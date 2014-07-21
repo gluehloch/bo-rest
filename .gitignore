@@ -1,0 +1,11 @@
+eclipse-bin
+build.properties
+target
+*.log
+betoffice.log.*
+project.index
+project.xml.md5
+database.properties
+tmp
+eclipse-target
+pirates

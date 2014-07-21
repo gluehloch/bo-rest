@@ -1,0 +1,196 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <parent>
+    <groupId>de.winkler.betoffice</groupId>
+    <artifactId>betoffice-maven-parent</artifactId>
+    <version>1.2.3</version>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.betoffice</groupId>
+  <artifactId>betoffice-jweb</artifactId>
+  <version>0.2.3-SNAPSHOT</version>
+  <packaging>war</packaging>
+
+  <scm>
+    <connection>
+      scm:svn:https://svn.code.sf.net/p/betoffice/svn/main/trunk/betoffice-jweb
+    </connection>
+    <developerConnection>
+      scm:svn:https://svn.code.sf.net/p/betoffice/svn/main/trunk/betoffice-jweb
+    </developerConnection>
+    <url>https://svn.code.sf.net/p/betoffice/svn/main/trunk/betoffice-jweb</url>
+  </scm>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.jboss.arquillian</groupId>
+        <artifactId>arquillian-bom</artifactId>
+        <version>1.1.2.Final</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.codehaus.cargo</groupId>
+          <artifactId>cargo-maven2-plugin</artifactId>
+          <version>1.4.2</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.cargo</groupId>
+        <artifactId>cargo-maven2-plugin</artifactId>
+        <configuration>
+          <wait>true</wait>
+          <container>
+            <containerId>tomcat7x</containerId>
+            <type>installed</type>
+            <home>${catalina.home}</home>
+          </container>
+          <configuration>
+            <type>existing</type>
+            <home>${catalina.home}</home>
+            <properties>
+              <cargo.tomcat.manager.url>${catalina.manager.url}</cargo.tomcat.manager.url>
+              <cargo.remote.username>${catalina.home.user}</cargo.remote.username>
+              <cargo.remote.password>${catalina.home.password}</cargo.remote.password>
+            </properties>
+          </configuration>
+          <deployable>
+            <groupId>de.winkler.betoffice</groupId>
+            <artifactId>betoffice-jweb</artifactId>
+            <type>war</type>
+            <!-- <version>0.1.0</version> -->
+          </deployable>
+        </configuration>
+        <executions>
+          <!-- <execution> <id>start-server</id> <phase>test</phase> <goals> 
+            <goal>start</goal> </goals> </execution> -->
+          <!-- <execution> <id>stop-server</id> <phase>test</phase> <goals> 
+            <goal>stop</goal> </goals> </execution> -->
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+    <!-- Some problems with an old version -->
+    <!-- <dependency> <groupId>com.ibm.icu</groupId> <artifactId>icu4j</artifactId> 
+      <version>4.8.1.1</version> </dependency> -->
+
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-jdbc</artifactId>
+      <version>7.0.27</version>
+    </dependency>
+
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-web-api</artifactId>
+      <version>6.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jstl</artifactId>
+      <version>1.2</version>
+    </dependency>
+
+    <!--
+    <dependency>
+      <groupId>org.jboss.spec</groupId>
+      <artifactId>jboss-javaee-6.0</artifactId>
+      <version>1.0.0.Final</version>
+      <type>pom</type>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.arquillian.junit</groupId>
+      <artifactId>arquillian-junit-container</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.arquillian.container</groupId>
+      <artifactId>arquillian-tomcat-remote-7</artifactId>
+      <version>1.0.0.CR5</version>
+      <scope>test</scope>
+    </dependency>
+    -->
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>${org.springframework.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+      <version>${org.springframework.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>${org.springframework.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- Jackson Java to JSON coder/encoder -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>2.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.0.0</version>
+    </dependency>
+
+    <!-- Make it testable... -->
+    <dependency>
+      <groupId>net.sourceforge.htmlunit</groupId>
+      <artifactId>htmlunit</artifactId>
+      <version>2.9</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>de.winkler.betoffice</groupId>
+      <artifactId>betoffice-storage</artifactId>
+      <version>1.3.2</version>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-dbcp</groupId>
+          <artifactId>commons-dbcp</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>commons-pool</groupId>
+          <artifactId>commons-pool</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>mysql</groupId>
+          <artifactId>mysql-connector-java</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
+
+</project>

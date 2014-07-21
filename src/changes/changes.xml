@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+  <properties>
+    <title>Change Notes</title>
+    <author email="andre.winkler@web.de">Andre Winkler</author>
+  </properties>
+  <body>
+
+    <!--
+         *** STILL UNDER DEVELOPMENT 0.2.3 (SNAPSHOT) ***
+    --> 
+    
+    <release version="betoffice-batch-0.2.3" date="2014-??-??"
+      description="Team history finder">
+      <action dev="andrewinkler" type="update" date="2014-03-09">
+        Remove 'evaluate-tipp.jsp'. I will use spring auto configuration.
+      </action>
+    </release>
+
+    <release version="betoffice-batch-0.2.2" date="2014-12-26"
+      description="Fix">    
+      <action dev="andrewinkler" type="fix" date="2014-12-26">
+        Change check for security token.
+      </action>
+      <action dev="andrewinkler" type="fix" date="2014-12-26">
+        Updated to betoffice-storage 1.3.1. (Round number fix).
+      </action>      
+    </release>
+
+    <release version="betoffice-batch-0.2.1" date="2014-12-20"
+      description="Second">    
+      <action dev="andrewinkler" type="add" date="2014-12-20?">
+        Send special response header to disable caching.
+      </action>
+    </release>    
+    
+    <release version="betoffice-batch-0.2.0" date="2013-12-15"
+      description="Second">
+      <action dev="andrewinkler" type="add" date="2013-08-25">
+        New URLs:
+        -root-/bo/tipp/submit
+        -root-/bo/tipp/receive/{round}/{nickname}
+        -root-/bo/tipp/auth
+      </action>
+    </release>
+
+    <release version="betoffice-batch-0.1.0" date="2013-07-31"
+      description="First">
+      <action dev="andrewinkler" type="add" date="2013-07-31">
+        The first release. Read and store tipp data.
+      </action>
+    </release>
+
+  </body>
+  <footer>
+    <legal>
+      Copyright (c) @year@ The 'betoffice-storage' Project
+      All rights reserved. $Revision: 3782 $ $Date: 2013-07-27 10:44:32 +0200 (Sat, 27 Jul 2013) $
+    </legal>
+  </footer>
+</document>

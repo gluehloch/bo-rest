@@ -1,0 +1,198 @@
+Betoffice jweb project
+
+  Deployment Voraussetzung:
+
+  Folgender Resourcen-Eintrag ist in der CONTEXT.XML des Tomcat Containers zu
+  hinterlegen:
+
++---------------------------------------------------------------------------+
+    <Resource name="jdbc/betoffice"
+              auth="Container"
+              type="javax.sql.DataSource"
+              factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+              testWhileIdle="true"
+              testOnBorrow="true"
+              testOnReturn="false"
+              validationQuery="SELECT 1"
+              validationInterval="30000"
+              timeBetweenEvictionRunsMillis="30000"
+              maxActive="100"
+              minIdle="10"
+              maxWait="10000"
+              initialSize="10"
+              removeAbandonedTimeout="60"
+              removeAbandoned="true"
+              logAbandoned="true"
+              minEvictableIdleTimeMillis="30000"
+              jmxEnabled="true"
+              jdbcInterceptors="org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;
+                org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer"
+              username="betoffice"
+              password="betoffice"
+              driverClassName="com.mysql.jdbc.Driver"
+              url="jdbc:mysql://localhost/betoffice"/>
++---------------------------------------------------------------------------+
+
+Aufsetzen der Server Umgebung
+
+  Server Deployment
+  
+  * SSH Server installieren
+  
+  sudo apt-get install openssh-server
+  
+  * SSH Schlüsselpaare anlegen
+  
+  ssh-keygen -t rsa
+  
+  Kopieren nach ./ssh/authorized_keys
+  
+  * JDK installieren
+  
+   sudo apt-get install openjdk-7-jdk
+   
+   Zu finden ist die Installation unter
+   /usr/lib/jvm/java-1.7.0-openjdk-i386
+  
+  * Apache installieren
+  
+  sudo apt-get install apache2 apache2-doc 
+  
+  * MYSQL installieren
+  
+  sudo apt-get install mysql-server
+  
+  * Tomcat User anlegen
+  
+  sudo useradd -m tomcat
+  sudo passwd tomcat
+  
+  * devtools User anlegen
+  
+  sudo useradd -m devtools
+  sudo passwd devtools
+  
+  * devtools Verzeichnis anlegen
+  
+  sudo mkdir /opt/devtools
+  sudo mkdir /opt/devtools/tomcat
+  
+  * Optional lege ich mir einen Konfigurationsbevollmaechtigten fuer
+    den Apache und den Tomcat an. Nennen wir ihn mal betoffice-root
+    mit etwas mehr Vollmachten als betoffice-admin.
+    
+    addgroup betoffice-root
+    sudo chgrp -R betoffice-root /etc/apache2
+    sudo chmod -R g+w /etc/apache2
+    sudo adduser winkler betoffice-root
+    
+    Nach dem die Gruppenrechte vergeben wurden, muss der betreffende
+    User sich ab- und neu anmelden, damit die Aenderungen sichtbar
+    werden.
+  
+  * Die Tomcat Binaries unter /opt/devtools/tomcat ablegen
+  
+    /opt/devtools/tomcat/apache-tomcat-7.0.40
+    
+  * Einen symbolischen Link anlegen
+  
+    sudo ln -s ./apache-tomcat-7.0.40/ apache-tomcat
+    
+  * Der Benutzer Tomcat erhält alle Rechte an dem Tomcat Verzeichnis
+  
+    sudo chown -R tomcat:tomcat tomcat
+    
+  * Die Datei tomcat.sh in das Verzeichnis /etc/init.d einspielen
+    und allen Benutzern die Ausfuehrungsrechte geben.
+    
+    sudo chmod ugo+x tomcat.sh
+    
+  * Testen, ob sich der Tomcat mit dem Skript starten laesst:
+  
+    sudo /etc/init.d/tomcat.sh start
+  
+  * Den Tomcat in das Startsystem einhaengen:
+  
+    sudo ln -s /etc/init.d/tomcat.sh  /etc/rc2.d/S92tomcat
+    
+  * In der HOSTS Datei hinterlege ich drei Eintraege:
+  
+    192.168.0.119 dev.tippdiekistebier.vmbox
+    192.168.0.119 test.tippdiekistebier.vmbox
+    192.168.0.119 prod.tippdiekistebier.vmbox
+    
+  * Den Tomcat-Apache Connector installieren, damit der Tomcat unter der
+    Port Nummer 80 erreichbar ist.
+    
+    sudo apt-get install libapache2-mod-jk
+    
+    Das folgende Kommando liefert den Speicherort der Datei mod_jk.so
+    
+    sudo find / -name mod_jk.so
+    
+    In der Regel findet sich die Datei unter
+    
+    /usr/lib/apache2/modules/mod_jk.so
+    
+    Im Anschluss muss die Datei
+    
+    /etc/libapache2-mod-jk/worker.properties
+    
+    angepassert werden. Das betrifft vor allem die Einstellungen
+    zu
+    
+    workers.tomcat_home und workers.java_home
+    
+    Im Anschluss wird fuer betoffice ein worker eingerichtet
+    (ajp13_worker ist der Beispiel Worker aus der Standard Installation).
+    
+    worker.list=ajp13_worker,betoffice_test
+    
+    worker.betoffice_test.port=8009
+    worker.betoffice_test.host=localhost
+    worker.betoffice_test.type=ajp13
+    worker.betoffice_test.lbfactor=1    
+    
+    In der Konfigurationsdatei
+    
+    /etc/apache2/mods-available/jk.conf
+    
+    wird das URI Mapping eingetragen
+    
+    JkMount /docs ajp13_worker
+    JkMount /docs* ajp13_worker
+    JkMount /docs/* ajp13_worker    
+    
+    JkMount /betoffice-jweb betoffice_test
+    
+    Fuer jedes JkMount muss in der Datei
+    
+    /etc/apache2/sites-available/default
+    
+    ein Eintrag hinterlegt werden oder, um die Sache abzukuerzen, wird
+    dort der Eintrag
+    
+    JkMountCopy On
+    
+    hinterlegt.
+    
+  * Virtual hosts fuer die Domains
+  
+    dev.tippdiekistebier.vmbox
+    test.tippdiekistebier.vmbox
+    prod.tippdiekistebier.vmbox
+    
+    anlegen. Diese Angaben erfolgen im Verzeichnis
+    
+    /etc/apache2/sites-available
+    
+    Siehe dazu auch die Datei dev.tippdiekistebier.vmbox Im Verzeichnis
+    /etc/apache2/sites-enabled wird ein symbolischer Link auf diese
+    Datei erstellt.
+    
+    
+    
+ 
+    
+  
+   

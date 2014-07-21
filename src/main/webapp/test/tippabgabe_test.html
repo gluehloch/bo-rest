@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+                    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <!-- <script src="http://code.jquery.com/jquery-latest.js"></script>  -->
+  <script src="./../js/jquery/jquery.min.js"></script>
+  
+  <!-- <link rel="stylesheet" href="http://code.jquery.com/qunit/git/qunit.css" type="text/css" media="screen" /> -->
+  <link rel="stylesheet" href="./../js/qunit/qunit.css" type="text/css" media="screen" />
+  
+  <!-- <script type="text/javascript" src="http://code.jquery.com/qunit/git/qunit.js"></script> -->
+  <script type="text/javascript" src="./../js/qunit/qunit.js"></script>
+  
+  <script type="text/javascript" src="./../js/tippabgabe.js"></script>
+
+  <script>
+	$(document).ready(function() {
+
+		test("tippabgabe.js", function() {
+			tippEvaluator.checkGoals(9);
+		});
+
+		module("Module 0");
+
+		test("a basic test example", function() {
+			ok(true, "this test is fine");
+			var value = "hello";
+			equals("hello", value, "We expect value to be hello");
+		});
+
+		module("Module A");
+
+		test("first test within module", function() {
+			ok(true, "all pass");
+		});
+
+		test("second test within module", function() {
+			ok(true, "all pass");
+		});
+
+		module("Module B");
+		
+		test("JSON serialization", function() {
+			var log;
+			if (console === undefined) {
+                log = {
+                    info: function() { return; },
+                    debug: function() { return; }
+                };
+                
+                console = log;
+			} else {
+				log = console;
+			}
+					
+	        log.info("Serialize for appending to a URL:");
+	        log.info($("#tippform").serialize());
+	        
+	        log.info("Serialze to a JSON object:");
+	        var jsonObject = tippEvaluator.formToJSON();
+	        log.info(jsonObject);
+	        
+	        var encoded = $.toJSON(jsonObject);
+	        log.info(encoded);
+	        // TODO Konvertierung in einen URI String
+	        // log.info(jQuery.serialize(encoded));
+
+	        equals("Frosch", jsonObject.userName);
+	        equals("Password", jsonObject.password);
+
+	        equals(4711, jsonObject.games[0].matchId);
+	        equals(100, jsonObject.games[0].homeTeamId);
+	        equals("Bremen", jsonObject.games[0].homeTeam);
+	        equals(101, jsonObject.games[0].guestTeamId);
+	        equals("Hamburg", jsonObject.games[0].guestTeam);
+
+	        equals(4712, jsonObject.games[1].matchId);
+            equals(102, jsonObject.games[1].homeTeamId);
+            equals(103, jsonObject.games[1].guestTeamId);
+
+	        equals(4713, jsonObject.games[2].matchId);
+	        equals(104, jsonObject.games[2].homeTeamId);
+	        equals(105, jsonObject.games[2].guestTeamId);
+
+	        equals(4714, jsonObject.games[3].matchId);
+	        equals(106, jsonObject.games[3].homeTeamId);
+	        equals(107, jsonObject.games[3].guestTeamId);
+		});
+
+		test("some other test", function() {
+			expect(2);
+			equals(true, false, "failing test");
+			equals(true, true, "passing test");
+			equals("Such mich", $("li[menuRefId]").text());
+		});
+
+	});
+  </script>
+</head>
+<body>
+	<h1 id="qunit-header">QUnit example</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
+	
+	<ul>
+	  <li menuRefId="Hallo">Such mich</li>
+	</ul>
+
+	<form id="tippform" name="tippform">
+	    <input type="hidden" id="user_name" name="user_name" value="Frosch"/>
+	    <input type="hidden" id="pwd" name="pwd" value="Password"/>
+		<input type="hidden" id="round" name="round" value="1"/>
+		<input type="hidden" id="championship" name="round" value="4711"/>
+		<input type="hidden" id="matchCount" name="matchCount" value="4"/>
+
+        <input type="hidden" id="match0" name="match0" value="0"/>
+        <input type="hidden" id="matchId0" name="matchId0" value="4711"/>
+        <input type="hidden" id="homeTeam0" name="homeTeam0" value="Bremen"/>
+        <input type="hidden" id="homeTeamId0" name="homeTeamId0" value="100"/>
+        <input type="hidden" id="guestTeam0" name="guestTeam0" value="Hamburg"/>
+        <input type="hidden" id="guestTeamId0" name="guestTeamId0" value="101"/>
+        <input type="hidden" id="homeGoals0" name="homeGoals0" value="2"/>
+        <input type="hidden" id="guestGoals0" name="guestGoals0" value="2"/>
+
+		<input type="hidden" id="match1" name="match1" value="1"/>
+		<input type="hidden" id="matchId1" name="matchId1" value="4712"/>
+		<input type="hidden" id="homeTeam1" name="homeTeam1" value="Gladbach"/>
+		<input type="hidden" id="homeTeamId1" name="homeTeamId1" value="102"/>
+		<input type="hidden" id="guestTeam1" name="guestTeam1" value="M�nchen"/>
+		<input type="hidden" id="guestTeamId1" name="guestTeamId1" value="103"/>
+		<input type="hidden" id="homeGoals1" name="homeGoals1" value="1"/>
+		<input type="hidden" id="guestGoals1" name="guestGoals1" value="2"/>
+
+        <input type="hidden" id="match2" name="match2" value="2"/>
+        <input type="hidden" id="matchId2" name="matchId2" value="4713"/>
+        <input type="hidden" id="homeTeam2" name="homeTeam2" value="RWE"/>
+        <input type="hidden" id="homeTeamId2" name="homeTeamId2" value="104"/>
+        <input type="hidden" id="guestTeam2" name="guestTeam2" value="Schalke"/>
+        <input type="hidden" id="guestTeamId2" name="guestTeamId2" value="105"/>
+        <input type="hidden" id="homeGoals2" name="homeGoals2" value="3"/>
+        <input type="hidden" id="guestGoals2" name="guestGoals2" value="0"/>
+
+        <input type="hidden" id="match3" name="match3" value="3"/>
+        <input type="hidden" id="matchId3" name="matchId3" value="4714"/>
+        <input type="hidden" id="homeTeam3" name="homeTeam3" value="Bielefeld"/>
+        <input type="hidden" id="homeTeamId3" name="homeTeamId3" value="106"/>
+        <input type="hidden" id="guestTeam3" name="guestTeam3" value="Oberhausen"/>
+        <input type="hidden" id="guestTeamId3" name="guestTeamId3" value="107"/>
+        <input type="hidden" id="homeGoals3" name="homeGoals3" value="1"/>
+        <input type="hidden" id="guestGoals3" name="guestGoals3" value="1"/>
+	</form>
+</body> 
+</html>
