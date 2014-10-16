@@ -193,4 +193,11 @@
     </dependency>
   </dependencies>
 
+  <repositories>
+    <repository>
+      <id>awtools</id>
+      <name>Andre Winklers AWTools Repository</name>
+      <url>http://maven2.gluehloch.de</url>
+    </repository>  
+  </repositories>
 </project>
