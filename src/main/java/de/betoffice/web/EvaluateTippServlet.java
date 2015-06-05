@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import de.betoffice.web.http.ResponseHeaderSetup;
 import de.betoffice.web.validator.EvaluateTippAuthRequestValidator;
 import de.betoffice.web.validator.EvaluateTippRequestValidator;
 import de.betoffice.web.validator.JWebConst;
