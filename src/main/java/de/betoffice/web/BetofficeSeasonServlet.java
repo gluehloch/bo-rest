@@ -36,16 +36,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.betoffice.web.http.ResponseHeaderSetup;
-import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.JsonBuilder;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.TeamJson;
 import de.winkler.betoffice.service.MasterDataManagerService;
 import de.winkler.betoffice.service.SeasonManagerService;
-import de.winkler.betoffice.storage.GameList;
 import de.winkler.betoffice.storage.Season;
-import de.winkler.betoffice.storage.Team;
 
 /**
  * Controller
@@ -79,6 +76,17 @@ public class BetofficeSeasonServlet {
         masterDataManagerService = _masterDataManagerService;
     }
 
+    // -- betofficeBasicJsonService -------------------------------------------
+
+    private BetofficeBasicJsonService betofficeBasicJsonService;
+
+    @Autowired
+    public void setBetofficeBasicJsonService(
+            BetofficeBasicJsonService _betofficeBasicJsonService) {
+
+        betofficeBasicJsonService = _betofficeBasicJsonService;
+    }
+
     // -----------------------------------------------------------------------
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -107,19 +115,7 @@ public class BetofficeSeasonServlet {
             HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
-
-        Long id = Long.parseLong(seasonId);
-        Season season = seasonManagerService.findSeasonById(id);
-        List<GameList> rounds = seasonManagerService.findRounds(season);
-
-        SeasonJson seasonJson = JsonBuilder.toJson(season);
-
-        for (GameList gameList : rounds) {
-            RoundJson roundJson = JsonBuilder.toJson(gameList);
-            seasonJson.addRound(roundJson);
-        }
-
-        return seasonJson;
+        return betofficeBasicJsonService.findSeasonById(seasonId);
     }
 
     @RequestMapping(value = "/season/round/{roundId}", method = RequestMethod.GET)
@@ -127,18 +123,7 @@ public class BetofficeSeasonServlet {
             @PathVariable("roundId") Long roundId, HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
-
-        GameList gameList = seasonManagerService.findRoundById(roundId);
-        RoundJson roundJson = null;
-
-        if (gameList != null) {
-            roundJson = JsonBuilder.toJson(gameList);
-            List<GameJson> gameJson = JsonBuilder.toGameJson(gameList
-                    .unmodifiableList());
-            roundJson.getGames().addAll(gameJson);
-        }
-
-        return roundJson;
+        return betofficeBasicJsonService.findRound(roundId);
     }
 
     @RequestMapping(value = "/season/round/{roundId}/next", method = RequestMethod.GET)
@@ -146,18 +131,7 @@ public class BetofficeSeasonServlet {
             @PathVariable("roundId") Long roundId, HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
-
-        GameList nextRound = seasonManagerService.findNextRound(roundId);
-        RoundJson roundJson = null;
-
-        if (nextRound != null) {
-            roundJson = JsonBuilder.toJson(nextRound);
-            List<GameJson> gameJson = JsonBuilder.toGameJson(nextRound
-                    .unmodifiableList());
-            roundJson.getGames().addAll(gameJson);
-        }
-
-        return roundJson;
+        return betofficeBasicJsonService.findNextRound(roundId);
     }
 
     @RequestMapping(value = "/season/round/{roundId}/prev", method = RequestMethod.GET)
@@ -165,18 +139,7 @@ public class BetofficeSeasonServlet {
             @PathVariable("roundId") Long roundId, HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
-
-        GameList prevRound = seasonManagerService.findPrevRound(roundId);
-        RoundJson roundJson = null;
-
-        if (prevRound != null) {
-            roundJson = JsonBuilder.toJson(prevRound);
-            List<GameJson> gameJson = JsonBuilder.toGameJson(prevRound
-                    .unmodifiableList());
-            roundJson.getGames().addAll(gameJson);
-        }
-
-        return roundJson;
+        return betofficeBasicJsonService.findPrevRound(roundId);
     }
 
     @RequestMapping(value = "/team/all", method = RequestMethod.GET)
@@ -184,9 +147,7 @@ public class BetofficeSeasonServlet {
             HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
-
-        List<Team> teams = masterDataManagerService.findAllTeams();
-        return JsonBuilder.toTeamJson(teams);
+        return betofficeBasicJsonService.findAllTeams();
     }
 
 }
