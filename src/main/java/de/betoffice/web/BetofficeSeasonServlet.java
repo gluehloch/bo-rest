@@ -42,6 +42,7 @@ import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.TeamJson;
 import de.winkler.betoffice.service.MasterDataManagerService;
 import de.winkler.betoffice.service.SeasonManagerService;
+import de.winkler.betoffice.service.TippService;
 import de.winkler.betoffice.storage.Season;
 
 /**
@@ -65,6 +66,15 @@ public class BetofficeSeasonServlet {
         seasonManagerService = _seasonManagerService;
     }
 
+    // -- tippService ---------------------------------------------------------
+
+    private TippService tippService;
+    
+    @Autowired
+    public void setTippService(TippService _tippService) {
+        tippService = _tippService;
+    }
+    
     // -- masterDataManagerService --------------------------------------------
 
     private MasterDataManagerService masterDataManagerService;
@@ -104,9 +114,7 @@ public class BetofficeSeasonServlet {
             HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
-
-        List<Season> seasons = seasonManagerService.findAllSeasons();
-        return JsonBuilder.toSeasonJson(seasons);
+        return betofficeBasicJsonService.findAllSeason();
     }
 
     @RequestMapping(value = "/season/{seasonId}", method = RequestMethod.GET)
@@ -150,4 +158,8 @@ public class BetofficeSeasonServlet {
         return betofficeBasicJsonService.findAllTeams();
     }
 
+    public void findNextTippRound() {
+        tippService.findNextTippRound(season, date)
+    }
+    
 }

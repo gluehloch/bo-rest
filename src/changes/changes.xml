@@ -12,6 +12,9 @@
 
     <release version="betoffice-jweb-0.4.0" date="2015-??-??"
       description="More services">
+      <action dev="andrewinkler" type="update" date="2015-07-28">
+        New service to find the next tipp round.
+      </action>
       <action dev="andrewinkler" type="add" date="2015-06-05">
         Moved the JSON objects to betoffice-jweb-misc project. This is
         a sharing project between betoffice-jweb and betoffice-jadmin.
