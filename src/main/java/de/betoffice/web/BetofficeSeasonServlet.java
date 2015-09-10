@@ -27,6 +27,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +42,7 @@ import de.betoffice.web.json.TeamJson;
 import de.winkler.betoffice.service.MasterDataManagerService;
 import de.winkler.betoffice.service.SeasonManagerService;
 import de.winkler.betoffice.service.TippService;
+import de.winkler.betoffice.storage.GameList;
 
 /**
  * Controller
@@ -138,11 +140,21 @@ public class BetofficeSeasonServlet {
     }
 
     @RequestMapping(value = "/season/tipp/{roundId}/{nickName}", method = RequestMethod.GET)
-    public @ResponseBody RoundJson findTipp(@PathVariable Long roundId,
-            @PathVariable String nickName, HttpServletResponse response) {
+    public @ResponseBody RoundJson findTipp(
+            @PathVariable("roundId") Long roundId,
+            @PathVariable("nickName") String nickName,
+            HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findTipp(roundId, nickName);
+    }
+
+    @RequestMapping(value = "/season/{seasonId}/tipp/next", method = RequestMethod.GET)
+    public RoundJson findNextTipp(@PathVariable("seasonId") Long seasonId,
+            HttpServletResponse response) {
+
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.findTippRound(seasonId);
     }
 
     @RequestMapping(value = "/team/all", method = RequestMethod.GET)
