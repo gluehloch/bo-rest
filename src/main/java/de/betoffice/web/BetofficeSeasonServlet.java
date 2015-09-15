@@ -150,7 +150,8 @@ public class BetofficeSeasonServlet {
     }
 
     @RequestMapping(value = "/season/{seasonId}/tipp/next", method = RequestMethod.GET)
-    public RoundJson findNextTipp(@PathVariable("seasonId") Long seasonId,
+    public @ResponseBody RoundJson findNextTipp(
+            @PathVariable("seasonId") Long seasonId,
             HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
