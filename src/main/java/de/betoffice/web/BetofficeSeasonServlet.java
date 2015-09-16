@@ -25,24 +25,28 @@ package de.betoffice.web;
 
 import java.util.List;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.betoffice.web.http.ResponseHeaderSetup;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.TeamJson;
+import de.winkler.betoffice.service.AuthService;
 import de.winkler.betoffice.service.MasterDataManagerService;
 import de.winkler.betoffice.service.SeasonManagerService;
+import de.winkler.betoffice.service.SecurityToken;
 import de.winkler.betoffice.service.TippService;
-import de.winkler.betoffice.storage.GameList;
 
 /**
  * Controller
@@ -54,36 +58,6 @@ public class BetofficeSeasonServlet {
     // ------------------------------------------------------------------------
     // The beans
     // ------------------------------------------------------------------------
-
-    // -- seasonManagerService ------------------------------------------------
-
-    private SeasonManagerService seasonManagerService;
-
-    @Autowired
-    public void setSeasonManagerService(
-            SeasonManagerService _seasonManagerService) {
-        seasonManagerService = _seasonManagerService;
-    }
-
-    // -- tippService ---------------------------------------------------------
-
-    private TippService tippService;
-
-    @Autowired
-    public void setTippService(TippService _tippService) {
-        tippService = _tippService;
-    }
-
-    // -- masterDataManagerService --------------------------------------------
-
-    private MasterDataManagerService masterDataManagerService;
-
-    @Autowired
-    public void setMasterDataManagerService(
-            MasterDataManagerService _masterDataManagerService) {
-
-        masterDataManagerService = _masterDataManagerService;
-    }
 
     // -- betofficeBasicJsonService -------------------------------------------
 
@@ -164,6 +138,34 @@ public class BetofficeSeasonServlet {
 
         ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findAllTeams();
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public @ResponseBody SecurityToken auth(
+            @RequestParam("username") String username,
+            @RequestParam("password") String password,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+
+        ResponseHeaderSetup.setup(response);
+
+        SecurityToken securityToken = betofficeBasicJsonService.login(username, password);
+
+        HttpSession session = request.getSession();
+        session.setAttribute(SecurityToken.class.getName(), securityToken);
+
+        if (securityToken.isNotLoggedIn()) {
+
+        } else {
+
+            Cookie[] cookies = request.getCookies();
+
+            for (Cookie cookie : cookies) {
+                response.addCookie(cookie);
+            }
+        }
+
+        return null;
     }
 
 }
