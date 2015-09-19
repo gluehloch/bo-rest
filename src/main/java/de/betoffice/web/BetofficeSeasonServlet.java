@@ -42,11 +42,7 @@ import de.betoffice.web.http.ResponseHeaderSetup;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.TeamJson;
-import de.winkler.betoffice.service.AuthService;
-import de.winkler.betoffice.service.MasterDataManagerService;
-import de.winkler.betoffice.service.SeasonManagerService;
 import de.winkler.betoffice.service.SecurityToken;
-import de.winkler.betoffice.service.TippService;
 
 /**
  * Controller
@@ -141,31 +137,27 @@ public class BetofficeSeasonServlet {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public @ResponseBody SecurityToken auth(
-            @RequestParam("username") String username,
+    public @ResponseBody SecurityToken login(
+            @RequestParam("nickname") String nickname,
             @RequestParam("password") String password,
-            HttpServletRequest request,
-            HttpServletResponse response) {
+            HttpServletRequest request, HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
 
-        SecurityToken securityToken = betofficeBasicJsonService.login(username, password);
+        SecurityToken securityToken = betofficeBasicJsonService.login(nickname,
+                password);
 
-        HttpSession session = request.getSession();
-        session.setAttribute(SecurityToken.class.getName(), securityToken);
-
-        if (securityToken.isNotLoggedIn()) {
-
-        } else {
-
+        if (securityToken.isLoggedIn()) {
+            HttpSession session = request.getSession();
+            session.setAttribute(SecurityToken.class.getName(), securityToken);
+            
+            // REST and Cookies? Does it work?
             Cookie[] cookies = request.getCookies();
-
             for (Cookie cookie : cookies) {
                 response.addCookie(cookie);
             }
         }
-
-        return null;
+        return securityToken;
     }
 
 }
