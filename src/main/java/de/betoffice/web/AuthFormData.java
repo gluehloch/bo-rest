@@ -28,8 +28,7 @@ package de.betoffice.web;
 /**
  * Authorization data.
  *
- * @author by Andre Winkler, $LastChangedBy: andrewinkler $
- * @version $LastChangedRevision: 3815 $ $LastChangedDate: 2013-09-08 08:52:23 +0200 (Sun, 08 Sep 2013) $
+ * @author by Andre Winkler
  */
 public class AuthFormData {
 
