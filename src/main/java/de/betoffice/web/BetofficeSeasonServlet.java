@@ -5,17 +5,17 @@
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
  * MODIFICATION
- *
+ * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
  * version.
- *
+ * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
- *
+ * 
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
  * Place, Suite 330, Boston, MA 02111-1307 USA
@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import de.betoffice.web.http.ResponseHeaderSetup;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonJson;
+import de.betoffice.web.json.SecurityTokenJson;
 import de.betoffice.web.json.TeamJson;
 import de.winkler.betoffice.service.SecurityToken;
 
@@ -69,16 +70,16 @@ public class BetofficeSeasonServlet {
     // -----------------------------------------------------------------------
 
     @RequestMapping(value = "/season/all", method = RequestMethod.GET)
-    public @ResponseBody
-    List<SeasonJson> findAllSeason(HttpServletResponse response) {
+    public @ResponseBody List<SeasonJson> findAllSeason(
+            HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findAllSeason();
     }
 
     @RequestMapping(value = "/season/{seasonId}", method = RequestMethod.GET)
-    public @ResponseBody
-    SeasonJson findSeasonById(@PathVariable("seasonId") String seasonId,
+    public @ResponseBody SeasonJson findSeasonById(
+            @PathVariable("seasonId") String seasonId,
             HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
@@ -86,35 +87,32 @@ public class BetofficeSeasonServlet {
     }
 
     @RequestMapping(value = "/season/round/{roundId}", method = RequestMethod.GET)
-    public @ResponseBody
-    RoundJson findRound(@PathVariable("roundId") Long roundId,
-            HttpServletResponse response) {
+    public @ResponseBody RoundJson findRound(
+            @PathVariable("roundId") Long roundId, HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findRound(roundId);
     }
 
     @RequestMapping(value = "/season/round/{roundId}/next", method = RequestMethod.GET)
-    public @ResponseBody
-    RoundJson findNextRound(@PathVariable("roundId") Long roundId,
-            HttpServletResponse response) {
+    public @ResponseBody RoundJson findNextRound(
+            @PathVariable("roundId") Long roundId, HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findNextRound(roundId);
     }
 
     @RequestMapping(value = "/season/round/{roundId}/prev", method = RequestMethod.GET)
-    public @ResponseBody
-    RoundJson findPrevRound(@PathVariable("roundId") Long roundId,
-            HttpServletResponse response) {
+    public @ResponseBody RoundJson findPrevRound(
+            @PathVariable("roundId") Long roundId, HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findPrevRound(roundId);
     }
 
     @RequestMapping(value = "/season/tipp/{roundId}/{nickName}", method = RequestMethod.GET)
-    public @ResponseBody
-    RoundJson findTipp(@PathVariable("roundId") Long roundId,
+    public @ResponseBody RoundJson findTipp(
+            @PathVariable("roundId") Long roundId,
             @PathVariable("nickName") String nickName,
             HttpServletResponse response) {
 
@@ -123,8 +121,8 @@ public class BetofficeSeasonServlet {
     }
 
     @RequestMapping(value = "/season/{seasonId}/tipp/next", method = RequestMethod.GET)
-    public @ResponseBody
-    RoundJson findNextTipp(@PathVariable("seasonId") Long seasonId,
+    public @ResponseBody RoundJson findNextTipp(
+            @PathVariable("seasonId") Long seasonId,
             HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
@@ -132,33 +130,32 @@ public class BetofficeSeasonServlet {
     }
 
     @RequestMapping(value = "/team/all", method = RequestMethod.GET)
-    public @ResponseBody
-    List<TeamJson> findAllTeams(HttpServletResponse response) {
+    public @ResponseBody List<TeamJson> findAllTeams(
+            HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findAllTeams();
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public @ResponseBody
-    SecurityToken login(@RequestBody AuthFormData authFormData,
-            HttpServletRequest request, HttpServletResponse response) {
+    public @ResponseBody SecurityTokenJson login(
+            @RequestBody AuthFormData authFormData, HttpServletRequest request,
+            HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
 
-        SecurityToken securityToken = betofficeBasicJsonService.login(
+        SecurityTokenJson securityToken = betofficeBasicJsonService.login(
                 authFormData.getNickname(), authFormData.getPassword());
 
-        if (securityToken.isLoggedIn()) {
-            HttpSession session = request.getSession();
-            session.setAttribute(SecurityToken.class.getName(), securityToken);
+        HttpSession session = request.getSession();
+        session.setAttribute(SecurityToken.class.getName(), securityToken);
 
-            // REST and Cookies? Does it work?
-            Cookie[] cookies = request.getCookies();
-            for (Cookie cookie : cookies) {
-                response.addCookie(cookie);
-            }
+        // REST and Cookies? Does it work?
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            response.addCookie(cookie);
         }
+
         return securityToken;
     }
 
