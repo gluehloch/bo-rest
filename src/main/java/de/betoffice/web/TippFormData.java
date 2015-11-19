@@ -1,8 +1,7 @@
 /*
- * $Id$
  * ============================================================================
  * Project betoffice-jweb
- * Copyright (c) 2000-2013 by Andre Winkler. All rights reserved.
+ * Copyright (c) 2000-2015 by Andre Winkler. All rights reserved.
  * ============================================================================
  *          GNU GENERAL PUBLIC LICENSE
  *  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
@@ -30,8 +29,7 @@ import java.util.List;
 /**
  * Holds the data of a tipp form.
  * 
- * @author by Andre Winkler, $LastChangedBy$
- * @version $LastChangedRevision$ $LastChangedDate$
+ * @author by Andre Winkler
  */
 public class TippFormData {
 

@@ -23,6 +23,7 @@
 
 package de.betoffice.web;
 
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.http.Cookie;
@@ -152,11 +153,48 @@ public class BetofficeSeasonServlet {
 
         // REST and Cookies? Does it work?
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            response.addCookie(cookie);
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                response.addCookie(cookie);
+            }
         }
 
         return securityToken;
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    public void logout(
+            @RequestBody LogoutFormData logoutFormData, HttpServletRequest request,
+            HttpServletResponse response) {
+
+        ResponseHeaderSetup.setup(response);
+
+        SecurityTokenJson securityToken = betofficeBasicJsonService.logout(
+                logoutFormData.getNickname(), logoutFormData.getSecurityToken());
+
+        HttpSession session = request.getSession();
+        session.setAttribute(SecurityToken.class.getName(), securityToken);
+    }
+
+    @RequestMapping(value = "/tipp/submit", method = RequestMethod.POST)
+    public @ResponseBody String tippSubmit(
+            @RequestBody TippFormData tippFormData, HttpServletRequest request,
+            HttpServletResponse response) {
+
+        request.getSession().getId();
+        request.getRemoteAddr();
+        request.getRemotePort();
+        request.getRemoteUser();
+        Enumeration<String> enumeration = request.getHeaderNames();
+
+        while (enumeration.hasMoreElements()) {
+            String nextElement = enumeration.nextElement();
+            System.out.println(request.getHeader(nextElement));
+        }
+
+        System.out.println(tippFormData);
+
+        return "";
     }
 
 }
