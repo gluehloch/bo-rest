@@ -147,6 +147,8 @@ public class BetofficeSeasonServlet {
 
         SecurityTokenJson securityToken = betofficeBasicJsonService.login(
                 authFormData.getNickname(), authFormData.getPassword());
+        request.getRemoteAddr()
+        request.getRemotePort()
 
         HttpSession session = request.getSession();
         session.setAttribute(SecurityToken.class.getName(), securityToken);
