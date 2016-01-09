@@ -97,7 +97,8 @@ public class BetofficeSeasonServlet {
 
     @RequestMapping(value = "/season/round/{roundId}/next", method = RequestMethod.GET)
     public @ResponseBody RoundJson findNextRound(
-            @PathVariable("roundId") Long roundId, HttpServletResponse response) {
+            @PathVariable("roundId") Long roundId, HttpServletRequest request,
+            HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findNextRound(roundId);
@@ -124,9 +125,14 @@ public class BetofficeSeasonServlet {
     @RequestMapping(value = "/season/{seasonId}/tipp/next", method = RequestMethod.GET)
     public @ResponseBody RoundJson findNextTipp(
             @PathVariable("seasonId") Long seasonId,
-            HttpServletResponse response) {
+            HttpServletRequest request, HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
+
+        HttpSession session = request.getSession();
+        Object securityToken = session.getAttribute(SecurityToken.class
+                .getName());
+
         return betofficeBasicJsonService.findTippRound(seasonId);
     }
 
@@ -151,7 +157,18 @@ public class BetofficeSeasonServlet {
         HttpSession session = request.getSession();
         session.setAttribute(SecurityToken.class.getName(), securityToken);
 
-        // REST and Cookies? Does it work?
+        request.getSession().getId();
+        request.getRemoteAddr();
+        request.getRemotePort();
+        request.getRemoteUser();
+        Enumeration<String> enumeration = request.getHeaderNames();
+
+        while (enumeration.hasMoreElements()) {
+            String nextElement = enumeration.nextElement();
+            System.out.println(request.getHeader(nextElement));
+        }
+
+        // Read all Cookies and put them to the response. Is this a good idea?
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
@@ -163,34 +180,22 @@ public class BetofficeSeasonServlet {
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
-    public void logout(
-            @RequestBody LogoutFormData logoutFormData, HttpServletRequest request,
-            HttpServletResponse response) {
+    public void logout(@RequestBody LogoutFormData logoutFormData,
+            HttpServletRequest request, HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
 
-        SecurityTokenJson securityToken = betofficeBasicJsonService.logout(
-                logoutFormData.getNickname(), logoutFormData.getSecurityToken());
+        betofficeBasicJsonService.logout(logoutFormData.getNickname(),
+                logoutFormData.getSecurityToken());
 
         HttpSession session = request.getSession();
-        session.setAttribute(SecurityToken.class.getName(), securityToken);
+        session.removeAttribute(SecurityToken.class.getName());
     }
 
     @RequestMapping(value = "/tipp/submit", method = RequestMethod.POST)
     public @ResponseBody String tippSubmit(
             @RequestBody TippFormData tippFormData, HttpServletRequest request,
             HttpServletResponse response) {
-
-        request.getSession().getId();
-        request.getRemoteAddr();
-        request.getRemotePort();
-        request.getRemoteUser();
-        Enumeration<String> enumeration = request.getHeaderNames();
-
-        while (enumeration.hasMoreElements()) {
-            String nextElement = enumeration.nextElement();
-            System.out.println(request.getHeader(nextElement));
-        }
 
         System.out.println(tippFormData);
 
