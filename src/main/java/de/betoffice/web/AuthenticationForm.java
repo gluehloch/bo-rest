@@ -1,8 +1,7 @@
 /*
- * $Id: AuthFormData.java 3815 2013-09-08 06:52:23Z andrewinkler $
  * ============================================================================
  * Project betoffice-jweb
- * Copyright (c) 2000-2013 by Andre Winkler. All rights reserved.
+ * Copyright (c) 2000-2016 by Andre Winkler. All rights reserved.
  * ============================================================================
  *          GNU GENERAL PUBLIC LICENSE
  *  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
@@ -30,7 +29,7 @@ package de.betoffice.web;
  *
  * @author by Andre Winkler
  */
-public class AuthFormData {
+public class AuthenticationForm {
 
     /** Users nick name. */
     private String nickname;

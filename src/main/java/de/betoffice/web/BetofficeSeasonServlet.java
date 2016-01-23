@@ -23,10 +23,8 @@
 
 package de.betoffice.web;
 
-import java.util.Enumeration;
 import java.util.List;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -146,35 +144,35 @@ public class BetofficeSeasonServlet {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public @ResponseBody SecurityTokenJson login(
-            @RequestBody AuthFormData authFormData, HttpServletRequest request,
-            HttpServletResponse response) {
+            @RequestBody AuthenticationForm authenticationForm,
+            HttpServletRequest request, HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
+        String userAgent = request.getHeader("User-Agent");
 
         SecurityTokenJson securityToken = betofficeBasicJsonService.login(
-                authFormData.getNickname(), authFormData.getPassword());
+                authenticationForm.getNickname(),
+                authenticationForm.getPassword(), request.getSession().getId(),
+                request.getRemoteAddr(), userAgent);
 
         HttpSession session = request.getSession();
         session.setAttribute(SecurityToken.class.getName(), securityToken);
 
-        request.getSession().getId();
-        request.getRemoteAddr();
-        request.getRemotePort();
-        request.getRemoteUser();
-        Enumeration<String> enumeration = request.getHeaderNames();
-
-        while (enumeration.hasMoreElements()) {
-            String nextElement = enumeration.nextElement();
-            System.out.println(request.getHeader(nextElement));
-        }
-
-        // Read all Cookies and put them to the response. Is this a good idea?
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                response.addCookie(cookie);
-            }
-        }
+        // TODO
+        // Enumeration<String> enumeration = request.getHeaderNames();
+        // while (enumeration.hasMoreElements()) {
+        // String nextElement = enumeration.nextElement();
+        // System.out.println(request.getHeader(nextElement));
+        // }
+        //
+        // // Read all Cookies and put them to the response. Is this a good
+        // idea?
+        // Cookie[] cookies = request.getCookies();
+        // if (cookies != null) {
+        // for (Cookie cookie : cookies) {
+        // response.addCookie(cookie);
+        // }
+        // }
 
         return securityToken;
     }
