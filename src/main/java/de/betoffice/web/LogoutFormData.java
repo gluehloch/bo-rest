@@ -24,18 +24,22 @@
 
 package de.betoffice.web;
 
+import java.io.Serializable;
+
 /**
  * Evaluate a tipp form.
  *
  * @author by Andre Winkler
  */
-public class LogoutFormData {
+public class LogoutFormData implements Serializable {
+
+    private static final long serialVersionUID = 1179593795827633149L;
 
     /** Users nick name. */
     private String nickname;
 
     /** The token to identify the user session. */
-    private String securityToken;
+    private String token;
 
     /**
      * @return the nickname
@@ -53,18 +57,18 @@ public class LogoutFormData {
     }
 
     /**
-     * @return the securityToken
+     * @return the token
      */
-    public String getSecurityToken() {
-        return securityToken;
+    public String getToken() {
+        return token;
     }
 
     /**
-     * @param securityToken
-     *            the securityToken to set
+     * @param token
+     *            the token to set
      */
-    public void setSecurityToken(String securityToken) {
-        this.securityToken = securityToken;
+    public void setToken(String token) {
+        this.token = token;
     }
 
     /*
@@ -74,8 +78,8 @@ public class LogoutFormData {
      */
     @Override
     public String toString() {
-        return "LogoutFormData [nickname=" + nickname + ", securityToken="
-                + securityToken + "]";
+        return "LogoutFormData [nickname=" + nickname + ", token=" + token
+                + "]";
     }
 
 }

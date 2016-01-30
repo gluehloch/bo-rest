@@ -23,6 +23,7 @@
  */
 package de.betoffice.web;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,9 @@ import java.util.List;
  * 
  * @author by Andre Winkler
  */
-public class TippFormData {
+public class TippFormData implements Serializable {
+
+    private static final long serialVersionUID = -1906517038351044364L;
 
     /** Users nick name. */
     private String nickname;

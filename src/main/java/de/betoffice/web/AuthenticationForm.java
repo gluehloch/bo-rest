@@ -24,12 +24,16 @@
 
 package de.betoffice.web;
 
+import java.io.Serializable;
+
 /**
  * Authorization data.
  *
  * @author by Andre Winkler
  */
-public class AuthenticationForm {
+public class AuthenticationForm implements Serializable {
+
+    private static final long serialVersionUID = -5962100047158592750L;
 
     /** Users nick name. */
     private String nickname;

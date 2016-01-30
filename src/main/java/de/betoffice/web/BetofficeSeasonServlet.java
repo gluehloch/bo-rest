@@ -126,11 +126,6 @@ public class BetofficeSeasonServlet {
             HttpServletRequest request, HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
-
-        HttpSession session = request.getSession();
-        Object securityToken = session.getAttribute(SecurityToken.class
-                .getName());
-
         return betofficeBasicJsonService.findTippRound(seasonId);
     }
 
@@ -142,7 +137,7 @@ public class BetofficeSeasonServlet {
         return betofficeBasicJsonService.findAllTeams();
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST, headers = { "Content-type=application/json" })
     public @ResponseBody SecurityTokenJson login(
             @RequestBody AuthenticationForm authenticationForm,
             HttpServletRequest request, HttpServletResponse response) {
@@ -177,20 +172,20 @@ public class BetofficeSeasonServlet {
         return securityToken;
     }
 
-    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    @RequestMapping(value = "/logout", method = RequestMethod.POST, headers = { "Content-type=application/json" })
     public void logout(@RequestBody LogoutFormData logoutFormData,
             HttpServletRequest request, HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
 
         betofficeBasicJsonService.logout(logoutFormData.getNickname(),
-                logoutFormData.getSecurityToken());
+                logoutFormData.getToken());
 
         HttpSession session = request.getSession();
         session.removeAttribute(SecurityToken.class.getName());
     }
 
-    @RequestMapping(value = "/tipp/submit", method = RequestMethod.POST)
+    @RequestMapping(value = "/tipp/submit", method = RequestMethod.POST, headers = { "Content-type=application/json" })
     public @ResponseBody String tippSubmit(
             @RequestBody TippFormData tippFormData, HttpServletRequest request,
             HttpServletResponse response) {
