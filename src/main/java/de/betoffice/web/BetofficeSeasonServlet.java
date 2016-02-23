@@ -120,6 +120,26 @@ public class BetofficeSeasonServlet {
         return betofficeBasicJsonService.findTipp(roundId, nickName);
     }
 
+    @RequestMapping(value = "/season/tipp/{roundId}/{nickName}/next", method = RequestMethod.GET)
+    public @ResponseBody RoundJson findNextTipp(
+            @PathVariable("roundId") Long roundId,
+            @PathVariable("nickName") String nickName,
+            HttpServletResponse response) {
+
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.findNextTipp(roundId, nickName);
+    }
+
+    @RequestMapping(value = "/season/tipp/{roundId}/{nickName}/prev", method = RequestMethod.GET)
+    public @ResponseBody RoundJson findPrevTipp(
+            @PathVariable("roundId") Long roundId,
+            @PathVariable("nickName") String nickName,
+            HttpServletResponse response) {
+
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.findPrevTipp(roundId, nickName);
+    }
+
     @RequestMapping(value = "/season/{seasonId}/tipp/next", method = RequestMethod.GET)
     public @ResponseBody RoundJson findNextTipp(
             @PathVariable("seasonId") Long seasonId,
@@ -152,22 +172,6 @@ public class BetofficeSeasonServlet {
 
         HttpSession session = request.getSession();
         session.setAttribute(SecurityToken.class.getName(), securityToken);
-
-        // TODO
-        // Enumeration<String> enumeration = request.getHeaderNames();
-        // while (enumeration.hasMoreElements()) {
-        // String nextElement = enumeration.nextElement();
-        // System.out.println(request.getHeader(nextElement));
-        // }
-        //
-        // // Read all Cookies and put them to the response. Is this a good
-        // idea?
-        // Cookie[] cookies = request.getCookies();
-        // if (cookies != null) {
-        // for (Cookie cookie : cookies) {
-        // response.addCookie(cookie);
-        // }
-        // }
 
         return securityToken;
     }
