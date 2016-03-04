@@ -5,17 +5,17 @@
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
  * MODIFICATION
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
  * version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
  * Place, Suite 330, Boston, MA 02111-1307 USA
@@ -87,7 +87,7 @@ public class BetofficeSeasonServlet {
 
     /**
      * Return the current (next to play and/or to tipp) round of a season.
-     * 
+     *
      * @param seasonId
      *            Season ID
      * @param request
@@ -132,7 +132,7 @@ public class BetofficeSeasonServlet {
 
     /**
      * Returns the tipp of a user for a round.
-     * 
+     *
      * @param roundId
      *            Round ID
      * @param nickName
@@ -141,7 +141,7 @@ public class BetofficeSeasonServlet {
      *            Servlet response
      * @return The tipp of a user for a round
      */
-    @RequestMapping(value = "/season/tipp/{roundId}/{nickName}", method = RequestMethod.GET)
+    @RequestMapping(value = "/tipp/{roundId}/{nickName}", method = RequestMethod.GET)
     public @ResponseBody RoundJson findTipp(
             @PathVariable("roundId") Long roundId,
             @PathVariable("nickName") String nickName,
@@ -152,8 +152,29 @@ public class BetofficeSeasonServlet {
     }
 
     /**
+     * The current round to tipp
+     *
+     * @param seasonId
+     *            Season ID
+     * @param request
+     *            Servlet request
+     * @param response
+     *            Servlet response
+     * @return The current tipp
+     */
+    @RequestMapping(value = "/tipp/{seasonId}/{nickname}/current", method = RequestMethod.GET)
+    public @ResponseBody RoundJson findCurrentTipp(
+            @PathVariable("seasonId") Long seasonId,
+            @PathVariable("nickname") String nickName,
+            HttpServletRequest request, HttpServletResponse response) {
+
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.findCurrentTipp(seasonId, nickName);
+    }
+
+    /**
      * The next tipp ahead of <code>roundId</code>
-     * 
+     *
      * @param roundId
      *            Round ID
      * @param nickName
@@ -162,7 +183,7 @@ public class BetofficeSeasonServlet {
      *            Servlet Response
      * @return The next tipp ahead of <code>roundId</code>
      */
-    @RequestMapping(value = "/season/tipp/{roundId}/{nickName}/next", method = RequestMethod.GET)
+    @RequestMapping(value = "/tipp/{roundId}/{nickName}/next", method = RequestMethod.GET)
     public @ResponseBody RoundJson findNextTipp(
             @PathVariable("roundId") Long roundId,
             @PathVariable("nickName") String nickName,
@@ -174,7 +195,7 @@ public class BetofficeSeasonServlet {
 
     /**
      * The previous tipp behind of <code>roundId</code>
-     * 
+     *
      * @param roundId
      *            Round ID
      * @param nickName
@@ -183,7 +204,7 @@ public class BetofficeSeasonServlet {
      *            Servlet Response
      * @return The previous tipp behind of <code>roundId</code>
      */
-    @RequestMapping(value = "/season/tipp/{roundId}/{nickName}/prev", method = RequestMethod.GET)
+    @RequestMapping(value = "/tipp/{roundId}/{nickName}/prev", method = RequestMethod.GET)
     public @ResponseBody RoundJson findPrevTipp(
             @PathVariable("roundId") Long roundId,
             @PathVariable("nickName") String nickName,
@@ -191,26 +212,6 @@ public class BetofficeSeasonServlet {
 
         ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findPrevTipp(roundId, nickName);
-    }
-
-    /**
-     * The current round to tipp
-     * 
-     * @param seasonId
-     *            Season ID
-     * @param request
-     *            Servlet request
-     * @param response
-     *            Servlet response
-     * @return The current tipp
-     */
-    @RequestMapping(value = "/season/tipp/{roundId}/{nickname}/current", method = RequestMethod.GET)
-    public @ResponseBody RoundJson findCurrentTipp(
-            @PathVariable("seasonId") Long seasonId,
-            HttpServletRequest request, HttpServletResponse response) {
-
-        ResponseHeaderSetup.setup(response);
-        return betofficeBasicJsonService.findTippRound(seasonId);
     }
 
     @RequestMapping(value = "/team/all", method = RequestMethod.GET)
