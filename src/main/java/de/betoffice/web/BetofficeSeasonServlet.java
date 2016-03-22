@@ -256,13 +256,13 @@ public class BetofficeSeasonServlet {
     }
 
     @RequestMapping(value = "/tipp/submit", method = RequestMethod.POST, headers = { "Content-type=application/json" })
-    public @ResponseBody String tippSubmit(
+    public @ResponseBody RoundJson submitTipp(
             @RequestBody TippRoundJson tippRoundJson, HttpServletRequest request,
             HttpServletResponse response) {
 
-        System.out.println(tippRoundJson);
+        ResponseHeaderSetup.setup(response);
 
-        return "";
+        return betofficeBasicJsonService.submitTipp(tippRoundJson);
     }
 
 }
