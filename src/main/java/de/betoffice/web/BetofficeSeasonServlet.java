@@ -42,6 +42,7 @@ import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SecurityTokenJson;
 import de.betoffice.web.json.TeamJson;
+import de.betoffice.web.json.TippRoundJson;
 import de.winkler.betoffice.service.SecurityToken;
 
 /**
@@ -255,13 +256,13 @@ public class BetofficeSeasonServlet {
     }
 
     @RequestMapping(value = "/tipp/submit", method = RequestMethod.POST, headers = { "Content-type=application/json" })
-    public @ResponseBody String tippSubmit(
-            @RequestBody TippFormData tippFormData, HttpServletRequest request,
+    public @ResponseBody RoundJson submitTipp(
+            @RequestBody TippRoundJson tippRoundJson, HttpServletRequest request,
             HttpServletResponse response) {
 
-        System.out.println(tippFormData);
+        ResponseHeaderSetup.setup(response);
 
-        return "";
+        return betofficeBasicJsonService.submitTipp(tippRoundJson);
     }
 
 }
