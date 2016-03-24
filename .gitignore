@@ -10,3 +10,7 @@ tmp
 eclipse-target
 pirates
 *.iml
+.classpath
+.project
+.settings
+
