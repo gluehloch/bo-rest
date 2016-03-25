@@ -106,6 +106,10 @@ public class BetofficeSeasonServlet {
         return betofficeBasicJsonService.findTippRound(seasonId);
     }
 
+    //
+    // round
+    //
+
     @RequestMapping(value = "/season/round/{roundId}", method = RequestMethod.GET)
     public @ResponseBody RoundJson findRound(
             @PathVariable("roundId") Long roundId, HttpServletResponse response) {
@@ -125,6 +129,35 @@ public class BetofficeSeasonServlet {
 
     @RequestMapping(value = "/season/round/{roundId}/prev", method = RequestMethod.GET)
     public @ResponseBody RoundJson findPrevRound(
+            @PathVariable("roundId") Long roundId, HttpServletResponse response) {
+
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.findPrevRound(roundId);
+    }
+
+    //
+    // round and table
+    //
+
+    @RequestMapping(value = "/season/roundtable/{roundId}", method = RequestMethod.GET)
+    public @ResponseBody RoundJson findRoundTable(
+            @PathVariable("roundId") Long roundId, HttpServletResponse response) {
+
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.findRound(roundId);
+    }
+
+    @RequestMapping(value = "/season/roundtable/{roundId}/next", method = RequestMethod.GET)
+    public @ResponseBody RoundJson findNextRoundTable(
+            @PathVariable("roundId") Long roundId, HttpServletRequest request,
+            HttpServletResponse response) {
+
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.findNextRound(roundId);
+    }
+
+    @RequestMapping(value = "/season/roundtable/{roundId}/prev", method = RequestMethod.GET)
+    public @ResponseBody RoundJson findPrevRoundTable(
             @PathVariable("roundId") Long roundId, HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
