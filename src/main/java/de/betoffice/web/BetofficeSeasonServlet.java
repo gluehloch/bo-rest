@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.betoffice.web.http.ResponseHeaderSetup;
+import de.betoffice.web.json.RoundAndTableJson;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SecurityTokenJson;
@@ -140,28 +141,28 @@ public class BetofficeSeasonServlet {
     //
 
     @RequestMapping(value = "/season/roundtable/{roundId}", method = RequestMethod.GET)
-    public @ResponseBody RoundJson findRoundTable(
+    public @ResponseBody RoundAndTableJson findRoundTable(
             @PathVariable("roundId") Long roundId, HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
-        return betofficeBasicJsonService.findRound(roundId);
+        return betofficeBasicJsonService.findRoundTable(roundId);
     }
 
     @RequestMapping(value = "/season/roundtable/{roundId}/next", method = RequestMethod.GET)
-    public @ResponseBody RoundJson findNextRoundTable(
+    public @ResponseBody RoundAndTableJson findNextRoundTable(
             @PathVariable("roundId") Long roundId, HttpServletRequest request,
             HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
-        return betofficeBasicJsonService.findNextRound(roundId);
+        return betofficeBasicJsonService.findNextRoundTable(roundId);
     }
 
     @RequestMapping(value = "/season/roundtable/{roundId}/prev", method = RequestMethod.GET)
-    public @ResponseBody RoundJson findPrevRoundTable(
+    public @ResponseBody RoundAndTableJson findPrevRoundTable(
             @PathVariable("roundId") Long roundId, HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
-        return betofficeBasicJsonService.findPrevRound(roundId);
+        return betofficeBasicJsonService.findPrevRoundTable(roundId);
     }
 
     /**
