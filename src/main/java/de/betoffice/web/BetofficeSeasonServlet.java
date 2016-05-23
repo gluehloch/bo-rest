@@ -5,17 +5,17 @@
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
  * MODIFICATION
- *
+ * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
  * version.
- *
+ * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
- *
+ * 
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
  * Place, Suite 330, Boston, MA 02111-1307 USA
@@ -54,235 +54,270 @@ import de.winkler.betoffice.service.SecurityToken;
 @RequestMapping("/office")
 public class BetofficeSeasonServlet {
 
-	// ------------------------------------------------------------------------
-	// The beans
-	// ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    // The beans
+    // ------------------------------------------------------------------------
 
-	// -- betofficeBasicJsonService -------------------------------------------
+    // -- betofficeBasicJsonService -------------------------------------------
 
-	private BetofficeBasicJsonService betofficeBasicJsonService;
+    private BetofficeBasicJsonService betofficeBasicJsonService;
 
-	@Autowired
-	public void setBetofficeBasicJsonService(BetofficeBasicJsonService _betofficeBasicJsonService) {
+    @Autowired
+    public void setBetofficeBasicJsonService(
+            BetofficeBasicJsonService _betofficeBasicJsonService) {
 
-		betofficeBasicJsonService = _betofficeBasicJsonService;
-	}
+        betofficeBasicJsonService = _betofficeBasicJsonService;
+    }
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
 
-	@RequestMapping(value = "/season/all", method = RequestMethod.GET)
-	public @ResponseBody List<SeasonJson> findAllSeason(HttpServletResponse response) {
-		ResponseHeaderSetup.setup(response);
-		return betofficeBasicJsonService.findAllSeason();
-	}
+    @RequestMapping(value = "/season/all", method = RequestMethod.GET)
+    public @ResponseBody List<SeasonJson> findAllSeason(
+            HttpServletResponse response) {
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.findAllSeason();
+    }
 
-	@RequestMapping(value = "/season/{seasonId}", method = RequestMethod.GET)
-	public @ResponseBody SeasonJson findSeasonById(@PathVariable("seasonId") Long seasonId,
-			HttpServletResponse response) {
+    @RequestMapping(value = "/season/{seasonId}", method = RequestMethod.GET)
+    public @ResponseBody SeasonJson findSeasonById(
+            @PathVariable("seasonId") Long seasonId,
+            HttpServletResponse response) {
 
-		ResponseHeaderSetup.setup(response);
-		return betofficeBasicJsonService.findSeasonById(seasonId);
-	}
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.findSeasonById(seasonId);
+    }
 
-	@RequestMapping(value = "/season/{seasonId}/group/all", method = RequestMethod.GET)
-	public @ResponseBody List<GroupTypeJson> findGroupTypes(@PathVariable("seasonId") Long seasonId,
-			HttpServletResponse response) {
+    @RequestMapping(value = "/season/{seasonId}/group/all", method = RequestMethod.GET)
+    public @ResponseBody List<GroupTypeJson> findGroupTypes(
+            @PathVariable("seasonId") Long seasonId,
+            HttpServletResponse response) {
 
-		ResponseHeaderSetup.setup(response);
-		return betofficeBasicJsonService.findAllGroups(seasonId);
-	}
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.findAllGroups(seasonId);
+    }
 
-	/**
-	 * Return the current (next to play and/or to tipp) round of a season.
-	 *
-	 * @param seasonId
-	 *            Season ID
-	 * @param request
-	 *            servlet request
-	 * @param response
-	 *            servlet response
-	 * @return The current round of a season
-	 */
-	@RequestMapping(value = "/season/{seasonId}/current", method = RequestMethod.GET)
-	public @ResponseBody RoundJson findNextTipp(@PathVariable("seasonId") Long seasonId, HttpServletRequest request,
-			HttpServletResponse response) {
+    @RequestMapping(value = "/season/{seasonId}/group/{groupTypeId}/round/all", method = RequestMethod.GET)
+    public @ResponseBody List<RoundJson> findAllRounds(
+            @PathVariable("seasonId") Long seasonId,
+            @PathVariable("groupTypeId") Long groupTypeId,
+            HttpServletResponse response) {
 
-		ResponseHeaderSetup.setup(response);
-		return betofficeBasicJsonService.findTippRound(seasonId);
-	}
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.findAllRounds(seasonId, groupTypeId);
+    }
 
-	//
-	// round
-	//
+    /**
+     * Return the current (next to play and/or to tipp) round of a season.
+     *
+     * @param seasonId
+     *            Season ID
+     * @param request
+     *            servlet request
+     * @param response
+     *            servlet response
+     * @return The current round of a season
+     */
+    @RequestMapping(value = "/season/{seasonId}/current", method = RequestMethod.GET)
+    public @ResponseBody RoundJson findNextTipp(
+            @PathVariable("seasonId") Long seasonId,
+            HttpServletRequest request, HttpServletResponse response) {
 
-	@RequestMapping(value = "/season/round/{roundId}", method = RequestMethod.GET)
-	public @ResponseBody RoundJson findRound(@PathVariable("roundId") Long roundId, HttpServletResponse response) {
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.findTippRound(seasonId);
+    }
 
-		ResponseHeaderSetup.setup(response);
-		return betofficeBasicJsonService.findRound(roundId);
-	}
+    //
+    // round
+    //
 
-	@RequestMapping(value = "/season/round/{roundId}/next", method = RequestMethod.GET)
-	public @ResponseBody RoundJson findNextRound(@PathVariable("roundId") Long roundId, HttpServletRequest request,
-			HttpServletResponse response) {
+    @RequestMapping(value = "/season/round/{roundId}", method = RequestMethod.GET)
+    public @ResponseBody RoundJson findRound(
+            @PathVariable("roundId") Long roundId, HttpServletResponse response) {
 
-		ResponseHeaderSetup.setup(response);
-		return betofficeBasicJsonService.findNextRound(roundId);
-	}
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.findRound(roundId);
+    }
 
-	@RequestMapping(value = "/season/round/{roundId}/prev", method = RequestMethod.GET)
-	public @ResponseBody RoundJson findPrevRound(@PathVariable("roundId") Long roundId, HttpServletResponse response) {
+    @RequestMapping(value = "/season/round/{roundId}/next", method = RequestMethod.GET)
+    public @ResponseBody RoundJson findNextRound(
+            @PathVariable("roundId") Long roundId, HttpServletRequest request,
+            HttpServletResponse response) {
 
-		ResponseHeaderSetup.setup(response);
-		return betofficeBasicJsonService.findPrevRound(roundId);
-	}
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.findNextRound(roundId);
+    }
 
-	//
-	// round and table
-	//
+    @RequestMapping(value = "/season/round/{roundId}/prev", method = RequestMethod.GET)
+    public @ResponseBody RoundJson findPrevRound(
+            @PathVariable("roundId") Long roundId, HttpServletResponse response) {
 
-	@RequestMapping(value = "/season/roundtable/{roundId}", method = RequestMethod.GET)
-	public @ResponseBody RoundAndTableJson findRoundTable(@PathVariable("roundId") Long roundId,
-			HttpServletResponse response) {
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.findPrevRound(roundId);
+    }
 
-		ResponseHeaderSetup.setup(response);
-		return betofficeBasicJsonService.findRoundTable(roundId);
-	}
+    //
+    // round and table
+    //
 
-	@RequestMapping(value = "/season/roundtable/{roundId}/next", method = RequestMethod.GET)
-	public @ResponseBody RoundAndTableJson findNextRoundTable(@PathVariable("roundId") Long roundId,
-			HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/season/roundtable/{roundId}", method = RequestMethod.GET)
+    public @ResponseBody RoundAndTableJson findRoundTable(
+            @PathVariable("roundId") Long roundId, HttpServletResponse response) {
 
-		ResponseHeaderSetup.setup(response);
-		return betofficeBasicJsonService.findNextRoundTable(roundId);
-	}
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.findRoundTable(roundId);
+    }
 
-	@RequestMapping(value = "/season/roundtable/{roundId}/prev", method = RequestMethod.GET)
-	public @ResponseBody RoundAndTableJson findPrevRoundTable(@PathVariable("roundId") Long roundId,
-			HttpServletResponse response) {
+    @RequestMapping(value = "/season/roundtable/{roundId}/next", method = RequestMethod.GET)
+    public @ResponseBody RoundAndTableJson findNextRoundTable(
+            @PathVariable("roundId") Long roundId, HttpServletRequest request,
+            HttpServletResponse response) {
 
-		ResponseHeaderSetup.setup(response);
-		return betofficeBasicJsonService.findPrevRoundTable(roundId);
-	}
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.findNextRoundTable(roundId);
+    }
 
-	/**
-	 * Returns the tipp of a user for a round.
-	 *
-	 * @param roundId
-	 *            Round ID
-	 * @param nickName
-	 *            nick name
-	 * @param response
-	 *            Servlet response
-	 * @return The tipp of a user for a round
-	 */
-	@RequestMapping(value = "/tipp/{roundId}/{nickName}", method = RequestMethod.GET)
-	public @ResponseBody RoundJson findTipp(@PathVariable("roundId") Long roundId,
-			@PathVariable("nickName") String nickName, HttpServletResponse response) {
+    @RequestMapping(value = "/season/roundtable/{roundId}/prev", method = RequestMethod.GET)
+    public @ResponseBody RoundAndTableJson findPrevRoundTable(
+            @PathVariable("roundId") Long roundId, HttpServletResponse response) {
 
-		ResponseHeaderSetup.setup(response);
-		return betofficeBasicJsonService.findTipp(roundId, nickName);
-	}
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.findPrevRoundTable(roundId);
+    }
 
-	/**
-	 * The current round to tipp
-	 *
-	 * @param seasonId
-	 *            Season ID
-	 * @param request
-	 *            Servlet request
-	 * @param response
-	 *            Servlet response
-	 * @return The current tipp
-	 */
-	@RequestMapping(value = "/tipp/{seasonId}/{nickname}/current", method = RequestMethod.GET)
-	public @ResponseBody RoundJson findCurrentTipp(@PathVariable("seasonId") Long seasonId,
-			@PathVariable("nickname") String nickName, HttpServletRequest request, HttpServletResponse response) {
+    /**
+     * Returns the tipp of a user for a round.
+     *
+     * @param roundId
+     *            Round ID
+     * @param nickName
+     *            nick name
+     * @param response
+     *            Servlet response
+     * @return The tipp of a user for a round
+     */
+    @RequestMapping(value = "/tipp/{roundId}/{nickName}", method = RequestMethod.GET)
+    public @ResponseBody RoundJson findTipp(
+            @PathVariable("roundId") Long roundId,
+            @PathVariable("nickName") String nickName,
+            HttpServletResponse response) {
 
-		ResponseHeaderSetup.setup(response);
-		return betofficeBasicJsonService.findCurrentTipp(seasonId, nickName);
-	}
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.findTipp(roundId, nickName);
+    }
 
-	/**
-	 * The next tipp ahead of <code>roundId</code>
-	 *
-	 * @param roundId
-	 *            Round ID
-	 * @param nickName
-	 *            nick name
-	 * @param response
-	 *            Servlet Response
-	 * @return The next tipp ahead of <code>roundId</code>
-	 */
-	@RequestMapping(value = "/tipp/{roundId}/{nickName}/next", method = RequestMethod.GET)
-	public @ResponseBody RoundJson findNextTipp(@PathVariable("roundId") Long roundId,
-			@PathVariable("nickName") String nickName, HttpServletResponse response) {
+    /**
+     * The current round to tipp
+     *
+     * @param seasonId
+     *            Season ID
+     * @param nickName
+     *            Der Name des Users
+     * @param request
+     *            Servlet request
+     * @param response
+     *            Servlet response
+     * @return The current tipp
+     */
+    @RequestMapping(value = "/tipp/{seasonId}/{nickname}/current", method = RequestMethod.GET)
+    public @ResponseBody RoundJson findCurrentTipp(
+            @PathVariable("seasonId") Long seasonId,
+            @PathVariable("nickname") String nickName,
+            HttpServletRequest request, HttpServletResponse response) {
 
-		ResponseHeaderSetup.setup(response);
-		return betofficeBasicJsonService.findNextTipp(roundId, nickName);
-	}
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.findCurrentTipp(seasonId, nickName);
+    }
 
-	/**
-	 * The previous tipp behind of <code>roundId</code>
-	 *
-	 * @param roundId
-	 *            Round ID
-	 * @param nickName
-	 *            nick name
-	 * @param response
-	 *            Servlet Response
-	 * @return The previous tipp behind of <code>roundId</code>
-	 */
-	@RequestMapping(value = "/tipp/{roundId}/{nickName}/prev", method = RequestMethod.GET)
-	public @ResponseBody RoundJson findPrevTipp(@PathVariable("roundId") Long roundId,
-			@PathVariable("nickName") String nickName, HttpServletResponse response) {
+    /**
+     * The next tipp ahead of <code>roundId</code>
+     *
+     * @param roundId
+     *            Round ID
+     * @param nickName
+     *            nick name
+     * @param response
+     *            Servlet Response
+     * @return The next tipp ahead of <code>roundId</code>
+     */
+    @RequestMapping(value = "/tipp/{roundId}/{nickName}/next", method = RequestMethod.GET)
+    public @ResponseBody RoundJson findNextTipp(
+            @PathVariable("roundId") Long roundId,
+            @PathVariable("nickName") String nickName,
+            HttpServletResponse response) {
 
-		ResponseHeaderSetup.setup(response);
-		return betofficeBasicJsonService.findPrevTipp(roundId, nickName);
-	}
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.findNextTipp(roundId, nickName);
+    }
 
-	@RequestMapping(value = "/team/all", method = RequestMethod.GET)
-	public @ResponseBody List<TeamJson> findAllTeams(HttpServletResponse response) {
+    /**
+     * The previous tipp behind of <code>roundId</code>
+     *
+     * @param roundId
+     *            Round ID
+     * @param nickName
+     *            nick name
+     * @param response
+     *            Servlet Response
+     * @return The previous tipp behind of <code>roundId</code>
+     */
+    @RequestMapping(value = "/tipp/{roundId}/{nickName}/prev", method = RequestMethod.GET)
+    public @ResponseBody RoundJson findPrevTipp(
+            @PathVariable("roundId") Long roundId,
+            @PathVariable("nickName") String nickName,
+            HttpServletResponse response) {
 
-		ResponseHeaderSetup.setup(response);
-		return betofficeBasicJsonService.findAllTeams();
-	}
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.findPrevTipp(roundId, nickName);
+    }
 
-	@RequestMapping(value = "/login", method = RequestMethod.POST, headers = { "Content-type=application/json" })
-	public @ResponseBody SecurityTokenJson login(@RequestBody AuthenticationForm authenticationForm,
-			HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/team/all", method = RequestMethod.GET)
+    public @ResponseBody List<TeamJson> findAllTeams(
+            HttpServletResponse response) {
 
-		ResponseHeaderSetup.setup(response);
-		String userAgent = request.getHeader("User-Agent");
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.findAllTeams();
+    }
 
-		SecurityTokenJson securityToken = betofficeBasicJsonService.login(authenticationForm.getNickname(),
-				authenticationForm.getPassword(), request.getSession().getId(), request.getRemoteAddr(), userAgent);
+    @RequestMapping(value = "/login", method = RequestMethod.POST, headers = { "Content-type=application/json" })
+    public @ResponseBody SecurityTokenJson login(
+            @RequestBody AuthenticationForm authenticationForm,
+            HttpServletRequest request, HttpServletResponse response) {
 
-		HttpSession session = request.getSession();
-		session.setAttribute(SecurityToken.class.getName(), securityToken);
+        ResponseHeaderSetup.setup(response);
+        String userAgent = request.getHeader("User-Agent");
 
-		return securityToken;
-	}
+        SecurityTokenJson securityToken = betofficeBasicJsonService.login(
+                authenticationForm.getNickname(),
+                authenticationForm.getPassword(), request.getSession().getId(),
+                request.getRemoteAddr(), userAgent);
 
-	@RequestMapping(value = "/logout", method = RequestMethod.POST, headers = { "Content-type=application/json" })
-	public void logout(@RequestBody LogoutFormData logoutFormData, HttpServletRequest request,
-			HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        session.setAttribute(SecurityToken.class.getName(), securityToken);
 
-		ResponseHeaderSetup.setup(response);
+        return securityToken;
+    }
 
-		betofficeBasicJsonService.logout(logoutFormData.getNickname(), logoutFormData.getToken());
+    @RequestMapping(value = "/logout", method = RequestMethod.POST, headers = { "Content-type=application/json" })
+    public void logout(@RequestBody LogoutFormData logoutFormData,
+            HttpServletRequest request, HttpServletResponse response) {
 
-		HttpSession session = request.getSession();
-		session.removeAttribute(SecurityToken.class.getName());
-	}
+        ResponseHeaderSetup.setup(response);
 
-	@RequestMapping(value = "/tipp/submit", method = RequestMethod.POST, headers = { "Content-type=application/json" })
-	public @ResponseBody RoundJson submitTipp(@RequestBody TippRoundJson tippRoundJson, HttpServletRequest request,
-			HttpServletResponse response) {
+        betofficeBasicJsonService.logout(logoutFormData.getNickname(),
+                logoutFormData.getToken());
 
-		ResponseHeaderSetup.setup(response);
+        HttpSession session = request.getSession();
+        session.removeAttribute(SecurityToken.class.getName());
+    }
 
-		return betofficeBasicJsonService.submitTipp(tippRoundJson);
-	}
+    @RequestMapping(value = "/tipp/submit", method = RequestMethod.POST, headers = { "Content-type=application/json" })
+    public @ResponseBody RoundJson submitTipp(
+            @RequestBody TippRoundJson tippRoundJson,
+            HttpServletRequest request, HttpServletResponse response) {
+
+        ResponseHeaderSetup.setup(response);
+
+        return betofficeBasicJsonService.submitTipp(tippRoundJson);
+    }
 
 }
