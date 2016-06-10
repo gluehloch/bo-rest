@@ -170,6 +170,7 @@ public class BetofficeSeasonServlet {
         return betofficeBasicJsonService.findRoundTable(roundId, groupTypeId);
     }
 
+    // TODO Implement and use me
     @RequestMapping(value = "/season/roundtable/{roundId}/next", method = RequestMethod.GET)
     public @ResponseBody RoundAndTableJson findNextRoundTable(
             @PathVariable("roundId") Long roundId, HttpServletRequest request,
@@ -179,6 +180,7 @@ public class BetofficeSeasonServlet {
         return betofficeBasicJsonService.findNextRoundTable(roundId);
     }
 
+    // TODO Implement and use me
     @RequestMapping(value = "/season/roundtable/{roundId}/prev", method = RequestMethod.GET)
     public @ResponseBody RoundAndTableJson findPrevRoundTable(
             @PathVariable("roundId") Long roundId, HttpServletResponse response) {
