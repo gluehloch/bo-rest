@@ -192,17 +192,19 @@ public class BetofficeSeasonServlet {
     //
     // user ranking
     //
-    
+
     @RequestMapping(value = "/season/{seasonId}/ranking", method = RequestMethod.GET)
-    public UserTableJson findUserRanking(@PathVariable("seasonId") Long seasonId, HttpServletResponse response) {
+    public @ResponseBody UserTableJson findUserRanking(
+            @PathVariable("seasonId") Long seasonId,
+            HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findUserRanking(seasonId);
     }
 
     @RequestMapping(value = "/season/round/{roundId}/ranking", method = RequestMethod.GET)
-    public UserTableJson findUserTable(@PathVariable("roundId") Long roundId,
-            HttpServletResponse response) {
+    public @ResponseBody UserTableJson findUserTable(
+            @PathVariable("roundId") Long roundId, HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findUserTable(roundId);
