@@ -194,7 +194,7 @@ public class BetofficeSeasonServlet {
     //
 
     @RequestMapping(value = "/ranking/season/{seasonId}", method = RequestMethod.GET)
-    public @ResponseBody UserTableJson findUserRanking(
+    public @ResponseBody UserTableJson findUserTableBySeason(
             @PathVariable("seasonId") Long seasonId,
             HttpServletResponse response) {
 
@@ -203,13 +203,33 @@ public class BetofficeSeasonServlet {
     }
 
     @RequestMapping(value = "/ranking/round/{roundId}/", method = RequestMethod.GET)
-    public @ResponseBody UserTableJson findUserTable(
+    public @ResponseBody UserTableJson findUserTableByRound(
             @PathVariable("roundId") Long roundId, HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.calcUserRankingByRound(roundId);
     }
 
+    @RequestMapping(value = "/ranking/round/{roundId}/next", method = RequestMethod.GET)
+    public @ResponseBody UserTableJson findUserTableByNextRound(
+            @PathVariable("roundId") Long roundId, HttpServletResponse response) {
+
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.calcUserRankingByNextRound(roundId);
+    }
+
+    @RequestMapping(value = "/ranking/round/{roundId}/prev", method = RequestMethod.GET)
+    public @ResponseBody UserTableJson findUserTableByPrevRound(
+            @PathVariable("roundId") Long roundId, HttpServletResponse response) {
+
+        ResponseHeaderSetup.setup(response);
+        return betofficeBasicJsonService.calcUserRankingByPrevRound(roundId);
+    }
+
+    //
+    // tipp
+    //
+    
     /**
      * Returns the tipp of a user for a round.
      *
