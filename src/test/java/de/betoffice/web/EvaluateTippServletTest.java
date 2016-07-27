@@ -1,8 +1,7 @@
 /*
- * $Id: EvaluateTippServletTest.java 3926 2014-03-08 09:58:34Z andrewinkler $
  * ============================================================================
  * Project betoffice-jweb
- * Copyright (c) 2000-2013 by Andre Winkler. All rights reserved.
+ * Copyright (c) 2000-2016 by Andre Winkler. All rights reserved.
  * ============================================================================
  *          GNU GENERAL PUBLIC LICENSE
  *  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
@@ -32,6 +31,7 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.AjaxController;
@@ -48,9 +48,9 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
  * A test class for {@link TippServlet}. This test case needs a running
  * web server!
  * 
- * @author by Andre Winkler, $LastChangedBy: andrewinkler $
- * @version $LastChangedRevision: 3926 $ $LastChangedDate: 2014-03-08 10:58:34 +0100 (Sat, 08 Mar 2014) $
+ * @author by Andre Winkler
  */
+@Ignore
 public class EvaluateTippServletTest {
 
     private static final String BASE_URL = "http://localhost:8080/betoffice-jweb";
