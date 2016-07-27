@@ -7,24 +7,42 @@
   <body>
 
     <!--
-         *** STILL UNDER DEVELOPMENT 0.2.3 (SNAPSHOT) ***
+         *** STILL UNDER DEVELOPMENT 0.4.0 (SNAPSHOT) ***
     -->
 
-    <release version="betoffice-batch-0.3.0" date="2014-10-26"
+    <!-- RELEASED -->
+    <release version="betoffice-jweb-0.4.0" date="2016-07-27"
+      description="More services">
+      <action dev="andrewinkler" type="update" date="2016-07-28">
+        Moved to Tomcat 8, Spring 4, Hibernate 5 and Java 8.
+      </action>
+      <action dev="andrewinkler" type="update" date="2015-07-28">
+        New service to find the next tipp round.
+      </action>
+      <action dev="andrewinkler" type="add" date="2015-06-05">
+        Moved the JSON objects to betoffice-jweb-misc project. This is
+        a sharing project between betoffice-jweb and betoffice-jadmin.
+      </action>
+      <action dev="andrewinkler" type="update" date="2015-06-04">
+        New services to find, select and browse a season.
+      </action>
+    </release>
+
+    <release version="betoffice-jweb-0.3.0" date="2014-10-26"
       description="Dependency update">
       <action dev="andrewinkler" type="update" date="2014-10-26">
         Dependency updates.
       </action>
     </release>
 
-    <release version="betoffice-batch-0.2.3" date="2014-03-09"
+    <release version="betoffice-jweb-0.2.3" date="2014-03-09"
       description="Team history finder">
       <action dev="andrewinkler" type="update" date="2014-03-09">
         Remove 'evaluate-tipp.jsp'. I will use spring auto configuration.
       </action>
     </release>
 
-    <release version="betoffice-batch-0.2.2" date="2014-12-26"
+    <release version="betoffice-jweb-0.2.2" date="2014-12-26"
       description="Fix">
       <action dev="andrewinkler" type="fix" date="2014-12-26">
         Change check for security token.
@@ -34,14 +52,14 @@
       </action>
     </release>
 
-    <release version="betoffice-batch-0.2.1" date="2014-12-20"
+    <release version="betoffice-jweb-0.2.1" date="2014-12-20"
       description="Second">
       <action dev="andrewinkler" type="add" date="2014-12-20?">
         Send special response header to disable caching.
       </action>
     </release>
 
-    <release version="betoffice-batch-0.2.0" date="2013-12-15"
+    <release version="betoffice-jweb-0.2.0" date="2013-12-15"
       description="Second">
       <action dev="andrewinkler" type="add" date="2013-08-25">
         New URLs:
@@ -51,7 +69,7 @@
       </action>
     </release>
 
-    <release version="betoffice-batch-0.1.0" date="2013-07-31"
+    <release version="betoffice-jweb-0.1.0" date="2013-07-31"
       description="First">
       <action dev="andrewinkler" type="add" date="2013-07-31">
         The first release. Read and store tipp data.
@@ -61,8 +79,7 @@
   </body>
   <footer>
     <legal>
-      Copyright (c) @year@ The 'betoffice-storage' Project
-      All rights reserved. $Revision: 3782 $ $Date: 2013-07-27 10:44:32 +0200 (Sat, 27 Jul 2013) $
+      Copyright (c) @year@ The 'betoffice-jweb' project.
     </legal>
   </footer>
 </document>

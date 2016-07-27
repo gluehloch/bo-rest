@@ -1,0 +1,26 @@
+Request Mapping
+
+
+
+(1) /office/login
+(2) /office/logout
+
+(3) /office/season/all
+(4) /office/team/all
+
+(6)  /office/season/{seasonId}                                                                            // Alle Spieltage einer Meisterschaft
+TODO x (7)  /office/season/{seasonId}/tipp/next            => /office/season/{seasonId}/current                  // Der AKTUELLE Spieltag
+
+(8)  /office/season/round/{roundId}
+(9)  /office/season/round/{roundId}/next
+(10) /office/season/round/{roundId}/prev
+
+(5)  /office/tipp/submit
+(11) /office/season/tipp/{roundId}/{nickname}       => /office/tipp/{roundId}/{nickname}
+(11) NEU                                            => /office/tipp/{roundId}/{nickname}/current           // Der aktuell zu tippende Spieltag
+(12) /office/season/tipp/{roundId}/{nickname}/next  => /office/tipp/{roundId}/{nickname}/next
+(13) /office/season/tipp/{roundId}/{nickname}/prev  => /office/tipp/{roundId}/{nickname}/prev
+
+(14) /research/findDfbTeams
+(15) /research/findFifaTeams
+(16) /research/teamvsteam
