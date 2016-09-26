@@ -7,10 +7,11 @@
   <body>
 
     <!--
-         *** STILL UNDER DEVELOPMENT 0.5.0 (SNAPSHOT) ***
+         *** STILL UNDER DEVELOPMENT x.x.x (SNAPSHOT) ***
     -->
+
     <!-- RELEASED -->
-    <release version="betoffice-jweb-0.5.0" date="2016-??-??"
+    <release version="betoffice-jweb-0.5.0" date="2016-09-26"
       description="Date and time validation of the game tipps">
       <action dev="andrewinkler" type="update" date="2016-09-10">
         Update dependencies.
