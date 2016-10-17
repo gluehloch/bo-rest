@@ -24,22 +24,5 @@
   <p>
     ÄÖÜ äöü ß
   </p>
-  <p>
-    <form action="/betoffice-jweb/bo/tipp/auth" method="post">
-      <table>
-        <tr>
-          <td>Name:</td>
-          <td><input type="text" id="nickname" name="nickname" size="15"/></td>
-        </tr>
-        <tr>
-          <td>Password:</td>
-          <td><input type="text" id="password" name="password" size="15"/></td>
-        </tr>
-        <tr>
-          <td><input type="submit">Submit</td>
-        </tr>
-      </table>
-    </form>
-  </p>
 </body>
 </html>
