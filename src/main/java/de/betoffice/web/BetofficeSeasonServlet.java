@@ -70,7 +70,17 @@ public class BetofficeSeasonServlet {
         betofficeBasicJsonService = _betofficeBasicJsonService;
     }
 
-    // -----------------------------------------------------------------------
+    // -- betofficeAdminJsonService -------------------------------------------
+
+    private BetofficeAdminJsonService betofficeAdminJsonService;
+
+    public void setBetofficeAdminJsonService(
+            BetofficeAdminJsonService _betofficeAdminJsonService) {
+
+        betofficeAdminJsonService = _betofficeAdminJsonService;
+    }
+
+    // ------------------------------------------------------------------------
 
     @RequestMapping(value = "/season/all", method = RequestMethod.GET)
     public @ResponseBody List<SeasonJson> findAllSeason(
@@ -120,8 +130,8 @@ public class BetofficeSeasonServlet {
      */
     @RequestMapping(value = "/season/{seasonId}/current", method = RequestMethod.GET)
     public @ResponseBody RoundJson findNextTipp(
-            @PathVariable("seasonId") Long seasonId,
-            HttpServletRequest request, HttpServletResponse response) {
+            @PathVariable("seasonId") Long seasonId, HttpServletRequest request,
+            HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findTippRound(seasonId);
@@ -133,7 +143,8 @@ public class BetofficeSeasonServlet {
 
     @RequestMapping(value = "/season/round/{roundId}", method = RequestMethod.GET)
     public @ResponseBody RoundJson findRound(
-            @PathVariable("roundId") Long roundId, HttpServletResponse response) {
+            @PathVariable("roundId") Long roundId,
+            HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findRound(roundId);
@@ -150,7 +161,8 @@ public class BetofficeSeasonServlet {
 
     @RequestMapping(value = "/season/round/{roundId}/prev", method = RequestMethod.GET)
     public @ResponseBody RoundJson findPrevRound(
-            @PathVariable("roundId") Long roundId, HttpServletResponse response) {
+            @PathVariable("roundId") Long roundId,
+            HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findPrevRound(roundId);
@@ -183,7 +195,8 @@ public class BetofficeSeasonServlet {
     // TODO Implement and use me
     @RequestMapping(value = "/season/roundtable/{roundId}/prev", method = RequestMethod.GET)
     public @ResponseBody RoundAndTableJson findPrevRoundTable(
-            @PathVariable("roundId") Long roundId, HttpServletResponse response) {
+            @PathVariable("roundId") Long roundId,
+            HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findPrevRoundTable(roundId);
@@ -204,7 +217,8 @@ public class BetofficeSeasonServlet {
 
     @RequestMapping(value = "/ranking/round/{roundId}/", method = RequestMethod.GET)
     public @ResponseBody UserTableJson findUserTableByRound(
-            @PathVariable("roundId") Long roundId, HttpServletResponse response) {
+            @PathVariable("roundId") Long roundId,
+            HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.calcUserRankingByRound(roundId);
@@ -212,7 +226,8 @@ public class BetofficeSeasonServlet {
 
     @RequestMapping(value = "/ranking/round/{roundId}/next", method = RequestMethod.GET)
     public @ResponseBody UserTableJson findUserTableByNextRound(
-            @PathVariable("roundId") Long roundId, HttpServletResponse response) {
+            @PathVariable("roundId") Long roundId,
+            HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.calcUserRankingByNextRound(roundId);
@@ -220,7 +235,8 @@ public class BetofficeSeasonServlet {
 
     @RequestMapping(value = "/ranking/round/{roundId}/prev", method = RequestMethod.GET)
     public @ResponseBody UserTableJson findUserTableByPrevRound(
-            @PathVariable("roundId") Long roundId, HttpServletResponse response) {
+            @PathVariable("roundId") Long roundId,
+            HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.calcUserRankingByPrevRound(roundId);
@@ -229,7 +245,7 @@ public class BetofficeSeasonServlet {
     //
     // tipp
     //
-    
+
     /**
      * Returns the tipp of a user for a round.
      *
@@ -324,7 +340,8 @@ public class BetofficeSeasonServlet {
         return betofficeBasicJsonService.findAllTeams();
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST, headers = { "Content-type=application/json" })
+    @RequestMapping(value = "/login", method = RequestMethod.POST, headers = {
+            "Content-type=application/json" })
     public @ResponseBody SecurityTokenJson login(
             @RequestBody AuthenticationForm authenticationForm,
             HttpServletRequest request, HttpServletResponse response) {
@@ -343,7 +360,8 @@ public class BetofficeSeasonServlet {
         return securityToken;
     }
 
-    @RequestMapping(value = "/logout", method = RequestMethod.POST, headers = { "Content-type=application/json" })
+    @RequestMapping(value = "/logout", method = RequestMethod.POST, headers = {
+            "Content-type=application/json" })
     public void logout(@RequestBody LogoutFormData logoutFormData,
             HttpServletRequest request, HttpServletResponse response) {
 
@@ -356,7 +374,8 @@ public class BetofficeSeasonServlet {
         session.removeAttribute(SecurityToken.class.getName());
     }
 
-    @RequestMapping(value = "/tipp/submit", method = RequestMethod.POST, headers = { "Content-type=application/json" })
+    @RequestMapping(value = "/tipp/submit", method = RequestMethod.POST, headers = {
+            "Content-type=application/json" })
     public @ResponseBody RoundJson submitTipp(
             @RequestBody TippRoundJson tippRoundJson,
             HttpServletRequest request, HttpServletResponse response) {
