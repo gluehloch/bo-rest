@@ -23,37 +23,19 @@
 
 package de.betoffice.web;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.betoffice.service.OpenligadbUpdateService;
-import de.betoffice.web.BetofficeBasicJsonService;
-import de.betoffice.web.admin.json.CreateSeasonJson;
-import de.betoffice.web.admin.json.UpdateRoundJson;
 import de.betoffice.web.http.ResponseHeaderSetup;
-import de.betoffice.web.json.JsonBuilder;
 import de.betoffice.web.json.RoundJson;
-import de.betoffice.web.json.SeasonJson;
-import de.betoffice.web.json.ServiceResponseMessage;
-import de.betoffice.web.json.ServiceResponseMessage.Status;
-import de.betoffice.web.json.TeamJson;
 import de.winkler.betoffice.service.MasterDataManagerService;
 import de.winkler.betoffice.service.SeasonManagerService;
-import de.winkler.betoffice.storage.GameList;
-import de.winkler.betoffice.storage.Season;
-import de.winkler.betoffice.storage.enums.SeasonType;
-import de.winkler.betoffice.storage.enums.TeamType;
-import de.winkler.betoffice.validation.BetofficeValidationException;
 
 /**
  * Controller for the admin view.
@@ -83,7 +65,7 @@ public class BetofficeAdminServlet {
     // The beans
     // ------------------------------------------------------------------------
 
-    // -- dfbDownloadService --------------------------------------------------
+    // -- openligadbService ---------------------------------------------------
 
     private OpenligadbUpdateService openligadbUpdateService;
 
