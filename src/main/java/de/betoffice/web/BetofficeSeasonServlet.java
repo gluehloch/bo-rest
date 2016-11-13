@@ -182,6 +182,20 @@ public class BetofficeSeasonServlet {
         return betofficeBasicJsonService.findRoundTable(roundId, groupTypeId);
     }
 
+    @RequestMapping(value = "/season/roundtable/{roundId}/group/{groupTypeId}/update", method = RequestMethod.POST, headers = {
+            "Content-type=application/json" })
+    public @ResponseBody RoundAndTableJson updateRoundTable(
+            @PathVariable("roundId") Long roundId,
+            @PathVariable("groupTypeId") Long groupTypeId,
+            HttpServletRequest request, HttpServletResponse response) {
+
+        ResponseHeaderSetup.setup(response);
+        RoundJson roundJson = betofficeAdminJsonService
+                .reconcileRoundWithOpenligadb(roundId);
+
+        return betofficeBasicJsonService.findRoundTable(roundId, groupTypeId);
+    }
+
     // TODO Implement and use me
     @RequestMapping(value = "/season/roundtable/{roundId}/next", method = RequestMethod.GET)
     public @ResponseBody RoundAndTableJson findNextRoundTable(
