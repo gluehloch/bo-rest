@@ -45,6 +45,7 @@ import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SecurityTokenJson;
 import de.betoffice.web.json.TeamJson;
 import de.betoffice.web.json.TippRoundJson;
+import de.betoffice.web.json.TokenJson;
 import de.betoffice.web.json.UserTableJson;
 import de.winkler.betoffice.service.SecurityToken;
 
@@ -187,11 +188,14 @@ public class BetofficeSeasonServlet {
     public @ResponseBody RoundAndTableJson updateRoundTable(
             @PathVariable("roundId") Long roundId,
             @PathVariable("groupTypeId") Long groupTypeId,
+            @RequestBody TokenJson token,
             HttpServletRequest request, HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
         RoundJson roundJson = betofficeAdminJsonService
                 .reconcileRoundWithOpenligadb(roundId);
+
+        betofficeBasicJsonService.
 
         return betofficeBasicJsonService.findRoundTable(roundId, groupTypeId);
     }
