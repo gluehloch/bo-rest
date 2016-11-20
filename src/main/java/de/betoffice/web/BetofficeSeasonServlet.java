@@ -75,6 +75,7 @@ public class BetofficeSeasonServlet {
 
     private BetofficeAdminJsonService betofficeAdminJsonService;
 
+    @Autowired
     public void setBetofficeAdminJsonService(
             BetofficeAdminJsonService _betofficeAdminJsonService) {
 
@@ -169,6 +170,34 @@ public class BetofficeSeasonServlet {
         return betofficeBasicJsonService.findPrevRound(roundId);
     }
 
+    @RequestMapping(value = "/season/round/{roundId}/update", method = RequestMethod.POST, headers = {
+            "Content-type=application/json" })
+    public @ResponseBody RoundJson updateRound(
+            @PathVariable("roundId") Long roundId, @RequestBody TokenJson token,
+            HttpServletRequest request, HttpServletResponse response) {
+
+        ResponseHeaderSetup.setup(response);
+
+        String userAgent = request.getHeader("User-Agent");
+
+        // SecurityTokenJson securityToken = betofficeBasicJsonService.login(
+        // authenticationForm.getNickname(),
+        // authenticationForm.getPassword(), request.getSession().getId(),
+        // request.getRemoteAddr(), userAgent);
+
+        HttpSession session = request.getSession();
+        if (session == null) {
+            return null;
+        }
+
+        Object attribute = session.getAttribute(SecurityToken.class.getName());
+
+        RoundJson roundJson = betofficeAdminJsonService
+                .reconcileRoundWithOpenligadb(roundId);
+
+        return betofficeBasicJsonService.findRound(roundId);
+    }
+
     //
     // round and table
     //
@@ -180,23 +209,6 @@ public class BetofficeSeasonServlet {
             HttpServletResponse response) {
 
         ResponseHeaderSetup.setup(response);
-        return betofficeBasicJsonService.findRoundTable(roundId, groupTypeId);
-    }
-
-    @RequestMapping(value = "/season/roundtable/{roundId}/group/{groupTypeId}/update", method = RequestMethod.POST, headers = {
-            "Content-type=application/json" })
-    public @ResponseBody RoundAndTableJson updateRoundTable(
-            @PathVariable("roundId") Long roundId,
-            @PathVariable("groupTypeId") Long groupTypeId,
-            @RequestBody TokenJson token,
-            HttpServletRequest request, HttpServletResponse response) {
-
-        ResponseHeaderSetup.setup(response);
-        RoundJson roundJson = betofficeAdminJsonService
-                .reconcileRoundWithOpenligadb(roundId);
-
-        betofficeBasicJsonService.
-
         return betofficeBasicJsonService.findRoundTable(roundId, groupTypeId);
     }
 
