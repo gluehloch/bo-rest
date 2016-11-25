@@ -195,7 +195,7 @@ public class BetofficeSeasonServlet {
         RoundJson roundJson = betofficeAdminJsonService
                 .reconcileRoundWithOpenligadb(roundId);
 
-        return betofficeBasicJsonService.findRound(roundId);
+        return roundJson;
     }
 
     //
