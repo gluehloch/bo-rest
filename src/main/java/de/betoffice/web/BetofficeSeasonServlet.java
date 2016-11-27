@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Role;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -193,7 +194,35 @@ public class BetofficeSeasonServlet {
         Object attribute = session.getAttribute(SecurityToken.class.getName());
 
         RoundJson roundJson = betofficeAdminJsonService
-                .reconcileRoundWithOpenligadb(roundId);
+                .reconcileRoundWithOpenligadb(token.getToken(), roundId);
+
+        return roundJson;
+    }
+
+    @RequestMapping(value = "/season/round/{roundId}/create", method = RequestMethod.POST, headers = {
+            "Content-type=application/json" })
+    public @ResponseBody RoundJson createOrUpdateRound(
+            @PathVariable("roundId") Long roundId, @RequestBody TokenJson token,
+            HttpServletRequest request, HttpServletResponse response) {
+
+        ResponseHeaderSetup.setup(response);
+
+        String userAgent = request.getHeader("User-Agent");
+
+        // SecurityTokenJson securityToken = betofficeBasicJsonService.login(
+        // authenticationForm.getNickname(),
+        // authenticationForm.getPassword(), request.getSession().getId(),
+        // request.getRemoteAddr(), userAgent);
+
+        HttpSession session = request.getSession();
+        if (session == null) {
+            return null;
+        }
+
+        Object attribute = session.getAttribute(SecurityToken.class.getName());
+
+        RoundJson roundJson = betofficeAdminJsonService
+                .mountRoundWithOpenligadb(token.getToken(), roundId);
 
         return roundJson;
     }
