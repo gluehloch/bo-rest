@@ -11,7 +11,9 @@
     -->
 
     <!-- UNDER DEVELOPMENT -->
-    <release version="betoffice-jweb-0.6.0" date="2016-09-26"
+    
+    <!-- RELEASED -->
+    <release version="betoffice-jweb-0.6.0" date="2016-12-03"
       description="Role based authorization">
       <action dev="andrewinkler" type="add" date="2016-10-04">
         Role based authorization. Added openligadb dependency and Spring
