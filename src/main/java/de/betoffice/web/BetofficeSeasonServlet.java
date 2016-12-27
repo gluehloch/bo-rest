@@ -30,15 +30,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Role;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import de.betoffice.web.http.ResponseHeaderSetup;
 import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.RoundAndTableJson;
 import de.betoffice.web.json.RoundJson;
@@ -53,7 +51,7 @@ import de.winkler.betoffice.service.SecurityToken;
 /**
  * Controller
  */
-@Controller
+@RestController
 @RequestMapping("/office")
 public class BetofficeSeasonServlet {
 
@@ -85,38 +83,37 @@ public class BetofficeSeasonServlet {
 
     // ------------------------------------------------------------------------
 
+    @CrossOrigin
     @RequestMapping(value = "/season/all", method = RequestMethod.GET)
-    public @ResponseBody List<SeasonJson> findAllSeason(
-            HttpServletResponse response) {
-        ResponseHeaderSetup.setup(response);
+    public List<SeasonJson> findAllSeason(HttpServletResponse response) {
+
         return betofficeBasicJsonService.findAllSeason();
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/season/{seasonId}", method = RequestMethod.GET)
-    public @ResponseBody SeasonJson findSeasonById(
-            @PathVariable("seasonId") Long seasonId,
+    public SeasonJson findSeasonById(@PathVariable("seasonId") Long seasonId,
             HttpServletResponse response) {
 
-        ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findSeasonById(seasonId);
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/season/{seasonId}/group/all", method = RequestMethod.GET)
-    public @ResponseBody List<GroupTypeJson> findGroupTypes(
+    public List<GroupTypeJson> findGroupTypes(
             @PathVariable("seasonId") Long seasonId,
             HttpServletResponse response) {
 
-        ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findAllGroups(seasonId);
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/season/{seasonId}/group/{groupTypeId}/round/all", method = RequestMethod.GET)
-    public @ResponseBody List<RoundJson> findAllRounds(
+    public List<RoundJson> findAllRounds(
             @PathVariable("seasonId") Long seasonId,
             @PathVariable("groupTypeId") Long groupTypeId,
             HttpServletResponse response) {
 
-        ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findAllRounds(seasonId, groupTypeId);
     }
 
@@ -131,12 +128,11 @@ public class BetofficeSeasonServlet {
      *            servlet response
      * @return The current round of a season
      */
+    @CrossOrigin
     @RequestMapping(value = "/season/{seasonId}/current", method = RequestMethod.GET)
-    public @ResponseBody RoundJson findNextTipp(
-            @PathVariable("seasonId") Long seasonId, HttpServletRequest request,
-            HttpServletResponse response) {
+    public RoundJson findNextTipp(@PathVariable("seasonId") Long seasonId,
+            HttpServletRequest request, HttpServletResponse response) {
 
-        ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findTippRound(seasonId);
     }
 
@@ -144,40 +140,36 @@ public class BetofficeSeasonServlet {
     // round
     //
 
+    @CrossOrigin
     @RequestMapping(value = "/season/round/{roundId}", method = RequestMethod.GET)
-    public @ResponseBody RoundJson findRound(
-            @PathVariable("roundId") Long roundId,
+    public RoundJson findRound(@PathVariable("roundId") Long roundId,
             HttpServletResponse response) {
 
-        ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findRound(roundId);
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/season/round/{roundId}/next", method = RequestMethod.GET)
-    public @ResponseBody RoundJson findNextRound(
-            @PathVariable("roundId") Long roundId, HttpServletRequest request,
-            HttpServletResponse response) {
+    public RoundJson findNextRound(@PathVariable("roundId") Long roundId,
+            HttpServletRequest request, HttpServletResponse response) {
 
-        ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findNextRound(roundId);
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/season/round/{roundId}/prev", method = RequestMethod.GET)
-    public @ResponseBody RoundJson findPrevRound(
-            @PathVariable("roundId") Long roundId,
+    public RoundJson findPrevRound(@PathVariable("roundId") Long roundId,
             HttpServletResponse response) {
 
-        ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findPrevRound(roundId);
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/season/round/{roundId}/update", method = RequestMethod.POST, headers = {
             "Content-type=application/json" })
-    public @ResponseBody RoundJson updateRound(
-            @PathVariable("roundId") Long roundId, @RequestBody TokenJson token,
-            HttpServletRequest request, HttpServletResponse response) {
-
-        ResponseHeaderSetup.setup(response);
+    public RoundJson updateRound(@PathVariable("roundId") Long roundId,
+            @RequestBody TokenJson token, HttpServletRequest request,
+            HttpServletResponse response) {
 
         String userAgent = request.getHeader("User-Agent");
 
@@ -199,13 +191,12 @@ public class BetofficeSeasonServlet {
         return roundJson;
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/season/round/{roundId}/create", method = RequestMethod.POST, headers = {
             "Content-type=application/json" })
-    public @ResponseBody RoundJson createOrUpdateRound(
-            @PathVariable("roundId") Long roundId, @RequestBody TokenJson token,
-            HttpServletRequest request, HttpServletResponse response) {
-
-        ResponseHeaderSetup.setup(response);
+    public RoundJson createOrUpdateRound(@PathVariable("roundId") Long roundId,
+            @RequestBody TokenJson token, HttpServletRequest request,
+            HttpServletResponse response) {
 
         String userAgent = request.getHeader("User-Agent");
 
@@ -231,33 +222,33 @@ public class BetofficeSeasonServlet {
     // round and table
     //
 
+    @CrossOrigin
     @RequestMapping(value = "/season/roundtable/{roundId}/group/{groupTypeId}", method = RequestMethod.GET)
-    public @ResponseBody RoundAndTableJson findRoundTable(
+    public RoundAndTableJson findRoundTable(
             @PathVariable("roundId") Long roundId,
             @PathVariable("groupTypeId") Long groupTypeId,
             HttpServletResponse response) {
 
-        ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findRoundTable(roundId, groupTypeId);
     }
 
     // TODO Implement and use me
+    @CrossOrigin
     @RequestMapping(value = "/season/roundtable/{roundId}/next", method = RequestMethod.GET)
-    public @ResponseBody RoundAndTableJson findNextRoundTable(
+    public RoundAndTableJson findNextRoundTable(
             @PathVariable("roundId") Long roundId, HttpServletRequest request,
             HttpServletResponse response) {
 
-        ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findNextRoundTable(roundId);
     }
 
     // TODO Implement and use me
+    @CrossOrigin
     @RequestMapping(value = "/season/roundtable/{roundId}/prev", method = RequestMethod.GET)
-    public @ResponseBody RoundAndTableJson findPrevRoundTable(
+    public RoundAndTableJson findPrevRoundTable(
             @PathVariable("roundId") Long roundId,
             HttpServletResponse response) {
 
-        ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findPrevRoundTable(roundId);
     }
 
@@ -265,39 +256,39 @@ public class BetofficeSeasonServlet {
     // user ranking
     //
 
+    @CrossOrigin
     @RequestMapping(value = "/ranking/season/{seasonId}", method = RequestMethod.GET)
-    public @ResponseBody UserTableJson findUserTableBySeason(
+    public UserTableJson findUserTableBySeason(
             @PathVariable("seasonId") Long seasonId,
             HttpServletResponse response) {
 
-        ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.calcUserRanking(seasonId);
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/ranking/round/{roundId}/", method = RequestMethod.GET)
-    public @ResponseBody UserTableJson findUserTableByRound(
+    public UserTableJson findUserTableByRound(
             @PathVariable("roundId") Long roundId,
             HttpServletResponse response) {
 
-        ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.calcUserRankingByRound(roundId);
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/ranking/round/{roundId}/next", method = RequestMethod.GET)
-    public @ResponseBody UserTableJson findUserTableByNextRound(
+    public UserTableJson findUserTableByNextRound(
             @PathVariable("roundId") Long roundId,
             HttpServletResponse response) {
 
-        ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.calcUserRankingByNextRound(roundId);
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/ranking/round/{roundId}/prev", method = RequestMethod.GET)
-    public @ResponseBody UserTableJson findUserTableByPrevRound(
+    public UserTableJson findUserTableByPrevRound(
             @PathVariable("roundId") Long roundId,
             HttpServletResponse response) {
 
-        ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.calcUserRankingByPrevRound(roundId);
     }
 
@@ -316,13 +307,12 @@ public class BetofficeSeasonServlet {
      *            Servlet response
      * @return The tipp of a user for a round
      */
+    @CrossOrigin
     @RequestMapping(value = "/tipp/{roundId}/{nickName}", method = RequestMethod.GET)
-    public @ResponseBody RoundJson findTipp(
-            @PathVariable("roundId") Long roundId,
+    public RoundJson findTipp(@PathVariable("roundId") Long roundId,
             @PathVariable("nickName") String nickName,
             HttpServletResponse response) {
 
-        ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findTipp(roundId, nickName);
     }
 
@@ -339,13 +329,12 @@ public class BetofficeSeasonServlet {
      *            Servlet response
      * @return The current tipp
      */
+    @CrossOrigin
     @RequestMapping(value = "/tipp/{seasonId}/{nickname}/current", method = RequestMethod.GET)
-    public @ResponseBody RoundJson findCurrentTipp(
-            @PathVariable("seasonId") Long seasonId,
+    public RoundJson findCurrentTipp(@PathVariable("seasonId") Long seasonId,
             @PathVariable("nickname") String nickName,
             HttpServletRequest request, HttpServletResponse response) {
 
-        ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findCurrentTipp(seasonId, nickName);
     }
 
@@ -360,13 +349,12 @@ public class BetofficeSeasonServlet {
      *            Servlet Response
      * @return The next tipp ahead of <code>roundId</code>
      */
+    @CrossOrigin
     @RequestMapping(value = "/tipp/{roundId}/{nickName}/next", method = RequestMethod.GET)
-    public @ResponseBody RoundJson findNextTipp(
-            @PathVariable("roundId") Long roundId,
+    public RoundJson findNextTipp(@PathVariable("roundId") Long roundId,
             @PathVariable("nickName") String nickName,
             HttpServletResponse response) {
 
-        ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findNextTipp(roundId, nickName);
     }
 
@@ -381,31 +369,29 @@ public class BetofficeSeasonServlet {
      *            Servlet Response
      * @return The previous tipp behind of <code>roundId</code>
      */
+    @CrossOrigin
     @RequestMapping(value = "/tipp/{roundId}/{nickName}/prev", method = RequestMethod.GET)
-    public @ResponseBody RoundJson findPrevTipp(
-            @PathVariable("roundId") Long roundId,
+    public RoundJson findPrevTipp(@PathVariable("roundId") Long roundId,
             @PathVariable("nickName") String nickName,
             HttpServletResponse response) {
 
-        ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findPrevTipp(roundId, nickName);
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/team/all", method = RequestMethod.GET)
-    public @ResponseBody List<TeamJson> findAllTeams(
-            HttpServletResponse response) {
+    public List<TeamJson> findAllTeams(HttpServletResponse response) {
 
-        ResponseHeaderSetup.setup(response);
         return betofficeBasicJsonService.findAllTeams();
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/login", method = RequestMethod.POST, headers = {
             "Content-type=application/json" })
-    public @ResponseBody SecurityTokenJson login(
+    public SecurityTokenJson login(
             @RequestBody AuthenticationForm authenticationForm,
             HttpServletRequest request, HttpServletResponse response) {
 
-        ResponseHeaderSetup.setup(response);
         String userAgent = request.getHeader("User-Agent");
 
         SecurityTokenJson securityToken = betofficeBasicJsonService.login(
@@ -419,12 +405,11 @@ public class BetofficeSeasonServlet {
         return securityToken;
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/logout", method = RequestMethod.POST, headers = {
             "Content-type=application/json" })
     public void logout(@RequestBody LogoutFormData logoutFormData,
             HttpServletRequest request, HttpServletResponse response) {
-
-        ResponseHeaderSetup.setup(response);
 
         betofficeBasicJsonService.logout(logoutFormData.getNickname(),
                 logoutFormData.getToken());
@@ -433,13 +418,11 @@ public class BetofficeSeasonServlet {
         session.removeAttribute(SecurityToken.class.getName());
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/tipp/submit", method = RequestMethod.POST, headers = {
             "Content-type=application/json" })
-    public @ResponseBody RoundJson submitTipp(
-            @RequestBody TippRoundJson tippRoundJson,
+    public RoundJson submitTipp(@RequestBody TippRoundJson tippRoundJson,
             HttpServletRequest request, HttpServletResponse response) {
-
-        ResponseHeaderSetup.setup(response);
 
         return betofficeBasicJsonService.submitTipp(tippRoundJson);
     }
