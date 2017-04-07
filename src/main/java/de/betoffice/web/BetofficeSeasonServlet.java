@@ -44,7 +44,6 @@ import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SecurityTokenJson;
 import de.betoffice.web.json.SubmitTippRoundJson;
 import de.betoffice.web.json.TeamJson;
-import de.betoffice.web.json.TippRoundJson;
 import de.betoffice.web.json.TokenJson;
 import de.betoffice.web.json.UserTableJson;
 import de.winkler.betoffice.service.SecurityToken;
@@ -320,7 +319,7 @@ public class BetofficeSeasonServlet {
      */
     @CrossOrigin
     @RequestMapping(value = "/tipp/{roundId}/{nickName}", method = RequestMethod.GET)
-    public TippRoundJson findTipp(@PathVariable("roundId") Long roundId,
+    public RoundJson findTipp(@PathVariable("roundId") Long roundId,
             @PathVariable("nickName") String nickName,
             HttpServletResponse response) {
 
@@ -342,8 +341,7 @@ public class BetofficeSeasonServlet {
      */
     @CrossOrigin
     @RequestMapping(value = "/tipp/{seasonId}/{nickname}/current", method = RequestMethod.GET)
-    public TippRoundJson findCurrentTipp(
-            @PathVariable("seasonId") Long seasonId,
+    public RoundJson findCurrentTipp(@PathVariable("seasonId") Long seasonId,
             @PathVariable("nickname") String nickName,
             HttpServletRequest request, HttpServletResponse response) {
 
@@ -363,7 +361,7 @@ public class BetofficeSeasonServlet {
      */
     @CrossOrigin
     @RequestMapping(value = "/tipp/{roundId}/{nickName}/next", method = RequestMethod.GET)
-    public TippRoundJson findNextTipp(@PathVariable("roundId") Long roundId,
+    public RoundJson findNextTipp(@PathVariable("roundId") Long roundId,
             @PathVariable("nickName") String nickName,
             HttpServletResponse response) {
 
@@ -383,7 +381,7 @@ public class BetofficeSeasonServlet {
      */
     @CrossOrigin
     @RequestMapping(value = "/tipp/{roundId}/{nickName}/prev", method = RequestMethod.GET)
-    public TippRoundJson findPrevTipp(@PathVariable("roundId") Long roundId,
+    public RoundJson findPrevTipp(@PathVariable("roundId") Long roundId,
             @PathVariable("nickName") String nickName,
             HttpServletResponse response) {
 
@@ -433,8 +431,7 @@ public class BetofficeSeasonServlet {
     @CrossOrigin
     @RequestMapping(value = "/tipp/submit", method = RequestMethod.POST, headers = {
             "Content-type=application/json" })
-    public TippRoundJson submitTipp(
-            @RequestBody SubmitTippRoundJson tippRoundJson,
+    public RoundJson submitTipp(@RequestBody SubmitTippRoundJson tippRoundJson,
             HttpServletRequest request, HttpServletResponse response) {
 
         return betofficeBasicJsonService.submitTipp(tippRoundJson);
