@@ -1,8 +1,7 @@
 /*
- * $Id$
  * ============================================================================
  * Project betoffice-jweb
- * Copyright (c) 2000-2014 by Andre Winkler. All rights reserved.
+ * Copyright (c) 2000-2017 by Andre Winkler. All rights reserved.
  * ============================================================================
  *          GNU GENERAL PUBLIC LICENSE
  *  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
@@ -25,10 +24,12 @@
 
 package de.betoffice.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,8 +37,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.betoffice.web.json.HistoryTeamVsTeamJson;
 import de.betoffice.web.json.HistoryTeamVsTeamJsonMapper;
+import de.betoffice.web.json.TeamJson;
 import de.betoffice.web.json.TeamsJson;
-import de.betoffice.web.json.TeamsJsonMapper;
+import de.betoffice.web.jsonbuilder.TeamJsonMapper;
 import de.winkler.betoffice.service.MasterDataManagerService;
 import de.winkler.betoffice.service.SeasonManagerService;
 import de.winkler.betoffice.storage.Game;
@@ -47,8 +49,7 @@ import de.winkler.betoffice.storage.enums.TeamType;
 /**
  * Researching data...
  * 
- * @author by Andre Winkler, $LastChangedBy$
- * @version $LastChangedRevision$ $LastChangedDate$
+ * @author Andre Winkler
  */
 @Controller
 @RequestMapping("/research")
@@ -57,47 +58,51 @@ public class ResearchDataServlet {
 	private SeasonManagerService seasonManagerService;
 
 	@Autowired
-	public void setSeasonManagerService(
-			SeasonManagerService _seasonManagerService) {
+	public void setSeasonManagerService(SeasonManagerService _seasonManagerService) {
 		seasonManagerService = _seasonManagerService;
 	}
 
 	private MasterDataManagerService masterDataManagerService;
 
 	@Autowired
-	public void setMasterDataManagerService(
-			MasterDataManagerService _masterDataManagerService) {
+	public void setMasterDataManagerService(MasterDataManagerService _masterDataManagerService) {
 		masterDataManagerService = _masterDataManagerService;
 	}
 
 	// ------------------------------------------------------------------------
 
+	@CrossOrigin
 	@RequestMapping(value = "/findDfbTeams", method = RequestMethod.GET)
-	public @ResponseBody
-	TeamsJson findDfbTeams() {
+	public @ResponseBody TeamsJson findDfbTeams() {
 		List<Team> dfbTeams = masterDataManagerService.findTeams(TeamType.DFB);
-		return TeamsJsonMapper.map(dfbTeams);
+
+		TeamJsonMapper teamJsonMapper = new TeamJsonMapper();
+		List<TeamJson> teamJsons = new ArrayList<>();
+
+		return new TeamsJson(teamJsonMapper.map(dfbTeams, teamJsons));
 	}
 
+	@CrossOrigin
 	@RequestMapping(value = "/findFifaTeams", method = RequestMethod.GET)
-	public @ResponseBody
-	TeamsJson findFifaTeams() {
-		List<Team> fifaTeams = masterDataManagerService
-				.findTeams(TeamType.FIFA);
-		return TeamsJsonMapper.map(fifaTeams);
+	public @ResponseBody TeamsJson findFifaTeams() {
+		List<Team> fifaTeams = masterDataManagerService.findTeams(TeamType.FIFA);
+		
+		TeamJsonMapper teamJsonMapper = new TeamJsonMapper();
+		List<TeamJson> teamJsons = new ArrayList<>();
+
+		return new TeamsJson(teamJsonMapper.map(fifaTeams, teamJsons));
 	}
 
+	@CrossOrigin
 	@RequestMapping(value = "/teamvsteam", method = RequestMethod.GET)
-	public @ResponseBody
-	HistoryTeamVsTeamJson research(
+	public @ResponseBody HistoryTeamVsTeamJson research(
 			@RequestParam(value = "homeTeam", required = true) long homeTeamId,
 			@RequestParam(value = "guestTeam", required = true) long guestTeamId) {
 
 		Team homeTeam = masterDataManagerService.findTeamById(homeTeamId);
 		Team guestTeam = masterDataManagerService.findTeamById(guestTeamId);
 
-		List<Game> findMatches = seasonManagerService.findMatches(homeTeam,
-				guestTeam);
+		List<Game> findMatches = seasonManagerService.findMatches(homeTeam, guestTeam);
 
 		return HistoryTeamVsTeamJsonMapper.map(findMatches);
 	}
