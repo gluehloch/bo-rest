@@ -24,7 +24,6 @@
 
 package de.betoffice.web;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.betoffice.web.json.HistoryTeamVsTeamJson;
 import de.betoffice.web.json.HistoryTeamVsTeamJsonMapper;
-import de.betoffice.web.json.TeamJson;
 import de.betoffice.web.json.TeamsJson;
 import de.betoffice.web.jsonbuilder.TeamJsonMapper;
 import de.winkler.betoffice.service.MasterDataManagerService;
@@ -77,9 +75,7 @@ public class ResearchDataServlet {
 		List<Team> dfbTeams = masterDataManagerService.findTeams(TeamType.DFB);
 
 		TeamJsonMapper teamJsonMapper = new TeamJsonMapper();
-		List<TeamJson> teamJsons = new ArrayList<>();
-
-		return new TeamsJson(teamJsonMapper.map(dfbTeams, teamJsons));
+		return new TeamsJson(teamJsonMapper.map(dfbTeams));
 	}
 
 	@CrossOrigin
@@ -88,9 +84,7 @@ public class ResearchDataServlet {
 		List<Team> fifaTeams = masterDataManagerService.findTeams(TeamType.FIFA);
 		
 		TeamJsonMapper teamJsonMapper = new TeamJsonMapper();
-		List<TeamJson> teamJsons = new ArrayList<>();
-
-		return new TeamsJson(teamJsonMapper.map(fifaTeams, teamJsons));
+		return new TeamsJson(teamJsonMapper.map(fifaTeams));
 	}
 
 	@CrossOrigin
