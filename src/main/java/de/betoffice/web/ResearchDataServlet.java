@@ -36,8 +36,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.betoffice.web.json.HistoryTeamVsTeamJson;
 import de.betoffice.web.json.HistoryTeamVsTeamJsonMapper;
-import de.betoffice.web.json.TeamsJson;
-import de.betoffice.web.jsonbuilder.TeamJsonMapper;
+import de.betoffice.web.json.TeamJson;
 import de.winkler.betoffice.service.MasterDataManagerService;
 import de.winkler.betoffice.service.SeasonManagerService;
 import de.winkler.betoffice.storage.Game;
@@ -71,20 +70,16 @@ public class ResearchDataServlet {
 
 	@CrossOrigin
 	@RequestMapping(value = "/findDfbTeams", method = RequestMethod.GET)
-	public @ResponseBody TeamsJson findDfbTeams() {
+	public @ResponseBody List<TeamJson> findDfbTeams() {
 		List<Team> dfbTeams = masterDataManagerService.findTeams(TeamType.DFB);
-
-		TeamJsonMapper teamJsonMapper = new TeamJsonMapper();
-		return new TeamsJson(teamJsonMapper.map(dfbTeams));
+		return JsonBuilder.toJsonWithTeams(dfbTeams);
 	}
 
 	@CrossOrigin
 	@RequestMapping(value = "/findFifaTeams", method = RequestMethod.GET)
-	public @ResponseBody TeamsJson findFifaTeams() {
+	public @ResponseBody List<TeamJson> findFifaTeams() {
 		List<Team> fifaTeams = masterDataManagerService.findTeams(TeamType.FIFA);
-		
-		TeamJsonMapper teamJsonMapper = new TeamJsonMapper();
-		return new TeamsJson(teamJsonMapper.map(fifaTeams));
+		return JsonBuilder.toJsonWithTeams(fifaTeams);
 	}
 
 	@CrossOrigin
