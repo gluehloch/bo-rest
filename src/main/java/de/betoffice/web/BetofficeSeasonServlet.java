@@ -109,7 +109,7 @@ public class BetofficeSeasonServlet {
 
     @CrossOrigin
     @RequestMapping(value = "/season/{seasonId}/group/{groupTypeId}/round/all", method = RequestMethod.GET)
-    public List<RoundJson> findAllRounds(
+    public SeasonJson findAllRounds(
             @PathVariable("seasonId") Long seasonId,
             @PathVariable("groupTypeId") Long groupTypeId,
             HttpServletResponse response) {
