@@ -379,14 +379,17 @@ public class BetofficeSeasonServlet {
     @CrossOrigin
     @RequestMapping(value = "/logout", method = RequestMethod.POST, headers = {
             "Content-type=application/json" })
-    public void logout(@RequestBody LogoutFormData logoutFormData,
+    public SecurityTokenJson logout(@RequestBody LogoutFormData logoutFormData,
             HttpServletRequest request) {
 
-        betofficeBasicJsonService.logout(logoutFormData.getNickname(),
+        SecurityTokenJson securityTokenJson = betofficeBasicJsonService.logout(
+                logoutFormData.getNickname(),
                 logoutFormData.getToken());
 
         HttpSession session = request.getSession();
         session.removeAttribute(SecurityToken.class.getName());
+
+        return securityTokenJson;
     }
 
     @CrossOrigin
