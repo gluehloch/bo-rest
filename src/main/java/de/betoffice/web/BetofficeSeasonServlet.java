@@ -45,7 +45,6 @@ import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SecurityTokenJson;
 import de.betoffice.web.json.SubmitTippRoundJson;
 import de.betoffice.web.json.TeamJson;
-import de.betoffice.web.json.TokenJson;
 import de.betoffice.web.json.UserTableJson;
 import de.winkler.betoffice.service.SecurityToken;
 
@@ -55,6 +54,10 @@ import de.winkler.betoffice.service.SecurityToken;
 @RestController
 @RequestMapping("/office")
 public class BetofficeSeasonServlet {
+
+    private static final String HTTP_HEADER_BETOFFICE_TOKEN = "betofficeToken";
+    private static final String HTTP_HEADER_BETOFFICE_NICKNAME = "betofficeNickname";
+    private static final String HTTP_HEADER_USER_AGENT = "User-Agent";
 
     // ------------------------------------------------------------------------
     // The beans
@@ -154,24 +157,24 @@ public class BetofficeSeasonServlet {
     @RequestMapping(value = "/season/round/{roundId}/update", method = RequestMethod.POST, headers = {
             "Content-type=application/json" })
     public RoundJson updateRound(@PathVariable("roundId") Long roundId,
-            @RequestBody TokenJson token, HttpServletRequest request) {
-
-        String userAgent = request.getHeader("User-Agent");
+            @RequestHeader(HTTP_HEADER_BETOFFICE_TOKEN) String token,
+            @RequestHeader(HTTP_HEADER_USER_AGENT) String userAgent,
+            HttpSession httpSession) {
 
         // SecurityTokenJson securityToken = betofficeBasicJsonService.login(
         // authenticationForm.getNickname(),
         // authenticationForm.getPassword(), request.getSession().getId(),
         // request.getRemoteAddr(), userAgent);
 
-        HttpSession session = request.getSession();
-        if (session == null) {
+        if (httpSession == null) {
             return null;
         }
 
-        Object attribute = session.getAttribute(SecurityToken.class.getName());
+        Object attribute = httpSession
+                .getAttribute(SecurityToken.class.getName());
 
         RoundJson roundJson = betofficeAdminJsonService
-                .reconcileRoundWithOpenligadb(token.getToken(), roundId);
+                .reconcileRoundWithOpenligadb(token, roundId);
 
         return roundJson;
     }
@@ -180,24 +183,24 @@ public class BetofficeSeasonServlet {
     @RequestMapping(value = "/season/round/{roundId}/create", method = RequestMethod.POST, headers = {
             "Content-type=application/json" })
     public RoundJson createOrUpdateRound(@PathVariable("roundId") Long roundId,
-            @RequestBody TokenJson token, HttpServletRequest request) {
-
-        String userAgent = request.getHeader("User-Agent");
+            @RequestHeader(HTTP_HEADER_BETOFFICE_TOKEN) String token,
+            @RequestHeader(HTTP_HEADER_USER_AGENT) String userAgent,
+            HttpSession httpSession) {
 
         // SecurityTokenJson securityToken = betofficeBasicJsonService.login(
         // authenticationForm.getNickname(),
         // authenticationForm.getPassword(), request.getSession().getId(),
         // request.getRemoteAddr(), userAgent);
 
-        HttpSession session = request.getSession();
-        if (session == null) {
+        if (httpSession == null) {
             return null;
         }
 
-        Object attribute = session.getAttribute(SecurityToken.class.getName());
+        Object attribute = httpSession
+                .getAttribute(SecurityToken.class.getName());
 
         RoundJson roundJson = betofficeAdminJsonService
-                .mountRoundWithOpenligadb(token.getToken(), roundId);
+                .mountRoundWithOpenligadb(token, roundId);
 
         return roundJson;
     }
@@ -362,9 +365,8 @@ public class BetofficeSeasonServlet {
             "Content-type=application/json" })
     public SecurityTokenJson login(
             @RequestBody AuthenticationForm authenticationForm,
+            @RequestHeader(HTTP_HEADER_USER_AGENT) String userAgent,
             HttpServletRequest request) {
-
-        String userAgent = request.getHeader("User-Agent");
 
         SecurityTokenJson securityToken = betofficeBasicJsonService.login(
                 authenticationForm.getNickname(),
@@ -397,10 +399,10 @@ public class BetofficeSeasonServlet {
     @RequestMapping(value = "/tipp/submit", method = RequestMethod.POST, headers = {
             "Content-type=application/json" })
     public RoundJson submitTipp(@RequestBody SubmitTippRoundJson tippRoundJson,
-            @RequestHeader("betofficeToken") String token,
-            @RequestHeader("betofficeNickname") String nickname) {
+            @RequestHeader(HTTP_HEADER_BETOFFICE_TOKEN) String token,
+            @RequestHeader(HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
-        return betofficeBasicJsonService.submitTipp(tippRoundJson);
+        return betofficeBasicJsonService.submitTipp(token, tippRoundJson);
     }
 
 }
