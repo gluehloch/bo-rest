@@ -16,6 +16,9 @@
   <mvc:annotation-driven />
 
   <bean id="fixDateTimeProvider" class="de.betoffice.web.FixDateTimeProvider" />
+  <!--
+  <bean id="fixDateTimeProvider" class="de.winkler.betoffice.service.DefaultDateTimeProvider" />
+  -->
   
   <!-- The Tomcat defined datasource.  -->
   <bean id="myDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
