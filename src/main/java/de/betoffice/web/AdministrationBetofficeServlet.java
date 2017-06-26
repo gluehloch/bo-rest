@@ -23,6 +23,8 @@
 
 package de.betoffice.web;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +36,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.web.json.RoundJson;
+import de.betoffice.web.json.SeasonMemberJson;
 import de.winkler.betoffice.service.SecurityToken;
 
 /**
  * The administration part of the betoffice.
  * 
  * <pre>
- * /season/add
- * /season/{seasonId}/update
+ * /season/{seasonId}/add          ??? DO I NEED THIS ???
+ * /season/{seasonId}/update       ??? DO I NEED THIS ???
  * 
  * /season/{seasonId}/user/list    Aufistung aller Tipp-Teilnehmer 
  * /season/{seasonId}/user/add     Ergänzt die Liste der Tipp-Teilnehmer um einen Teilnehmer
@@ -116,5 +119,22 @@ public class AdministrationBetofficeServlet {
 
         return roundJson;
     }
+    
+    // -- user administration -------------------------------------------------
+    
+    public List<SeasonMemberJson> listUsers(@PathVariable("seasonId") Long seasonId) {
+        return null;
+        
+    }
+    
+    public void addUsers(@PathVariable("seasonId") Long seasonId) {
+        
+    }
+    
+    public void removeUsers(@PathVariable("seasonId") Long seasonId) {
+        
+    }
+
+    
     
 }
