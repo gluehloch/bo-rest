@@ -30,6 +30,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -46,9 +47,10 @@ import de.winkler.betoffice.service.SecurityToken;
  * /season/{seasonId}/add          ??? DO I NEED THIS ???
  * /season/{seasonId}/update       ??? DO I NEED THIS ???
  * 
- * /season/{seasonId}/user/list    Aufistung aller Tipp-Teilnehmer 
- * /season/{seasonId}/user/add     Ergänzt die Liste der Tipp-Teilnehmer um einen Teilnehmer
- * /season/{seasonId}/user/remove  Entfernt aus der Liste der Tipp-Teilnehmer einen Teilnehmer
+ * /season/{seasonId}/potentialuser Potentielle Tipp-Teilnehmer
+ * /season/{seasonId}/user          Aufistung aller Tipp-Teilnehmer 
+ * /season/{seasonId}/user/add      Ergänzt die Liste der Tipp-Teilnehmer um einen Teilnehmer
+ * /season/{seasonId}/user/remove   Entfernt aus der Liste der Tipp-Teilnehmer einen Teilnehmer
  * 
  * /season/{seasonId}/matchday/list   Auflistung aller Spieltage einer Meisterschaft
  * /season/{seasonId}/matchday/add    Ergänzt die Meisterschaft um einen Spieltag
@@ -94,7 +96,7 @@ public class AdministrationBetofficeServlet {
     }
 
     // ------------------------------------------------------------------------
-    
+
     @CrossOrigin
     @RequestMapping(value = "/season/", method = RequestMethod.POST, headers = {
             "Content-type=application/json" })
@@ -115,26 +117,50 @@ public class AdministrationBetofficeServlet {
         Object attribute = httpSession
                 .getAttribute(SecurityToken.class.getName());
 
-        RoundJson roundJson = null; //betofficeAdminJsonService.reconcileRoundWithOpenligadb(token, roundId);
+        RoundJson roundJson = null; // betofficeAdminJsonService.reconcileRoundWithOpenligadb(token,
+                                    // roundId);
 
         return roundJson;
     }
-    
+
     // -- user administration -------------------------------------------------
-    
-    public List<SeasonMemberJson> listUsers(@PathVariable("seasonId") Long seasonId) {
-        return null;
-        
-    }
-    
-    public void addUsers(@PathVariable("seasonId") Long seasonId) {
-        
-    }
-    
-    public void removeUsers(@PathVariable("seasonId") Long seasonId) {
-        
+
+    @CrossOrigin
+    @RequestMapping(value = "/season/{seasonId}/potentialuser", method = RequestMethod.GET, headers = {
+            "Content-type=application/json" })
+    public List<SeasonMemberJson> listPotentialUsers(
+            @PathVariable("seasonId") Long seasonId) {
+
+        return betofficeAdminJsonService.findPotentialSeasonMembers(seasonId);
     }
 
-    
-    
+    @CrossOrigin
+    @RequestMapping(value = "/season/{seasonId}/user", method = RequestMethod.GET, headers = {
+            "Content-type=application/json" })
+    public List<SeasonMemberJson> listUsers(
+            @PathVariable("seasonId") Long seasonId) {
+
+        return betofficeAdminJsonService.findAllSeasonMembers(seasonId);
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/season/{seasonId}/user/add", method = RequestMethod.POST, headers = {
+            "Content-type=application/json" })
+    public List<SeasonMemberJson> addUsers(
+            @PathVariable("seasonId") Long seasonId,
+            @RequestBody List<SeasonMemberJson> members) {
+
+        return betofficeAdminJsonService.addSeasonMembers(seasonId, members);
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/season/{seasonId}/user/remove", method = RequestMethod.POST, headers = {
+            "Content-type=application/json" })
+    public List<SeasonMemberJson> removeUsers(
+            @PathVariable("seasonId") Long seasonId,
+            @RequestBody List<SeasonMemberJson> members) {
+
+        return betofficeAdminJsonService.removeSeasonMembers(seasonId, members);
+    }
+
 }
