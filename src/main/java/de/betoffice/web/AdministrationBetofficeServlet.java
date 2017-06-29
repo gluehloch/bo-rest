@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.web.json.RoundJson;
+import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SeasonMemberJson;
 import de.winkler.betoffice.service.SecurityToken;
 
@@ -44,6 +45,7 @@ import de.winkler.betoffice.service.SecurityToken;
  * The administration part of the betoffice.
  * 
  * <pre>
+ * /season
  * /season/{seasonId}/add          ??? DO I NEED THIS ???
  * /season/{seasonId}/update       ??? DO I NEED THIS ???
  * 
@@ -121,6 +123,29 @@ public class AdministrationBetofficeServlet {
                                     // roundId);
 
         return roundJson;
+    }
+
+    // -- season administration -----------------------------------------------
+
+    @CrossOrigin
+    @RequestMapping(value = "/season", method = RequestMethod.GET, headers = {
+            "Content-type=application/json" })
+    public List<SeasonJson> findSeasons() {
+        return betofficeBasicJsonService.findAllSeason();
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/season/add", method = RequestMethod.POST, headers = {
+            "Content-type=application/json" })
+    public List<SeasonJson> addSeason(@RequestBody SeasonJson season) {
+        return betofficeAdminJsonService.addSeason(season);
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/season/update", method = RequestMethod.POST, headers = {
+            "Content-type=application/json" })
+    public List<SeasonJson> updateSeason(@RequestBody SeasonJson season) {
+        return betofficeBasicJsonService.updateSeason(season);
     }
 
     // -- user administration -------------------------------------------------
