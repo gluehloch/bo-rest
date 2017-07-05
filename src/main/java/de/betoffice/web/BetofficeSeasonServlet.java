@@ -84,7 +84,7 @@ public class BetofficeSeasonServlet {
     // ------------------------------------------------------------------------
 
     @CrossOrigin
-    @RequestMapping(value = "/season/all", method = RequestMethod.GET)
+    @RequestMapping(value = "/season/list", method = RequestMethod.GET)
     public List<SeasonJson> findAllSeason(HttpServletResponse response) {
 
         return betofficeBasicJsonService.findAllSeason();

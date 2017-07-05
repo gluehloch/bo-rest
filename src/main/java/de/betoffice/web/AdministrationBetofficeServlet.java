@@ -46,11 +46,11 @@ import de.winkler.betoffice.service.SecurityToken;
  * The administration part of the betoffice.
  * 
  * <pre>
- * /user               Listet alle bekannten User
+ * /user/list          Listet alle bekannten User
  * /user/add           Kreiert einen neuen User
  * /user/update        Ändert die Daten eines Users.
  * 
- * /season
+ * /season/list
  * /season/{seasonId}/add          ??? DO I NEED THIS ???
  * /season/{seasonId}/update       ??? DO I NEED THIS ???
  * 
@@ -156,7 +156,7 @@ public class AdministrationBetofficeServlet {
     // -- user administration -------------------------------------------------
 
     @CrossOrigin
-    @RequestMapping(value = "/user", method = RequestMethod.GET, headers = {
+    @RequestMapping(value = "/user/list", method = RequestMethod.GET, headers = {
             "Content-type=application/json" })
     public List<PartyJson> findUsers() {
         return betofficeAdminJsonService.findUsers();
