@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.betoffice.web.json.PartyJson;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SeasonMemberJson;
@@ -45,6 +46,10 @@ import de.winkler.betoffice.service.SecurityToken;
  * The administration part of the betoffice.
  * 
  * <pre>
+ * /user               Listet alle bekannten User
+ * /user/add           Kreiert einen neuen User
+ * /user/update        Ändert die Daten eines Users.
+ * 
  * /season
  * /season/{seasonId}/add          ??? DO I NEED THIS ???
  * /season/{seasonId}/update       ??? DO I NEED THIS ???
@@ -137,18 +142,27 @@ public class AdministrationBetofficeServlet {
     @CrossOrigin
     @RequestMapping(value = "/season/add", method = RequestMethod.POST, headers = {
             "Content-type=application/json" })
-    public List<SeasonJson> addSeason(@RequestBody SeasonJson season) {
+    public SeasonJson addSeason(@RequestBody SeasonJson season) {
         return betofficeAdminJsonService.addSeason(season);
     }
 
     @CrossOrigin
     @RequestMapping(value = "/season/update", method = RequestMethod.POST, headers = {
             "Content-type=application/json" })
-    public List<SeasonJson> updateSeason(@RequestBody SeasonJson season) {
-        return betofficeBasicJsonService.updateSeason(season);
+    public SeasonJson updateSeason(@RequestBody SeasonJson season) {
+        return betofficeAdminJsonService.updateSeason(season);
     }
 
     // -- user administration -------------------------------------------------
+
+    @CrossOrigin
+    @RequestMapping(value = "/user", method = RequestMethod.GET, headers = {
+            "Content-type=application/json" })
+    public List<PartyJson> findUsers() {
+        return betofficeAdminJsonService.findUsers();
+    }
+
+    // -- user/season administration ------------------------------------------
 
     @CrossOrigin
     @RequestMapping(value = "/season/{seasonId}/potentialuser", method = RequestMethod.GET, headers = {
