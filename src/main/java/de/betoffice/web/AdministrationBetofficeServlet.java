@@ -161,6 +161,20 @@ public class AdministrationBetofficeServlet {
     public List<PartyJson> findUsers() {
         return betofficeAdminJsonService.findUsers();
     }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/user/add", method = RequestMethod.POST, headers = {
+            "Content-type=application/json" })
+    public PartyJson addUser(@RequestBody PartyJson partyJson) {
+        return betofficeAdminJsonService.addUser(partyJson);
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/user/update", method = RequestMethod.POST, headers = {
+            "Content-type=application/json" })
+    public PartyJson updateUser(@RequestBody PartyJson partyJson) {
+        return betofficeAdminJsonService.updateUser(partyJson);
+    }
 
     // -- user/season administration ------------------------------------------
 
