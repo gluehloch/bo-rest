@@ -155,6 +155,14 @@ public class AdministrationBetofficeServlet {
 
     // -- user administration -------------------------------------------------
 
+
+    @CrossOrigin
+    @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET, headers = {
+            "Content-type=application/json" })
+    public PartyJson findUser(@PathVariable("userId") Long userId) {
+        return betofficeAdminJsonService.findUser(userId);
+    }
+
     @CrossOrigin
     @RequestMapping(value = "/user/list", method = RequestMethod.GET, headers = {
             "Content-type=application/json" })
