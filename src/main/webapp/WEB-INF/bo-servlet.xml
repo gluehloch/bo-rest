@@ -15,6 +15,7 @@
   <context:component-scan base-package="de.betoffice.web"/>
   <mvc:annotation-driven />
 
+  <!-- ONLY FOR LOCAL TESTING -->
   <bean id="fixDateTimeProvider" class="de.betoffice.web.FixDateTimeProvider" />
   <!--
   <bean id="fixDateTimeProvider" class="de.winkler.betoffice.service.DefaultDateTimeProvider" />

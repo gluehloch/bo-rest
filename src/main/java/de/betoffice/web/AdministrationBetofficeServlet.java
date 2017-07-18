@@ -155,7 +155,6 @@ public class AdministrationBetofficeServlet {
 
     // -- user administration -------------------------------------------------
 
-
     @CrossOrigin
     @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET, headers = {
             "Content-type=application/json" })
@@ -169,18 +168,20 @@ public class AdministrationBetofficeServlet {
     public List<PartyJson> findUsers() {
         return betofficeAdminJsonService.findUsers();
     }
-    
+
     @CrossOrigin
     @RequestMapping(value = "/user/add", method = RequestMethod.POST, headers = {
             "Content-type=application/json" })
     public PartyJson addUser(@RequestBody PartyJson partyJson) {
         return betofficeAdminJsonService.addUser(partyJson);
     }
-    
+
     @CrossOrigin
     @RequestMapping(value = "/user/update", method = RequestMethod.POST, headers = {
             "Content-type=application/json" })
-    public PartyJson updateUser(@RequestBody PartyJson partyJson) {
+    public PartyJson updateUser(@RequestBody PartyJson partyJson,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
         return betofficeAdminJsonService.updateUser(partyJson);
     }
 
