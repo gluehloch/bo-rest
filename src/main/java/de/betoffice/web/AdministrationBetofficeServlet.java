@@ -133,7 +133,14 @@ public class AdministrationBetofficeServlet {
     // -- season administration -----------------------------------------------
 
     @CrossOrigin
-    @RequestMapping(value = "/season", method = RequestMethod.GET, headers = {
+    @RequestMapping(value = "/season/{seasonId}", method = RequestMethod.GET, headers = {
+            "Content-type=application/json" })
+    public SeasonJson findSeason(@PathVariable("seasonId") Long seasonId) {
+        return betofficeBasicJsonService.findSeasonById(seasonId);
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/season/list", method = RequestMethod.GET, headers = {
             "Content-type=application/json" })
     public List<SeasonJson> findSeasons() {
         return betofficeBasicJsonService.findAllSeason();
