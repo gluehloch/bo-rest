@@ -160,6 +160,13 @@ public class AdministrationBetofficeServlet {
         return betofficeAdminJsonService.updateSeason(season);
     }
 
+    @CrossOrigin
+    @RequestMapping(value = "/season/create", method = RequestMethod.POST, headers = {
+            "Content-type=application/json" })
+    public SeasonJson createSeason(@RequestBody SeasonJson season) {
+        return betofficeAdminJsonService.addSeason(season);
+    }
+
     // -- user administration -------------------------------------------------
 
     @CrossOrigin
