@@ -170,11 +170,12 @@
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
-<dependency>
-    <groupId>com.sun.jersey</groupId>
-    <artifactId>jersey-client</artifactId>
-    <version>1.12</version>
-</dependency>    
+
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>1.19.4</version>
+        </dependency>    
 
 		<!-- <dependency> <groupId>org.jboss.spec</groupId> <artifactId>jboss-javaee-6.0</artifactId> 
 			<version>1.0.0.Final</version> <type>pom</type> <scope>provided</scope> </dependency> 

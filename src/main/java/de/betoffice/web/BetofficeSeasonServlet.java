@@ -28,14 +28,20 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.WebApplicationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.web.json.GroupTypeJson;
@@ -397,8 +403,17 @@ public class BetofficeSeasonServlet {
     public RoundJson submitTipp(@RequestBody SubmitTippRoundJson tippRoundJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
-
+        
         return betofficeBasicJsonService.submitTipp(token, tippRoundJson);
     }
 
+    /**
+     * Convert a predefined exception to an HTTP Status code
+     */
+    @ResponseStatus(value = HttpStatus.FORBIDDEN, reason = "Access denied")
+    @ExceptionHandler(AccessDeniedException.class)
+    public void forbidden() {
+    }
+    
+    
 }
