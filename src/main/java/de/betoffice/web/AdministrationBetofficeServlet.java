@@ -167,6 +167,13 @@ public class AdministrationBetofficeServlet {
         return betofficeAdminJsonService.addSeason(season);
     }
 
+    @CrossOrigin
+    @RequestMapping(value = "/season/round/{roundId}/update", method = RequestMethod.POST, headers = {
+            "Content-type=application/json" })
+    public RoundJson updateRound(@RequestBody RoundJson roundJson) {
+        return betofficeAdminJsonService.updateRound(roundJson);
+    }
+
     // -- user administration -------------------------------------------------
 
     @CrossOrigin
