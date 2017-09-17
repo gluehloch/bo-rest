@@ -28,15 +28,19 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.web.json.PartyJson;
+import de.betoffice.web.json.RoundAndTableJson;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SeasonMemberJson;
@@ -105,9 +109,12 @@ public class AdministrationBetofficeServlet {
     // ------------------------------------------------------------------------
 
     @CrossOrigin
-    @RequestMapping(value = "/season/", method = RequestMethod.POST, headers = {
+    @RequestMapping(value = "/season/round/{roundId}/group/{groupId}/update", method = RequestMethod.POST, headers = {
             "Content-type=application/json" })
-    public RoundJson updateRound(@PathVariable("roundId") Long roundId,
+    public RoundAndTableJson updateRound(
+            @PathVariable("roundId") Long roundId,
+            @PathVariable("groupId") Long groupId,
+            @RequestBody RoundJson roundJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent,
             HttpSession httpSession) {
@@ -121,13 +128,28 @@ public class AdministrationBetofficeServlet {
             return null;
         }
 
-        Object attribute = httpSession
+        SecurityToken securityToken = (SecurityToken) httpSession
                 .getAttribute(SecurityToken.class.getName());
 
-        RoundJson roundJson = null; // betofficeAdminJsonService.reconcileRoundWithOpenligadb(token,
-                                    // roundId);
+        // TODO Ist das Token noch gültig? Hat sich der User vielleicht bereits
+        // ausgeloggt?
+        
+        if (!securityToken.getUser().isAdmin()) {
+            throw new AccessDeniedException();
+        }
 
-        return roundJson;
+//        Optional<Session> session = authService.validateSession(token);
+//
+//        if (!session.isPresent()) {
+//            throw new AccessDeniedException();
+//        }
+        // !session.get().getUser().isAdmin()
+
+
+        // betofficeAdminJsonService.reconcileRoundWithOpenligadb(token,
+        // roundId);
+        betofficeAdminJsonService.updateRound(roundJson);
+        return betofficeBasicJsonService.findRoundTable(roundId, groupId);
     }
 
     // -- season administration -----------------------------------------------
@@ -165,13 +187,6 @@ public class AdministrationBetofficeServlet {
             "Content-type=application/json" })
     public SeasonJson createSeason(@RequestBody SeasonJson season) {
         return betofficeAdminJsonService.addSeason(season);
-    }
-
-    @CrossOrigin
-    @RequestMapping(value = "/season/round/{roundId}/update", method = RequestMethod.POST, headers = {
-            "Content-type=application/json" })
-    public RoundJson updateRound(@RequestBody RoundJson roundJson) {
-        return betofficeAdminJsonService.updateRound(roundJson);
     }
 
     // -- user administration -------------------------------------------------
@@ -244,6 +259,14 @@ public class AdministrationBetofficeServlet {
             @RequestBody List<SeasonMemberJson> members) {
 
         return betofficeAdminJsonService.removeSeasonMembers(seasonId, members);
+    }
+
+    /**
+     * Convert a predefined exception to an HTTP Status code
+     */
+    @ResponseStatus(value = HttpStatus.FORBIDDEN, reason = "Access denied")
+    @ExceptionHandler(AccessDeniedException.class)
+    public void forbidden() {
     }
 
 }
