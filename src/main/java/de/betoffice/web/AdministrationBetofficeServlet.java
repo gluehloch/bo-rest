@@ -109,6 +109,40 @@ public class AdministrationBetofficeServlet {
     // ------------------------------------------------------------------------
 
     @CrossOrigin
+    @RequestMapping(value = "/season/round/{roundId}/group/{groupId}/ligadbupdate", method = RequestMethod.POST, headers = {
+            "Content-type=application/json" })
+    public RoundAndTableJson updateRoundByOpenligaDb(
+            @PathVariable("roundId") Long roundId,
+            @PathVariable("groupId") Long groupId,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent,
+            HttpSession httpSession) {
+
+        validateAdminSession(httpSession);
+
+        betofficeAdminJsonService.reconcileRoundWithOpenligadb(token, roundId);
+        return betofficeBasicJsonService.findRoundTable(roundId, groupId);
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/season/round/{roundId}/group/{groupId}/ligadbcreate", method = RequestMethod.POST, headers = {
+            "Content-type=application/json" })
+    public RoundAndTableJson createOrUpdateRoundByOpenligaDb(
+            @PathVariable("roundId") Long roundId,
+            @PathVariable("groupId") Long groupId,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent,
+            HttpSession httpSession) {
+
+        validateAdminSession(httpSession);
+
+        betofficeAdminJsonService.mountRoundWithOpenligadb(token, roundId);
+        return betofficeBasicJsonService.findRoundTable(roundId, groupId);
+    }
+
+    // ------------------------------------------------------------------------
+
+    @CrossOrigin
     @RequestMapping(value = "/season/round/{roundId}/group/{groupId}/update", method = RequestMethod.POST, headers = {
             "Content-type=application/json" })
     public RoundAndTableJson updateRound(
@@ -119,35 +153,8 @@ public class AdministrationBetofficeServlet {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent,
             HttpSession httpSession) {
 
-        // SecurityTokenJson securityToken = betofficeBasicJsonService.login(
-        // authenticationForm.getNickname(),
-        // authenticationForm.getPassword(), request.getSession().getId(),
-        // request.getRemoteAddr(), userAgent);
+        validateAdminSession(httpSession);
 
-        if (httpSession == null) {
-            return null;
-        }
-
-        SecurityToken securityToken = (SecurityToken) httpSession
-                .getAttribute(SecurityToken.class.getName());
-
-        // TODO Ist das Token noch gültig? Hat sich der User vielleicht bereits
-        // ausgeloggt?
-        
-        if (!securityToken.getUser().isAdmin()) {
-            throw new AccessDeniedException();
-        }
-
-//        Optional<Session> session = authService.validateSession(token);
-//
-//        if (!session.isPresent()) {
-//            throw new AccessDeniedException();
-//        }
-        // !session.get().getUser().isAdmin()
-
-
-        // betofficeAdminJsonService.reconcileRoundWithOpenligadb(token,
-        // roundId);
         betofficeAdminJsonService.updateRound(roundJson);
         return betofficeBasicJsonService.findRoundTable(roundId, groupId);
     }
@@ -267,6 +274,18 @@ public class AdministrationBetofficeServlet {
     @ResponseStatus(value = HttpStatus.FORBIDDEN, reason = "Access denied")
     @ExceptionHandler(AccessDeniedException.class)
     public void forbidden() {
+    }
+
+    private void validateAdminSession(HttpSession httpSession) {
+        if (httpSession == null) {
+            throw new AccessDeniedException();
+        }
+        SecurityToken securityToken = (SecurityToken) httpSession
+                .getAttribute(SecurityToken.class.getName());
+
+        if (!securityToken.getUser().isAdmin()) {
+            throw new AccessDeniedException();
+        }
     }
 
 }

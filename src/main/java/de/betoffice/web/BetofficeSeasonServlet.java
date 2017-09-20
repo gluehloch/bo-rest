@@ -152,58 +152,6 @@ public class BetofficeSeasonServlet {
         return betofficeBasicJsonService.findPrevRound(roundId);
     }
 
-    @CrossOrigin
-    @RequestMapping(value = "/season/round/{roundId}/update", method = RequestMethod.POST, headers = {
-            "Content-type=application/json" })
-    public RoundJson updateRound(@PathVariable("roundId") Long roundId,
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent,
-            HttpSession httpSession) {
-
-        // SecurityTokenJson securityToken = betofficeBasicJsonService.login(
-        // authenticationForm.getNickname(),
-        // authenticationForm.getPassword(), request.getSession().getId(),
-        // request.getRemoteAddr(), userAgent);
-
-        if (httpSession == null) {
-            return null;
-        }
-
-        Object attribute = httpSession
-                .getAttribute(SecurityToken.class.getName());
-
-        RoundJson roundJson = betofficeAdminJsonService
-                .reconcileRoundWithOpenligadb(token, roundId);
-
-        return roundJson;
-    }
-
-    @CrossOrigin
-    @RequestMapping(value = "/season/round/{roundId}/create", method = RequestMethod.POST, headers = {
-            "Content-type=application/json" })
-    public RoundJson createOrUpdateRound(@PathVariable("roundId") Long roundId,
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent,
-            HttpSession httpSession) {
-
-        // SecurityTokenJson securityToken = betofficeBasicJsonService.login(
-        // authenticationForm.getNickname(),
-        // authenticationForm.getPassword(), request.getSession().getId(),
-        // request.getRemoteAddr(), userAgent);
-
-        if (httpSession == null) {
-            return null;
-        }
-
-        Object attribute = httpSession
-                .getAttribute(SecurityToken.class.getName());
-
-        RoundJson roundJson = betofficeAdminJsonService
-                .mountRoundWithOpenligadb(token, roundId);
-
-        return roundJson;
-    }
-
     //
     // round and table
     //
