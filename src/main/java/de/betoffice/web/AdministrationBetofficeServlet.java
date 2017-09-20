@@ -44,7 +44,6 @@ import de.betoffice.web.json.RoundAndTableJson;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SeasonMemberJson;
-import de.winkler.betoffice.service.SecurityToken;
 
 /**
  * The administration part of the betoffice.
@@ -118,8 +117,7 @@ public class AdministrationBetofficeServlet {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent,
             HttpSession httpSession) {
 
-        validateAdminSession(httpSession);
-
+        betofficeAdminJsonService.validateAdminSession(token);
         betofficeAdminJsonService.reconcileRoundWithOpenligadb(token, roundId);
         return betofficeBasicJsonService.findRoundTable(roundId, groupId);
     }
@@ -134,8 +132,7 @@ public class AdministrationBetofficeServlet {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent,
             HttpSession httpSession) {
 
-        validateAdminSession(httpSession);
-
+        betofficeAdminJsonService.validateAdminSession(token);
         betofficeAdminJsonService.mountRoundWithOpenligadb(token, roundId);
         return betofficeBasicJsonService.findRoundTable(roundId, groupId);
     }
@@ -153,8 +150,7 @@ public class AdministrationBetofficeServlet {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent,
             HttpSession httpSession) {
 
-        validateAdminSession(httpSession);
-
+        betofficeAdminJsonService.validateAdminSession(token);
         betofficeAdminJsonService.updateRound(roundJson);
         return betofficeBasicJsonService.findRoundTable(roundId, groupId);
     }
@@ -274,18 +270,6 @@ public class AdministrationBetofficeServlet {
     @ResponseStatus(value = HttpStatus.FORBIDDEN, reason = "Access denied")
     @ExceptionHandler(AccessDeniedException.class)
     public void forbidden() {
-    }
-
-    private void validateAdminSession(HttpSession httpSession) {
-        if (httpSession == null) {
-            throw new AccessDeniedException();
-        }
-        SecurityToken securityToken = (SecurityToken) httpSession
-                .getAttribute(SecurityToken.class.getName());
-
-        if (!securityToken.getUser().isAdmin()) {
-            throw new AccessDeniedException();
-        }
     }
 
 }
