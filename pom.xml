@@ -5,13 +5,13 @@
   <parent>
     <groupId>de.winkler.betoffice</groupId>
     <artifactId>betoffice-maven-parent</artifactId>
-    <version>1.4.0</version>
+    <version>1.5.0</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.betoffice</groupId>
   <artifactId>betoffice-jweb</artifactId>
-  <version>0.6.0</version>
+  <version>0.7.0</version>
   <packaging>war</packaging>
 
   <dependencyManagement>
@@ -65,24 +65,46 @@
           </deployable>
         </configuration>
         <executions>
-          <!-- <execution> <id>start-server</id> <phase>test</phase> <goals>
+          <!-- <execution> <id>start-server</id> <phase>test</phase> <goals> 
             <goal>start</goal> </goals> </execution> -->
-          <!-- <execution> <id>stop-server</id> <phase>test</phase> <goals>
+          <!-- <execution> <id>stop-server</id> <phase>test</phase> <goals> 
             <goal>stop</goal> </goals> </execution> -->
         </executions>
       </plugin>
+
+      <!-- Swagger <plugin> <groupId>com.github.kongchen</groupId> <artifactId>swagger-maven-plugin</artifactId> 
+        <version>3.0.0</version> <configuration> <apiSources> <apiSource> <springmvc>true</springmvc> 
+        <locations> <location>com.wordnik.swagger.sample</location> </locations> 
+        <schemes> <scheme>http</scheme> <scheme>https</scheme> </schemes> <host>www.example.com:8080</host> 
+        <basePath>/api</basePath> <info> <title>Swagger Maven Plugin Sample</title> 
+        <version>v1</version> <description> This is a sample. </description> <termsOfService> 
+        http://www.github.com/kongchen/swagger-maven-plugin </termsOfService> <contact> 
+        <email>kongchen@gmail.com</email> <name>Kong Chen</name> <url>http://kongch.com</url> 
+        </contact> <license> <url>http://www.apache.org/licenses/LICENSE-2.0.html</url> 
+        <name>Apache 2.0</name> </license> </info> <securityDefinitions> <securityDefinition> 
+        <name>basicAuth</name> <type>basic</type> </securityDefinition> <securityDefinition> 
+        <json>/securityDefinition.json</json> </securityDefinition> </securityDefinitions> 
+        <templatePath>${basedir}/src/test/resources/strapdown.html.hbs</templatePath> 
+        <outputPath>${basedir}/generated/document.html</outputPath> <swaggerDirectory>${basedir}/generated/swagger-ui</swaggerDirectory> 
+        <swaggerApiReader>com.wordnik.swagger.jaxrs.reader.DefaultJaxrsApiReader</swaggerApiReader> 
+        <attachSwaggerArtifact>true</attachSwaggerArtifact> <modelConverters>io.swagger.validator.BeanValidator</modelConverters> 
+        </apiSource> </apiSources> </configuration> <executions> <execution> <phase>compile</phase> 
+        <goals> <goal>generate</goal> </goals> </execution> </executions> <dependencies> 
+        <dependency> <groupId>io.swagger</groupId> <artifactId>swagger-hibernate-validations</artifactId> 
+        <version>1.5.6</version> </dependency> </dependencies> </plugin> -->
+
     </plugins>
   </build>
 
   <dependencies>
     <!-- Some problems with an old version -->
-    <!-- <dependency> <groupId>com.ibm.icu</groupId> <artifactId>icu4j</artifactId>
+    <!-- <dependency> <groupId>com.ibm.icu</groupId> <artifactId>icu4j</artifactId> 
       <version>4.8.1.1</version> </dependency> -->
 
     <dependency>
       <groupId>org.apache.tomcat</groupId>
       <artifactId>tomcat-jdbc</artifactId>
-      <version>7.0.27</version>
+      <version>8.5.20</version>
     </dependency>
 
     <dependency>
@@ -96,27 +118,6 @@
       <artifactId>jstl</artifactId>
       <version>1.2</version>
     </dependency>
-
-    <!--
-    <dependency>
-      <groupId>org.jboss.spec</groupId>
-      <artifactId>jboss-javaee-6.0</artifactId>
-      <version>1.0.0.Final</version>
-      <type>pom</type>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.arquillian.junit</groupId>
-      <artifactId>arquillian-junit-container</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.arquillian.container</groupId>
-      <artifactId>arquillian-tomcat-remote-7</artifactId>
-      <version>1.0.0.CR5</version>
-      <scope>test</scope>
-    </dependency>
-    -->
 
     <dependency>
       <groupId>org.springframework</groupId>
@@ -174,35 +175,18 @@
       <scope>test</scope>
     </dependency>
 
-    <!--+
-        ! Exclude the betoffice-storage database dependency pool.
-        !
-        ! TODO May be i should remove the pooling from the storage.
-        +-->
-    <dependency>
-      <groupId>de.winkler.betoffice</groupId>
-      <artifactId>betoffice-storage</artifactId>
-      <version>2.3.0</version>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>commons-dbcp</groupId>
-          <artifactId>commons-dbcp</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>commons-pool</groupId>
-          <artifactId>commons-pool</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>mysql</groupId>
-          <artifactId>mysql-connector-java</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
+    <!--+ ! Exclude the betoffice-storage database dependency pool. ! ! TODO 
+      May be i should remove the pooling from the storage. + -->
+    <!-- <dependency> <groupId>de.winkler.betoffice</groupId> <artifactId>betoffice-storage</artifactId> 
+      <version>2.4.0-SNAPSHOTs</version> <scope>compile</scope> <exclusions> <exclusion> 
+      <groupId>commons-dbcp</groupId> <artifactId>commons-dbcp</artifactId> </exclusion> 
+      <exclusion> <groupId>commons-pool</groupId> <artifactId>commons-pool</artifactId> 
+      </exclusion> <exclusion> <groupId>mysql</groupId> <artifactId>mysql-connector-java</artifactId> 
+      </exclusion> </exclusions> </dependency> -->
     <dependency>
       <groupId>de.betoffice</groupId>
       <artifactId>betoffice-jweb-misc</artifactId>
-      <version>0.3.0</version>
+      <version>0.4.0</version>
     </dependency>
   </dependencies>
 

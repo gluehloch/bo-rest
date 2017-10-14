@@ -12,6 +12,14 @@
 
     <!-- UNDER DEVELOPMENT -->
     
+    <!-- RELEASE -->
+    <release version="betoffice-jweb-0.7.0" date="2016-12-03"
+      description="Use Spring´s CORS annotation">
+      <action dev="andrewinkler" type="add" date="2016-12-27">
+        Added Spring´s CORS annotation.
+      </action>
+    </release>
+
     <!-- RELEASED -->
     <release version="betoffice-jweb-0.6.0" date="2016-12-03"
       description="Role based authorization">

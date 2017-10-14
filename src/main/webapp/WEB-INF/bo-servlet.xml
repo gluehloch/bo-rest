@@ -15,12 +15,18 @@
   <context:component-scan base-package="de.betoffice.web"/>
   <mvc:annotation-driven />
 
+  <!-- ONLY FOR LOCAL TESTING -->
+  <!--
+  <bean id="fixDateTimeProvider" class="de.betoffice.web.FixDateTimeProvider" />
+  -->
+  <bean id="fixDateTimeProvider" class="de.winkler.betoffice.service.DefaultDateTimeProvider" />
+  
   <!-- The Tomcat defined datasource.  -->
   <bean id="myDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
     <property name="jndiName" value="java:comp/env/jdbc/betoffice" />
   </bean>
 
-  <!-- The betoffice spring peristence definitions. -->
+  <!-- The betoffice spring persistence definitions. -->
   <import resource="classpath:betoffice-persistence.xml" />
 
   <!--
