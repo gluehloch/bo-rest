@@ -206,7 +206,15 @@ public class BetofficeSeasonServlet {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/ranking/round/{roundId}/", method = RequestMethod.GET)
+    @RequestMapping(value = "/ranking/roundonly/{roundId}", method = RequestMethod.GET)
+    public UserTableJson findUserTableByRoundOnly(
+            @PathVariable("roundId") Long roundId) {
+
+        return betofficeBasicJsonService.calcUserRankingByRoundOnly(roundId);
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/ranking/round/{roundId}", method = RequestMethod.GET)
     public UserTableJson findUserTableByRound(
             @PathVariable("roundId") Long roundId) {
 
