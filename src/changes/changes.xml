@@ -11,7 +11,13 @@
     -->
 
     <!-- UNDER DEVELOPMENT -->
-    
+    <release version="betoffice-jweb-1.1.0" date="2017-??-??"
+      description="Release 1.1.0">
+      <action dev="andrewinkler" type="add" date="2017-11-07">
+        Short and XShort name for team.
+      </action>
+    </release>
+
     <!-- RELEASED -->
     <release version="betoffice-jweb-1.0.0" date="2017-11-05"
       description="Release 1.0.0">
