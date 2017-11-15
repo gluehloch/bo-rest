@@ -25,8 +25,6 @@ package de.betoffice.web;
 
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -44,6 +42,7 @@ import de.betoffice.web.json.RoundAndTableJson;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SeasonMemberJson;
+import de.betoffice.web.json.TeamJson;
 
 /**
  * The administration part of the betoffice.
@@ -79,197 +78,228 @@ import de.betoffice.web.json.SeasonMemberJson;
 @RequestMapping("/chiefoperator")
 public class AdministrationBetofficeServlet {
 
-    // ------------------------------------------------------------------------
-    // The beans
-    // ------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
+	// The beans
+	// ------------------------------------------------------------------------
 
-    // -- betofficeBasicJsonService -------------------------------------------
+	// -- betofficeBasicJsonService -------------------------------------------
 
-    private BetofficeBasicJsonService betofficeBasicJsonService;
+	private BetofficeBasicJsonService betofficeBasicJsonService;
 
-    @Autowired
-    public void setBetofficeBasicJsonService(
-            BetofficeBasicJsonService _betofficeBasicJsonService) {
+	@Autowired
+	public void setBetofficeBasicJsonService(BetofficeBasicJsonService _betofficeBasicJsonService) {
 
-        betofficeBasicJsonService = _betofficeBasicJsonService;
-    }
+		betofficeBasicJsonService = _betofficeBasicJsonService;
+	}
 
-    // -- betofficeAdminJsonService -------------------------------------------
+	// -- betofficeAdminJsonService -------------------------------------------
 
-    private BetofficeAdminJsonService betofficeAdminJsonService;
+	private BetofficeAdminJsonService betofficeAdminJsonService;
 
-    @Autowired
-    public void setBetofficeAdminJsonService(
-            BetofficeAdminJsonService _betofficeAdminJsonService) {
+	@Autowired
+	public void setBetofficeAdminJsonService(BetofficeAdminJsonService _betofficeAdminJsonService) {
 
-        betofficeAdminJsonService = _betofficeAdminJsonService;
-    }
+		betofficeAdminJsonService = _betofficeAdminJsonService;
+	}
 
-    // ------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
-    @CrossOrigin
-    @RequestMapping(value = "/season/round/{roundId}/group/{groupId}/ligadbupdate", method = RequestMethod.POST, headers = {
-            "Content-type=application/json" })
-    public RoundAndTableJson updateRoundByOpenligaDb(
-            @PathVariable("roundId") Long roundId,
-            @PathVariable("groupId") Long groupId,
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent,
-            HttpSession httpSession) {
+	@CrossOrigin
+	@RequestMapping(value = "/season/round/{roundId}/group/{groupId}/ligadbupdate", method = RequestMethod.POST, headers = {
+			"Content-type=application/json" })
+	public RoundAndTableJson updateRoundByOpenligaDb(@PathVariable("roundId") Long roundId,
+			@PathVariable("groupId") Long groupId,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        betofficeAdminJsonService.validateAdminSession(token);
-        betofficeAdminJsonService.reconcileRoundWithOpenligadb(token, roundId);
-        return betofficeBasicJsonService.findRoundTable(roundId, groupId);
-    }
+		betofficeAdminJsonService.validateAdminSession(token);
+		betofficeAdminJsonService.reconcileRoundWithOpenligadb(token, roundId);
+		return betofficeBasicJsonService.findRoundTable(roundId, groupId);
+	}
 
-    @CrossOrigin
-    @RequestMapping(value = "/season/round/{roundId}/group/{groupId}/ligadbcreate", method = RequestMethod.POST, headers = {
-            "Content-type=application/json" })
-    public RoundAndTableJson createOrUpdateRoundByOpenligaDb(
-            @PathVariable("roundId") Long roundId,
-            @PathVariable("groupId") Long groupId,
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent,
-            HttpSession httpSession) {
+	@CrossOrigin
+	@RequestMapping(value = "/season/round/{roundId}/group/{groupId}/ligadbcreate", method = RequestMethod.POST, headers = {
+			"Content-type=application/json" })
+	public RoundAndTableJson createOrUpdateRoundByOpenligaDb(@PathVariable("roundId") Long roundId,
+			@PathVariable("groupId") Long groupId,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        betofficeAdminJsonService.validateAdminSession(token);
-        betofficeAdminJsonService.mountRoundWithOpenligadb(token, roundId);
-        return betofficeBasicJsonService.findRoundTable(roundId, groupId);
-    }
+		betofficeAdminJsonService.validateAdminSession(token);
+		betofficeAdminJsonService.mountRoundWithOpenligadb(token, roundId);
+		return betofficeBasicJsonService.findRoundTable(roundId, groupId);
+	}
 
-    // ------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
-    @CrossOrigin
-    @RequestMapping(value = "/season/round/{roundId}/group/{groupId}/update", method = RequestMethod.POST, headers = {
-            "Content-type=application/json" })
-    public RoundAndTableJson updateRound(
-            @PathVariable("roundId") Long roundId,
-            @PathVariable("groupId") Long groupId,
-            @RequestBody RoundJson roundJson,
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent,
-            HttpSession httpSession) {
+	@CrossOrigin
+	@RequestMapping(value = "/season/round/{roundId}/group/{groupId}/update", method = RequestMethod.POST, headers = {
+			"Content-type=application/json" })
+	public RoundAndTableJson updateRound(@PathVariable("roundId") Long roundId, @PathVariable("groupId") Long groupId,
+			@RequestBody RoundJson roundJson,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        betofficeAdminJsonService.validateAdminSession(token);
-        betofficeAdminJsonService.updateRound(roundJson);
-        return betofficeBasicJsonService.findRoundTable(roundId, groupId);
-    }
+		betofficeAdminJsonService.validateAdminSession(token);
+		betofficeAdminJsonService.updateRound(roundJson);
+		return betofficeBasicJsonService.findRoundTable(roundId, groupId);
+	}
 
-    // -- season administration -----------------------------------------------
+	// -- season administration -----------------------------------------------
 
-    @CrossOrigin
-    @RequestMapping(value = "/season/{seasonId}", method = RequestMethod.GET, headers = {
-            "Content-type=application/json" })
-    public SeasonJson findSeason(@PathVariable("seasonId") Long seasonId) {
-        return betofficeBasicJsonService.findSeasonById(seasonId);
-    }
+	@CrossOrigin
+	@RequestMapping(value = "/season/{seasonId}", method = RequestMethod.GET, headers = {
+			"Content-type=application/json" })
+	public SeasonJson findSeason(@PathVariable("seasonId") Long seasonId) {
+		return betofficeBasicJsonService.findSeasonById(seasonId);
+	}
 
-    @CrossOrigin
-    @RequestMapping(value = "/season/list", method = RequestMethod.GET, headers = {
-            "Content-type=application/json" })
-    public List<SeasonJson> findSeasons() {
-        return betofficeBasicJsonService.findAllSeason();
-    }
+	@CrossOrigin
+	@RequestMapping(value = "/season/list", method = RequestMethod.GET, headers = { "Content-type=application/json" })
+	public List<SeasonJson> findSeasons() {
+		return betofficeBasicJsonService.findAllSeason();
+	}
 
-    @CrossOrigin
-    @RequestMapping(value = "/season/add", method = RequestMethod.POST, headers = {
-            "Content-type=application/json" })
-    public SeasonJson addSeason(@RequestBody SeasonJson season) {
-        return betofficeAdminJsonService.addSeason(season);
-    }
+	@CrossOrigin
+	@RequestMapping(value = "/season/add", method = RequestMethod.POST, headers = { "Content-type=application/json" })
+	public SeasonJson addSeason(@RequestBody SeasonJson season,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-    @CrossOrigin
-    @RequestMapping(value = "/season/update", method = RequestMethod.POST, headers = {
-            "Content-type=application/json" })
-    public SeasonJson updateSeason(@RequestBody SeasonJson season) {
-        return betofficeAdminJsonService.updateSeason(season);
-    }
+		betofficeAdminJsonService.validateAdminSession(token);
+		return betofficeAdminJsonService.addSeason(season);
+	}
 
-    @CrossOrigin
-    @RequestMapping(value = "/season/create", method = RequestMethod.POST, headers = {
-            "Content-type=application/json" })
-    public SeasonJson createSeason(@RequestBody SeasonJson season) {
-        return betofficeAdminJsonService.addSeason(season);
-    }
+	@CrossOrigin
+	@RequestMapping(value = "/season/update", method = RequestMethod.POST, headers = {
+			"Content-type=application/json" })
+	public SeasonJson updateSeason(@RequestBody SeasonJson season) {
+		return betofficeAdminJsonService.updateSeason(season);
+	}
 
-    // -- user administration -------------------------------------------------
+	@CrossOrigin
+	@RequestMapping(value = "/season/create", method = RequestMethod.POST, headers = {
+			"Content-type=application/json" })
+	public SeasonJson createSeason(@RequestBody SeasonJson season) {
+		return betofficeAdminJsonService.addSeason(season);
+	}
 
-    @CrossOrigin
-    @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET, headers = {
-            "Content-type=application/json" })
-    public PartyJson findUser(@PathVariable("userId") Long userId) {
-        return betofficeAdminJsonService.findUser(userId);
-    }
+	// -- user administration -------------------------------------------------
 
-    @CrossOrigin
-    @RequestMapping(value = "/user/list", method = RequestMethod.GET, headers = {
-            "Content-type=application/json" })
-    public List<PartyJson> findUsers() {
-        return betofficeAdminJsonService.findUsers();
-    }
+	@CrossOrigin
+	@RequestMapping(value = "/user/{userId}", method = RequestMethod.GET, headers = { "Content-type=application/json" })
+	public PartyJson findUser(@PathVariable("userId") Long userId) {
+		return betofficeAdminJsonService.findUser(userId);
+	}
 
-    @CrossOrigin
-    @RequestMapping(value = "/user/add", method = RequestMethod.POST, headers = {
-            "Content-type=application/json" })
-    public PartyJson addUser(@RequestBody PartyJson partyJson) {
-        return betofficeAdminJsonService.addUser(partyJson);
-    }
+	@CrossOrigin
+	@RequestMapping(value = "/user/list", method = RequestMethod.GET, headers = { "Content-type=application/json" })
+	public List<PartyJson> findUsers() {
+		return betofficeAdminJsonService.findUsers();
+	}
 
-    @CrossOrigin
-    @RequestMapping(value = "/user/update", method = RequestMethod.POST, headers = {
-            "Content-type=application/json" })
-    public PartyJson updateUser(@RequestBody PartyJson partyJson,
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
-        return betofficeAdminJsonService.updateUser(partyJson);
-    }
+	@CrossOrigin
+	@RequestMapping(value = "/user/add", method = RequestMethod.POST, headers = { "Content-type=application/json" })
+	public PartyJson addUser(@RequestBody PartyJson partyJson,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
-    // -- user/season administration ------------------------------------------
+		betofficeAdminJsonService.validateAdminSession(token);
+		return betofficeAdminJsonService.addUser(partyJson);
+	}
 
-    @CrossOrigin
-    @RequestMapping(value = "/season/{seasonId}/potentialuser", method = RequestMethod.GET, headers = {
-            "Content-type=application/json" })
-    public List<SeasonMemberJson> listPotentialUsers(
-            @PathVariable("seasonId") Long seasonId) {
+	@CrossOrigin
+	@RequestMapping(value = "/user/update", method = RequestMethod.POST, headers = { "Content-type=application/json" })
+	public PartyJson updateUser(@RequestBody PartyJson partyJson,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
-        return betofficeAdminJsonService.findPotentialSeasonMembers(seasonId);
-    }
+		betofficeAdminJsonService.validateAdminSession(token);
+		return betofficeAdminJsonService.updateUser(partyJson);
+	}
 
-    @CrossOrigin
-    @RequestMapping(value = "/season/{seasonId}/user", method = RequestMethod.GET, headers = {
-            "Content-type=application/json" })
-    public List<SeasonMemberJson> listUsers(
-            @PathVariable("seasonId") Long seasonId) {
+	// -- team administration -------------------------------------------------
 
-        return betofficeAdminJsonService.findAllSeasonMembers(seasonId);
-    }
+	@CrossOrigin
+	@RequestMapping(value = "/team/{teamId}", method = RequestMethod.GET, headers = { "Content-type=application/json" })
+	public TeamJson findTeam(@PathVariable("teamId") Long teamId) {
+		return betofficeAdminJsonService.findTeam(teamId);
+	}
 
-    @CrossOrigin
-    @RequestMapping(value = "/season/{seasonId}/user/add", method = RequestMethod.POST, headers = {
-            "Content-type=application/json" })
-    public List<SeasonMemberJson> addUsers(
-            @PathVariable("seasonId") Long seasonId,
-            @RequestBody List<SeasonMemberJson> members) {
+	@CrossOrigin
+	@RequestMapping(value = "/team/list", method = RequestMethod.GET, headers = { "Content-type=application/json" })
+	public List<TeamJson> findTeams() {
+		return betofficeAdminJsonService.findTeams();
+	}
 
-        return betofficeAdminJsonService.addSeasonMembers(seasonId, members);
-    }
+	@CrossOrigin
+	@RequestMapping(value = "/team/add", method = RequestMethod.POST, headers = { "Content-type=application/json" })
+	public TeamJson addTeam(@RequestBody TeamJson teamJson,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
+		
+		betofficeAdminJsonService.validateAdminSession(token);
+		return betofficeAdminJsonService.addTeam(teamJson);
+	}
 
-    @CrossOrigin
-    @RequestMapping(value = "/season/{seasonId}/user/remove", method = RequestMethod.POST, headers = {
-            "Content-type=application/json" })
-    public List<SeasonMemberJson> removeUsers(
-            @PathVariable("seasonId") Long seasonId,
-            @RequestBody List<SeasonMemberJson> members) {
+	@CrossOrigin
+	@RequestMapping(value = "/team/update", method = RequestMethod.POST, headers = { "Content-type=application/json" })
+	public TeamJson updateTeam(@RequestBody TeamJson teamJson,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
+		
+		betofficeAdminJsonService.validateAdminSession(token);
+		return betofficeAdminJsonService.updateTeam(teamJson);
+	}
 
-        return betofficeAdminJsonService.removeSeasonMembers(seasonId, members);
-    }
+	// -- user/season administration ------------------------------------------
 
-    /**
-     * Convert a predefined exception to an HTTP Status code
-     */
-    @ResponseStatus(value = HttpStatus.FORBIDDEN, reason = "Access denied")
-    @ExceptionHandler(AccessDeniedException.class)
-    public void forbidden() {
-    }
+	@CrossOrigin
+	@RequestMapping(value = "/season/{seasonId}/potentialuser", method = RequestMethod.GET, headers = {
+			"Content-type=application/json" })
+	public List<SeasonMemberJson> listPotentialUsers(@PathVariable("seasonId") Long seasonId) {
+
+		return betofficeAdminJsonService.findPotentialSeasonMembers(seasonId);
+	}
+
+	@CrossOrigin
+	@RequestMapping(value = "/season/{seasonId}/user", method = RequestMethod.GET, headers = {
+			"Content-type=application/json" })
+	public List<SeasonMemberJson> listUsers(@PathVariable("seasonId") Long seasonId) {
+
+		return betofficeAdminJsonService.findAllSeasonMembers(seasonId);
+	}
+
+	@CrossOrigin
+	@RequestMapping(value = "/season/{seasonId}/user/add", method = RequestMethod.POST, headers = {
+			"Content-type=application/json" })
+	public List<SeasonMemberJson> addUsers(@PathVariable("seasonId") Long seasonId,
+			@RequestBody List<SeasonMemberJson> members,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
+
+		betofficeAdminJsonService.validateAdminSession(token);
+		return betofficeAdminJsonService.addSeasonMembers(seasonId, members);
+	}
+
+	@CrossOrigin
+	@RequestMapping(value = "/season/{seasonId}/user/remove", method = RequestMethod.POST, headers = {
+			"Content-type=application/json" })
+	public List<SeasonMemberJson> removeUsers(@PathVariable("seasonId") Long seasonId,
+			@RequestBody List<SeasonMemberJson> members,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
+
+		betofficeAdminJsonService.validateAdminSession(token);
+		return betofficeAdminJsonService.removeSeasonMembers(seasonId, members);
+	}
+
+	/**
+	 * Convert a predefined exception to an HTTP Status code
+	 */
+	@ResponseStatus(value = HttpStatus.FORBIDDEN, reason = "Access denied")
+	@ExceptionHandler(AccessDeniedException.class)
+	public void forbidden() {
+	}
 
 }
