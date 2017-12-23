@@ -46,8 +46,8 @@ import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 /**
- * A test class for {@link TippServlet}. This test case needs a running
- * web server!
+ * A test class for {@link TippServlet}. This test case needs a running web
+ * server!
  * 
  * @author by Andre Winkler
  */

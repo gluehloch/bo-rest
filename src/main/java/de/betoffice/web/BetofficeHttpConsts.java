@@ -33,7 +33,7 @@ public class BetofficeHttpConsts {
     /** Header key name for the betoffice token. */
     public static final String HTTP_HEADER_BETOFFICE_TOKEN = "betofficeToken";
     public static final String HTTP_HEADER_BETOFFICE_NICKNAME = "betofficeNickname";
-    
+
     /** Header key name for the user-agent. */
     public static final String HTTP_HEADER_USER_AGENT = "User-Agent";
 

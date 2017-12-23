@@ -356,7 +356,7 @@ public class BetofficeSeasonServlet {
     public RoundJson submitTipp(@RequestBody SubmitTippRoundJson tippRoundJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
-        
+
         return betofficeBasicJsonService.submitTipp(token, tippRoundJson);
     }
 
@@ -367,6 +367,5 @@ public class BetofficeSeasonServlet {
     @ExceptionHandler(AccessDeniedException.class)
     public void forbidden() {
     }
-    
-    
+
 }

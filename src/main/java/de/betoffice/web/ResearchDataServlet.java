@@ -52,48 +52,52 @@ import de.winkler.betoffice.storage.enums.TeamType;
 @RequestMapping("/research")
 public class ResearchDataServlet {
 
-	private SeasonManagerService seasonManagerService;
+    private SeasonManagerService seasonManagerService;
 
-	@Autowired
-	public void setSeasonManagerService(SeasonManagerService _seasonManagerService) {
-		seasonManagerService = _seasonManagerService;
-	}
+    @Autowired
+    public void setSeasonManagerService(
+            SeasonManagerService _seasonManagerService) {
+        seasonManagerService = _seasonManagerService;
+    }
 
-	private MasterDataManagerService masterDataManagerService;
+    private MasterDataManagerService masterDataManagerService;
 
-	@Autowired
-	public void setMasterDataManagerService(MasterDataManagerService _masterDataManagerService) {
-		masterDataManagerService = _masterDataManagerService;
-	}
+    @Autowired
+    public void setMasterDataManagerService(
+            MasterDataManagerService _masterDataManagerService) {
+        masterDataManagerService = _masterDataManagerService;
+    }
 
-	// ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
 
-	@CrossOrigin
-	@RequestMapping(value = "/findDfbTeams", method = RequestMethod.GET)
-	public @ResponseBody List<TeamJson> findDfbTeams() {
-		List<Team> dfbTeams = masterDataManagerService.findTeams(TeamType.DFB);
-		return JsonBuilder.toJsonWithTeams(dfbTeams);
-	}
+    @CrossOrigin
+    @RequestMapping(value = "/findDfbTeams", method = RequestMethod.GET)
+    public @ResponseBody List<TeamJson> findDfbTeams() {
+        List<Team> dfbTeams = masterDataManagerService.findTeams(TeamType.DFB);
+        return JsonBuilder.toJsonWithTeams(dfbTeams);
+    }
 
-	@CrossOrigin
-	@RequestMapping(value = "/findFifaTeams", method = RequestMethod.GET)
-	public @ResponseBody List<TeamJson> findFifaTeams() {
-		List<Team> fifaTeams = masterDataManagerService.findTeams(TeamType.FIFA);
-		return JsonBuilder.toJsonWithTeams(fifaTeams);
-	}
+    @CrossOrigin
+    @RequestMapping(value = "/findFifaTeams", method = RequestMethod.GET)
+    public @ResponseBody List<TeamJson> findFifaTeams() {
+        List<Team> fifaTeams = masterDataManagerService
+                .findTeams(TeamType.FIFA);
+        return JsonBuilder.toJsonWithTeams(fifaTeams);
+    }
 
-	@CrossOrigin
-	@RequestMapping(value = "/teamvsteam", method = RequestMethod.GET)
-	public @ResponseBody HistoryTeamVsTeamJson research(
-			@RequestParam(value = "homeTeam", required = true) long homeTeamId,
-			@RequestParam(value = "guestTeam", required = true) long guestTeamId) {
+    @CrossOrigin
+    @RequestMapping(value = "/teamvsteam", method = RequestMethod.GET)
+    public @ResponseBody HistoryTeamVsTeamJson research(
+            @RequestParam(value = "homeTeam", required = true) long homeTeamId,
+            @RequestParam(value = "guestTeam", required = true) long guestTeamId) {
 
-		Team homeTeam = masterDataManagerService.findTeamById(homeTeamId);
-		Team guestTeam = masterDataManagerService.findTeamById(guestTeamId);
+        Team homeTeam = masterDataManagerService.findTeamById(homeTeamId);
+        Team guestTeam = masterDataManagerService.findTeamById(guestTeamId);
 
-		List<Game> findMatches = seasonManagerService.findMatches(homeTeam, guestTeam);
+        List<Game> findMatches = seasonManagerService.findMatches(homeTeam,
+                guestTeam);
 
-		return HistoryTeamVsTeamJsonMapper.map(findMatches);
-	}
+        return HistoryTeamVsTeamJsonMapper.map(findMatches);
+    }
 
 }
