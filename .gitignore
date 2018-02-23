@@ -15,3 +15,5 @@ pirates
 .settings
 .springbeans
 /bin
+.vscode
+
