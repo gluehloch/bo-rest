@@ -173,28 +173,10 @@
       <scope>test</scope>
     </dependency>
 
-    <!--+ ! Exclude the betoffice-storage database dependency pool. ! ! TODO 
-      May be i should remove the pooling from the storage. + -->
-    <!-- <dependency> <groupId>de.winkler.betoffice</groupId> <artifactId>betoffice-storage</artifactId> 
-      <version>2.4.0-SNAPSHOTs</version> <scope>compile</scope> <exclusions> <exclusion> 
-      <groupId>commons-dbcp</groupId> <artifactId>commons-dbcp</artifactId> </exclusion> 
-      <exclusion> <groupId>commons-pool</groupId> <artifactId>commons-pool</artifactId> 
-      </exclusion> <exclusion> <groupId>mysql</groupId> <artifactId>mysql-connector-java</artifactId> 
-      </exclusion> </exclusions> </dependency> -->
     <dependency>
       <groupId>de.betoffice</groupId>
       <artifactId>betoffice-jweb-misc</artifactId>
-      <version>0.6.0</version>
-    </dependency>
-    <dependency>
-      <groupId>de.betoffice</groupId>
-      <artifactId>betoffice-openligadb</artifactId>
-      <version>1.5.0</version>
-    </dependency>
-    <dependency>
-      <groupId>de.winkler.betoffice</groupId>
-      <artifactId>betoffice-storage</artifactId>
-      <version>2.5.1-SNAPSHOT</version>
+      <version>1.1.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
