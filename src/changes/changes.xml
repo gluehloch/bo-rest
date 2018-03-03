@@ -11,7 +11,9 @@
     -->
 
     <!-- UNDER DEVELOPMENT -->
-    <release version="betoffice-jweb-1.1.1" date="2018-02-??"
+    
+    <!-- RELEASED -->
+    <release version="betoffice-jweb-1.1.1" date="2018-03-03"
       description="Release 1.1.1">
       <action dev="andrewinkler" type="fix" date="2018-02-02">
         Fix for service: Removing parties from a season.
