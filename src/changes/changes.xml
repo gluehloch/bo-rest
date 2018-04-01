@@ -11,7 +11,9 @@
     -->
 
     <!-- UNDER DEVELOPMENT -->
-    <release version="betoffice-jweb-1.1.2" date="2018-??-??"
+    
+    <!-- RELEASED -->
+    <release version="betoffice-jweb-1.1.2" date="2018-04-01"
       description="Release 1.1.2">
       <action dev="andrewinkler" type="update" date="2018-03-05">
         Spring and Hibernate version update.
