@@ -24,7 +24,7 @@
 
 package de.betoffice.web;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,8 +46,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 /**
- * A test class for {@link TippServlet}. This test case needs a running web
- * server!
+ * This is under construction.
  * 
  * @author by Andre Winkler
  */

@@ -73,17 +73,6 @@ public class BetofficeSeasonServlet {
         betofficeBasicJsonService = _betofficeBasicJsonService;
     }
 
-    // -- betofficeAdminJsonService -------------------------------------------
-
-    private BetofficeAdminJsonService betofficeAdminJsonService;
-
-    @Autowired
-    public void setBetofficeAdminJsonService(
-            BetofficeAdminJsonService _betofficeAdminJsonService) {
-
-        betofficeAdminJsonService = _betofficeAdminJsonService;
-    }
-
     // ------------------------------------------------------------------------
 
     @CrossOrigin
