@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.RoundAndTableJson;
 import de.betoffice.web.json.RoundJson;
@@ -141,6 +142,16 @@ public class BetofficeSeasonServlet {
         return betofficeBasicJsonService.findPrevRound(roundId);
     }
 
+    //
+    // game
+    //
+    
+    @CrossOrigin
+    @RequestMapping(value = "/season/game/{gameId}", method = RequestMethod.GET)
+    public GameJson findGame(@PathVariable("gameId") Long gameId) {
+        return betofficeBasicJsonService.findGame(gameId);
+    }
+    
     //
     // round and table
     //
