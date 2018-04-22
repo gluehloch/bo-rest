@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.PartyJson;
 import de.betoffice.web.json.RoundAndTableJson;
 import de.betoffice.web.json.RoundJson;
@@ -148,6 +149,18 @@ public class AdministrationBetofficeServlet {
         betofficeAdminJsonService.validateAdminSession(token);
         betofficeAdminJsonService.updateRound(roundJson);
         return betofficeBasicJsonService.findRoundTable(roundId, groupId);
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/game/update", method = RequestMethod.POST, headers = {
+            "Content-type=application/json" })
+    public GameJson updateGame(@RequestBody GameJson gameJson,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
+
+        betofficeAdminJsonService.validateAdminSession(token);
+        betofficeAdminJsonService.updateGame(gameJson);
+        return betofficeBasicJsonService.findGame(gameJson.getId());
     }
 
     // -- season administration -----------------------------------------------
