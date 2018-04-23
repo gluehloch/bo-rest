@@ -15,7 +15,7 @@
       description="Release 1.2.0">
       <action dev="andrewinkler" type="update" date="2018-04-13">
         Support for ko games (overtime and penalty). New service method
-        for game operations.
+        for game operations (find and update).
       </action>
     </release>
 

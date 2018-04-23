@@ -147,7 +147,7 @@ public class BetofficeSeasonServlet {
     //
     
     @CrossOrigin
-    @RequestMapping(value = "/season/game/{gameId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/game/{gameId}", method = RequestMethod.GET)
     public GameJson findGame(@PathVariable("gameId") Long gameId) {
         return betofficeBasicJsonService.findGame(gameId);
     }
