@@ -11,6 +11,14 @@
     -->
 
     <!-- UNDER DEVELOPMENT -->
+    <!-- Under development -->
+    <release version="betoffice-jweb-misc-1.2.2" date="2018-06-15"
+      description="">
+      <action dev="andrewinkler" type="add" date="2018-06-15">
+        Don´t forget to set the round before update. Issue
+        <a href="https://bitbucket.org/teamwinkler/angular2/issues/12/tipp-bersicht-wird-nicht-angezeigt">#12</a>
+      </action>
+    </release>
     
     <!-- RELEASED -->
     <release version="betoffice-jweb-1.2.1" date="2018-06-06"
