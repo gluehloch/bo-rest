@@ -11,8 +11,9 @@
     -->
 
     <!-- UNDER DEVELOPMENT -->
-    <!-- Under development -->
-    <release version="betoffice-jweb-misc-1.2.2" date="2018-06-15"
+    
+    <!-- RELEASED -->
+    <release version="betoffice-jweb-misc-1.2.2" date="2018-07-12"
       description="">
       <action dev="andrewinkler" type="add" date="2018-06-15">
         Don´t forget to set the round before update. Issue
