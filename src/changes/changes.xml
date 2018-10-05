@@ -16,6 +16,10 @@
       <action dev="andrewinkler" type="update" date="2018-10-05">
         Java 10
       </action>
+      <action dev="andrewinkler" type="add" date="2018-10-05">
+        Added Jenkinsfile for some experiments with Jenkins and
+        a build pipeline.
+      </action>
     </release>
     
     <!-- RELEASED -->
