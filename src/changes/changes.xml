@@ -11,7 +11,9 @@
     -->
 
     <!-- UNDER DEVELOPMENT -->
-    <release version="betoffice-jweb-misc-1.2.3" date="2018-10-05"
+    
+    <!-- RELEASED -->
+    <release version="betoffice-jweb-misc-1.2.3" date="2019-03-22"
       description="Java 11">
       <action dev="andrewinkler" type="update" date="2019-02-15">
         Java 11. I have to release faster...
