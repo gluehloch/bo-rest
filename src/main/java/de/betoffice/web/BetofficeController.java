@@ -57,7 +57,7 @@ import de.winkler.betoffice.service.SecurityToken;
  */
 @RestController
 @RequestMapping("/office")
-public class BetofficeSeasonServlet {
+public class BetofficeController {
 
     // ------------------------------------------------------------------------
     // The beans
@@ -65,11 +65,11 @@ public class BetofficeSeasonServlet {
 
     // -- betofficeBasicJsonService -------------------------------------------
 
-    private BetofficeBasicJsonService betofficeBasicJsonService;
+    private BetofficeService betofficeBasicJsonService;
 
     @Autowired
     public void setBetofficeBasicJsonService(
-            BetofficeBasicJsonService _betofficeBasicJsonService) {
+            BetofficeService _betofficeBasicJsonService) {
 
         betofficeBasicJsonService = _betofficeBasicJsonService;
     }

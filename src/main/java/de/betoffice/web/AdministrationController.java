@@ -48,36 +48,11 @@ import de.betoffice.web.json.TeamJson;
 /**
  * The administration part of the betoffice.
  * 
- * <pre>
- * /user/list          Listet alle bekannten User
- * /user/add           Kreiert einen neuen User
- * /user/update        Ändert die Daten eines Users.
- * 
- * /season/list
- * /season/{seasonId}/add          ??? DO I NEED THIS ???
- * /season/{seasonId}/update       ??? DO I NEED THIS ???
- * 
- * /season/{seasonId}/potentialuser Potentielle Tipp-Teilnehmer
- * /season/{seasonId}/user          Aufistung aller Tipp-Teilnehmer 
- * /season/{seasonId}/user/add      Ergänzt die Liste der Tipp-Teilnehmer um einen Teilnehmer
- * /season/{seasonId}/user/remove   Entfernt aus der Liste der Tipp-Teilnehmer einen Teilnehmer
- * 
- * /season/{seasonId}/matchday/list   Auflistung aller Spieltage einer Meisterschaft
- * /season/{seasonId}/matchday/add    Ergänzt die Meisterschaft um einen Spieltag
- * /season/{seasonId}/matchday/remove Entfernt einen Spieltag aus der Meisterschaft
- * /season/{seasonId}/matchday/update Ändert die Daten eines Spieltags
- * 
- * /season/{seasonId}/matchday/{matchday}/game/list   Auflistung aller Spiele eines Spieltages
- * /season/{seasonId}/matchday/{matchday}/game/add    Ergänzt den Spieltag um ein Spiel
- * /season/{seasonId}/matchday/{matchday}/game/remove Entfernt ein Spiel aus dem Spieltag
- * /season/{seasonId}/matchday/{matchday}/game/update Ändert die Daten eines Spiels
- * </pre>
- * 
  * @author Andre Winkler
  */
 @RestController
 @RequestMapping("/chiefoperator")
-public class AdministrationBetofficeServlet {
+public class AdministrationController {
 
     // ------------------------------------------------------------------------
     // The beans
@@ -85,22 +60,22 @@ public class AdministrationBetofficeServlet {
 
     // -- betofficeBasicJsonService -------------------------------------------
 
-    private BetofficeBasicJsonService betofficeBasicJsonService;
+    private BetofficeService betofficeBasicJsonService;
 
     @Autowired
     public void setBetofficeBasicJsonService(
-            BetofficeBasicJsonService _betofficeBasicJsonService) {
+            BetofficeService _betofficeBasicJsonService) {
 
         betofficeBasicJsonService = _betofficeBasicJsonService;
     }
 
     // -- betofficeAdminJsonService -------------------------------------------
 
-    private BetofficeAdminJsonService betofficeAdminJsonService;
+    private AdminService betofficeAdminJsonService;
 
     @Autowired
     public void setBetofficeAdminJsonService(
-            BetofficeAdminJsonService _betofficeAdminJsonService) {
+            AdminService _betofficeAdminJsonService) {
 
         betofficeAdminJsonService = _betofficeAdminJsonService;
     }
