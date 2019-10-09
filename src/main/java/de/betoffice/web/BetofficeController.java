@@ -23,14 +23,12 @@
 
 package de.betoffice.web;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -65,26 +63,18 @@ public class BetofficeController {
     // The beans
     // ------------------------------------------------------------------------
 
-    // -- betofficeBasicJsonService -------------------------------------------
-
-    private BetofficeService betofficeBasicJsonService;
+    @Autowired
+    BetofficeService betofficeBasicJsonService;
 
     @Autowired
-    public void setBetofficeBasicJsonService(
-            BetofficeService _betofficeBasicJsonService) {
-
-        betofficeBasicJsonService = _betofficeBasicJsonService;
-    }
+    VersionService versionService;   
 
     // ------------------------------------------------------------------------
 
     @CrossOrigin
     @RequestMapping(value = "/ping", method = RequestMethod.GET)
     public PingDateTime ping() {
-        Date now = DateTime.now().toDate();
-        PingDateTime pdt = new PingDateTime();
-        pdt.setDateTime(now);
-        return pdt;
+        return versionService.version();
     }
 
     @CrossOrigin

@@ -19,6 +19,9 @@
         <action dev="andrewinkler" type="add" date="2919-07-30">
             Add community support.
         </action>
+        <action dev="andrewinkler" type="add" date="2019-10-09">
+            Ping service.
+        </action>
     </release>
     
     <!-- RELEASED -->
