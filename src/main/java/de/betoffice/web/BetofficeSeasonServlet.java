@@ -43,6 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GroupTypeJson;
+import de.betoffice.web.json.PingJson;
 import de.betoffice.web.json.RoundAndTableJson;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonJson;
@@ -75,11 +76,18 @@ public class BetofficeSeasonServlet {
     }
 
     // ------------------------------------------------------------------------
+    
+    @CrossOrigin
+    @RequestMapping(value = "/ping", method = RequestMethod.GET)
+    public PingJson ping() {
+        return betofficeBasicJsonService.ping();
+    }
+    
+    // ------------------------------------------------------------------------
 
     @CrossOrigin
     @RequestMapping(value = "/season/list", method = RequestMethod.GET)
     public List<SeasonJson> findAllSeason(HttpServletResponse response) {
-
         return betofficeBasicJsonService.findAllSeason();
     }
 

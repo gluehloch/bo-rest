@@ -11,7 +11,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.betoffice</groupId>
   <artifactId>betoffice-jweb</artifactId>
-  <version>1.2.3</version>
+  <version>1.2.4</version>
   <packaging>war</packaging>
 
   <dependencyManagement>
@@ -152,19 +152,33 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
-      <version>2.9.4</version>
+      <version>2.11.0</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
-      <version>2.9.4</version>
+      <version>2.11.0</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.9.4</version>
+      <version>2.11.0</version>
     </dependency>
-
+    <dependency>
+      <groupId>com.fasterxml.jackson.module</groupId>
+      <artifactId>jackson-module-parameter-names</artifactId>
+      <version>2.11.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jdk8</artifactId>
+      <version>2.11.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+      <version>2.11.0</version>
+    </dependency>    
     <!-- Make it testable... -->
     <dependency>
       <groupId>net.sourceforge.htmlunit</groupId>
@@ -176,7 +190,7 @@
     <dependency>
       <groupId>de.betoffice</groupId>
       <artifactId>betoffice-jweb-misc</artifactId>
-      <version>1.2.3</version>
+      <version>1.2.4</version>
     </dependency>
   </dependencies>
 
