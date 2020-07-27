@@ -11,7 +11,9 @@
     -->
 
     <!-- UNDER DEVELOPMENT -->
-    <release version="betoffice-jweb-misc-1.2.4" date="2020-07-??"
+
+    <!-- RELEASED -->
+    <release version="betoffice-jweb-misc-1.2.4" date="2020-07-27"
       description="Date time and the time zone problem">
       <action dev="andrewinkler" type="fix" date="2020-06-26">
         Date and time. Only with timezone.
