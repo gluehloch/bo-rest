@@ -1,0 +1,28 @@
+[Unit]
+Description=Apache Tomcat Web Application Container
+After=network.target
+
+[Service]
+Type=forking
+
+Environment=JAVA_HOME=/opt/devtools/java/jdk-14.0.1
+Environment=CATALINA_PID=/opt/devtools/apache-tomcat/tomcat-prod/temp/tomcat.pid
+Environment=CATALINA_HOME=/opt/devtools/apache-tomcat/tomcat-prod
+Environment=CATALINA_BASE=/opt/devtools/apache-tomcat/tomcat-prod
+Environment='CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC'
+Environment='JAVA_OPTS=-Duser.timezone=Europe/Berlin -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom'
+Environment=AWTOOLS_CONFDIR=/opt/conf
+
+ExecStart=/opt/devtools/apache-tomcat/tomcat-prod/bin/startup.sh
+ExecStop=/opt/devtools/apache-tomcat/tomcat-prod/bin/shutdown.sh
+
+User=tomcat
+Group=tomcat
+UMask=0007
+RestartSec=30
+Restart=always
+TimeoutStartSec=240
+TimeoutStopSec=240
+
+[Install]
+WantedBy=multi-user.target
