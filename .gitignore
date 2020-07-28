@@ -1,21 +1,31 @@
+# Eclipse
 eclipse-bin
-build.properties
-target
-*.log
-betoffice.log.*
-project.index
-project.xml.md5
-database.properties
-tmp
 eclipse-target
-pirates
-*.iml
 .classpath
 .project
 .settings
 .springbeans
 /bin
+
+# Maven
+target
+*.log
+build.properties
+database.properties
+betoffice.log.*
+
+project.index
+project.xml.md5
+
+tmp
+
+pirates
+*.iml
+
+# VisualCode
 .vscode
 .idea
 .dbeaver
 
+# IntelliJ
+.idea

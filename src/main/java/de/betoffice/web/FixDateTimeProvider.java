@@ -24,8 +24,9 @@
 
 package de.betoffice.web;
 
-import org.joda.time.DateTime;
-import org.springframework.stereotype.Component;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import de.winkler.betoffice.service.DateTimeProvider;
 
@@ -33,15 +34,20 @@ import de.winkler.betoffice.service.DateTimeProvider;
  * 
  * @author Andre Winkler
  */
-@Component
+//@Component("dataTimeProvider")
 public class FixDateTimeProvider implements DateTimeProvider {
 
     /**
      * Kurz vor dem letzten Spieltag der Bundesliga 2016/2017.
      */
     @Override
-    public DateTime currentDateTime() {
-        return new DateTime(2017, 5, 20, 12, 0);
+    public ZonedDateTime currentDateTime() {
+        return ZonedDateTime.of(LocalDateTime.of(2020, 06, 05, 12, 00), ZoneId.of("Europe/Berlin"));
+    }
+
+    @Override
+    public ZoneId defaultZoneId() {
+        return ZoneId.of("Europe/Berlin");
     }
 
 }

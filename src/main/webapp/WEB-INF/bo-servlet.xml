@@ -18,9 +18,9 @@
   <!-- ONLY FOR LOCAL TESTING -->
   <!--
   <bean id="fixDateTimeProvider" class="de.betoffice.web.FixDateTimeProvider" />
-  -->
   <bean id="fixDateTimeProvider" class="de.winkler.betoffice.service.DefaultDateTimeProvider" />
-  
+  -->
+
   <!-- The Tomcat defined datasource.  -->
   <bean id="myDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
     <property name="jndiName" value="java:comp/env/jdbc/betoffice" />
