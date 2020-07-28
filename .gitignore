@@ -21,6 +21,7 @@ tmp
 
 pirates
 *.iml
+.dbeaver
 
 # VisualCode
 .vscode
