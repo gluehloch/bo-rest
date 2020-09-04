@@ -13,7 +13,7 @@
     <!-- UNDER DEVELOPMENT -->
 
     <!-- RELEASED -->
-    <release version="betoffice-jweb-misc-1.2.4" date="2020-07-27"
+    <release version="betoffice-jweb-1.2.4" date="2020-07-27"
       description="Date time and the time zone problem">
       <action dev="andrewinkler" type="fix" date="2020-06-26">
         Date and time. Only with timezone.
@@ -21,7 +21,7 @@
     </release>
     
     <!-- RELEASED -->
-    <release version="betoffice-jweb-misc-1.2.3" date="2019-03-22"
+    <release version="betoffice-jweb-1.2.3" date="2019-03-22"
       description="Java 11">
       <action dev="andrewinkler" type="update" date="2019-02-15">
         Java 11. I have to release faster...
@@ -36,7 +36,7 @@
     </release>
     
     <!-- RELEASED -->
-    <release version="betoffice-jweb-misc-1.2.2" date="2018-07-12"
+    <release version="betoffice-jweb-1.2.2" date="2018-07-12"
       description="">
       <action dev="andrewinkler" type="add" date="2018-06-15">
         Don´t forget to set the round before update. Issue
