@@ -11,6 +11,18 @@
     -->
 
     <!-- UNDER DEVELOPMENT -->
+    <release version="betoffice-jweb-1.3.0" date="2019-06-07"
+        description="JUnit 5">
+        <action dev="andrewinkler" type="update" date="2019-06-07">
+            Updated to JUnit 5.
+        </action>
+        <action dev="andrewinkler" type="add" date="2919-07-30">
+            Add community support.
+        </action>
+        <action dev="andrewinkler" type="add" date="2019-10-09">
+            Ping service.
+        </action>
+    </release>
 
     <!-- RELEASED -->
     <release version="betoffice-jweb-misc-1.2.4" date="2020-07-27"
@@ -21,7 +33,7 @@
     </release>
     
     <!-- RELEASED -->
-    <release version="betoffice-jweb-misc-1.2.3" date="2019-03-22"
+    <release version="betoffice-jweb-1.2.3" date="2019-03-22"
       description="Java 11">
       <action dev="andrewinkler" type="update" date="2019-02-15">
         Java 11. I have to release faster...
@@ -36,7 +48,7 @@
     </release>
     
     <!-- RELEASED -->
-    <release version="betoffice-jweb-misc-1.2.2" date="2018-07-12"
+    <release version="betoffice-jweb-1.2.2" date="2018-07-12"
       description="">
       <action dev="andrewinkler" type="add" date="2018-06-15">
         Don´t forget to set the round before update. Issue

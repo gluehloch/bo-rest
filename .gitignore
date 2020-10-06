@@ -25,6 +25,8 @@ pirates
 
 # VisualCode
 .vscode
+.idea
+.dbeaver
 
 # IntelliJ
 .idea
