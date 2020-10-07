@@ -1,7 +1,7 @@
 /*
  * ============================================================================
  * Project betoffice-jweb
- * Copyright (c) 2000-2017 by Andre Winkler. All rights reserved.
+ * Copyright (c) 2000-2019 by Andre Winkler. All rights reserved.
  * ============================================================================
  *          GNU GENERAL PUBLIC LICENSE
  *  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION

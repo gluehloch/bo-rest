@@ -11,6 +11,19 @@
     -->
 
     <!-- UNDER DEVELOPMENT -->
+    
+    <!-- RELEASED -->
+    <release version="betoffice-jweb-1.2.5" date="2020-10-07" description="JUnit 5, Java 14">
+        <action dev="andrewinkler" type="update" date="2019-06-07">
+            Updated to JUnit 5.
+        </action>
+        <action dev="andrewinkler" type="add" date="2919-07-30">
+            Add community support.
+        </action>
+        <action dev="andrewinkler" type="add" date="2019-10-09">
+            Ping service.
+        </action>
+    </release>
 
     <!-- RELEASED -->
     <release version="betoffice-jweb-1.2.4" date="2020-07-27"

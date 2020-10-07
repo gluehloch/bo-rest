@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb Copyright (c) 2015-2017 by Andre Winkler. All rights
+ * Project betoffice-jweb Copyright (c) 2015-2020 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -58,22 +58,14 @@ import de.winkler.betoffice.service.SecurityToken;
  */
 @RestController
 @RequestMapping("/office")
-public class BetofficeSeasonServlet {
+public class BetofficeController {
 
     // ------------------------------------------------------------------------
     // The beans
     // ------------------------------------------------------------------------
 
-    // -- betofficeBasicJsonService -------------------------------------------
-
-    private BetofficeBasicJsonService betofficeBasicJsonService;
-
     @Autowired
-    public void setBetofficeBasicJsonService(
-            BetofficeBasicJsonService _betofficeBasicJsonService) {
-
-        betofficeBasicJsonService = _betofficeBasicJsonService;
-    }
+    BetofficeService betofficeBasicJsonService;
 
     // ------------------------------------------------------------------------
     
@@ -153,13 +145,13 @@ public class BetofficeSeasonServlet {
     //
     // game
     //
-    
+
     @CrossOrigin
     @RequestMapping(value = "/game/{gameId}", method = RequestMethod.GET)
     public GameJson findGame(@PathVariable("gameId") Long gameId) {
         return betofficeBasicJsonService.findGame(gameId);
     }
-    
+
     //
     // round and table
     //

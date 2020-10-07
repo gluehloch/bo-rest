@@ -1,7 +1,7 @@
 /*
  * ============================================================================
  * Project betoffice-jweb
- * Copyright (c) 2000-2016 by Andre Winkler. All rights reserved.
+ * Copyright (c) 2000-2019 by Andre Winkler. All rights reserved.
  * ============================================================================
  *          GNU GENERAL PUBLIC LICENSE
  *  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
@@ -30,10 +30,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import com.gargoylesoftware.htmlunit.AjaxController;
 import com.gargoylesoftware.htmlunit.CollectingAlertHandler;
@@ -50,7 +50,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
  * 
  * @author by Andre Winkler
  */
-@Ignore
+@Disabled
 public class EvaluateTippServletTest {
 
     private static final String BASE_URL = "http://localhost:8080/betoffice-jweb";
@@ -60,13 +60,13 @@ public class EvaluateTippServletTest {
 
     private WebClient webClient;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         webClient = new WebClient();
         webClient.setAjaxController(new MyAjaxController());
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         webClient.closeAllWindows();
     }
