@@ -13,6 +13,12 @@
     <!-- UNDER DEVELOPMENT -->
     
     <!-- RELEASED -->
+    <release version="betoffice-jweb-1.2.6" date="2020-10-07" description="Hibernate Lazy Exceptions">
+        <action dev="andrewinkler" type="fix" date="2020-10-07">
+            Update betoffice-jweb-misc to 12.6.
+        </action>
+    </release>
+
     <release version="betoffice-jweb-1.2.5" date="2020-10-07" description="JUnit 5, Java 14">
         <action dev="andrewinkler" type="update" date="2019-06-07">
             Updated to JUnit 5.
