@@ -11,6 +11,12 @@
     -->
 
     <!-- UNDER DEVELOPMENT -->
+    <release version="betoffice-jweb-misc-1.2.7" date="2020-10-??"
+        description="">
+        <action dev="andrewinkler" type="fix" date="2020-10-10">
+            Season update: Several problems with LazyLoadExceptions and GameList.
+        </action>
+    </release>
     
     <!-- RELEASED -->
     <release version="betoffice-jweb-1.2.6" date="2020-10-07" description="Hibernate Lazy Exceptions">
