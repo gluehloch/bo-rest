@@ -11,10 +11,13 @@
     -->
 
     <!-- UNDER DEVELOPMENT -->
-    <release version="betoffice-jweb-misc-1.2.7" date="2020-10-??"
+    
+    <!-- RELEASED -->
+    <release version="betoffice-jweb-misc-1.2.7" date="2020-10-11"
         description="">
         <action dev="andrewinkler" type="fix" date="2020-10-10">
             Season update: Several problems with LazyLoadExceptions and GameList.
+            Changed openligadb connection implementation from WSDL to REST/JSON.
         </action>
     </release>
     
@@ -25,6 +28,7 @@
         </action>
     </release>
 
+    <!-- RELEASED -->
     <release version="betoffice-jweb-1.2.5" date="2020-10-07" description="JUnit 5, Java 14">
         <action dev="andrewinkler" type="update" date="2019-06-07">
             Updated to JUnit 5.
