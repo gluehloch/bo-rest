@@ -13,6 +13,15 @@
     <!-- UNDER DEVELOPMENT -->
     
     <!-- RELEASED -->
+    <release version="betoffice-jweb-misc-1.2.8" date="2020-10-18"
+        description="">
+        <action dev="andrewinkler" type="fix" date="2020-10-18">
+            betoffice-openligadb: 1.6.1 / betoffice-jweb-misc: 1.2.8
+            NullPointerException (GoalBuilder)
+        </action>
+    </release>    
+    
+    <!-- RELEASED -->
     <release version="betoffice-jweb-misc-1.2.7" date="2020-10-11"
         description="">
         <action dev="andrewinkler" type="fix" date="2020-10-10">
