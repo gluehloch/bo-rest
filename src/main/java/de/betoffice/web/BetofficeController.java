@@ -64,9 +64,13 @@ public class BetofficeController {
     // The beans
     // ------------------------------------------------------------------------
 
-    @Autowired
-    BetofficeService betofficeBasicJsonService;
+    private final BetofficeService betofficeBasicJsonService;
 
+    @Autowired
+    public BetofficeController(BetofficeService betofficeService) {
+        this.betofficeBasicJsonService = betofficeService;
+    }
+    
     // ------------------------------------------------------------------------
     
     @CrossOrigin

@@ -98,6 +98,12 @@
 	</build>
 
 	<dependencies>
+         <dependency>
+            <groupId>de.betoffice</groupId>
+            <artifactId>betoffice-jweb-misc</artifactId>
+            <version>1.2.8</version>
+        </dependency>
+    
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-jdbc</artifactId>
@@ -181,6 +187,7 @@
 			<artifactId>jackson-datatype-jsr310</artifactId>
 			<version>2.11.0</version>
 		</dependency>
+        
 		<!-- Make it testable... -->
 		<dependency>
 			<groupId>net.sourceforge.htmlunit</groupId>
@@ -188,11 +195,23 @@
 			<version>2.9</version>
 			<scope>test</scope>
 		</dependency>
-
+        <dependency>
+            <groupId>de.betoffice</groupId>
+            <artifactId>betoffice-testutils</artifactId>
+            <version>1.0.0</version>
+            <scope>test</scope>
+        </dependency>
 		<dependency>
-			<groupId>de.betoffice</groupId>
-			<artifactId>betoffice-jweb-misc</artifactId>
-			<version>1.2.8</version>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.jayway.jsonpath</groupId>
+			<artifactId>json-path</artifactId>
+			<version>2.4.0</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
