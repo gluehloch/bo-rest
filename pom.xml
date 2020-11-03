@@ -98,12 +98,12 @@
 	</build>
 
 	<dependencies>
-         <dependency>
-            <groupId>de.betoffice</groupId>
-            <artifactId>betoffice-jweb-misc</artifactId>
-            <version>1.2.8</version>
-        </dependency>
-    
+		<dependency>
+			<groupId>de.betoffice</groupId>
+			<artifactId>betoffice-jweb-misc</artifactId>
+			<version>1.2.8</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-jdbc</artifactId>
@@ -187,7 +187,7 @@
 			<artifactId>jackson-datatype-jsr310</artifactId>
 			<version>2.11.0</version>
 		</dependency>
-        
+
 		<!-- Make it testable... -->
 		<dependency>
 			<groupId>net.sourceforge.htmlunit</groupId>
@@ -195,12 +195,12 @@
 			<version>2.9</version>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
-            <groupId>de.betoffice</groupId>
-            <artifactId>betoffice-testutils</artifactId>
-            <version>1.0.0</version>
-            <scope>test</scope>
-        </dependency>
+		<dependency>
+			<groupId>de.betoffice</groupId>
+			<artifactId>betoffice-testutils</artifactId>
+			<version>1.0.0</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
@@ -213,6 +213,15 @@
 			<version>2.4.0</version>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-all -->
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-all</artifactId>
+			<version>1.3</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<repositories>

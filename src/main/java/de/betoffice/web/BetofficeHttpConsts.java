@@ -36,5 +36,6 @@ public class BetofficeHttpConsts {
 
     /** Header key name for the user-agent. */
     public static final String HTTP_HEADER_USER_AGENT = "User-Agent";
+    public static final String HTTP_HEADER_USER_AGENT_UNKNOWN = "User-Agent-Unknown";
 
 }

@@ -31,6 +31,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -70,15 +71,15 @@ public class BetofficeController {
     public BetofficeController(BetofficeService betofficeService) {
         this.betofficeBasicJsonService = betofficeService;
     }
-    
+
     // ------------------------------------------------------------------------
-    
+
     @CrossOrigin
     @RequestMapping(value = "/ping", method = RequestMethod.GET)
     public PingJson ping() {
         return betofficeBasicJsonService.ping();
     }
-    
+
     // ------------------------------------------------------------------------
 
     @CrossOrigin
@@ -165,9 +166,9 @@ public class BetofficeController {
      * 
      * @RequestMapping(value = "/season/{seasonId}/roundtable/current", method =
      * RequestMethod.GET) public RoundAndTableJson
-     * findCurrentRoundTable(@PathVariable("seasonId") Long seasonId) {
-     * RoundJson currentSeason =
-     * betofficeBasicJsonService.findCurrent(seasonId); return null; }
+     * findCurrentRoundTable(@PathVariable("seasonId") Long seasonId) { RoundJson
+     * currentSeason = betofficeBasicJsonService.findCurrent(seasonId); return null;
+     * }
      */
 
     @CrossOrigin
@@ -322,20 +323,22 @@ public class BetofficeController {
     @CrossOrigin
     @RequestMapping(value = "/login", method = RequestMethod.POST, headers = {
             "Content-type=application/json" })
-    public SecurityTokenJson login(
+    public ResponseEntity<SecurityTokenJson> login(
             @RequestBody AuthenticationForm authenticationForm,
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent,
+            @RequestHeader(required = false, name = BetofficeHttpConsts.HTTP_HEADER_USER_AGENT, defaultValue = BetofficeHttpConsts.HTTP_HEADER_USER_AGENT_UNKNOWN) String userAgent,
             HttpServletRequest request) {
 
         SecurityTokenJson securityToken = betofficeBasicJsonService.login(
                 authenticationForm.getNickname(),
-                authenticationForm.getPassword(), request.getSession().getId(),
-                request.getRemoteAddr(), userAgent);
+                authenticationForm.getPassword(),
+                request.getSession().getId(),
+                request.getRemoteAddr(),
+                userAgent);
 
         HttpSession session = request.getSession();
         session.setAttribute(SecurityToken.class.getName(), securityToken);
 
-        return securityToken;
+        return ResponseEntity.ok(securityToken);
     }
 
     @CrossOrigin
