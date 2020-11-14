@@ -1,5 +1,31 @@
+/*
+ * ============================================================================
+ * Project betoffice-jweb
+ * Copyright (c) 2000-2020 by Andre Winkler. All rights reserved.
+ * ============================================================================
+ *          GNU GENERAL PUBLIC LICENSE
+ *  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+ *
+ *   This program is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation; either version 2 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program; if not, write to the Free Software
+ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ */
+
 package de.betoffice.web;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -42,6 +68,7 @@ import de.betoffice.web.json.SubmitTippRoundJson;
 import de.winkler.betoffice.dao.SessionDao;
 import de.winkler.betoffice.service.MasterDataManagerService;
 import de.winkler.betoffice.service.SeasonManagerService;
+import de.winkler.betoffice.storage.Game;
 import de.winkler.betoffice.storage.GameList;
 import de.winkler.betoffice.storage.GameTipp;
 import de.winkler.betoffice.storage.Group;
@@ -77,33 +104,28 @@ public class TippControllerTest {
 
     @Autowired
     private SessionDao sessionDao;
-    
-    private GameList round;
-    private User userA;
+
+    private T data;
 
     @Test
     @Transactional
-    public void submitTipp() throws Exception {
+    public void ping() throws Exception {
         mockMvc.perform(get("/office/ping")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
 
-        SubmitTippRoundJson tipp = new SubmitTippRoundJson();
-
-        mockMvc.perform(post("/office/tipp/submit")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(toString(tipp))
-                .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN, "token")
-                .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME, NICKNAME)
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isForbidden());
-
+    @Test
+    @Transactional
+    public void submitValidTipp() throws Exception {
+        //
+        // Authentifizierung starten...
+        //
         AuthenticationForm authenticationForm = new AuthenticationForm();
         authenticationForm.setNickname(NICKNAME);
         authenticationForm.setPassword(PASSWORD);
-        
+
         ResultActions loginAction = mockMvc.perform(post("/office/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toString(authenticationForm))
@@ -115,28 +137,95 @@ public class TippControllerTest {
                 .andExpect(jsonPath("nickname", equalTo(NICKNAME)))
                 .andExpect(jsonPath("role", equalTo("TIPPER")));
 
+        List<Session> sessions = sessionDao.findByNickname(NICKNAME);
+        assertThat(sessions).hasSize(1);
+        String token = sessions.get(0).getToken();
+        
+        LogoutFormData logoutFormData = new LogoutFormData();
+        logoutFormData.setNickname(NICKNAME);
+        logoutFormData.setToken(token);
+        
+        ResultActions logoutAction = mockMvc.perform(post("/office/logout")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toString(logoutFormData))
+                .header("User-Agent", USER_AGENT_TEST)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+        
+        List<Session> sessions2 = sessionDao.findByNickname(NICKNAME);
+        assertThat(sessions2).hasSize(1);
+        ZonedDateTime logout = sessions2.get(0).getLogout();
+        assertThat(logout).isNotNull();
+    }
+
+    @Test
+    @Transactional
+    public void submitInvalidTipp() throws Exception {
+        //
+        // Versuch der Tippabgabe ohne Authentifizierung.
+        //
+        SubmitTippRoundJson tippWithoutAuthentication = new SubmitTippRoundJson();
+
+        mockMvc.perform(post("/office/tipp/submit")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toString(tippWithoutAuthentication))
+                .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN, "token")
+                .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME, NICKNAME)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+
+        //
+        // Authentifizierung starten...
+        //
+        AuthenticationForm authenticationForm = new AuthenticationForm();
+        authenticationForm.setNickname(NICKNAME);
+        authenticationForm.setPassword(PASSWORD);
+
+        ResultActions loginAction = mockMvc.perform(post("/office/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toString(authenticationForm))
+                .header("User-Agent", USER_AGENT_TEST)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("token", notNullValue()))
+                .andExpect(jsonPath("nickname", equalTo(NICKNAME)))
+                .andExpect(jsonPath("role", equalTo("TIPPER")));
+
         MvcResult result = loginAction.andReturn();
         System.out.println(result.getResponse().getContentAsString());
-        
+
         List<Session> session = sessionDao.findByNickname(NICKNAME);
         assertThat(session).hasSize(1);
         assertThat(session.get(0).getBrowser()).isEqualTo(USER_AGENT_TEST);
-        
+        String token = session.get(0).getToken();
+
+        //
+        // Tippabgabe erfolgt (weit) nach Spielstart (also heute). Es wird ein leerer
+        // Tipp mit zurueck gegeben (Der Nickname wird vom Server NICHT gesetzt!).
+        //
+        List<GameTipp> expectedTipps = seasonManagerService.findTipps(data.round, data.user);
+        assertThat(expectedTipps).hasSize(0);
+
+        SubmitTippRoundJson tipp = new SubmitTippRoundJson();
         tipp.setNickname(NICKNAME);
-        tipp.setRoundId(round.getId());
+        tipp.setRoundId(data.round.getId());
         List<SubmitTippGameJson> submitTippGames = new ArrayList<>();
         SubmitTippGameJson submitTippGame = new SubmitTippGameJson();
-        submitTippGame.setGameId(round.get(0).getId());
+        submitTippGame.setGameId(data.round.get(0).getId());
         GameResultJson gameResultJson = new GameResultJson();
         gameResultJson.setHomeGoals(2);
         gameResultJson.setGuestGoals(3);
         submitTippGame.setTippResult(gameResultJson);
+        submitTippGames.add(submitTippGame);
         tipp.setSubmitTippGames(submitTippGames);
 
         ResultActions submitAction = mockMvc.perform(post("/office/tipp/submit")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toString(tipp))
-                .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN, "1")
+                .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN, token)
                 .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME, NICKNAME)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -145,15 +234,25 @@ public class TippControllerTest {
                 .andExpect(jsonPath("seasonYear", equalTo("1999/2000")))
                 .andExpect(jsonPath("games[0].homeTeam.name", equalTo("Vfb Lübeck")))
                 .andExpect(jsonPath("games[0].guestTeam.name", equalTo("RWE")))
-                .andExpect(jsonPath("games[0].tipps[0].nickname", equalTo(NICKNAME)));
+                .andExpect(jsonPath("games[0].tipps[0].nickname", nullValue()));
+
         System.out.println(submitAction.andReturn().getResponse().getContentAsString());
 
-        List<GameTipp> tipps = seasonManagerService.findTipps(round, userA);
-        assertThat(tipps).hasSize(1);
-        assertThat(tipps.get(0).getToken()).isEqualTo("1");
-        assertThat(tipps.get(0).getUser().getNickname()).isEqualTo(NICKNAME);
-        assertThat(tipps.get(0).getTipp().getHomeGoals()).isEqualTo(2);
-        assertThat(tipps.get(0).getTipp().getGuestGoals()).isEqualTo(3);
+        seasonManagerService.findTippsByMatch(data.luebeckVsRwe);
+
+        List<GameTipp> tipps = seasonManagerService.findTipps(data.round, data.user);
+        assertThat(tipps).hasSize(0);
+
+        //
+        // Tippabgabe zum richtigen Zeitpunkt. Einen Tag vor dem Spieltag.
+        //
+
+        // TODO Wie stelle ich die Uhrzeit im Server fuer den Test passend ein?
+        
+//        assertThat(tipps.get(0).getToken()).isEqualTo("1");
+//        assertThat(tipps.get(0).getUser().getNickname()).isEqualTo(NICKNAME);
+//        assertThat(tipps.get(0).getTipp().getHomeGoals()).isEqualTo(2);
+//        assertThat(tipps.get(0).getTipp().getGuestGoals()).isEqualTo(3);
     }
 
     private String toString(Object object) throws JsonProcessingException {
@@ -170,36 +269,52 @@ public class TippControllerTest {
                 .standaloneSetup(new BetofficeController(betofficeService))
                 .build();
 
-        Team luebeck = new Team("Vfb Lübeck", "Vfb Lübeck", "luebeck.gif");
-        masterDataManagerService.createTeam(luebeck);
-        Team rwe = new Team("RWE", "Rot-Weiss-Essen", "rwe.gif");
-        masterDataManagerService.createTeam(rwe);
+        data = new T();
 
-        Season season = new Season();
-        season.setMode(SeasonType.LEAGUE);
-        season.setName("Bundesliga");
-        season.setYear("1999/2000");
-        seasonManagerService.createSeason(season);
+        data.luebeck = new Team("Vfb Lübeck", "Vfb Lübeck", "luebeck.gif");
+        masterDataManagerService.createTeam(data.luebeck);
+        data.rwe = new Team("RWE", "Rot-Weiss-Essen", "rwe.gif");
+        masterDataManagerService.createTeam(data.rwe);
 
-        GroupType buli1 = new GroupType();
-        buli1.setName("1. Bundesliga");
-        masterDataManagerService.createGroupType(buli1);
+        data.season = new Season();
+        data.season.setMode(SeasonType.LEAGUE);
+        data.season.setName("Bundesliga");
+        data.season.setYear("1999/2000");
+        seasonManagerService.createSeason(data.season);
 
-        season = seasonManagerService.addGroupType(season, buli1);
-        Group group = seasonManagerService.findGroup(season, buli1);
-        seasonManagerService.addTeam(season, buli1, rwe);
-        seasonManagerService.addTeam(season, buli1, luebeck);
+        data.bundesliga = new GroupType();
+        data.bundesliga.setName("1. Bundesliga");
+        masterDataManagerService.createGroupType(data.bundesliga);
 
-        round = seasonManagerService.addRound(season, DATE_1971_03_24, buli1);
-        seasonManagerService.addMatch(round, DATE_1971_03_24, group, luebeck, rwe);
-        seasonManagerService.addMatch(round, DATE_1971_03_24, group, rwe, luebeck);
+        data.season = seasonManagerService.addGroupType(data.season, data.bundesliga);
+        data.group = seasonManagerService.findGroup(data.season, data.bundesliga);
+        seasonManagerService.addTeam(data.season, data.bundesliga, data.rwe);
+        seasonManagerService.addTeam(data.season, data.bundesliga, data.luebeck);
 
-        userA = new User();
-        userA.setNickname(NICKNAME);
-        userA.setPassword(PASSWORD);
-        masterDataManagerService.createUser(userA);
+        data.round = seasonManagerService.addRound(data.season, DATE_1971_03_24, data.bundesliga);
+        data.luebeckVsRwe = seasonManagerService.addMatch(data.round, DATE_1971_03_24, data.group, data.luebeck,
+                data.rwe);
+        data.rweVsLuebeck = seasonManagerService.addMatch(data.round, DATE_1971_03_24, data.group, data.rwe,
+                data.luebeck);
 
-        seasonManagerService.addUser(season, userA);
+        data.user = new User();
+        data.user.setNickname(NICKNAME);
+        data.user.setPassword(PASSWORD);
+        masterDataManagerService.createUser(data.user);
+
+        seasonManagerService.addUser(data.season, data.user);
+    }
+
+    private static class T {
+        Season season;
+        User user;
+        Team luebeck;
+        Team rwe;
+        GroupType bundesliga;
+        Group group;
+        GameList round;
+        Game luebeckVsRwe;
+        Game rweVsLuebeck;
     }
 
 }

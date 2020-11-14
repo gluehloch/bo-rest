@@ -13,6 +13,14 @@
     <!-- UNDER DEVELOPMENT -->
     
     <!-- RELEASED -->
+    <release version="betoffice-jweb-misc-1.2.9" date="2020-11-14"
+        description="Incomplete test and MockMvc">
+        <action dev="andrewinkler" type="fix" date="2020-11-14">
+            Added Spring´s web test: org.springframework.test.web.servlet.setup.MockMvcBuilders
+        </action>
+    </release>    
+    
+    <!-- RELEASED -->
     <release version="betoffice-jweb-misc-1.2.8" date="2020-10-18"
         description="">
         <action dev="andrewinkler" type="fix" date="2020-10-18">
