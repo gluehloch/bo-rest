@@ -18,11 +18,19 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>org.jboss.arquillian</groupId>
-				<artifactId>arquillian-bom</artifactId>
-				<version>1.1.2.Final</version>
-				<scope>import</scope>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-bom</artifactId>
+				<version>5.4.6</version>
+				<!--  {spring-security-version} -->
 				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>5.2.13.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -231,4 +239,5 @@
 			<url>http://maven.gluehloch.de/repository</url>
 		</repository>
 	</repositories>
+
 </project>
