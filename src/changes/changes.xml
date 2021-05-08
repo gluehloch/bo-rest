@@ -11,10 +11,10 @@
         -->
 
         <!-- UNDER DEVELOPMENT -->
-        <release version="betoffice-jweb" date="2021-03-??"
+        <release version="betoffice-jweb" date="2021-=??-??"
                  description="spring security">
             <action dev="andrewinkler" type="add" date="2021-03-14">
-                Add Spring security.
+                Add Spring security. Updated to maven-war-plugin 3.3.1
             </action>
         </release>
 
