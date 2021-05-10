@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>de.winkler.betoffice</groupId>
 		<artifactId>betoffice-maven-parent</artifactId>
-		<version>1.11.0</version>
+		<version>1.11.0-SNAPSHOT</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -25,6 +25,7 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+			<!--
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-framework-bom</artifactId>
@@ -32,6 +33,7 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+			-->
 		</dependencies>
 	</dependencyManagement>
 
@@ -39,9 +41,9 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
-					<groupId>org.codehaus.cargo</groupId>
-					<artifactId>cargo-maven2-plugin</artifactId>
-					<version>1.4.2</version>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>3.3.1</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -52,61 +54,6 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.3.1</version>
             </plugin>            
-			<plugin>
-				<groupId>org.codehaus.cargo</groupId>
-				<artifactId>cargo-maven2-plugin</artifactId>
-				<configuration>
-					<wait>true</wait>
-					<container>
-						<containerId>tomcat7x</containerId>
-						<type>installed</type>
-						<home>${catalina.home}</home>
-					</container>
-					<configuration>
-						<type>existing</type>
-						<home>${catalina.home}</home>
-						<properties>
-							<cargo.tomcat.manager.url>${catalina.manager.url}</cargo.tomcat.manager.url>
-							<cargo.remote.username>${catalina.home.user}</cargo.remote.username>
-							<cargo.remote.password>${catalina.home.password}</cargo.remote.password>
-						</properties>
-					</configuration>
-					<deployable>
-						<groupId>de.winkler.betoffice</groupId>
-						<artifactId>betoffice-jweb</artifactId>
-						<type>war</type>
-						<!-- <version>0.1.0</version> -->
-					</deployable>
-				</configuration>
-				<executions>
-					<!-- <execution> <id>start-server</id> <phase>test</phase> <goals> <goal>start</goal> 
-						</goals> </execution> -->
-					<!-- <execution> <id>stop-server</id> <phase>test</phase> <goals> <goal>stop</goal> 
-						</goals> </execution> -->
-				</executions>
-			</plugin>
-
-			<!-- Swagger <plugin> <groupId>com.github.kongchen</groupId> <artifactId>swagger-maven-plugin</artifactId> 
-				<version>3.0.0</version> <configuration> <apiSources> <apiSource> <springmvc>true</springmvc> 
-				<locations> <location>com.wordnik.swagger.sample</location> </locations> 
-				<schemes> <scheme>http</scheme> <scheme>https</scheme> </schemes> <host>www.example.com:8080</host> 
-				<basePath>/api</basePath> <info> <title>Swagger Maven Plugin Sample</title> 
-				<version>v1</version> <description> This is a sample. </description> <termsOfService> 
-				http://www.github.com/kongchen/swagger-maven-plugin </termsOfService> <contact> 
-				<email>kongchen@gmail.com</email> <name>Kong Chen</name> <url>http://kongch.com</url> 
-				</contact> <license> <url>http://www.apache.org/licenses/LICENSE-2.0.html</url> 
-				<name>Apache 2.0</name> </license> </info> <securityDefinitions> <securityDefinition> 
-				<name>basicAuth</name> <type>basic</type> </securityDefinition> <securityDefinition> 
-				<json>/securityDefinition.json</json> </securityDefinition> </securityDefinitions> 
-				<templatePath>${basedir}/src/test/resources/strapdown.html.hbs</templatePath> 
-				<outputPath>${basedir}/generated/document.html</outputPath> <swaggerDirectory>${basedir}/generated/swagger-ui</swaggerDirectory> 
-				<swaggerApiReader>com.wordnik.swagger.jaxrs.reader.DefaultJaxrsApiReader</swaggerApiReader> 
-				<attachSwaggerArtifact>true</attachSwaggerArtifact> <modelConverters>io.swagger.validator.BeanValidator</modelConverters> 
-				</apiSource> </apiSources> </configuration> <executions> <execution> <phase>compile</phase> 
-				<goals> <goal>generate</goal> </goals> </execution> </executions> <dependencies> 
-				<dependency> <groupId>io.swagger</groupId> <artifactId>swagger-hibernate-validations</artifactId> 
-				<version>1.5.6</version> </dependency> </dependencies> </plugin> -->
-
 		</plugins>
 	</build>
 
@@ -156,18 +103,19 @@
 			<scope>compile</scope>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-web -->
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-web</artifactId>
-			<version>5.3.4.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-config</artifactId>
-			<version>5.3.4.RELEASE</version>
-			<scope>compile</scope>
-		</dependency>
+<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-web -->
+<dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-web</artifactId>
+    <version>5.4.6</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-config -->
+<dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-config</artifactId>
+    <version>5.4.6</version>
+</dependency>
+
 
 		<!-- Jackson Java to JSON coder/encoder -->
 		<dependency>
@@ -211,15 +159,17 @@
 		<dependency>
 			<groupId>de.betoffice</groupId>
 			<artifactId>betoffice-testutils</artifactId>
-			<version>1.0.0</version>
+			<version>1.1.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
+		<!--
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>4.0.1</version>
 			<scope>test</scope>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>com.jayway.jsonpath</groupId>
 			<artifactId>json-path</artifactId>
