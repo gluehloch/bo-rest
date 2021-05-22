@@ -1,7 +1,7 @@
 /*
  * ============================================================================
  * Project betoffice-jweb
- * Copyright (c) 2000-2016 by Andre Winkler. All rights reserved.
+ * Copyright (c) 2000-2021 by Andre Winkler. All rights reserved.
  * ============================================================================
  *          GNU GENERAL PUBLIC LICENSE
  *  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
@@ -28,7 +28,6 @@ import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -37,6 +36,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import de.winkler.betoffice.dao.UserDao;
+import de.winkler.betoffice.service.AuthService;
+import de.winkler.betoffice.storage.User;
 
 /**
  * Security configuration.
@@ -47,15 +50,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UserAccountDetailsService userDetailsService;
+    private UserDao userDao;
+
+    @Autowired
+    private AuthService authService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Bean
     public DaoAuthenticationProvider authProvider() {
-        UserDetailsService userDetailsService = null;
-        
+        UserDetailsService userDetailsService = new BetofficeUserAccountDetailsService(userDao);
+
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder);
@@ -64,18 +70,32 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 }
 
-class MyUserAccountDetailsService implements UserDetailsService {
+class BetofficeUserAccountDetailsService implements UserDetailsService {
+
+    private final UserDao userDao;
+
+    BetofficeUserAccountDetailsService(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // TODO Auto-generated method stub
-        return null;
+        User user = userDao.findByNickname(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Unknown nickname: " + username));
+
+        return new BetofficeUserDetails(user);
     }
-    
+
 }
 
-class MyUserDetails implements UserDetails {
+class BetofficeUserDetails implements UserDetails {
 
+    private final User user;
+    
+    BetofficeUserDetails(User user) {
+        this.user = user;
+    }
+    
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // TODO Auto-generated method stub
@@ -84,59 +104,32 @@ class MyUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        // TODO Auto-generated method stub
-        return null;
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        // TODO Auto-generated method stub
-        return null;
+        return user.getNickname();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        // TODO Auto-generated method stub
-        return false;
+        return user.isExcluded();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean isEnabled() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-    
-}
-
-/*
-@Configuration
-public class SpringSecurity {
-
-    @Autowired
-    private UserAccountDetailsService userDetailsService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Bean
-    public DaoAuthenticationProvider authProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder);
-        return authProvider;
+        return !user.isExcluded();
     }
 
 }
-*/
