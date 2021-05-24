@@ -25,6 +25,7 @@
 package de.betoffice.web.security;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +40,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import de.betoffice.web.BetofficeHttpConsts;
 import de.winkler.betoffice.service.AuthService;
+import de.winkler.betoffice.service.SecurityToken;
+import de.winkler.betoffice.storage.User;
 
 /**
  * This filter tries to authenticate the user. So there has to be an instance the {@link UserEntity} as JSON
@@ -70,7 +73,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         	browserid = BetofficeHttpConsts.HTTP_HEADER_USER_AGENT_UNKNOWN;
         }
         
-        authService.login(nickname, password, password, ipaddress, browserid);
+        /*SecurityToken token =*/ authService.login(nickname, password, password, ipaddress, browserid);
         
         // UserEntity creds = new ObjectMapper().readValue(req.getInputStream(), UserEntity.class);
 
@@ -80,12 +83,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain, Authentication auth) {
-    	// TODO das Token auslesen?
-        authService.getToken(auth.getName());
-        // Token token = loginService.token(user);
-
-        res.addHeader(HEADER_STRING, TOKEN_PREFIX + token.getContent());
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication auth) {
+        SecurityToken token = authService.findTokenByNickname(auth.getName()).orElseThrow();
+        response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
     }
 
 }
