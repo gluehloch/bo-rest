@@ -40,6 +40,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import de.winkler.betoffice.service.AuthService;
+import de.winkler.betoffice.storage.User;
+
 /**
  * Custom Authentification Provider: Defines my own authentication implementation. A nickname/password comparison.
  *
@@ -50,11 +53,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     private static final Logger LOG = Logger.getLogger(CustomAuthenticationProvider.class.getName());
 
-    private final UserRepository userRepository;
+    private final AuthService authService;
 
     @Autowired
-    public CustomAuthenticationProvider(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public CustomAuthenticationProvider(AuthService authService) {
+        this.authService = authService;
     }
 
     @Transactional
@@ -70,9 +73,16 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         }
 
         String password = credentials.toString();
-
-        UserEntity user = userRepository.findByNickname(name)
-                .orElseThrow(() -> new BadCredentialsException("Authentication failed for nickname=[" + name + "]."));
+        
+        // TODO Da muss ich das Authentication Objekt erweitern.
+        Object details = authentication.getDetails();
+        String ipaddress = null;
+        String browserid = null;
+        
+        authService.login(name, password, password, ipaddress, browserid);
+        
+        User user = authService.findByNickname(name).orElseThrow(
+        		() -> new BadCredentialsException("Authentication failed for nickname=[" + name + "]."));
 
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         //
