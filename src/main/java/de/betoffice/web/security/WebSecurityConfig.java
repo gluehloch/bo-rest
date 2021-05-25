@@ -104,13 +104,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         builder.authenticationProvider(customAuthenticationProvider);
     }
     
-    /* Beispiel: Manuelles Setzen des Authentication-Tokens. */
-    private void xxxx() {
-    	UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(user, pass);
-    	Authentication auth = authenticationManager().authenticate(authReq);
-      	SecurityContext sc = SecurityContextHolder.getContext();
-    	sc.setAuthentication(auth);    	
-    }
+    /* Beispiel: Manuelles Setzen des Authentication-Tokens. Wenn ich das Login selber implementiere? Oder wann? */
+//    private void xxxx() {
+//    	UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(user, pass);
+//    	Authentication auth = authenticationManager().authenticate(authReq);
+//      	SecurityContext sc = SecurityContextHolder.getContext();
+//    	sc.setAuthentication(auth);    	
+//    }
 
     // Secure the endpoins with HTTP Basic authentication
     @Override
@@ -125,8 +125,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //                .formLogin().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager(), loginService))
-                .addFilter(new JWTAuthorizationFilter(authenticationManager(), loginService, roleRepository))
+                .addFilter(new JWTAuthenticationFilter(authenticationManager(), authService))
+                .addFilter(new JWTAuthorizationFilter(authenticationManager(), authService))
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/demo/ping").permitAll()
 
