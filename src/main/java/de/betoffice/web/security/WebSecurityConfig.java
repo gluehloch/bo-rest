@@ -48,6 +48,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
@@ -72,13 +73,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private AuthService authService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     
     @Autowired
     CustomAuthenticationProvider customAuthenticationProvider;
+    
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
     
     @Bean
     public UserDetailsService userDetailsService() {
@@ -92,7 +94,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * @return ...
      */
     @Bean
-    public DaoAuthenticationProvider authProvider(@Autowired UserDetailsService userDetailsService) {
+    public DaoAuthenticationProvider authProvider(@Autowired UserDetailsService userDetailsService, @Autowired PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder);
