@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -43,8 +43,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -75,7 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private AuthService authService;
     
     @Autowired
-    CustomAuthenticationProvider customAuthenticationProvider;
+    private AuthenticationProvider authenticationProvider;
     
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -103,7 +101,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     
     @Override
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
-        builder.authenticationProvider(customAuthenticationProvider);
+        builder.authenticationProvider(authenticationProvider);
     }
     
     /* Beispiel: Manuelles Setzen des Authentication-Tokens. Wenn ich das Login selber implementiere? Oder wann? */
@@ -118,12 +116,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors().disable()
-                .csrf().disable()
-                .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessHandler(logoutSuccessHandler()).deleteCookies("JSESSIONID")
-                .and()
+//                .cors().disable()
+//                .csrf().disable()
+//                .logout()
+//                .logoutUrl("/logout")
+//                .logoutSuccessHandler(logoutSuccessHandler()).deleteCookies("JSESSIONID")
+//                .and()
                 //                .formLogin().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
