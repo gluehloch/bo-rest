@@ -128,7 +128,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JWTAuthenticationFilter(authenticationManager(), authService))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager(), authService))
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/demo/ping").permitAll()
+                //.antMatchers(HttpMethod.GET, "/demo/ping").permitAll()
+                .antMatchers(HttpMethod.GET, "/office/ping").denyAll()
 
                 .antMatchers(HttpMethod.GET, "/order").hasAnyRole("USER")
                 .antMatchers(HttpMethod.POST, "/order").hasAnyRole("USER")
@@ -167,14 +168,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public LogoutSuccessHandler logoutSuccessHandler() {
         var x = new LogoutSuccessHandler() {
-
             @Override
-            public void onLogoutSuccess(
-            		HttpServletRequest request,
-            		HttpServletResponse response,
-            		Authentication authentication) 
-            				throws IOException, ServletException {
-            	
+            public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+                /* throws IOException, ServletException */
             	SecurityToken securityToken = null; // TODO Wo bekommen ich den denn her? Aus dem Request vermutlich!!!
             	authService.logout(null);
             }
