@@ -292,10 +292,8 @@ public class TippControllerTest {
         seasonManagerService.addTeam(data.season, data.bundesliga, data.luebeck);
 
         data.round = seasonManagerService.addRound(data.season, DATE_1971_03_24, data.bundesliga);
-        data.luebeckVsRwe = seasonManagerService.addMatch(data.round, DATE_1971_03_24, data.group, data.luebeck,
-                data.rwe);
-        data.rweVsLuebeck = seasonManagerService.addMatch(data.round, DATE_1971_03_24, data.group, data.rwe,
-                data.luebeck);
+        data.luebeckVsRwe = seasonManagerService.addMatch(data.round, DATE_1971_03_24, data.group, data.luebeck, data.rwe);
+        data.rweVsLuebeck = seasonManagerService.addMatch(data.round, DATE_1971_03_24, data.group, data.rwe, data.luebeck);
 
         data.user = new User();
         data.user.setNickname(NICKNAME);
