@@ -53,7 +53,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 @Disabled
 public class EvaluateTippServletTest {
 
-    private static final String BASE_URL = "http://localhost:8080/betoffice-jweb";
+    private static final String BASE_URL = "http://localhost:8080/betoffice-jweb/bo/office";
 
     private static final String HOME_GOALS_INPUT_ID = "homeGoals";
     private static final String GUEST_GOALS_INPUT_ID = "guestGoals";

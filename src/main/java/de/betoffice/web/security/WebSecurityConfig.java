@@ -24,7 +24,6 @@
 
 package de.betoffice.web.security;
 
-import java.io.IOException;
 import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
@@ -99,7 +98,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     
     @Override
-    public void configure(AuthenticationManagerBuilder builder) throws Exception {
+    public void configure(AuthenticationManagerBuilder builder) {
         builder.authenticationProvider(authenticationProvider);
     }
     
@@ -128,7 +127,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JWTAuthorizationFilter(authenticationManager(), authService))
                 .authorizeRequests()
                 //.antMatchers(HttpMethod.GET, "/demo/ping").permitAll()
-                .antMatchers(HttpMethod.GET, "/bo/office/ping").denyAll()
+                //.antMatchers(HttpMethod.GET, "/bo/office/**").denyAll()
+                //.antMatchers(HttpMethod.GET, "/bo/office/ping").denyAll()
 
                 .antMatchers(HttpMethod.GET, "/order").hasAnyRole("USER")
                 .antMatchers(HttpMethod.POST, "/order").hasAnyRole("USER")
