@@ -28,7 +28,23 @@
     <res-auth>Container</res-auth>
   </resource-ref>
 
-  <!--
+  <!-- Ich brauche hier keinen Context-Loader?!?
+  <listener>
+    <listener-class>
+      org.springframework.web.context.ContextLoaderListener
+    </listener-class>
+  </listener>
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>
+      /WEB-INF/applicationContext.xml
+      /WEB-INF/applicationContext-security.xml
+    </param-value>
+  </context-param>
+  -->
+
+  Read more: https://javarevisited.blogspot.com/2017/05/how-to-enable-spring-security-in-java-web-application.html#ixzz6zkPcHHGa
+
   <filter>
     <filter-name>springSecurityFilterChain</filter-name>
     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -37,7 +53,6 @@
     <filter-name>springSecurityFilterChain</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
-  -->
 
     <!-- DISABLED for DEVELOPMENT !!!
     <security-constraint>
