@@ -24,13 +24,11 @@
 
 package de.betoffice.web.security;
 
-import static de.betoffice.web.security.SecurityConstants.HEADER_STRING;
+import static de.betoffice.web.security.SecurityConstants.HEADER_AUTHORIZATION;
 import static de.betoffice.web.security.SecurityConstants.TOKEN_PREFIX;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -65,7 +63,14 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
 			throws IOException, ServletException {
 
-		String header = req.getHeader(HEADER_STRING);
+//		Enumeration<String> headerNames = req.getHeaderNames();
+//		Iterator<String> stringIterator = headerNames.asIterator();
+//		while (stringIterator.hasNext()) {
+//			String next = stringIterator.next();
+//			System.out.println("/ " + next);
+//		}
+
+		String header = req.getHeader(HEADER_AUTHORIZATION);
 
 		if (header == null || !header.startsWith(TOKEN_PREFIX)) {
 			chain.doFilter(req, res);
@@ -78,7 +83,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 	}
 
 	private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
-        String token = request.getHeader(HEADER_STRING);
+        String token = request.getHeader(HEADER_AUTHORIZATION);
         if (token != null) {
         	Optional<Session> validateSession = authService.validateSession(token.replace(TOKEN_PREFIX, ""));
             if (validateSession.isPresent()) {

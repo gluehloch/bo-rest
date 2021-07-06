@@ -1,6 +1,7 @@
 package de.betoffice.web;
 
 import de.betoffice.web.json.SecurityTokenJson;
+import de.betoffice.web.security.SecurityConstants;
 import de.winkler.betoffice.service.SecurityToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,10 +37,11 @@ public class AuthenticationController {
 
     @CrossOrigin
     @RequestMapping(value = "/logout", method = RequestMethod.POST, headers = { "Content-type=application/json" })
-    public SecurityTokenJson logout(@RequestBody LogoutFormData logoutFormData, HttpServletRequest request) {
+    public SecurityTokenJson logout(@RequestBody LogoutFormData logoutFormData,
+                                    @RequestHeader(required = false, name = SecurityConstants.HEADER_AUTHORIZATION) String authorization,
+                                    HttpServletRequest request) {
 
-        SecurityTokenJson securityTokenJson = betofficeAuthenticationService.logout(logoutFormData.getNickname(),
-                logoutFormData.getToken());
+        SecurityTokenJson securityTokenJson = betofficeAuthenticationService.logout(logoutFormData.getNickname(), logoutFormData.getToken());
 
         HttpSession session = request.getSession();
         session.removeAttribute(SecurityToken.class.getName());

@@ -114,6 +114,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                // .headers().cacheControl().and()
 //                .cors().disable()
 //                .csrf().disable()
 //                .logout()
@@ -121,26 +122,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .logoutSuccessHandler(logoutSuccessHandler()).deleteCookies("JSESSIONID")
 //                .and()
                 //                .formLogin().and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+                //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .addFilter(new JWTAuthenticationFilter(authenticationManager(), authService))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager(), authService))
                 .authorizeRequests()
+                //.antMatchers(HttpMethod.GET, "/**").permitAll()
                 //.antMatchers(HttpMethod.GET, "/demo/ping").permitAll()
                 //.antMatchers(HttpMethod.GET, "/bo/office/**").denyAll()
-                //.antMatchers(HttpMethod.GET, "/bo/office/ping").denyAll()
+                .antMatchers(HttpMethod.GET, "/bo/office/ping").permitAll()
+//                .antMatchers(HttpMethod.GET, "/order").hasAnyRole("USER")
+//                .antMatchers(HttpMethod.POST, "/order").hasAnyRole("USER")
+//                .antMatchers(HttpMethod.DELETE, "/order").hasAnyRole("USER")
+//                .antMatchers(HttpMethod.PUT, "/order").hasAnyRole("USER")
+//
+//                .antMatchers(HttpMethod.GET, "/user").permitAll()
+//                .antMatchers(HttpMethod.PUT, "/user").hasAnyRole("USER", "ADMIN")
+//                .antMatchers(HttpMethod.POST, "/user").hasAnyRole("USER", "ADMIN")
 
-                .antMatchers(HttpMethod.GET, "/order").hasAnyRole("USER")
-                .antMatchers(HttpMethod.POST, "/order").hasAnyRole("USER")
-                .antMatchers(HttpMethod.DELETE, "/order").hasAnyRole("USER")
-                .antMatchers(HttpMethod.PUT, "/order").hasAnyRole("USER")
-
-                .antMatchers(HttpMethod.GET, "/user").permitAll()
-                .antMatchers(HttpMethod.PUT, "/user").hasAnyRole("USER", "ADMIN")
-                .antMatchers(HttpMethod.POST, "/user").hasAnyRole("USER", "ADMIN")
-
-                .antMatchers(HttpMethod.POST, "/login").permitAll()
-                .antMatchers(HttpMethod.POST, "/logout").hasRole("USER"); // TODO
+                .antMatchers(HttpMethod.GET, "/bo/office/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/bo/office/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/bo/office/logout").hasRole("USER"); // TODO
         //.antMatchers(HttpMethod.GET, "/books/**").hasRole("USER")
         //.antMatchers(HttpMethod.POST, "/books").hasRole("ADMIN")
         //.antMatchers(HttpMethod.PUT, "/books/**").hasRole("ADMIN")
