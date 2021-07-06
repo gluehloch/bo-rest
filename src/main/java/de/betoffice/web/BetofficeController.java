@@ -25,13 +25,10 @@ package de.betoffice.web;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,11 +45,9 @@ import de.betoffice.web.json.PingJson;
 import de.betoffice.web.json.RoundAndTableJson;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonJson;
-import de.betoffice.web.json.SecurityTokenJson;
 import de.betoffice.web.json.SubmitTippRoundJson;
 import de.betoffice.web.json.TeamJson;
 import de.betoffice.web.json.UserTableJson;
-import de.winkler.betoffice.service.SecurityToken;
 
 /**
  * Controller
