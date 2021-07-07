@@ -142,9 +142,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers(HttpMethod.PUT, "/user").hasAnyRole("USER", "ADMIN")
 //                .antMatchers(HttpMethod.POST, "/user").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.GET, "/bo/office/ping").permitAll()
-                .antMatchers(HttpMethod.GET, "/bo/office/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/bo/office/login").permitAll()
-                .antMatchers(HttpMethod.POST, "/bo/office/logout").hasRole("TIPPER"); // TODO
+                .antMatchers(HttpMethod.POST, "/bo/office/logout").hasRole("TIPPER")
+                .antMatchers(HttpMethod.POST, "/bo/office/tipp/submit").hasRole("TIPPER")
+                .antMatchers(HttpMethod.GET, "/bo/chiefoperator").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/bo/chiefoperator").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/bo/chiefoperator").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/bo/chiefoperator").hasRole("ADMIN")
+        ;
         //.antMatchers(HttpMethod.GET, "/books/**").hasRole("USER")
         //.antMatchers(HttpMethod.POST, "/books").hasRole("ADMIN")
         //.antMatchers(HttpMethod.PUT, "/books/**").hasRole("ADMIN")
