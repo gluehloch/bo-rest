@@ -115,8 +115,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 // .headers().cacheControl().and()
-//                .cors().disable()
-//                .csrf().disable()
+                .cors().disable()
+                .csrf().disable()
 //                .logout()
 //                .logoutUrl("/logout")
 //                .logoutSuccessHandler(logoutSuccessHandler()).deleteCookies("JSESSIONID")
@@ -129,7 +129,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //.antMatchers(HttpMethod.GET, "/**").permitAll()
                 //.antMatchers(HttpMethod.GET, "/demo/ping").permitAll()
                 //.antMatchers(HttpMethod.GET, "/bo/office/**").denyAll()
-                .antMatchers(HttpMethod.GET, "/bo/office/ping").permitAll()
 //                .antMatchers(HttpMethod.GET, "/order").hasAnyRole("USER")
 //                .antMatchers(HttpMethod.POST, "/order").hasAnyRole("USER")
 //                .antMatchers(HttpMethod.DELETE, "/order").hasAnyRole("USER")
@@ -138,7 +137,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers(HttpMethod.GET, "/user").permitAll()
 //                .antMatchers(HttpMethod.PUT, "/user").hasAnyRole("USER", "ADMIN")
 //                .antMatchers(HttpMethod.POST, "/user").hasAnyRole("USER", "ADMIN")
-
+                .antMatchers(HttpMethod.GET, "/bo/office/ping").permitAll()
                 .antMatchers(HttpMethod.GET, "/bo/office/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/bo/office/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/bo/office/logout").hasRole("USER"); // TODO
