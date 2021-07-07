@@ -98,11 +98,14 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                 // List<GrantedAuthority> authorities = roles.stream().map(MyGrantedAuthority::of).collect(Collectors.toList());
             	boolean isAdminUser = validateSession.get().getUser().isAdmin();
             	List<GrantedAuthority> authorities = new ArrayList<>();
+
+            	// TODO
+				final String ROLE_PREFIX = "ROLE_";
             	if (isAdminUser) {
-            		authorities.add(new SimpleGrantedAuthority("ADMIN"));
-            		authorities.add(new SimpleGrantedAuthority("TIPPER"));
+            		authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + "ADMIN"));
+            		authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + "TIPPER"));
             	} else {
-            		authorities.add(new SimpleGrantedAuthority("TIPPER"));
+            		authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + "TIPPER"));
             	}
 
             	String nickname = validateSession.get().getNickname();

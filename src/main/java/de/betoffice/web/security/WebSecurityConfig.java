@@ -25,10 +25,13 @@
 package de.betoffice.web.security;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.winkler.betoffice.storage.enums.RoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -41,6 +44,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -140,7 +144,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/bo/office/ping").permitAll()
                 .antMatchers(HttpMethod.GET, "/bo/office/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/bo/office/login").permitAll()
-                .antMatchers(HttpMethod.POST, "/bo/office/logout").hasRole("USER"); // TODO
+                .antMatchers(HttpMethod.POST, "/bo/office/logout").hasRole("TIPPER"); // TODO
         //.antMatchers(HttpMethod.GET, "/books/**").hasRole("USER")
         //.antMatchers(HttpMethod.POST, "/books").hasRole("ADMIN")
         //.antMatchers(HttpMethod.PUT, "/books/**").hasRole("ADMIN")
@@ -192,7 +196,7 @@ class BetofficeUserAccountDetailsService implements UserDetailsService {
         User user = userDao.findByNickname(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Unknown nickname: " + username));
 
-        return new BetofficeUserDetails(user);
+        return new BetofficeUserDetails(user, user.getRoleTypes());
     }
 
 }
@@ -202,15 +206,16 @@ class BetofficeUserDetails implements UserDetails {
 	private static final long serialVersionUID = 1L;
 
 	private final User user;
+	private final List<SimpleGrantedAuthority> authorities;
     
-    BetofficeUserDetails(User user) {
+    BetofficeUserDetails(User user, List<RoleType> roleTypes) {
         this.user = user;
+        this.authorities = roleTypes.stream().map(RoleType::name).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
     
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // TODO Auto-generated method stub
-        return null;
+        return authorities;
     }
 
     @Override
