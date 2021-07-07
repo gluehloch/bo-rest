@@ -29,12 +29,14 @@ import static de.betoffice.web.security.SecurityConstants.TOKEN_PREFIX;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.winkler.betoffice.storage.enums.RoleType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -96,19 +98,22 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                 // * Wie setzt sich die Authority zusammen: Aus Privilegien und/oder Rollen?!?
                 //
                 // List<GrantedAuthority> authorities = roles.stream().map(MyGrantedAuthority::of).collect(Collectors.toList());
-            	boolean isAdminUser = validateSession.get().getUser().isAdmin();
-            	List<GrantedAuthority> authorities = new ArrayList<>();
+				List<RoleType> roleTypes = validateSession.get().getUser().getRoleTypes();
+//				boolean isAdminUser = validateSession.get().getUser().isAdmin();
+//            	List<GrantedAuthority> authorities = new ArrayList<>();
+//
+//            	// TODO
+//				final String ROLE_PREFIX = "ROLE_";
+//            	if (isAdminUser) {
+//            		authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + "ADMIN"));
+//            		authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + "TIPPER"));
+//            	} else {
+//            		authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + "TIPPER"));
+//            	}
 
-            	// TODO
-				final String ROLE_PREFIX = "ROLE_";
-            	if (isAdminUser) {
-            		authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + "ADMIN"));
-            		authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + "TIPPER"));
-            	} else {
-            		authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + "TIPPER"));
-            	}
+				List<SimpleGrantedAuthority> authorities = roleTypes.stream().map(RoleType::name).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
-            	String nickname = validateSession.get().getNickname();
+				String nickname = validateSession.get().getNickname();
                 return new UsernamePasswordAuthenticationToken(nickname, null, authorities);
             }
             return null;
