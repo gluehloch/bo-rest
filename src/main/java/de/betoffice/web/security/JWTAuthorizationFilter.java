@@ -39,7 +39,6 @@ import javax.servlet.http.HttpServletResponse;
 import de.winkler.betoffice.storage.enums.RoleType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -65,13 +64,6 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
 			throws IOException, ServletException {
 
-//		Enumeration<String> headerNames = req.getHeaderNames();
-//		Iterator<String> stringIterator = headerNames.asIterator();
-//		while (stringIterator.hasNext()) {
-//			String next = stringIterator.next();
-//			System.out.println("/ " + next);
-//		}
-
 		String header = req.getHeader(HEADER_AUTHORIZATION);
 
 		if (header == null || !header.startsWith(TOKEN_PREFIX)) {
@@ -89,29 +81,13 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         if (token != null) {
         	Optional<Session> validateSession = authService.validateSession(token.replace(TOKEN_PREFIX, ""));
             if (validateSession.isPresent()) {
-                // Werden wir hier mal Rollen verwenden?
-            	//
-                // List<RoleEntity> roles = roleRepository.findRoles(nickname.get());
-                //
-                // TODO
-                // * User und Authorities laden und dem Request zuordnen.
-                // * Wie setzt sich die Authority zusammen: Aus Privilegien und/oder Rollen?!?
-                //
-                // List<GrantedAuthority> authorities = roles.stream().map(MyGrantedAuthority::of).collect(Collectors.toList());
 				List<RoleType> roleTypes = validateSession.get().getUser().getRoleTypes();
-//				boolean isAdminUser = validateSession.get().getUser().isAdmin();
-//            	List<GrantedAuthority> authorities = new ArrayList<>();
-//
-//            	// TODO
-//				final String ROLE_PREFIX = "ROLE_";
-//            	if (isAdminUser) {
-//            		authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + "ADMIN"));
-//            		authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + "TIPPER"));
-//            	} else {
-//            		authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + "TIPPER"));
-//            	}
 
-				List<SimpleGrantedAuthority> authorities = roleTypes.stream().map(RoleType::name).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+				// TODO Spring-Security benoetigt das Prefix "ROLE_". Sonst werden die Rollen nicht identifiziert.
+				List<SimpleGrantedAuthority> authorities = roleTypes.stream()
+						.map(RoleType::name)
+						.map(role -> "ROLE_" + role)
+						.map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
 				String nickname = validateSession.get().getNickname();
                 return new UsernamePasswordAuthenticationToken(nickname, null, authorities);
@@ -120,30 +96,5 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         }
         return null;
     }
-
-//	/**
-//	 * /* TODO Zuordnung zu {@link RoleEntity} und {@link PrivilegeEntity}.
-//	 * 
-//	 * Könnte hier ebenfalls ein {@link SimpleGrantedAuthority} sein. Die Rolle ist
-//	 * nur eine String Repräsentation.
-//	 */
-//	public static class MyGrantedAuthority implements GrantedAuthority {
-//		private static final long serialVersionUID = 1L;
-//
-//		private String roleName;
-//
-//		public static MyGrantedAuthority of(RoleEntity role) {
-//			return new MyGrantedAuthority(role.getName());
-//		}
-//
-//		private MyGrantedAuthority(String roleName) {
-//			this.roleName = roleName;
-//		}
-//
-//		@Override
-//		public String getAuthority() {
-//			return roleName;
-//		}
-//	}
 
 }
