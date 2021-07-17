@@ -79,6 +79,9 @@ import de.winkler.betoffice.storage.Team;
 import de.winkler.betoffice.storage.User;
 import de.winkler.betoffice.storage.enums.SeasonType;
 
+/**
+ * Die Spring-Security Konfiguration kann auf diese Art und Weise nicht mit getestet werden.
+ */
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
 @SpringJUnitConfig(locations = { "/betoffice-test-properties.xml", "/betoffice.xml" })
