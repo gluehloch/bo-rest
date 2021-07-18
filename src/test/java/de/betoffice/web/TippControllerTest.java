@@ -130,9 +130,10 @@ public class TippControllerTest {
         authenticationForm.setPassword(PASSWORD);
 
         ResultActions loginAction = mockMvc.perform(post("/office/login")
-                .contentType(MediaType.APPLICATION_JSON)
+                //.contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE) /* APPLICATION_JSON */
                 .content(toString(authenticationForm))
-                .header("User-Agent", USER_AGENT_TEST)
+                .header("Authorization", "Bearer ")
+                //.header("User-Agent", USER_AGENT_TEST)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())

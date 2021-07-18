@@ -50,6 +50,7 @@ import de.betoffice.web.json.TeamJson;
  * 
  * @author Andre Winkler
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/chiefoperator")
 public class AdministrationController {
@@ -80,7 +81,6 @@ public class AdministrationController {
 
 	// ------------------------------------------------------------------------
 
-	@CrossOrigin
 	@RequestMapping(value = "/season/round/{roundId}/group/{groupId}/ligadbupdate", method = RequestMethod.POST, headers = {
 			"Content-type=application/json" })
 	public RoundAndTableJson updateRoundByOpenligaDb(@PathVariable("roundId") Long roundId,
@@ -93,7 +93,6 @@ public class AdministrationController {
 		return betofficeBasicJsonService.findRoundTable(roundId, groupId);
 	}
 
-	@CrossOrigin
 	@RequestMapping(value = "/season/round/{roundId}/group/{groupId}/ligadbcreate", method = RequestMethod.POST, headers = {
 			"Content-type=application/json" })
 	public RoundAndTableJson createOrUpdateRoundByOpenligaDb(@PathVariable("roundId") Long roundId,
@@ -108,7 +107,6 @@ public class AdministrationController {
 
 	// ------------------------------------------------------------------------
 
-	@CrossOrigin
 	@RequestMapping(value = "/season/round/{roundId}/group/{groupId}/update", method = RequestMethod.POST, headers = {
 			"Content-type=application/json" })
 	public RoundAndTableJson updateRound(@PathVariable("roundId") Long roundId, @PathVariable("groupId") Long groupId,
@@ -121,7 +119,6 @@ public class AdministrationController {
 		return betofficeBasicJsonService.findRoundTable(roundId, groupId);
 	}
 
-	@CrossOrigin
 	@RequestMapping(value = "/game/update", method = RequestMethod.POST, headers = { "Content-type=application/json" })
 	public GameJson updateGame(@RequestBody GameJson gameJson,
 			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
@@ -134,14 +131,12 @@ public class AdministrationController {
 
 	// -- season administration -----------------------------------------------
 
-	@CrossOrigin
 	@RequestMapping(value = "/season/{seasonId}", method = RequestMethod.GET, headers = {
 			"Content-type=application/json" })
 	public SeasonJson findSeason(@PathVariable("seasonId") Long seasonId) {
 		return betofficeBasicJsonService.findSeasonById(seasonId);
 	}
 
-	@CrossOrigin
 	@RequestMapping(value = "/season/list", method = RequestMethod.GET, headers = { "Content-type=application/json" })
 	public List<SeasonJson> findSeasons() {
 		return betofficeBasicJsonService.findAllSeason();
@@ -157,14 +152,12 @@ public class AdministrationController {
 		return betofficeAdminJsonService.addSeason(season);
 	}
 
-	@CrossOrigin
 	@RequestMapping(value = "/season/update", method = RequestMethod.POST, headers = {
 			"Content-type=application/json" })
 	public SeasonJson updateSeason(@RequestBody SeasonJson season) {
 		return betofficeAdminJsonService.updateSeason(season);
 	}
 
-	@CrossOrigin
 	@RequestMapping(value = "/season/create", method = RequestMethod.POST, headers = {
 			"Content-type=application/json" })
 	public SeasonJson createSeason(@RequestBody SeasonJson season) {
@@ -173,19 +166,16 @@ public class AdministrationController {
 
 	// -- user administration -------------------------------------------------
 
-	@CrossOrigin
 	@RequestMapping(value = "/user/{userId}", method = RequestMethod.GET, headers = { "Content-type=application/json" })
 	public PartyJson findUser(@PathVariable("userId") Long userId) {
 		return betofficeAdminJsonService.findUser(userId);
 	}
 
-	@CrossOrigin
 	@RequestMapping(value = "/user/list", method = RequestMethod.GET, headers = { "Content-type=application/json" })
 	public List<PartyJson> findUsers() {
 		return betofficeAdminJsonService.findUsers();
 	}
 
-	@CrossOrigin
 	@RequestMapping(value = "/user/add", method = RequestMethod.POST, headers = { "Content-type=application/json" })
 	public PartyJson addUser(@RequestBody PartyJson partyJson,
 			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
@@ -195,7 +185,6 @@ public class AdministrationController {
 		return betofficeAdminJsonService.addUser(partyJson);
 	}
 
-	@CrossOrigin
 	@RequestMapping(value = "/user/update", method = RequestMethod.POST, headers = { "Content-type=application/json" })
 	public PartyJson updateUser(@RequestBody PartyJson partyJson,
 			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
@@ -207,19 +196,16 @@ public class AdministrationController {
 
 	// -- team administration -------------------------------------------------
 
-	@CrossOrigin
 	@RequestMapping(value = "/team/{teamId}", method = RequestMethod.GET, headers = { "Content-type=application/json" })
 	public TeamJson findTeam(@PathVariable("teamId") Long teamId) {
 		return betofficeAdminJsonService.findTeam(teamId);
 	}
 
-	@CrossOrigin
 	@RequestMapping(value = "/team/list", method = RequestMethod.GET, headers = { "Content-type=application/json" })
 	public List<TeamJson> findTeams() {
 		return betofficeAdminJsonService.findTeams();
 	}
 
-	@CrossOrigin
 	@RequestMapping(value = "/team/add", method = RequestMethod.POST, headers = { "Content-type=application/json" })
 	public TeamJson addTeam(@RequestBody TeamJson teamJson,
 			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
@@ -229,7 +215,6 @@ public class AdministrationController {
 		return betofficeAdminJsonService.addTeam(teamJson);
 	}
 
-	@CrossOrigin
 	@RequestMapping(value = "/team/update", method = RequestMethod.POST, headers = { "Content-type=application/json" })
 	public TeamJson updateTeam(@RequestBody TeamJson teamJson,
 			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
@@ -241,7 +226,6 @@ public class AdministrationController {
 
 	// -- user/season administration ------------------------------------------
 
-	@CrossOrigin
 	@RequestMapping(value = "/season/{seasonId}/potentialuser", method = RequestMethod.GET, headers = {
 			"Content-type=application/json" })
 	public List<SeasonMemberJson> listPotentialUsers(@PathVariable("seasonId") Long seasonId) {
@@ -249,7 +233,6 @@ public class AdministrationController {
 		return betofficeAdminJsonService.findPotentialSeasonMembers(seasonId);
 	}
 
-	@CrossOrigin
 	@RequestMapping(value = "/season/{seasonId}/user", method = RequestMethod.GET, headers = {
 			"Content-type=application/json" })
 	public List<SeasonMemberJson> listUsers(@PathVariable("seasonId") Long seasonId) {
@@ -257,7 +240,6 @@ public class AdministrationController {
 		return betofficeAdminJsonService.findAllSeasonMembers(seasonId);
 	}
 
-	@CrossOrigin
 	@RequestMapping(value = "/season/{seasonId}/user/add", method = RequestMethod.POST, headers = {
 			"Content-type=application/json" })
 	public List<SeasonMemberJson> addUsers(@PathVariable("seasonId") Long seasonId,
@@ -269,7 +251,6 @@ public class AdministrationController {
 		return betofficeAdminJsonService.addSeasonMembers(seasonId, members);
 	}
 
-	@CrossOrigin
 	@RequestMapping(value = "/season/{seasonId}/user/remove", method = RequestMethod.POST, headers = {
 			"Content-type=application/json" })
 	public List<SeasonMemberJson> removeUsers(@PathVariable("seasonId") Long seasonId,
