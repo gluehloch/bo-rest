@@ -100,6 +100,9 @@ public class TippControllerTest {
     private BetofficeService betofficeService;
 
     @Autowired
+    private BetofficeAuthenticationService betofficeAuthenticationService;
+
+    @Autowired
     private MasterDataManagerService masterDataManagerService;
 
     @Autowired
@@ -117,6 +120,11 @@ public class TippControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
+
+        mockMvc.perform(get("/authentication/ping")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -129,15 +137,14 @@ public class TippControllerTest {
         authenticationForm.setNickname(NICKNAME);
         authenticationForm.setPassword(PASSWORD);
 
-        ResultActions loginAction = mockMvc.perform(post("/office/login")
-                //.contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE) /* APPLICATION_JSON */
+        ResultActions loginAction = mockMvc.perform(post("/authentication/login")
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(toString(authenticationForm))
-                .header("Authorization", "Bearer ")
-                //.header("User-Agent", USER_AGENT_TEST)
+                .header("User-Agent", USER_AGENT_TEST)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("token", equalTo("1")))
+                .andExpect(jsonPath("token", notNullValue()))
                 .andExpect(jsonPath("nickname", equalTo(NICKNAME)))
                 .andExpect(jsonPath("role", equalTo("TIPPER")));
 
@@ -149,7 +156,7 @@ public class TippControllerTest {
         logoutFormData.setNickname(NICKNAME);
         logoutFormData.setToken(token);
         
-        ResultActions logoutAction = mockMvc.perform(post("/office/logout")
+        ResultActions logoutAction = mockMvc.perform(post("/authentication/logout")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toString(logoutFormData))
                 .header("User-Agent", USER_AGENT_TEST)
@@ -187,7 +194,7 @@ public class TippControllerTest {
         authenticationForm.setNickname(NICKNAME);
         authenticationForm.setPassword(PASSWORD);
 
-        ResultActions loginAction = mockMvc.perform(post("/office/login")
+        ResultActions loginAction = mockMvc.perform(post("/authentication/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toString(authenticationForm))
                 .header("User-Agent", USER_AGENT_TEST)
@@ -269,9 +276,7 @@ public class TippControllerTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders
-                .standaloneSetup(new BetofficeController(betofficeService))
-                .build();
+        mockMvc = MockMvcBuilders.standaloneSetup(new BetofficeController(betofficeService), new AuthenticationController(betofficeAuthenticationService)).build();
 
         data = new T();
 
