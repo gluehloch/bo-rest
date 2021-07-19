@@ -11,7 +11,9 @@
         -->
 
         <!-- UNDER DEVELOPMENT -->
-        <release version="betoffice-jweb" date="2021-??-??"
+
+        <!-- RELEASED -->
+        <release version="betoffice-jweb" date="2021-07-19"
                  description="spring security">
             <action dev="andrewinkler" type="add" date="2021-03-14">
                 Add Spring security. Updated to maven-war-plugin 3.3.1
