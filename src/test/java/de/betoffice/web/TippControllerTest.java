@@ -211,6 +211,8 @@ public class TippControllerTest {
         assertThat(tipps).hasSize(0);
 
         logout(findSessionToken());
+        String tokenOfLogoutSession = findSessionToken();
+        assertThat(tokenOfLogoutSession).isEqualTo(token);
         
         mockMvc.perform(post("/office/tipp/submit")
                 .contentType(MediaType.APPLICATION_JSON)

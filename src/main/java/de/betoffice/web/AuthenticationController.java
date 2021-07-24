@@ -1,17 +1,49 @@
+/*
+ * ============================================================================
+ * Project betoffice-jweb Copyright (c) 2015-2021 by Andre Winkler. All rights
+ * reserved.
+ * ============================================================================
+ * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
+ * MODIFICATION
+ * 
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place, Suite 330, Boston, MA 02111-1307 USA
+ */
+
 package de.betoffice.web;
+
+import java.time.ZonedDateTime;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.web.json.PingJson;
 import de.betoffice.web.json.SecurityTokenJson;
 import de.betoffice.web.security.SecurityConstants;
 import de.winkler.betoffice.service.SecurityToken;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.time.ZonedDateTime;
 
 /**
  * Authentication controller: Login and logout.
@@ -58,7 +90,12 @@ public class AuthenticationController {
 
         HttpSession session = request.getSession();
         session.removeAttribute(SecurityToken.class.getName());
-
+        
+        // TODO
+        session.invalidate();
+        SecurityContextHolder.clearContext();
+        new SecurityContextLogoutHandler().logout(request, null, null);        
+        
         return securityTokenJson;
     }
 
