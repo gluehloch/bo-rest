@@ -1,38 +1,34 @@
 package de.betoffice.web;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.mockito.Mockito.*;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import de.betoffice.web.json.SecurityTokenJson;
-import de.winkler.betoffice.dao.SessionDao;
-import de.winkler.betoffice.storage.Session;
+import javax.transaction.Transactional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import javax.transaction.Transactional;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.List;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
+import de.betoffice.web.json.SecurityTokenJson;
 
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
@@ -44,10 +40,6 @@ public class AuthenticationControllerTest {
     private static final String PASSWORD = "Password";
     private static final String ROLE_TIPPER = "TIPPER";
     private static final String USER_AGENT_TEST = "TESTAGENT";
-    private static final ZoneId EUROPE_BERLIN = ZoneId.of("Europe/Berlin");
-
-    @Autowired
-    private SessionDao sessionDao;
 
     private MockMvc mockMvc;
 
@@ -76,7 +68,7 @@ public class AuthenticationControllerTest {
         authenticationForm.setNickname(NICKNAME);
         authenticationForm.setPassword(PASSWORD);
 
-        ResultActions loginAction = mockMvc.perform(post("/authentication/login")
+        /*ResultActions loginAction =*/ mockMvc.perform(post("/authentication/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toString(authenticationForm))
                 .header("User-Agent", USER_AGENT_TEST)
@@ -91,7 +83,7 @@ public class AuthenticationControllerTest {
         logoutFormData.setNickname(NICKNAME);
         logoutFormData.setToken(TOKEN);
 
-        ResultActions logoutAction = mockMvc.perform(post("/authentication/logout")
+        /*ResultActions logoutAction =*/ mockMvc.perform(post("/authentication/logout")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toString(logoutFormData))
                 .header("User-Agent", USER_AGENT_TEST)

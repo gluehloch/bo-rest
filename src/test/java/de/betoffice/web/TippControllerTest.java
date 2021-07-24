@@ -129,40 +129,9 @@ public class TippControllerTest {
 
     @Test
     @Transactional
-    public void submitValidTipp() throws Exception {
-        //
-        // Authentifizierung starten...
-        //
-        AuthenticationForm authenticationForm = new AuthenticationForm();
-        authenticationForm.setNickname(NICKNAME);
-        authenticationForm.setPassword(PASSWORD);
-
-        ResultActions loginAction = mockMvc.perform(post("/authentication/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(toString(authenticationForm))
-                .header("User-Agent", USER_AGENT_TEST)
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("token", notNullValue()))
-                .andExpect(jsonPath("nickname", equalTo(NICKNAME)))
-                .andExpect(jsonPath("role", equalTo("TIPPER")));
-
-        List<Session> sessions = sessionDao.findByNickname(NICKNAME);
-        assertThat(sessions).hasSize(1);
-        String token = sessions.get(0).getToken();
-        
-        LogoutFormData logoutFormData = new LogoutFormData();
-        logoutFormData.setNickname(NICKNAME);
-        logoutFormData.setToken(token);
-        
-        ResultActions logoutAction = mockMvc.perform(post("/authentication/logout")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(toString(logoutFormData))
-                .header("User-Agent", USER_AGENT_TEST)
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk());
+    public void submitLoginLogout() throws Exception {
+        login();       
+        logout(findSessionToken());
         
         List<Session> sessions2 = sessionDao.findByNickname(NICKNAME);
         assertThat(sessions2).hasSize(1);
@@ -190,20 +159,7 @@ public class TippControllerTest {
         //
         // Authentifizierung starten...
         //
-        AuthenticationForm authenticationForm = new AuthenticationForm();
-        authenticationForm.setNickname(NICKNAME);
-        authenticationForm.setPassword(PASSWORD);
-
-        ResultActions loginAction = mockMvc.perform(post("/authentication/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(toString(authenticationForm))
-                .header("User-Agent", USER_AGENT_TEST)
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("token", notNullValue()))
-                .andExpect(jsonPath("nickname", equalTo(NICKNAME)))
-                .andExpect(jsonPath("role", equalTo("TIPPER")));
+        ResultActions loginAction = login();
 
         MvcResult result = loginAction.andReturn();
         System.out.println(result.getResponse().getContentAsString());
@@ -254,6 +210,17 @@ public class TippControllerTest {
         List<GameTipp> tipps = seasonManagerService.findTipps(data.round, data.user);
         assertThat(tipps).hasSize(0);
 
+        logout(findSessionToken());
+        
+        mockMvc.perform(post("/office/tipp/submit")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toString(tipp))
+                .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN, token)
+                .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME, NICKNAME)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+        
         //
         // Tippabgabe zum richtigen Zeitpunkt. Einen Tag vor dem Spieltag.
         //
@@ -324,4 +291,46 @@ public class TippControllerTest {
         Game rweVsLuebeck;
     }
 
+	private ResultActions login() throws Exception, JsonProcessingException {
+		AuthenticationForm authenticationForm = new AuthenticationForm();
+        authenticationForm.setNickname(NICKNAME);
+        authenticationForm.setPassword(PASSWORD);
+
+        ResultActions loginAction = mockMvc.perform(post("/authentication/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toString(authenticationForm))
+                .header("User-Agent", USER_AGENT_TEST)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("token", notNullValue()))
+                .andExpect(jsonPath("nickname", equalTo(NICKNAME)))
+                .andExpect(jsonPath("role", equalTo("TIPPER")));
+        
+        return loginAction;
+	}
+
+	private ResultActions logout(String token) throws Exception, JsonProcessingException {
+		LogoutFormData logoutFormData = new LogoutFormData();
+        logoutFormData.setNickname(NICKNAME);
+        logoutFormData.setToken(token);
+        
+        ResultActions logoutAction = mockMvc.perform(post("/authentication/logout")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toString(logoutFormData))
+                .header("User-Agent", USER_AGENT_TEST)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+        
+        return logoutAction;
+	}
+
+	private String findSessionToken() {
+		List<Session> sessions = sessionDao.findByNickname(NICKNAME);
+        assertThat(sessions).hasSize(1);
+        String token = sessions.get(0).getToken();
+		return token;
+	}
+	
 }
