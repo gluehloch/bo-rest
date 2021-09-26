@@ -26,6 +26,9 @@ package de.betoffice.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,13 +53,12 @@ public class CommunityController {
     private BetofficeCommunityService communityService;
 
     @GetMapping(value = "/communities", headers = { "Content-type=application/json" })
-    public ResponseEntity<Page<Community>> updateRoundByOpenligaDb(
-            @RequestParam("filter") String filter,
-            @RequestParam("pageRequest") PageRequest pageRequest,
+    public ResponseEntity<Page<Community>> findCommunities(
+            Pageable pageable,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
-    
-        Page<Community> communities = communityService.findCommunities(filter, pageRequest);
+
+        Page<Community> communities = communityService.findCommunities("", pageable);
         return ResponseEntity.ok(communities);
     }
 
