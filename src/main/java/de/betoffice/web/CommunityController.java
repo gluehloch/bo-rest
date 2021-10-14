@@ -23,6 +23,8 @@
 
 package de.betoffice.web;
 
+import de.betoffice.web.json.CommunityJson;
+import de.betoffice.web.json.builder.CommunityJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -53,12 +55,12 @@ public class CommunityController {
     private BetofficeCommunityService communityService;
 
     @GetMapping(value = "/communities", headers = { "Content-type=application/json" })
-    public ResponseEntity<Page<Community>> findCommunities(
+    public ResponseEntity<Page<CommunityJson>> findCommunities(
             Pageable pageable,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        Page<Community> communities = communityService.findCommunities("", pageable);
+        Page<CommunityJson> communities = communityService.findCommunities("", pageable).map(CommunityJsonMapper::map);
         return ResponseEntity.ok(communities);
     }
 
