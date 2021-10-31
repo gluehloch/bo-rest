@@ -12,6 +12,7 @@ import java.util.List;
 @EnableSpringDataWebSupport
 public class BetofficeConfiguration implements WebMvcConfigurer {
 
+    // TODO Spring REST suppotr for page- and sortables. Does this work? Currently not!
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add( new PageableHandlerMethodArgumentResolver());
