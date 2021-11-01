@@ -26,7 +26,6 @@ package de.betoffice.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,17 +51,40 @@ public class CommunityController {
 
     @GetMapping(value = "/communities", headers = { "Content-type=application/json" })
     public ResponseEntity<Page<CommunityJson>> findCommunities(
-            Pageable pageable,
+            PageParam pageParam,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
         String communityFilterName = "";
-        int page = 0, size = 0;
-        
-        PageRequest pageRequest = PageRequest.of(page, size);
-        
-        Page<CommunityJson> communities = communityService.findCommunities(communityFilterName, pageRequest).map(CommunityJsonMapper::map);
+
+        Page<CommunityJson> communities = communityService
+                .findCommunities(communityFilterName, pageParam.toPageRequest()).map(CommunityJsonMapper::map);
         return ResponseEntity.ok(communities);
+    }
+
+    public static class PageParam {
+        private int page;
+        private int size;
+
+        public int getPage() {
+            return page;
+        }
+
+        public void setPage(int page) {
+            this.page = page;
+        }
+
+        public int getSize() {
+            return size;
+        }
+
+        public void setSize(int size) {
+            this.size = size;
+        }
+
+        PageRequest toPageRequest() {
+            return PageRequest.of(page, size);
+        }
     }
 
 }
