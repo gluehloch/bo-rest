@@ -25,7 +25,6 @@ package de.betoffice.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,31 +59,6 @@ public class CommunityController {
         Page<CommunityJson> communities = communityService
                 .findCommunities(communityFilterName, pageParam.toPageRequest()).map(CommunityJsonMapper::map);
         return ResponseEntity.ok(communities);
-    }
-
-    public static class PageParam {
-        private int page;
-        private int size;
-
-        public int getPage() {
-            return page;
-        }
-
-        public void setPage(int page) {
-            this.page = page;
-        }
-
-        public int getSize() {
-            return size;
-        }
-
-        public void setSize(int size) {
-            this.size = size;
-        }
-
-        PageRequest toPageRequest() {
-            return PageRequest.of(page, size);
-        }
     }
 
 }
