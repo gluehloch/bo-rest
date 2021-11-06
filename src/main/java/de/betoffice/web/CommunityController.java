@@ -51,7 +51,7 @@ public class CommunityController {
     @GetMapping(value = "/communities", headers = { "Content-type=application/json" })
     public ResponseEntity<Page<CommunityJson>> findCommunities(
             PageParam pageParam,
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
+            // @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
         String communityFilterName = "";

@@ -26,8 +26,8 @@ package de.betoffice.web;
 import org.springframework.data.domain.PageRequest;
 
 public class PageParam {
-    private int page;
-    private int size;
+    private int page = 0;
+    private int size = 10;
 
     public int getPage() {
         return page;
