@@ -24,6 +24,7 @@
 package de.betoffice.web;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 public class PageParam {
     private int page = 0;
@@ -48,4 +49,9 @@ public class PageParam {
     PageRequest toPageRequest() {
         return PageRequest.of(page, size);
     }
+
+    PageRequest toPageRequest(Sort sort) {
+        return PageRequest.of(page, size, sort);
+    }
+
 }
