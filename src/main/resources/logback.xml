@@ -9,6 +9,9 @@
     <logger name="org.hibernate" level="error" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
+    <logger name="de.betoffice" level="warn" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
     <root level="info">
         <appender-ref ref="STDOUT"/>
     </root>
