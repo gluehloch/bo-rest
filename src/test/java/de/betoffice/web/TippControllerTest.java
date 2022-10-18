@@ -24,6 +24,7 @@
 
 package de.betoffice.web;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.equalTo;
@@ -33,14 +34,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
 import javax.transaction.Transactional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -62,6 +64,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import de.betoffice.database.data.DeleteDatabase;
 import de.betoffice.web.json.GameResultJson;
 import de.betoffice.web.json.SubmitTippGameJson;
 import de.betoffice.web.json.SubmitTippRoundJson;
@@ -110,6 +113,9 @@ public class TippControllerTest {
 
     @Autowired
     private SessionDao sessionDao;
+    
+    @Autowired
+    private DataSource dataSource;
 
     private T data;
 
@@ -242,9 +248,25 @@ public class TippControllerTest {
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         return ow.writeValueAsString(object);
     }
+    
+    public void tearDown() throws SQLException {
+        Connection conn = getConnection();
+        try {
+            DeleteDatabase.deleteDatabase(conn);
+        } finally {
+            conn.close();
+        }
+    }
+
+    private Connection getConnection() throws SQLException {
+        Connection conn = dataSource.getConnection();
+        conn.setAutoCommit(false);
+        return conn;
+    }
 
     @BeforeEach
-    void setup() {
+    void setup() throws Exception {
+        tearDown();
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(new BetofficeController(betofficeService), new AuthenticationController(betofficeAuthenticationService)).build();
 
