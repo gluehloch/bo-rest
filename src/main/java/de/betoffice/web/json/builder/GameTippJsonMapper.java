@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2013-2017 by Andre Winkler. All rights
+ * Project betoffice-jweb-misc Copyright (c) 2013-2022 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -40,9 +40,8 @@ public class GameTippJsonMapper {
     private static final GameResultJsonMapper gameResultJsonMapper = new GameResultJsonMapper();
 
     public GameTippJson map(GameTipp tipp, GameTippJson gameTippJson) {
-        gameTippJson.setNickname(tipp.getUser().getNickname());
-        gameTippJson.setTipp(
-                gameResultJsonMapper.map(tipp.getTipp(), new GameResultJson()));
+        gameTippJson.setNickname(tipp.getUser().getNickname().value());
+        gameTippJson.setTipp(gameResultJsonMapper.map(tipp.getTipp(), new GameResultJson()));
         gameTippJson.setPoints(tipp.getPoints());
         return gameTippJson;
     }

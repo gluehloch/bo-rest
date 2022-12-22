@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2013-2017 by Andre Winkler. All
+ * Project betoffice-jweb-misc Copyright (c) 2013-2022 by Andre Winkler. All
  * rights reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -36,7 +36,7 @@ public class SecurityTokenJsonMapper {
 
     public SecurityTokenJson map(SecurityToken securityToken, SecurityTokenJson securityTokenJson) {
         securityTokenJson.setLoginTime(securityToken.getLoginTime());
-        securityTokenJson.setNickname(securityToken.getUser().getNickname());
+        securityTokenJson.setNickname(securityToken.getUser().getNickname().value());
 
         if (securityToken.getRoleTypes().contains(RoleType.ADMIN)) {
             securityTokenJson.setRole(RoleType.ADMIN.name());

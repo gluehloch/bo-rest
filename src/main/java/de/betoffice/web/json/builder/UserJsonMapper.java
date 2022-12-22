@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb Copyright (c) 2013-2017 by Andre Winkler. All rights
+ * Project betoffice-jweb Copyright (c) 2013-2022 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -39,7 +39,7 @@ public class UserJsonMapper {
 
     public UserJson map(UserResult userResult, UserJson userJson) {
         userJson.setId(userResult.getUser().getId());
-        userJson.setNickname(userResult.getUser().getNickname());
+        userJson.setNickname(userResult.getUser().getNickname().value());
         userJson.setWin(userResult.getUserWin());
         userJson.setToto(userResult.getUserTotoWin());
         userJson.setTicket(userResult.getTicket());

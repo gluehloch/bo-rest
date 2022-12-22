@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb Copyright (c) 2016 by Andre Winkler. All rights
+ * Project betoffice-jweb Copyright (c) 2016-2022 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import de.betoffice.web.json.PartyJson;
+import de.winkler.betoffice.storage.Nickname;
 import de.winkler.betoffice.storage.User;
 
 /**
@@ -41,7 +42,7 @@ public class PartyJsonMapper {
         partyJson.setName(user.getName());
         partyJson.setSurname(user.getSurname());
         partyJson.setMail(user.getEmail());
-        partyJson.setNickname(user.getNickname());
+        partyJson.setNickname(user.getNickname().value());
         partyJson.setPassword(user.getPassword());
         partyJson.setPhone(user.getPhone());
         partyJson.setTitle(user.getTitle());
@@ -60,7 +61,7 @@ public class PartyJsonMapper {
         user.setName(partyJson.getName());
         user.setSurname(partyJson.getSurname());
         user.setEmail(partyJson.getMail());
-        user.setNickname(partyJson.getNickname());
+        user.setNickname(Nickname.of(partyJson.getNickname()));
         user.setPassword(partyJson.getPassword());
         user.setPhone(partyJson.getPhone());
         user.setTitle(partyJson.getTitle());

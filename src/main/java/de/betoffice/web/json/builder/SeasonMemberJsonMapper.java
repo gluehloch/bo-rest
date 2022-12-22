@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb Copyright (c) 2017 by Andre Winkler. All rights
+ * Project betoffice-jweb Copyright (c) 2017-2022 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -38,7 +38,7 @@ public class SeasonMemberJsonMapper {
 
     public SeasonMemberJson map(User user, SeasonMemberJson seasonMemberJson) {
         seasonMemberJson.setId(user.getId());
-        seasonMemberJson.setNickname(user.getNickname());
+        seasonMemberJson.setNickname(user.getNickname().value());
         return seasonMemberJson;
     }
 

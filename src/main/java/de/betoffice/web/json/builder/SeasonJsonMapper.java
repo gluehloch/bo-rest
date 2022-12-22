@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb Copyright (c) 2016 by Andre Winkler. All rights
+ * Project betoffice-jweb Copyright (c) 2022 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 
 import de.betoffice.web.json.SeasonJson;
 import de.winkler.betoffice.storage.Season;
+import de.winkler.betoffice.storage.SeasonReference;
 import de.winkler.betoffice.storage.enums.SeasonType;
 import de.winkler.betoffice.storage.enums.TeamType;
 
@@ -40,8 +41,8 @@ public class SeasonJsonMapper {
 
     public SeasonJson map(Season season, SeasonJson seasonJson) {
         seasonJson.setId(season.getId());
-        seasonJson.setName(season.getName());
-        seasonJson.setYear(season.getYear());
+        seasonJson.setName(season.getReference().getName());
+        seasonJson.setYear(season.getReference().getYear());
         seasonJson.setSeasonType(season.getMode().toString());
         seasonJson.setTeamType(season.getTeamType().toString());
 
@@ -67,8 +68,7 @@ public class SeasonJsonMapper {
     public Season reverse(SeasonJson seasonJson, Season season) {
         season.setMode(SeasonType.valueOf(seasonJson.getSeasonType()));
         season.setTeamType(TeamType.valueOf(seasonJson.getTeamType()));
-        season.setYear(seasonJson.getYear());
-        season.setName(seasonJson.getName());
+        season.setReference(SeasonReference.of(seasonJson.getYear(), seasonJson.getName()));
         season.getChampionshipConfiguration().setOpenligaLeagueSeason(seasonJson.getOpenligaLeagueSeason());
         season.getChampionshipConfiguration().setOpenligaLeagueShortcut(seasonJson.getOpenligaLeagueShortcut());
         return season;
