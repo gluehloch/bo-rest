@@ -41,6 +41,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import de.winkler.betoffice.service.AuthService;
+import de.winkler.betoffice.storage.Nickname;
 import de.winkler.betoffice.storage.User;
 
 /**
@@ -63,7 +64,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Transactional
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String name = authentication.getName();
+        Nickname nickname = Nickname.of(authentication.getName());
         Object credentials = authentication.getCredentials();
 
         LOG.info(() -> "credentials class: " + credentials.getClass());
@@ -73,16 +74,17 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         }
 
         String password = credentials.toString();
-        
+
         // TODO Da muss ich das Authentication Objekt erweitern.
         Object details = authentication.getDetails();
         String ipaddress = null;
         String browserid = null;
-        
-        authService.login(name, password, password, ipaddress, browserid);
-        
-        User user = authService.findByNickname(name).orElseThrow(
-        		() -> new BadCredentialsException("Authentication failed for nickname=[" + name + "]."));
+
+        authService.login(nickname, password, password, ipaddress, browserid);
+
+        User user = authService.findByNickname(nickname).orElseThrow(
+                () -> new BadCredentialsException(
+                        String.format("Authentication failed for nickname=[%1s].", nickname.value())));
 
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         //
@@ -93,7 +95,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         //
         // TODO ???? UsernamePasswordAuthenticationToken oder lieber was JWT naeheres???
         //
-        Authentication auth = new UsernamePasswordAuthenticationToken(name, password, grantedAuthorities);
+        Authentication auth = new UsernamePasswordAuthenticationToken(nickname, password, grantedAuthorities);
 
         return auth;
     }

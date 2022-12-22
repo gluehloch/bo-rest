@@ -58,6 +58,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import de.winkler.betoffice.dao.UserDao;
 import de.winkler.betoffice.service.AuthService;
 import de.winkler.betoffice.service.SecurityToken;
+import de.winkler.betoffice.storage.Nickname;
 import de.winkler.betoffice.storage.User;
 
 /**
@@ -198,7 +199,7 @@ class BetofficeUserAccountDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userDao.findByNickname(username)
+        User user = userDao.findByNickname(Nickname.of(username))
                 .orElseThrow(() -> new UsernameNotFoundException("Unknown nickname: " + username));
 
         return new BetofficeUserDetails(user, user.getRoleTypes());
@@ -230,7 +231,7 @@ class BetofficeUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getNickname();
+        return user.getNickname().value();
     }
 
     @Override

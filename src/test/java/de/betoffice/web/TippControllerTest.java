@@ -76,7 +76,9 @@ import de.winkler.betoffice.storage.GameList;
 import de.winkler.betoffice.storage.GameTipp;
 import de.winkler.betoffice.storage.Group;
 import de.winkler.betoffice.storage.GroupType;
+import de.winkler.betoffice.storage.Nickname;
 import de.winkler.betoffice.storage.Season;
+import de.winkler.betoffice.storage.SeasonReference;
 import de.winkler.betoffice.storage.Session;
 import de.winkler.betoffice.storage.Team;
 import de.winkler.betoffice.storage.User;
@@ -279,8 +281,7 @@ public class TippControllerTest {
 
         data.season = new Season();
         data.season.setMode(SeasonType.LEAGUE);
-        data.season.setName("Bundesliga");
-        data.season.setYear("1999/2000");
+        data.season.setReference(SeasonReference.of("1999/2000", "Bundesliga"));
         seasonManagerService.createSeason(data.season);
 
         data.bundesliga = new GroupType();
@@ -297,7 +298,7 @@ public class TippControllerTest {
         data.rweVsLuebeck = seasonManagerService.addMatch(data.round, DATE_1971_03_24, data.group, data.rwe, data.luebeck);
 
         data.user = new User();
-        data.user.setNickname(NICKNAME);
+        data.user.setNickname(Nickname.of(NICKNAME));
         data.user.setPassword(PASSWORD);
         masterDataManagerService.createUser(data.user);
 

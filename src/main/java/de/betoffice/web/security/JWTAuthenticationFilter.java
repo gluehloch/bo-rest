@@ -39,6 +39,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import de.betoffice.web.BetofficeHttpConsts;
 import de.winkler.betoffice.service.AuthService;
 import de.winkler.betoffice.service.SecurityToken;
+import de.winkler.betoffice.storage.Nickname;
 
 /**
  * This filter tries to authenticate the user. So there has to be an instance the {@link de.winkler.betoffice.storage.User} as JSON
@@ -60,7 +61,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
 
-        String nickname = request.getParameter("nickname");
+        Nickname nickname = Nickname.of(request.getParameter("nickname"));
         String password = request.getParameter("password");
 
         String sessionid = request.getSession().getId();
@@ -81,7 +82,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication auth) {
-        SecurityToken token = authService.findTokenByNickname(auth.getName()).orElseThrow();
+        SecurityToken token = authService.findTokenByNickname(Nickname.of(auth.getName())).orElseThrow();
         response.addHeader(SecurityConstants.HEADER_AUTHORIZATION, SecurityConstants.TOKEN_PREFIX + token);
     }
 
