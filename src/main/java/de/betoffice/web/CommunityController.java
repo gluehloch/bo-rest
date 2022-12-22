@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.web.json.CommunityJson;
 import de.betoffice.web.json.builder.CommunityJsonMapper;
+import de.winkler.betoffice.service.CommunityService;
 import de.winkler.betoffice.storage.CommunityFilter;
 
 /**
@@ -53,7 +54,7 @@ import de.winkler.betoffice.storage.CommunityFilter;
 public class CommunityController {
 
     @Autowired
-    private BetofficeCommunityService communityService;
+    private CommunityService communityService;
 
     @GetMapping(value = "/communities", headers = { "Content-type=application/json" })
     public ResponseEntity<Page<CommunityJson>> findCommunities(
