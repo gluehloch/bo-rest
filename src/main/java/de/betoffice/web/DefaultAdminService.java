@@ -25,8 +25,10 @@ package de.betoffice.web;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,11 +47,14 @@ import de.betoffice.web.json.builder.SeasonJsonMapper;
 import de.betoffice.web.json.builder.SeasonMemberJsonMapper;
 import de.betoffice.web.json.builder.TeamJsonMapper;
 import de.winkler.betoffice.service.AuthService;
+import de.winkler.betoffice.service.CommunityService;
 import de.winkler.betoffice.service.DateTimeProvider;
 import de.winkler.betoffice.service.MasterDataManagerService;
 import de.winkler.betoffice.service.SeasonManagerService;
+import de.winkler.betoffice.storage.CommunityReference;
 import de.winkler.betoffice.storage.Game;
 import de.winkler.betoffice.storage.GameList;
+import de.winkler.betoffice.storage.Nickname;
 import de.winkler.betoffice.storage.Season;
 import de.winkler.betoffice.storage.Session;
 import de.winkler.betoffice.storage.Team;
@@ -76,6 +81,9 @@ public class DefaultAdminService implements AdminService {
 
     @Autowired
     private SeasonManagerService seasonManagerService;
+    
+    @Autowired
+    private CommunityService communityService;
 
     @Autowired
     private AuthService authService;
@@ -167,29 +175,28 @@ public class DefaultAdminService implements AdminService {
     // -- user administration -------------------------------------------------
 
     public PartyJson findUser(long userId) {
-        User user = masterDataManagerService.findUser(userId);
+        User user = communityService.findUser(userId);
         return new PartyJsonMapper().map(user, new PartyJson());
     }
 
     @Override
     public List<PartyJson> findUsers() {
-        return new PartyJsonMapper()
-                .map(masterDataManagerService.findAllUsers());
+        return new PartyJsonMapper().map(communityService.findAllUsers());
     }
 
     @Override
     public PartyJson addUser(PartyJson partyJson) {
         PartyJsonMapper mapper = new PartyJsonMapper();
         User user = mapper.reverse(partyJson, new User());
-        user = masterDataManagerService.createUser(user);
+        user = communityService.createUser(user);
         return mapper.map(user, partyJson);
     }
 
     @Override
     public PartyJson updateUser(PartyJson partyJson) {
-        User storedUser = masterDataManagerService.findUser(partyJson.getId());
+        User storedUser = communityService.findUser(partyJson.getId());
         User user = new PartyJsonMapper().reverse(partyJson, storedUser);
-        masterDataManagerService.updateUser(user);
+        communityService.updateUser(user);
         return partyJson;
     }
 
@@ -257,35 +264,34 @@ public class DefaultAdminService implements AdminService {
     @Override
     public List<SeasonMemberJson> findPotentialSeasonMembers(long seasonId) {
         Season season = seasonManagerService.findSeasonById(seasonId);
-        List<User> activatedUsers = seasonManagerService
-                .findActivatedUsers(season);
-        List<User> users = masterDataManagerService.findAllUsers();
+        CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(season.getReference());
+        Set<User> activatedUsers = communityService.findMembers(defaultPlayerGroup);
+        List<User> users = communityService.findAllUsers();
 
         users.removeAll(activatedUsers);
 
         SeasonMemberJsonMapper mapper = new SeasonMemberJsonMapper();
-        List<SeasonMemberJson> seasonMembers = mapper.map(users);
-
-        return seasonMembers;
+        return mapper.map(users);
     }
 
     @Override
     public List<SeasonMemberJson> findAllSeasonMembers(long seasonId) {
         Season season = seasonManagerService.findSeasonById(seasonId);
-        List<User> activatedUsers = seasonManagerService.findActivatedUsers(season);
+        CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(season.getReference());
+        Set<User> activatedUsers = communityService.findMembers(defaultPlayerGroup);
 
         SeasonMemberJsonMapper mapper = new SeasonMemberJsonMapper();
-        List<SeasonMemberJson> seasonMembers = mapper.map(activatedUsers);
-
-        return seasonMembers;
+        return mapper.map(activatedUsers);
     }
 
     @Override
     public List<SeasonMemberJson> addSeasonMembers(long seasonId, List<SeasonMemberJson> seasonMembers) {
         List<User> users = findUsers(seasonMembers);
         Season season = seasonManagerService.findSeasonById(seasonId);
+        CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(season.getReference());
 
-        seasonManagerService.addUsers(season, users);
+        Set<Nickname> nicknames = new HashSet<>(users.stream().map(User::getNickname).toList());
+        communityService.addMembers(defaultPlayerGroup, nicknames);
 
         return findAllSeasonMembers(seasonId);
     }

@@ -23,8 +23,8 @@
 
 package de.betoffice.web.json.builder;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import de.betoffice.web.json.SeasonMemberJson;
 import de.winkler.betoffice.storage.User;
@@ -42,12 +42,12 @@ public class SeasonMemberJsonMapper {
         return seasonMemberJson;
     }
 
-    public List<SeasonMemberJson> map(List<User> users) {
+    public List<SeasonMemberJson> map(Collection<User> users) {
         return users.stream().map((user) -> {
             SeasonMemberJson json = new SeasonMemberJson();
             json = map(user, json);
             return json;
-        }).collect(Collectors.toList());
+        }).toList();
     }
 
 }
