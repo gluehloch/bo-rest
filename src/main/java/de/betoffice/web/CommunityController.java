@@ -66,7 +66,7 @@ public class CommunityController {
         CommunityFilter communityFilter = new CommunityFilter();
         PageRequest pageRequest = pageParam.toPageRequest(sort);
 
-        Page<CommunityJson> communities = communityService.findCommunities(communityFilter, pageRequest);
+        Page<CommunityJson> communities = communityService.findCommunities(communityFilter, pageRequest).map(CommunityJsonMapper::map);
         return ResponseEntity.ok(communities);
     }
     
