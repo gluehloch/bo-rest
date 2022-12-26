@@ -435,8 +435,7 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     private UserTableJson calcUserRanking(UserTableJson userTableJson, GameList round, int startIndex) {
-        Long seasonId = userTableJson.getSeason().getId();
-        Season season = seasonManagerService.findSeasonById(seasonId);
+        Season season = seasonManagerService.findSeasonById(round.getSeason().getId());
         List<UserResult> calculatedRanking = communityCalculatorService.calculateRanking(
                 CommunityService.defaultPlayerGroup(season.getReference()), SeasonRange.of(startIndex, round.getIndex()));
         
