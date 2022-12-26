@@ -23,6 +23,7 @@
 
 package de.betoffice.web;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -97,7 +98,7 @@ public class DefaultBetofficeService implements BetofficeService {
 
     @Autowired
     private CommunityService communityService;
-    
+
     @Autowired
     private CommunityCalculatorService communityCalculatorService;
 
@@ -297,10 +298,19 @@ public class DefaultBetofficeService implements BetofficeService {
 
     @Override
     public RoundJson findCurrentTipp(Long seasonId, String nickName) {
-        GameList tippRound = tippService.findNextTippRound(seasonId, dateTimeProvider.currentDateTime());
+        ZonedDateTime currentDateTime = dateTimeProvider.currentDateTime();
+        GameList tippRound = tippService.findNextTippRound(seasonId, currentDateTime);
+
         if (tippRound != null) {
             return findTipp(tippRound.getId(), nickName);
         }
+
+        GameList previousTippRound = tippService.findPreviousTippRound(seasonId, currentDateTime);
+        if (previousTippRound != null) {
+            return findTipp(tippRound.getId(), nickName);
+        }
+
+        // TODO Falls kein nächster Spieltag vorhanden ist,
         return null;
     }
 
@@ -437,8 +447,9 @@ public class DefaultBetofficeService implements BetofficeService {
     private UserTableJson calcUserRanking(UserTableJson userTableJson, GameList round, int startIndex) {
         Season season = seasonManagerService.findSeasonById(round.getSeason().getId());
         List<UserResult> calculatedRanking = communityCalculatorService.calculateRanking(
-                CommunityService.defaultPlayerGroup(season.getReference()), SeasonRange.of(startIndex, round.getIndex()));
-        
+                CommunityService.defaultPlayerGroup(season.getReference()),
+                SeasonRange.of(startIndex, round.getIndex()));
+
         for (UserResult ur : calculatedRanking) {
             UserJson userJson = JsonBuilder.toJson(ur);
             userTableJson.addUser(userJson);
