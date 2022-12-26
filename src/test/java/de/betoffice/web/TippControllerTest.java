@@ -72,6 +72,7 @@ import de.winkler.betoffice.dao.SessionDao;
 import de.winkler.betoffice.service.CommunityService;
 import de.winkler.betoffice.service.MasterDataManagerService;
 import de.winkler.betoffice.service.SeasonManagerService;
+import de.winkler.betoffice.storage.CommunityReference;
 import de.winkler.betoffice.storage.Game;
 import de.winkler.betoffice.storage.GameList;
 import de.winkler.betoffice.storage.GameTipp;
@@ -305,7 +306,9 @@ class TippControllerTest {
         data.user.setNickname(Nickname.of(NICKNAME));
         data.user.setPassword(PASSWORD);
         communityService.createUser(data.user);
-
+        
+        CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(data.season.getReference());
+        communityService.create(defaultPlayerGroup, data.season.getReference(), defaultPlayerGroup.getShortName(), Nickname.of(NICKNAME));
         communityService.addMember(CommunityService.defaultPlayerGroup(data.season.getReference()), data.user.getNickname());
     }
 
