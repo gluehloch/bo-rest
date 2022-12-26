@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb Copyright (c) 2013-2020 by Andre Winkler.
+ * Project betoffice-jweb Copyright (c) 2013-2022 by Andre Winkler.
  * All rights reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -28,7 +28,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
 import de.betoffice.web.json.UserJson;
+import de.winkler.betoffice.storage.Nickname;
 import de.winkler.betoffice.storage.Season;
+import de.winkler.betoffice.storage.SeasonReference;
 import de.winkler.betoffice.storage.User;
 import de.winkler.betoffice.storage.UserResult;
 
@@ -37,13 +39,13 @@ import de.winkler.betoffice.storage.UserResult;
  * 
  * @author Andre Winkler
  */
-public class UserJsonMapperTest {
+class UserJsonMapperTest {
 
     @Test
-    public void testUserJsonMapping() {
-        User user = new User("Frosch");
+    void testUserJsonMapping() {
+        User user = new User(Nickname.of("Frosch"));
         Season season = new Season();
-        season.setName("Bundesliga 2017/2018");
+        season.setReference(SeasonReference.of("2017/2018", "Bundesliga"));
 
         UserResult userResult = new UserResult(user);
         userResult.setTabPos(1);

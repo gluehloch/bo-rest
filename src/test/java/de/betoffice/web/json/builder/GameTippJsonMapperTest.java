@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2013-2019 by Andre Winkler. All rights
+ * Project betoffice-jweb-misc Copyright (c) 2013-2022 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -31,6 +31,7 @@ import de.betoffice.web.json.GameTippJson;
 import de.winkler.betoffice.storage.Game;
 import de.winkler.betoffice.storage.GameResult;
 import de.winkler.betoffice.storage.GameTipp;
+import de.winkler.betoffice.storage.Nickname;
 import de.winkler.betoffice.storage.Team;
 import de.winkler.betoffice.storage.User;
 import de.winkler.betoffice.storage.enums.TippStatusType;
@@ -40,12 +41,12 @@ import de.winkler.betoffice.storage.enums.TippStatusType;
  *
  * @author Andre Winkler
  */
-public class GameTippJsonMapperTest {
+class GameTippJsonMapperTest {
 
     @Test
-    public void testGameTippJsonMapperFullPoints() {
+    void testGameTippJsonMapperFullPoints() {
         User user = new User();
-        user.setNickname("Frosch");
+        user.setNickname(Nickname.of("Frosch"));
 
         Game game = new Game();
         game.setHomeTeam(new Team());
@@ -70,9 +71,9 @@ public class GameTippJsonMapperTest {
     }
 
     @Test
-    public void testGameTippJsonMapperWinPoints() {
+    void testGameTippJsonMapperWinPoints() {
         User user = new User();
-        user.setNickname("Frosch");
+        user.setNickname(Nickname.of("Frosch"));
 
         Game game = new Game();
         game.setHomeTeam(new Team());
@@ -97,9 +98,9 @@ public class GameTippJsonMapperTest {
     }
 
     @Test
-    public void testGameTippJsonMapperLostPoints() {
+    void testGameTippJsonMapperLostPoints() {
         User user = new User();
-        user.setNickname("Frosch");
+        user.setNickname(Nickname.of("Frosch"));
 
         Game game = new Game();
         game.setHomeTeam(new Team());

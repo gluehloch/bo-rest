@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2000-2021 by Andre Winkler. All
+ * Project betoffice-jweb-misc Copyright (c) 2000-2022 by Andre Winkler. All
  * rights reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -46,6 +46,8 @@ import de.betoffice.web.json.TeamResultJson;
 import de.betoffice.web.json.UserJson;
 import de.betoffice.web.json.UserTableJson;
 import de.winkler.betoffice.service.AuthService;
+import de.winkler.betoffice.service.CommunityCalculatorService;
+import de.winkler.betoffice.service.CommunityService;
 import de.winkler.betoffice.service.DateTimeProvider;
 import de.winkler.betoffice.service.MasterDataManagerService;
 import de.winkler.betoffice.service.SeasonManagerService;
@@ -55,7 +57,9 @@ import de.winkler.betoffice.storage.GameList;
 import de.winkler.betoffice.storage.GameTipp;
 import de.winkler.betoffice.storage.Group;
 import de.winkler.betoffice.storage.GroupType;
+import de.winkler.betoffice.storage.Nickname;
 import de.winkler.betoffice.storage.Season;
+import de.winkler.betoffice.storage.SeasonRange;
 import de.winkler.betoffice.storage.Session;
 import de.winkler.betoffice.storage.Team;
 import de.winkler.betoffice.storage.TeamResult;
@@ -66,461 +70,478 @@ import de.winkler.betoffice.storage.UserResult;
 
 /**
  * Basic rest service features for betoffice.
+ * 
+ * TODO Hier gibt es die ein oder andere Codestelle, die vielleicht einmal ueberprueft werden sollte.
  *
  * @author Andre Winkler
  */
 @Component("betofficeBasicService")
 public class DefaultBetofficeService implements BetofficeService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(DefaultBetofficeService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultBetofficeService.class);
 
-	@Autowired
-	private AuthService authService;
+    @Autowired
+    private AuthService authService;
 
-	@Autowired
-	private DateTimeProvider dateTimeProvider;
+    @Autowired
+    private DateTimeProvider dateTimeProvider;
 
-	@Autowired
-	private SeasonManagerService seasonManagerService;
+    @Autowired
+    private SeasonManagerService seasonManagerService;
 
-	@Autowired
-	private MasterDataManagerService masterDataManagerService;
+    @Autowired
+    private MasterDataManagerService masterDataManagerService;
 
-	@Autowired
-	private TippService tippService;
+    @Autowired
+    private TippService tippService;
 
-	// ------------------------------------------------------------------------
+    @Autowired
+    private CommunityService communityService;
+    
+    @Autowired
+    private CommunityCalculatorService communityCalculatorService;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.betoffice.web.IBetofficeBasicJsonService#findSeasonById(java.lang.
-	 * String)
-	 */
-	@Override
-	public SeasonJson findSeasonById(Long seasonId) {
-		Season season = seasonManagerService.findSeasonById(seasonId);
-		List<GameList> rounds = seasonManagerService.findRounds(season);
+    // ------------------------------------------------------------------------
 
-		GameList nextTippRound = tippService.findNextTippRound(seasonId, dateTimeProvider.currentDateTime());
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.betoffice.web.IBetofficeBasicJsonService#findSeasonById(java.lang.
+     * String)
+     */
+    @Override
+    public SeasonJson findSeasonById(Long seasonId) {
+        Season season = seasonManagerService.findSeasonById(seasonId);
+        List<GameList> rounds = seasonManagerService.findRounds(season);
 
-		JsonAssembler jsonAssembler = new JsonAssembler();
-		SeasonJson seasonJson = jsonAssembler.build(season).rounds(rounds).currentRound(nextTippRound).assemble();
+        GameList nextTippRound = tippService.findNextTippRound(seasonId, dateTimeProvider.currentDateTime());
 
-		return seasonJson;
-	}
+        JsonAssembler jsonAssembler = new JsonAssembler();
+        SeasonJson seasonJson = jsonAssembler.build(season).rounds(rounds).currentRound(nextTippRound).assemble();
 
-	@Override
-	public List<GroupTypeJson> findAllGroups(Long seasonId) {
-		Season season = seasonManagerService.findSeasonById(seasonId);
-		List<GroupType> groupTypes = seasonManagerService.findGroupTypesBySeason(season);
+        return seasonJson;
+    }
 
-		return JsonBuilder.toJsonWithGroupTypes(groupTypes);
-	}
+    @Override
+    public List<GroupTypeJson> findAllGroups(Long seasonId) {
+        Season season = seasonManagerService.findSeasonById(seasonId);
+        List<GroupType> groupTypes = seasonManagerService.findGroupTypesBySeason(season);
 
-	@Override
-	public SeasonJson findAllRounds(Long seasonId, Long groupTypeId) {
-		Season season = seasonManagerService.findSeasonById(seasonId);
-		GroupType groupType = masterDataManagerService.findGroupType(groupTypeId);
-		Group group = seasonManagerService.findGroup(season, groupType);
-		List<GameList> rounds = seasonManagerService.findRounds(group);
+        return JsonBuilder.toJsonWithGroupTypes(groupTypes);
+    }
 
-		GameList nextTippRound = tippService.findNextTippRound(seasonId, dateTimeProvider.currentDateTime());
+    @Override
+    public SeasonJson findAllRounds(Long seasonId, Long groupTypeId) {
+        Season season = seasonManagerService.findSeasonById(seasonId);
+        GroupType groupType = masterDataManagerService.findGroupType(groupTypeId);
+        Group group = seasonManagerService.findGroup(season, groupType);
+        List<GameList> rounds = seasonManagerService.findRounds(group);
 
-		JsonAssembler jsonAssembler = new JsonAssembler();
-		SeasonJson seasonJson = jsonAssembler.build(season).rounds(rounds).currentRound(nextTippRound).assemble();
+        GameList nextTippRound = tippService.findNextTippRound(seasonId, dateTimeProvider.currentDateTime());
 
-		return seasonJson;
-	}
+        JsonAssembler jsonAssembler = new JsonAssembler();
+        SeasonJson seasonJson = jsonAssembler.build(season).rounds(rounds).currentRound(nextTippRound).assemble();
 
-	@Override
-	public RoundJson findRound(Long roundId) {
-		GameList gameList = seasonManagerService.findRound(roundId);
-		RoundJson roundJson = null;
+        return seasonJson;
+    }
 
-		if (gameList != null) {
-			Optional<GameList> nextRound = seasonManagerService.findNextRound(roundId);
+    @Override
+    public RoundJson findRound(Long roundId) {
+        GameList gameList = seasonManagerService.findRound(roundId);
+        RoundJson roundJson = null;
 
-			JsonAssembler jsonAssembler = new JsonAssembler();
-			roundJson = jsonAssembler.build(gameList).games().lastRound(!nextRound.isPresent()).assemble();
-		}
+        if (gameList != null) {
+            Optional<GameList> nextRound = seasonManagerService.findNextRound(roundId);
 
-		return roundJson;
-	}
+            JsonAssembler jsonAssembler = new JsonAssembler();
+            roundJson = jsonAssembler.build(gameList).games().lastRound(!nextRound.isPresent()).assemble();
+        }
 
-	@Override
-	public RoundJson findRound(Long roundId, Long groupTypeId) {
-		Optional<GameList> gameList = seasonManagerService.findRoundGames(roundId);
-		GroupType groupType = masterDataManagerService.findGroupType(groupTypeId);
-		Group group = seasonManagerService.findGroup(gameList.get().getSeason(), groupType);
+        return roundJson;
+    }
 
-		RoundJson roundJson = null;
+    @Override
+    public RoundJson findRound(Long roundId, Long groupTypeId) {
+        Optional<GameList> gameList = seasonManagerService.findRoundGames(roundId);
+        GroupType groupType = masterDataManagerService.findGroupType(groupTypeId);
+        Group group = seasonManagerService.findGroup(gameList.get().getSeason(), groupType);
 
-		if (gameList != null) {
-			Optional<GameList> nextRound = seasonManagerService.findNextRound(roundId);
-
-			JsonAssembler jsonAssembler = new JsonAssembler();
-			roundJson = jsonAssembler.build(gameList.get()).games(gameList.get().toList(group))
-					.lastRound(!nextRound.isPresent()).assemble();
-		}
-
-		return roundJson;
-	}
-
-	@Override
-	public RoundJson findNextRound(Long roundId) {
-		Optional<GameList> nextRound = seasonManagerService.findNextRound(roundId);
-		RoundJson roundJson = null;
-
-		if (nextRound.isPresent()) {
-			Optional<GameList> nextNextRound = seasonManagerService.findNextRound(nextRound.get().getId());
-
-			JsonAssembler jsonAssembler = new JsonAssembler();
-			roundJson = jsonAssembler.build(nextRound.get()).lastRound(!nextNextRound.isPresent()).games().assemble();
-		}
-
-		return roundJson;
-	}
-
-	@Override
-	public RoundJson findPrevRound(Long roundId) {
-		Optional<GameList> prevRound = seasonManagerService.findPrevRound(roundId);
-		RoundJson roundJson = null;
-
-		if (prevRound.isPresent()) {
-			JsonAssembler jsonAssembler = new JsonAssembler();
-			roundJson = jsonAssembler.build(prevRound.get()).lastRound(false).games().assemble();
-		}
-
-		return roundJson;
-	}
-
-	@Override
-	public RoundAndTableJson findRoundTable(Long roundId, Long groupTypeId) {
-		RoundJson roundJson = findRound(roundId, groupTypeId);
-
-		Season season = seasonManagerService.findSeasonById(roundJson.getSeasonId());
-		GroupType groupType = masterDataManagerService.findGroupType(groupTypeId);
-
-		RoundAndTableJson roundAndTableJson = new RoundAndTableJson();
-		roundAndTableJson.setRoundJson(roundJson);
-
-		List<TeamResult> teamRanking = seasonManagerService.calculateTeamRanking(season, groupType, 0 /* startIndex */,
-				roundJson.getIndex() - 1);
-
-		GroupTeamTableJson groupTeamTableJson = new GroupTeamTableJson();
-		groupTeamTableJson.setGroupTypeJson(JsonBuilder.toJson(groupType));
-
-		for (TeamResult teamResult : teamRanking) {
-			TeamResultJson teamResultJson = JsonBuilder.toJson(teamResult);
-			groupTeamTableJson.add(teamResultJson);
-		}
-
-		roundAndTableJson.setGroupTeamTableJson(groupTeamTableJson);
-
-		return roundAndTableJson;
-	}
-
-	@Override
-	public RoundAndTableJson findNextRoundTable(Long roundId) {
-		return findRoundTable(roundId, null);
-		// TODO Auto-generated method stub
-		// return null;
-	}
-
-	@Override
-	public RoundAndTableJson findPrevRoundTable(Long roundId) {
-		return findRoundTable(roundId, null);
-		// TODO Auto-generated method stub
-		// return null;
-	}
-
-	@Override
-	public GameJson findGame(Long gameId) {
-		Game game = seasonManagerService.findMatch(gameId);
-		return JsonBuilder.toJson(game);
-	}
-
-	@Override
-	public RoundJson findTipp(Long roundId, String nickName) {
-		Optional<User> user = masterDataManagerService.findUserByNickname(nickName);
-
-		if (!user.isPresent()) {
-			return null;
-		}
-
-		// HINWEIS: Diese Stelle ist problematisch. Es wird nach allen Tipps
-		// zu diesem Spieltag gesucht. Falls für ein Spiel ein Tipp fehlt,
-		// so steht dieses als NULL in der Spieltagsliste.
-		//
-		// Die folgende Methode wuerde das Problem verursachen;
-		// GameList tippRound = tippService.findTipp(roundId.longValue(),
-		// user.get().getId().longValue());
-		//
-		RoundJson roundJson = null;
-		Optional<GameList> round = seasonManagerService.findRoundGames(roundId);
-		if (round.isPresent()) {
-			List<GameTipp> roundTipps = tippService.findTipps(round.get(), user.get());
-			Optional<GameList> nextNextRound = seasonManagerService.findNextRound(roundId);
-
-			JsonAssembler jsonAssembler = new JsonAssembler();
-
-			if (roundTipps.isEmpty()) {
-				roundJson = jsonAssembler.build(round.get()).lastRound(!nextNextRound.isPresent()).games().emptyTipp()
-						.assemble();
-			} else {
-				roundJson = jsonAssembler.build(round.get()).lastRound(!nextNextRound.isPresent()).games()
-						.tipps(roundTipps).assemble();
-			}
-		}
-
-		return roundJson;
-	}
-
-	@Override
-	public RoundJson findCurrentTipp(Long seasonId, String nickName) {
-		GameList tippRound = tippService.findNextTippRound(seasonId, dateTimeProvider.currentDateTime());
-		if (tippRound != null) {
-			return findTipp(tippRound.getId(), nickName);
-		}
-		return null;
-	}
-
-	@Override
-	public RoundJson findCurrent(Long seasonId) {
-		GameList tippRound = tippService.findNextTippRound(seasonId, dateTimeProvider.currentDateTime());
-		if (tippRound != null) {
-			return JsonBuilder.toJson(tippRound);
-		}
-		return null;
-	}
-
-	@Override
-	public RoundJson findNextTipp(Long roundId, String nickName) {
-		Optional<GameList> nextRound = seasonManagerService.findNextRound(roundId);
-		if (nextRound.isPresent()) {
-			return findTipp(nextRound.get().getId(), nickName);
-		}
-		return null;
-	}
-
-	@Override
-	public RoundJson findPrevTipp(Long roundId, String nickName) {
-		Optional<GameList> prevRound = seasonManagerService.findPrevRound(roundId);
-		if (prevRound.isPresent()) {
-			return findTipp(prevRound.get().getId(), nickName);
-		}
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.betoffice.web.IBetofficeBasicJsonService#findTippRound(java.lang.Long)
-	 */
-	@Override
-	public RoundJson findTippRound(Long seasonId) {
-		GameList tippRound = tippService.findNextTippRound(seasonId, dateTimeProvider.currentDateTime());
-
-		RoundJson roundJson = null;
-		if (tippRound != null) {
-			roundJson = JsonBuilder.toJson(tippRound);
-			List<GameJson> gameJson = JsonBuilder.toJsonWithGames(tippRound.unmodifiableList());
-			roundJson.getGames().addAll(gameJson);
-			roundJson.setTippable(isFinished(roundJson));
-		}
-
-		return roundJson;
-	}
-
-	@Override
-	public UserTableJson calcUserRanking(Long seasonId) {
-		Season season = seasonManagerService.findSeasonById(seasonId);
-		GameList round = tippService.findPreviousTippRound(seasonId, dateTimeProvider.currentDateTime());
-
-		// TODO Ist das vielleicht besser ein Optional hier?
-		// #findPreviousTippRound
-		// liefert dann null, wenn die Meisterschaft noch nicht gestartet ist.
-
-		UserTableJson userTableJson = new UserTableJson();
-		if (round == null) {
-			// Dann gibt es keine Tipprunde und es kann der letzte Spieltag
-			// angenommen werden.
-			// TODO: Was ist besser? Der erste oder der letzte Spieltag?
-			// Falls die Saison noch nicht gestartet ist, dann ist der erste
-			// Spieltag eine gute Loesung.
-			// Falls die Saison vorbei ist, ist der letzte Spieltag die bessere
-			// Wahl.
-
-			// TODO Saison noch ohne ersten Spieltag.
-			Optional<GameList> lastRound = seasonManagerService.findFirstRound(season);
-
-			round = lastRound.get();
-		}
-
-		userTableJson.setRound(JsonBuilder.toJson(round));
-		return calcUserRanking(userTableJson, round, 0);
-	}
-
-	@Override
-	public UserTableJson calcUserRankingByRoundOnly(Long roundId) {
-		// GameList round = seasonManagerService.findRound(roundId);
-		// return calcUserRanking(round, round.getIndex());
-
-		Optional<GameList> round = seasonManagerService.findRoundGames(roundId);
-		if (round.isPresent()) {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Calculate user ranking for a single round: {}", round.get().getDateTime());
-				for (Game game : round.get().unmodifiableList()) {
-					LOG.debug("Game: {}", game.debug());
-				}
-			}
-
-			List<GameTipp> tipps = tippService.findTipps(roundId);
-
-			if (LOG.isDebugEnabled()) {
-				for (GameTipp tipp : tipps) {
-					LOG.debug("GameTipp: {}", tipp.debug());
-				}
-			}
-
-			UserTableJson userTableJson = new UserTableJson();
-			userTableJson.setRound(JsonBuilder.toJson(round.get()));
-
-			// userTableJson.setRound(JsonBuilder.toJsonWithGames(round));
-			List<GameJson> jsonWithGamesAndTipps = JsonBuilder.toJsonWithGamesAndTipps(round.get().unmodifiableList(), tipps);
-			userTableJson.getRound().setGames(jsonWithGamesAndTipps);
-
-			return calcUserRanking(userTableJson, round.get(), round.get().getIndex());
-		} else {
-			return null;
-		}
-	}
-
-	@Override
-	public UserTableJson calcUserRankingByRound(Long roundId) {
-		Optional<GameList> round = seasonManagerService.findRoundGames(roundId);
-
-		UserTableJson userTableJson = new UserTableJson();
-		userTableJson.setRound(JsonBuilder.toJson(round.get()));
-
-		List<GameTipp> tipps = tippService.findTipps(roundId);
-
-		// userTableJson.setRound(JsonBuilder.toJsonWithGames(round));
-		List<GameJson> jsonWithGamesAndTipps = JsonBuilder.toJsonWithGamesAndTipps(round.get().unmodifiableList(),
-				tipps);
-		userTableJson.getRound().setGames(jsonWithGamesAndTipps);
-
-		return calcUserRanking(userTableJson, round.get(), 0);
-	}
-
-	private UserTableJson calcUserRanking(UserTableJson userTableJson, GameList round, int startIndex) {
-		List<UserResult> userRanking = seasonManagerService.calculateUserRanking(round.getSeason(), startIndex,
-				round.getIndex());
-
-		for (UserResult ur : userRanking) {
-			UserJson userJson = JsonBuilder.toJson(ur);
-			userTableJson.addUser(userJson);
-		}
-
-		SeasonJson season = JsonBuilder.toJson(round.getSeason());
-		userTableJson.setSeason(season);
-
-		findNextAndPrevRound(round, userTableJson);
-
-		return userTableJson;
-	}
-
-	private void findNextAndPrevRound(GameList round, UserTableJson userTableJson) {
-
-		Optional<GameList> nextNextRound = seasonManagerService.findNextRound(round.getId());
-		userTableJson.getRound().setLastRound(!nextNextRound.isPresent());
-		userTableJson.getRound().setTippable(isFinished(userTableJson.getRound()));
-	}
-
-	@Override
-	public UserTableJson calcUserRankingByNextRound(Long roundId) {
-		Optional<GameList> nextRound = seasonManagerService.findNextRound(roundId);
-		if (nextRound.isPresent()) {
-			return calcUserRankingByRound(nextRound.get().getId());
-		}
-		return null;
-	}
-
-	@Override
-	public UserTableJson calcUserRankingByPrevRound(Long roundId) {
-		Optional<GameList> prevRound = seasonManagerService.findPrevRound(roundId);
-		if (prevRound.isPresent()) {
-			return calcUserRankingByRound(prevRound.get().getId());
-		}
-		return null;
-	}
-
-	@Override
-	public List<TeamJson> findAllTeams() {
-		List<Team> teams = masterDataManagerService.findAllTeams();
-		return JsonBuilder.toJsonWithTeams(teams);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.betoffice.web.IBetofficeBasicJsonService#findAllSeason()
-	 */
-	@Override
-	public List<SeasonJson> findAllSeason() {
-		List<Season> seasons = seasonManagerService.findAllSeasons();
-		return JsonBuilder.toJsonWithSeasons(seasons);
-	}
-
-	@Override
-	public RoundJson submitTipp(String token, SubmitTippRoundJson tippRoundJson) throws AccessDeniedException {
-		Session session = authService.validateSession(token).orElseThrow(() -> new AccessDeniedException());
-
-		if (!StringUtils.equals(session.getUser().getNickname(), tippRoundJson.getNickname())) {
-			throw new AccessDeniedException();
-		}
-
-		TippDto tippDto = new TippDto();
-		tippDto.setNickname(tippRoundJson.getNickname());
-		tippDto.setRoundId(tippRoundJson.getRoundId());
-		tippDto.setToken(token);
-		tippDto.setSubmitTime(dateTimeProvider.currentDateTime());
-
-		for (SubmitTippGameJson submitTippJson : tippRoundJson.getSubmitTippGames()) {
-			GameTippDto gameTippDto = new GameTippDto();
-			gameTippDto.setGameId(submitTippJson.getGameId());
-			gameTippDto.setHomeGoals(submitTippJson.getTippResult().getHomeGoals());
-			gameTippDto.setGuestGoals(submitTippJson.getTippResult().getGuestGoals());
-			tippDto.addGameTipp(gameTippDto);
-		}
-
-		//
-		// TODO ...
-		// Falls nach Spielbeginn abgegeben, kommt hier nur eine Teilmenge der Tipps
-		// zurueck.
-		//
-		List<GameTipp> tipps = tippService.validateKickOffTimeAndAddTipp(tippDto);
-
-		return findTipp(tippRoundJson.getRoundId(), tippRoundJson.getNickname());
-	}
-
-	private boolean isFinished(RoundJson round) {
-		boolean finished = false;
-		for (GameJson game : round.getGames()) {
-			if (!game.isFinished()) {
-				finished = true;
-			}
-		}
-		return finished;
-	}
-
-	@Override
-	public PingJson ping() {
-		PingJson pingJson = new PingJson();
-		pingJson.setDateTime(dateTimeProvider.currentDateTime());
-		return pingJson;
-	}
+        RoundJson roundJson = null;
+
+        if (gameList != null) {
+            Optional<GameList> nextRound = seasonManagerService.findNextRound(roundId);
+
+            JsonAssembler jsonAssembler = new JsonAssembler();
+            roundJson = jsonAssembler.build(gameList.get()).games(gameList.get().toList(group))
+                    .lastRound(!nextRound.isPresent()).assemble();
+        }
+
+        return roundJson;
+    }
+
+    @Override
+    public RoundJson findNextRound(Long roundId) {
+        Optional<GameList> nextRound = seasonManagerService.findNextRound(roundId);
+        RoundJson roundJson = null;
+
+        if (nextRound.isPresent()) {
+            Optional<GameList> nextNextRound = seasonManagerService.findNextRound(nextRound.get().getId());
+
+            JsonAssembler jsonAssembler = new JsonAssembler();
+            roundJson = jsonAssembler.build(nextRound.get()).lastRound(!nextNextRound.isPresent()).games().assemble();
+        }
+
+        return roundJson;
+    }
+
+    @Override
+    public RoundJson findPrevRound(Long roundId) {
+        Optional<GameList> prevRound = seasonManagerService.findPrevRound(roundId);
+        RoundJson roundJson = null;
+
+        if (prevRound.isPresent()) {
+            JsonAssembler jsonAssembler = new JsonAssembler();
+            roundJson = jsonAssembler.build(prevRound.get()).lastRound(false).games().assemble();
+        }
+
+        return roundJson;
+    }
+
+    @Override
+    public RoundAndTableJson findRoundTable(Long roundId, Long groupTypeId) {
+        RoundJson roundJson = findRound(roundId, groupTypeId);
+
+        Season season = seasonManagerService.findSeasonById(roundJson.getSeasonId());
+        GroupType groupType = masterDataManagerService.findGroupType(groupTypeId);
+
+        RoundAndTableJson roundAndTableJson = new RoundAndTableJson();
+        roundAndTableJson.setRoundJson(roundJson);
+
+        List<TeamResult> teamRanking = seasonManagerService.calculateTeamRanking(season, groupType, 0 /* startIndex */,
+                roundJson.getIndex() - 1);
+
+        GroupTeamTableJson groupTeamTableJson = new GroupTeamTableJson();
+        groupTeamTableJson.setGroupTypeJson(JsonBuilder.toJson(groupType));
+
+        for (TeamResult teamResult : teamRanking) {
+            TeamResultJson teamResultJson = JsonBuilder.toJson(teamResult);
+            groupTeamTableJson.add(teamResultJson);
+        }
+
+        roundAndTableJson.setGroupTeamTableJson(groupTeamTableJson);
+
+        return roundAndTableJson;
+    }
+
+    @Override
+    public RoundAndTableJson findNextRoundTable(Long roundId) {
+        return findRoundTable(roundId, null);
+        // TODO Auto-generated method stub
+        // return null;
+    }
+
+    @Override
+    public RoundAndTableJson findPrevRoundTable(Long roundId) {
+        return findRoundTable(roundId, null);
+        // TODO Auto-generated method stub
+        // return null;
+    }
+
+    @Override
+    public GameJson findGame(Long gameId) {
+        Game game = seasonManagerService.findMatch(gameId);
+        return JsonBuilder.toJson(game);
+    }
+
+    @Override
+    public RoundJson findTipp(Long roundId, String nickName) {
+        Optional<User> user = communityService.findUser(Nickname.of(nickName));
+
+        if (!user.isPresent()) {
+            return null;
+        }
+
+        // HINWEIS: Diese Stelle ist problematisch. Es wird nach allen Tipps
+        // zu diesem Spieltag gesucht. Falls für ein Spiel ein Tipp fehlt,
+        // so steht dieses als NULL in der Spieltagsliste.
+        //
+        // Die folgende Methode wuerde das Problem verursachen;
+        // GameList tippRound = tippService.findTipp(roundId.longValue(),
+        // user.get().getId().longValue());
+        //
+        RoundJson roundJson = null;
+        Optional<GameList> round = seasonManagerService.findRoundGames(roundId);
+        if (round.isPresent()) {
+            List<GameTipp> roundTipps = tippService.findTipps(round.get(), user.get());
+            Optional<GameList> nextNextRound = seasonManagerService.findNextRound(roundId);
+
+            JsonAssembler jsonAssembler = new JsonAssembler();
+
+            if (roundTipps.isEmpty()) {
+                roundJson = jsonAssembler.build(round.get())
+                        .lastRound(!nextNextRound.isPresent())
+                        .games()
+                        .emptyTipp()
+                        .assemble();
+            } else {
+                roundJson = jsonAssembler.build(round.get())
+                        .lastRound(!nextNextRound.isPresent())
+                        .games()
+                        .tipps(roundTipps)
+                        .assemble();
+            }
+        }
+
+        return roundJson;
+    }
+
+    @Override
+    public RoundJson findCurrentTipp(Long seasonId, String nickName) {
+        GameList tippRound = tippService.findNextTippRound(seasonId, dateTimeProvider.currentDateTime());
+        if (tippRound != null) {
+            return findTipp(tippRound.getId(), nickName);
+        }
+        return null;
+    }
+
+    @Override
+    public RoundJson findCurrent(Long seasonId) {
+        GameList tippRound = tippService.findNextTippRound(seasonId, dateTimeProvider.currentDateTime());
+        if (tippRound != null) {
+            return JsonBuilder.toJson(tippRound);
+        }
+        return null;
+    }
+
+    @Override
+    public RoundJson findNextTipp(Long roundId, String nickName) {
+        Optional<GameList> nextRound = seasonManagerService.findNextRound(roundId);
+        if (nextRound.isPresent()) {
+            return findTipp(nextRound.get().getId(), nickName);
+        }
+        return null;
+    }
+
+    @Override
+    public RoundJson findPrevTipp(Long roundId, String nickName) {
+        Optional<GameList> prevRound = seasonManagerService.findPrevRound(roundId);
+        if (prevRound.isPresent()) {
+            return findTipp(prevRound.get().getId(), nickName);
+        }
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.betoffice.web.IBetofficeBasicJsonService#findTippRound(java.lang.Long)
+     */
+    @Override
+    public RoundJson findTippRound(Long seasonId) {
+        GameList tippRound = tippService.findNextTippRound(seasonId, dateTimeProvider.currentDateTime());
+
+        RoundJson roundJson = null;
+        if (tippRound != null) {
+            roundJson = JsonBuilder.toJson(tippRound);
+            List<GameJson> gameJson = JsonBuilder.toJsonWithGames(tippRound.unmodifiableList());
+            roundJson.getGames().addAll(gameJson);
+            roundJson.setTippable(isFinished(roundJson));
+        }
+
+        return roundJson;
+    }
+
+    @Override
+    public UserTableJson calcUserRanking(Long seasonId) {
+        Season season = seasonManagerService.findSeasonById(seasonId);
+        GameList round = tippService.findPreviousTippRound(seasonId, dateTimeProvider.currentDateTime());
+
+        // TODO Ist das vielleicht besser ein Optional hier?
+        // #findPreviousTippRound
+        // liefert dann null, wenn die Meisterschaft noch nicht gestartet ist.
+
+        UserTableJson userTableJson = new UserTableJson();
+        if (round == null) {
+            // Dann gibt es keine Tipprunde und es kann der letzte Spieltag
+            // angenommen werden.
+            // TODO: Was ist besser? Der erste oder der letzte Spieltag?
+            // Falls die Saison noch nicht gestartet ist, dann ist der erste
+            // Spieltag eine gute Loesung.
+            // Falls die Saison vorbei ist, ist der letzte Spieltag die bessere
+            // Wahl.
+
+            // TODO Saison noch ohne ersten Spieltag.
+            Optional<GameList> lastRound = seasonManagerService.findFirstRound(season);
+
+            round = lastRound.get();
+        }
+
+        userTableJson.setRound(JsonBuilder.toJson(round));
+        return calcUserRanking(userTableJson, round, 0);
+    }
+
+    @Override
+    public UserTableJson calcUserRankingByRoundOnly(Long roundId) {
+        // GameList round = seasonManagerService.findRound(roundId);
+        // return calcUserRanking(round, round.getIndex());
+
+        Optional<GameList> round = seasonManagerService.findRoundGames(roundId);
+        if (round.isPresent()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Calculate user ranking for a single round: {}", round.get().getDateTime());
+                for (Game game : round.get().unmodifiableList()) {
+                    LOG.debug("Game: {}", game.debug());
+                }
+            }
+
+            List<GameTipp> tipps = tippService.findTipps(roundId);
+
+            if (LOG.isDebugEnabled()) {
+                for (GameTipp tipp : tipps) {
+                    LOG.debug("GameTipp: {}", tipp.debug());
+                }
+            }
+
+            UserTableJson userTableJson = new UserTableJson();
+            userTableJson.setRound(JsonBuilder.toJson(round.get()));
+
+            // userTableJson.setRound(JsonBuilder.toJsonWithGames(round));
+            List<GameJson> jsonWithGamesAndTipps = JsonBuilder.toJsonWithGamesAndTipps(round.get().unmodifiableList(),
+                    tipps);
+            userTableJson.getRound().setGames(jsonWithGamesAndTipps);
+
+            return calcUserRanking(userTableJson, round.get(), round.get().getIndex());
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public UserTableJson calcUserRankingByRound(Long roundId) {
+        Optional<GameList> round = seasonManagerService.findRoundGames(roundId);
+
+        UserTableJson userTableJson = new UserTableJson();
+        userTableJson.setRound(JsonBuilder.toJson(round.get()));
+
+        List<GameTipp> tipps = tippService.findTipps(roundId);
+
+        // userTableJson.setRound(JsonBuilder.toJsonWithGames(round));
+        List<GameJson> jsonWithGamesAndTipps = JsonBuilder.toJsonWithGamesAndTipps(round.get().unmodifiableList(),
+                tipps);
+        userTableJson.getRound().setGames(jsonWithGamesAndTipps);
+
+        return calcUserRanking(userTableJson, round.get(), 0);
+    }
+
+    private UserTableJson calcUserRanking(UserTableJson userTableJson, GameList round, int startIndex) {
+        Long seasonId = userTableJson.getSeason().getId();
+        Season season = seasonManagerService.findSeasonById(seasonId);
+        List<UserResult> calculatedRanking = communityCalculatorService.calculateRanking(
+                CommunityService.defaultPlayerGroup(season.getReference()), SeasonRange.of(startIndex, round.getIndex()));
+        
+        for (UserResult ur : calculatedRanking) {
+            UserJson userJson = JsonBuilder.toJson(ur);
+            userTableJson.addUser(userJson);
+        }
+
+        SeasonJson seasonJson = JsonBuilder.toJson(round.getSeason());
+        userTableJson.setSeason(seasonJson);
+
+        findNextAndPrevRound(round, userTableJson);
+
+        return userTableJson;
+    }
+
+    private void findNextAndPrevRound(GameList round, UserTableJson userTableJson) {
+
+        Optional<GameList> nextNextRound = seasonManagerService.findNextRound(round.getId());
+        userTableJson.getRound().setLastRound(!nextNextRound.isPresent());
+        userTableJson.getRound().setTippable(isFinished(userTableJson.getRound()));
+    }
+
+    @Override
+    public UserTableJson calcUserRankingByNextRound(Long roundId) {
+        Optional<GameList> nextRound = seasonManagerService.findNextRound(roundId);
+        if (nextRound.isPresent()) {
+            return calcUserRankingByRound(nextRound.get().getId());
+        }
+        return null;
+    }
+
+    @Override
+    public UserTableJson calcUserRankingByPrevRound(Long roundId) {
+        Optional<GameList> prevRound = seasonManagerService.findPrevRound(roundId);
+        if (prevRound.isPresent()) {
+            return calcUserRankingByRound(prevRound.get().getId());
+        }
+        return null;
+    }
+
+    @Override
+    public List<TeamJson> findAllTeams() {
+        List<Team> teams = masterDataManagerService.findAllTeams();
+        return JsonBuilder.toJsonWithTeams(teams);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.betoffice.web.IBetofficeBasicJsonService#findAllSeason()
+     */
+    @Override
+    public List<SeasonJson> findAllSeason() {
+        List<Season> seasons = seasonManagerService.findAllSeasons();
+        return JsonBuilder.toJsonWithSeasons(seasons);
+    }
+
+    @Override
+    public RoundJson submitTipp(String token, SubmitTippRoundJson tippRoundJson) throws AccessDeniedException {
+        Session session = authService.validateSession(token).orElseThrow(() -> new AccessDeniedException());
+
+        if (!StringUtils.equals(session.getUser().getNickname().value(), tippRoundJson.getNickname())) {
+            throw new AccessDeniedException();
+        }
+
+        TippDto tippDto = new TippDto();
+        tippDto.setNickname(tippRoundJson.getNickname());
+        tippDto.setRoundId(tippRoundJson.getRoundId());
+        tippDto.setToken(token);
+        tippDto.setSubmitTime(dateTimeProvider.currentDateTime());
+
+        for (SubmitTippGameJson submitTippJson : tippRoundJson.getSubmitTippGames()) {
+            GameTippDto gameTippDto = new GameTippDto();
+            gameTippDto.setGameId(submitTippJson.getGameId());
+            gameTippDto.setHomeGoals(submitTippJson.getTippResult().getHomeGoals());
+            gameTippDto.setGuestGoals(submitTippJson.getTippResult().getGuestGoals());
+            tippDto.addGameTipp(gameTippDto);
+        }
+
+        //
+        // TODO ...
+        // Falls nach Spielbeginn abgegeben, kommt hier nur eine Teilmenge der Tipps
+        // zurueck.
+        //
+        List<GameTipp> tipps = tippService.validateKickOffTimeAndAddTipp(tippDto);
+
+        return findTipp(tippRoundJson.getRoundId(), tippRoundJson.getNickname());
+    }
+
+    private boolean isFinished(RoundJson round) {
+        boolean finished = false;
+        for (GameJson game : round.getGames()) {
+            if (!game.isFinished()) {
+                finished = true;
+            }
+        }
+        return finished;
+    }
+
+    @Override
+    public PingJson ping() {
+        PingJson pingJson = new PingJson();
+        pingJson.setDateTime(dateTimeProvider.currentDateTime());
+        return pingJson;
+    }
 
 }

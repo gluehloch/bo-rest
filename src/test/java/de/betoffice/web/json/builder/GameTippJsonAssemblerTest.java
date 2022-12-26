@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2013-2019 by Andre Winkler. All rights
+ * Project betoffice-jweb-misc Copyright (c) 2013-2022 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -40,6 +40,7 @@ import de.winkler.betoffice.storage.GameList;
 import de.winkler.betoffice.storage.GameResult;
 import de.winkler.betoffice.storage.GameTipp;
 import de.winkler.betoffice.storage.Group;
+import de.winkler.betoffice.storage.Nickname;
 import de.winkler.betoffice.storage.Team;
 import de.winkler.betoffice.storage.User;
 import de.winkler.betoffice.storage.enums.TippStatusType;
@@ -49,10 +50,10 @@ import de.winkler.betoffice.storage.enums.TippStatusType;
  * 
  * @author Andre Winkler
  */
-public class GameTippJsonAssemblerTest {
+class GameTippJsonAssemblerTest {
 
     @Test
-    public void testGameTippJsonAssembler() {
+    void testGameTippJsonAssembler() {
         List<Game> games = new ArrayList<>();
         Game game = new Game() {
             private static final long serialVersionUID = 2794058674675291216L;
@@ -78,7 +79,7 @@ public class GameTippJsonAssemblerTest {
         List<GameTipp> gameTipps = new ArrayList<>();
         GameTipp tipp = new GameTipp();
         tipp.setToken("Token");
-        tipp.setUser(new User("Frosch"));
+        tipp.setUser(new User(Nickname.of("Frosch")));
         tipp.setGame(game);
         tipp.setTipp(GameResult.of(2, 1), TippStatusType.USER);
         gameTipps.add(tipp);

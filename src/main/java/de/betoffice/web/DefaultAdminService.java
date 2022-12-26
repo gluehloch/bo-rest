@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2000-2020 by Andre Winkler. All
+ * Project betoffice-jweb-misc Copyright (c) 2000-2022 by Andre Winkler. All
  * rights reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -81,7 +81,7 @@ public class DefaultAdminService implements AdminService {
 
     @Autowired
     private SeasonManagerService seasonManagerService;
-    
+
     @Autowired
     private CommunityService communityService;
 
@@ -298,10 +298,11 @@ public class DefaultAdminService implements AdminService {
 
     @Override
     public List<SeasonMemberJson> removeSeasonMembers(long seasonId, List<SeasonMemberJson> seasonMembers) {
-        List<User> users = findUsers(seasonMembers);
         Season season = seasonManagerService.findSeasonById(seasonId);
+        CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(season.getReference());
 
-        seasonManagerService.removeUsers(season, users);
+        Set<Nickname> nicknames = new HashSet<>(seasonMembers.stream().map(sm -> Nickname.of(sm.getNickname())).toList());
+        communityService.removeMembers(defaultPlayerGroup, nicknames);
 
         return findAllSeasonMembers(seasonId);
     }
@@ -309,7 +310,7 @@ public class DefaultAdminService implements AdminService {
     private List<User> findUsers(List<SeasonMemberJson> seasonMembers) {
         List<User> users = new ArrayList<>();
         for (SeasonMemberJson member : seasonMembers) {
-            User user = masterDataManagerService.findUser(member.getId());
+            User user = communityService.findUser(member.getId());
             users.add(user);
         }
         return users;

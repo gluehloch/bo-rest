@@ -1,7 +1,7 @@
 /*
  * ============================================================================
  * Project betoffice-jweb
- * Copyright (c) 2000-2020 by Andre Winkler. All rights reserved.
+ * Copyright (c) 2000-2022 by Andre Winkler. All rights reserved.
  * ============================================================================
  *          GNU GENERAL PUBLIC LICENSE
  *  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
@@ -69,6 +69,7 @@ import de.betoffice.web.json.GameResultJson;
 import de.betoffice.web.json.SubmitTippGameJson;
 import de.betoffice.web.json.SubmitTippRoundJson;
 import de.winkler.betoffice.dao.SessionDao;
+import de.winkler.betoffice.service.CommunityService;
 import de.winkler.betoffice.service.MasterDataManagerService;
 import de.winkler.betoffice.service.SeasonManagerService;
 import de.winkler.betoffice.storage.Game;
@@ -90,7 +91,7 @@ import de.winkler.betoffice.storage.enums.SeasonType;
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
 @SpringJUnitConfig(locations = { "/betoffice-test-properties.xml", "/betoffice.xml" })
-public class TippControllerTest {
+class TippControllerTest {
 
     private static final String NICKNAME = "Frosch";
     private static final String PASSWORD = "Password";
@@ -117,13 +118,16 @@ public class TippControllerTest {
     private SessionDao sessionDao;
     
     @Autowired
+    private CommunityService communityService;
+    
+    @Autowired
     private DataSource dataSource;
 
     private T data;
 
     @Test
     @Transactional
-    public void ping() throws Exception {
+    void ping() throws Exception {
         mockMvc.perform(get("/office/ping")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -137,7 +141,7 @@ public class TippControllerTest {
 
     @Test
     @Transactional
-    public void submitLoginLogout() throws Exception {
+    void submitLoginLogout() throws Exception {
         login();       
         logout(findSessionToken().getToken());
         
@@ -149,7 +153,7 @@ public class TippControllerTest {
 
     @Test
     @Transactional
-    public void submitInvalidTipp() throws Exception {
+    void submitInvalidTipp() throws Exception {
         //
         // Versuch der Tippabgabe ohne Authentifizierung.
         //
@@ -300,9 +304,9 @@ public class TippControllerTest {
         data.user = new User();
         data.user.setNickname(Nickname.of(NICKNAME));
         data.user.setPassword(PASSWORD);
-        masterDataManagerService.createUser(data.user);
+        communityService.createUser(data.user);
 
-        seasonManagerService.addUser(data.season, data.user);
+        communityService.addMember(CommunityService.defaultPlayerGroup(data.season.getReference()), data.user.getNickname());
     }
 
     private static class T {

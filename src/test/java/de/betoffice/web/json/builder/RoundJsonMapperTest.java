@@ -1,10 +1,6 @@
 /*
  * ============================================================================
-<<<<<<< HEAD
- * Project betoffice-jweb-misc Copyright (c) 2013-2019 by Andre Winkler. All rights
-=======
- * Project betoffice-jweb-misc Copyright (c) 2013-2020 by Andre Winkler. All rights
->>>>>>> origin/master
+ * Project betoffice-jweb-misc Copyright (c) 2013-2022 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -39,6 +35,7 @@ import de.winkler.betoffice.storage.GameList;
 import de.winkler.betoffice.storage.Group;
 import de.winkler.betoffice.storage.GroupType;
 import de.winkler.betoffice.storage.Season;
+import de.winkler.betoffice.storage.SeasonReference;
 import de.winkler.betoffice.storage.enums.SeasonType;
 
 /**
@@ -46,16 +43,15 @@ import de.winkler.betoffice.storage.enums.SeasonType;
  * 
  * @author Andre Winkler
  */
-public class RoundJsonMapperTest {
+class RoundJsonMapperTest {
 
     @Test
-    public void testRoundJsonMapper() {
+    void testRoundJsonMapper() {
         GroupType groupType = new GroupType();
         groupType.setName("1. Bundesliga");
         Season season = new Season();
         season.setMode(SeasonType.LEAGUE);
-        season.setName("Bundesliga");
-        season.setYear("1987/1988");
+        season.setReference(SeasonReference.of("1987/1988", "Bundesliga"));
         Group group = new Group();
         group.setGroupType(groupType);
 

@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2000-2021 by Andre Winkler. All
+ * Project betoffice-jweb-misc Copyright (c) 2000-2022 by Andre Winkler. All
  * rights reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -40,7 +40,7 @@ import de.winkler.betoffice.storage.CommunityFilter;
 import de.winkler.betoffice.storage.Season;
 
 @Component
-public class DefaultBetofficeCommunityService implements BetofficeCommunityService {
+public class DefaultBetofficeCommunityService {
 
 	@Autowired
 	private CommunityService communityService;
@@ -48,25 +48,25 @@ public class DefaultBetofficeCommunityService implements BetofficeCommunityServi
 	@Autowired
 	private SeasonManagerService seasonManagerService;
 	
-	@Override
-	public Page<CommunityJson> findCommunities(CommunityFilter communityFilter, Pageable pageable) {
-		return communityService.findCommunities(communityFilter, pageable).map(CommunityJsonMapper::map);
-	}
-
-    @Override
-    public CommunityJson createCommunity(CommunityJson community) {
-        Optional<User> communityManager = communityService.findUser(community.getCommunityManager().getNickname());
-        Optional<Community> communityExists = communityService.find(community.getShortName());
-        Optional<Season> communitySeason = seasonManagerService.findSeasonByName(community.getSeason().getName(), community.getSeason().getYear());
-        
-        community.getSeason();
-        community.getCommunityManager();
-        community.getName();
-        community.getShortName();
-        
-        communityService.create(season, name, shortName, managerNickname);
-        // TODO Auto-generated method stub
-        return null;
-    }
+//	@Override
+//	public Page<CommunityJson> findCommunities(CommunityFilter communityFilter, Pageable pageable) {
+//		return communityService.findCommunities(communityFilter, pageable).map(CommunityJsonMapper::map);
+//	}
+//
+//    @Override
+//    public CommunityJson createCommunity(CommunityJson community) {
+//        Optional<User> communityManager = communityService.findUser(community.getCommunityManager().getNickname());
+//        Optional<Community> communityExists = communityService.find(community.getShortName());
+//        Optional<Season> communitySeason = seasonManagerService.findSeasonByName(community.getSeason().getName(), community.getSeason().getYear());
+//        
+//        community.getSeason();
+//        community.getCommunityManager();
+//        community.getName();
+//        community.getShortName();
+//        
+//        communityService.create(season, name, shortName, managerNickname);
+//        // TODO Auto-generated method stub
+//        return null;
+//    }
 
 }

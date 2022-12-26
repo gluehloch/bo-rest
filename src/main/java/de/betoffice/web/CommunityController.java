@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb Copyright (c) 2015-2021 by Andre Winkler. All rights
+ * Project betoffice-jweb Copyright (c) 2015-2022 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -45,6 +45,8 @@ import de.winkler.betoffice.storage.CommunityFilter;
 
 /**
  * Community management.
+ * 
+ * TODO Please implement me!
  * 
  * @author Andre Winkler
  */

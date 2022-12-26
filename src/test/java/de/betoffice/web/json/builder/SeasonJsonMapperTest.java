@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2017-2020 by Andre Winkler. All rights
+ * Project betoffice-jweb-misc Copyright (c) 2017-2022 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import de.betoffice.web.json.SeasonJson;
 import de.winkler.betoffice.storage.Season;
+import de.winkler.betoffice.storage.SeasonReference;
 import de.winkler.betoffice.storage.enums.SeasonType;
 import de.winkler.betoffice.storage.enums.TeamType;
 
@@ -37,15 +38,14 @@ import de.winkler.betoffice.storage.enums.TeamType;
  * 
  * @author Andre Winkler
  */
-public class SeasonJsonMapperTest {
+class SeasonJsonMapperTest {
 
     @Test
-    public void testSeasonJsonMapper() {
+    void testSeasonJsonMapper() {
         Season season = new Season();
         season.setMode(SeasonType.LEAGUE);
-        season.setName("Bundesliga 2017/2018");
+        season.setReference(SeasonReference.of("2017/2018", "Bundesliga 2017/2018"));
         season.setTeamType(TeamType.DFB);
-        season.setYear("2017/2018");
 
         SeasonJsonMapper seasonJsonMapper = new SeasonJsonMapper();
         SeasonJson seasonJson = seasonJsonMapper.map(season, new SeasonJson());
