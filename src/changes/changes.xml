@@ -13,7 +13,7 @@
         <!-- UNDER DEVELOPMENT -->
         
         <!-- RELEASED -->
-        <release version="betoffice-jweb-1.4.0" date="2022-10-19" description="Merge betoffice-jweb and betoffice-jweb-misc">
+        <release version="betoffice-jweb-1.4.0" date="2023-01-07" description="Merge betoffice-jweb and betoffice-jweb-misc / community edition">
             <action dev="andrewinkler" type="add" date="2022-10-19">
                 Merging betoffice-jweb-misc to betoffice-jweb.
             </action>
