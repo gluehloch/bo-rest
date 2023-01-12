@@ -12,7 +12,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.betoffice</groupId>
 	<artifactId>betoffice-jweb</artifactId>
-	<version>1.4.0</version>
+	<version>1.4.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
 	<dependencyManagement>
@@ -111,13 +111,13 @@
 		<dependency>
 			<groupId>de.winkler.betoffice</groupId>
 			<artifactId>betoffice-storage</artifactId>
-			<version>3.0.0</version>
+			<version>3.0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>de.betoffice</groupId>
 			<artifactId>betoffice-openligadb</artifactId>
-			<version>3.0.0</version>
+			<version>3.0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 
