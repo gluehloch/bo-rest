@@ -28,9 +28,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,6 +41,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.betoffice.web.json.CommunityJson;
 import de.betoffice.web.json.builder.CommunityJsonMapper;
@@ -58,6 +63,15 @@ public class CommunityController {
 
     @Autowired
     private CommunityService communityService;
+    
+    @Autowired
+    private MappingJackson2HttpMessageConverter springMvcJacksonConverter;
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        ObjectMapper objectMapper = springMvcJacksonConverter.getObjectMapper();
+        binder.registerCustomEditor(PageParam.class, new PageParamObjectMapper(objectMapper));
+    }
 
     @GetMapping(value = "/communities", headers = { "Content-type=application/json" })
     public ResponseEntity<Page<CommunityJson>> findCommunities(
