@@ -14,6 +14,7 @@ public class CommunityJsonMapper {
     public CommunityJson map(Community community, CommunityJson json) {
         json.setId(community.getId());
         json.setName(community.getName());
+        json.setYear(community.getYear());
         json.setShortName(community.getReference().getShortName());
 
         PartyJsonMapper partyJsonMapper = new PartyJsonMapper();

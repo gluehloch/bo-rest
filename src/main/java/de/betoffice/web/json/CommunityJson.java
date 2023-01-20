@@ -7,6 +7,7 @@ public class CommunityJson extends AbstractIdentifier implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String name;
+    private String year;
     private String shortName;
     private PartyJson communityManager;
     private SeasonJson season;
@@ -17,6 +18,14 @@ public class CommunityJson extends AbstractIdentifier implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+    
+    public String getYear() {
+        return year;
+    }
+    
+    public void setYear(String year) {
+        this.year = year;
     }
 
     public String getShortName() {

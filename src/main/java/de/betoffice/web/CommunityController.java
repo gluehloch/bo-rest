@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.web.json.CommunityJson;
@@ -60,7 +61,8 @@ public class CommunityController {
 
     @GetMapping(value = "/communities", headers = { "Content-type=application/json" })
     public ResponseEntity<Page<CommunityJson>> findCommunities(
-            PageParam pageParam, SortParam sortParam,
+            @RequestParam(required = true) PageParam pageParam,
+            @RequestParam(required = false) SortParam sortParam,
             // @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
