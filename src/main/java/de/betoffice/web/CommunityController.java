@@ -28,7 +28,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -63,13 +62,10 @@ public class CommunityController {
 
     @Autowired
     private CommunityService communityService;
-    
-    @Autowired
-    private MappingJackson2HttpMessageConverter springMvcJacksonConverter;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        ObjectMapper objectMapper = springMvcJacksonConverter.getObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
         binder.registerCustomEditor(PageParam.class, new PageParamObjectMapper(objectMapper));
     }
 
@@ -84,34 +80,35 @@ public class CommunityController {
         CommunityFilter communityFilter = new CommunityFilter();
         PageRequest pageRequest = pageParam.toPageRequest(sort);
 
-        Page<CommunityJson> communities = communityService.findCommunities(communityFilter, pageRequest).map(CommunityJsonMapper::map);
+        Page<CommunityJson> communities = communityService.findCommunities(communityFilter, pageRequest)
+                .map(CommunityJsonMapper::map);
         return ResponseEntity.ok(communities);
     }
-    
-    @PostMapping(value ="/community", headers = { "Content-type=application/json" })
+
+    @PostMapping(value = "/community", headers = { "Content-type=application/json" })
     public ResponseEntity<CommunityJson> createCommunity(
             @RequestBody CommunityJson communityJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
-        
+
         return null;
     }
 
-    @PutMapping(value ="/community", headers = { "Content-type=application/json" })
+    @PutMapping(value = "/community", headers = { "Content-type=application/json" })
     public ResponseEntity<CommunityJson> updateCommunity(
             @RequestBody CommunityJson communityJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
-        
+
         return null;
     }
 
-    @DeleteMapping(value ="/community", headers = { "Content-type=application/json" })
+    @DeleteMapping(value = "/community", headers = { "Content-type=application/json" })
     public ResponseEntity<CommunityJson> deleteCommunity(
             @RequestBody CommunityJson communityJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
-        
+
         return null;
     }
 }
