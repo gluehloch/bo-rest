@@ -307,7 +307,7 @@ public class DefaultBetofficeService implements BetofficeService {
 
         GameList previousTippRound = tippService.findPreviousTippRound(seasonId, currentDateTime);
         if (previousTippRound != null) {
-            return findTipp(tippRound.getId(), nickName);
+            return findTipp(previousTippRound.getId(), nickName);
         }
 
         // TODO Falls kein nächster Spieltag vorhanden ist,
