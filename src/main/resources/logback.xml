@@ -12,6 +12,12 @@
     <logger name="de.betoffice" level="warn" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
+    <logger name=" de.betoffice.web" level="info" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>    
+    <logger name=" de.betoffice.openligadb" level="info" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
     <root level="info">
         <appender-ref ref="STDOUT"/>
     </root>
