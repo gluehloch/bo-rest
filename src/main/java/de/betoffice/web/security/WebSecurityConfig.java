@@ -120,7 +120,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 // .headers().cacheControl().and()
-                .cors().disable()
+                .cors().and()
                 .csrf().disable()
 //                .logout()
 //                .logoutUrl("/logout")
