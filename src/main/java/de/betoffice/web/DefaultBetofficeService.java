@@ -104,21 +104,19 @@ public class DefaultBetofficeService implements BetofficeService {
 
     // ------------------------------------------------------------------------
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see de.betoffice.web.IBetofficeBasicJsonService#findSeasonById(java.lang.
-     * String)
-     */
     @Override
     public SeasonJson findSeasonById(Long seasonId) {
         Season season = seasonManagerService.findSeasonById(seasonId);
         List<GameList> rounds = seasonManagerService.findRounds(season);
 
-        GameList nextTippRound = tippService.findNextTippRound(seasonId, dateTimeProvider.currentDateTime());
+        Optional<GameList> nextTippRound = tippService.findNextTippRound(seasonId, dateTimeProvider.currentDateTime());
 
         JsonAssembler jsonAssembler = new JsonAssembler();
-        SeasonJson seasonJson = jsonAssembler.build(season).rounds(rounds).currentRound(nextTippRound).assemble();
+        SeasonJson seasonJson = jsonAssembler
+                .build(season)
+                .rounds(rounds)
+                .currentRound(nextTippRound)
+                .assemble();
 
         return seasonJson;
     }
@@ -138,10 +136,14 @@ public class DefaultBetofficeService implements BetofficeService {
         Group group = seasonManagerService.findGroup(season, groupType);
         List<GameList> rounds = seasonManagerService.findRounds(group);
 
-        GameList nextTippRound = tippService.findNextTippRound(seasonId, dateTimeProvider.currentDateTime());
+        Optional<GameList> nextTippRound = tippService.findNextTippRound(seasonId, dateTimeProvider.currentDateTime());
 
         JsonAssembler jsonAssembler = new JsonAssembler();
-        SeasonJson seasonJson = jsonAssembler.build(season).rounds(rounds).currentRound(nextTippRound).assemble();
+        SeasonJson seasonJson = jsonAssembler
+                .build(season)
+                .rounds(rounds)
+                .currentRound(nextTippRound)
+                .assemble();
 
         return seasonJson;
     }
@@ -297,82 +299,57 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
-    public RoundJson findCurrentTipp(Long seasonId, String nickName) {
+    public Optional<RoundJson> findCurrentTipp(Long seasonId, String nickName) {
         ZonedDateTime currentDateTime = dateTimeProvider.currentDateTime();
-        GameList tippRound = tippService.findNextTippRound(seasonId, currentDateTime);
-
-        if (tippRound != null) {
-            return findTipp(tippRound.getId(), nickName);
-        }
-
-        GameList previousTippRound = tippService.findPreviousTippRound(seasonId, currentDateTime);
-        if (previousTippRound != null) {
-            return findTipp(previousTippRound.getId(), nickName);
-        }
-
-        // TODO Falls kein nächster Spieltag vorhanden ist,
-        return null;
+        return tippService
+                .findNextTippRound(seasonId, currentDateTime)
+                .map(i -> findTipp(i.getId(), nickName));
     }
 
     @Override
-    public RoundJson findCurrent(Long seasonId) {
-        GameList tippRound = tippService.findNextTippRound(seasonId, dateTimeProvider.currentDateTime());
-        if (tippRound != null) {
-            return JsonBuilder.toJson(tippRound);
-        }
-        return null;
+    public Optional<RoundJson> findCurrent(Long seasonId) {
+        return tippService
+                .findNextTippRound(seasonId, dateTimeProvider.currentDateTime())
+                .map(i -> JsonBuilder.toJson(i));
     }
 
     @Override
-    public RoundJson findNextTipp(Long roundId, String nickName) {
-        Optional<GameList> nextRound = seasonManagerService.findNextRound(roundId);
-        if (nextRound.isPresent()) {
-            return findTipp(nextRound.get().getId(), nickName);
-        }
-        return null;
+    public Optional<RoundJson> findNextTipp(Long roundId, String nickName) {
+        return seasonManagerService
+                .findNextRound(roundId)
+                .map(i -> findTipp(i.getId(), nickName));
     }
 
     @Override
-    public RoundJson findPrevTipp(Long roundId, String nickName) {
-        Optional<GameList> prevRound = seasonManagerService.findPrevRound(roundId);
-        if (prevRound.isPresent()) {
-            return findTipp(prevRound.get().getId(), nickName);
-        }
-        return null;
+    public Optional<RoundJson> findPrevTipp(Long roundId, String nickName) {
+        return seasonManagerService
+                .findPrevRound(roundId)
+                .map(i -> findTipp(i.getId(), nickName));
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * de.betoffice.web.IBetofficeBasicJsonService#findTippRound(java.lang.Long)
-     */
     @Override
-    public RoundJson findTippRound(Long seasonId) {
-        GameList tippRound = tippService.findNextTippRound(seasonId, dateTimeProvider.currentDateTime());
-
-        RoundJson roundJson = null;
-        if (tippRound != null) {
-            roundJson = JsonBuilder.toJson(tippRound);
-            List<GameJson> gameJson = JsonBuilder.toJsonWithGames(tippRound.unmodifiableList());
-            roundJson.getGames().addAll(gameJson);
-            roundJson.setTippable(isFinished(roundJson));
-        }
-
-        return roundJson;
+    public Optional<RoundJson> findTippRound(Long seasonId) {
+        return tippService.findNextTippRound(seasonId, dateTimeProvider.currentDateTime())
+            .map(gameList -> {
+                RoundJson roundJson = JsonBuilder.toJson(gameList);
+                List<GameJson> gameJson = JsonBuilder.toJsonWithGames(gameList.unmodifiableList());
+                roundJson.getGames().addAll(gameJson);
+                roundJson.setTippable(isFinished(roundJson));
+                return roundJson;
+            });
     }
 
     @Override
     public UserTableJson calcUserRanking(Long seasonId) {
         Season season = seasonManagerService.findSeasonById(seasonId);
-        GameList round = tippService.findPreviousTippRound(seasonId, dateTimeProvider.currentDateTime());
+        Optional<GameList> round = tippService.findPreviousTippRound(seasonId, dateTimeProvider.currentDateTime());
 
         // TODO Ist das vielleicht besser ein Optional hier?
         // #findPreviousTippRound
         // liefert dann null, wenn die Meisterschaft noch nicht gestartet ist.
 
         UserTableJson userTableJson = new UserTableJson();
-        if (round == null) {
+        if (round.isEmpty()) {
             // Dann gibt es keine Tipprunde und es kann der letzte Spieltag
             // angenommen werden.
             // TODO: Was ist besser? Der erste oder der letzte Spieltag?
@@ -384,11 +361,12 @@ public class DefaultBetofficeService implements BetofficeService {
             // TODO Saison noch ohne ersten Spieltag.
             Optional<GameList> lastRound = seasonManagerService.findFirstRound(season);
 
-            round = lastRound.get();
+            // TODO ... fix me
+            round = lastRound;
         }
 
-        userTableJson.setRound(JsonBuilder.toJson(round));
-        return calcUserRanking(userTableJson, round, 0);
+        userTableJson.setRound(JsonBuilder.toJson(round.get()));
+        return calcUserRanking(userTableJson, round.get(), 0);
     }
 
     @Override

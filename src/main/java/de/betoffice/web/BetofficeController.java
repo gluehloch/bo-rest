@@ -109,7 +109,7 @@ public class BetofficeController {
 	 */
 	@RequestMapping(value = "/season/{seasonId}/current", method = RequestMethod.GET)
 	public RoundJson findNextTipp(@PathVariable("seasonId") Long seasonId) {
-		return betofficeBasicJsonService.findTippRound(seasonId);
+		return betofficeBasicJsonService.findTippRound(seasonId).orElse(null);
 	}
 
 	//
@@ -222,7 +222,6 @@ public class BetofficeController {
 	 */
 	@RequestMapping(value = "/tipp/{roundId}/{nickName}", method = RequestMethod.GET)
 	public RoundJson findTipp(@PathVariable("roundId") Long roundId, @PathVariable("nickName") String nickName) {
-
 		return betofficeBasicJsonService.findTipp(roundId, nickName);
 	}
 
@@ -234,10 +233,8 @@ public class BetofficeController {
 	 * @return The current tipp
 	 */
 	@RequestMapping(value = "/tipp/{seasonId}/{nickname}/current", method = RequestMethod.GET)
-	public RoundJson findCurrentTipp(@PathVariable("seasonId") Long seasonId,
-			@PathVariable("nickname") String nickName) {
-
-		return betofficeBasicJsonService.findCurrentTipp(seasonId, nickName);
+	public RoundJson findCurrentTipp(@PathVariable("seasonId") Long seasonId, @PathVariable("nickname") String nickName) {
+		return betofficeBasicJsonService.findCurrentTipp(seasonId, nickName).orElse(null);
 	}
 
 	/**
@@ -249,8 +246,7 @@ public class BetofficeController {
 	 */
 	@RequestMapping(value = "/tipp/{roundId}/{nickName}/next", method = RequestMethod.GET)
 	public RoundJson findNextTipp(@PathVariable("roundId") Long roundId, @PathVariable("nickName") String nickName) {
-
-		return betofficeBasicJsonService.findNextTipp(roundId, nickName);
+		return betofficeBasicJsonService.findNextTipp(roundId, nickName).orElse(null);
 	}
 
 	/**
@@ -262,8 +258,7 @@ public class BetofficeController {
 	 */
 	@RequestMapping(value = "/tipp/{roundId}/{nickName}/prev", method = RequestMethod.GET)
 	public RoundJson findPrevTipp(@PathVariable("roundId") Long roundId, @PathVariable("nickName") String nickName) {
-
-		return betofficeBasicJsonService.findPrevTipp(roundId, nickName);
+		return betofficeBasicJsonService.findPrevTipp(roundId, nickName).orElse(null);
 	}
 
 	@RequestMapping(value = "/team/all", method = RequestMethod.GET)

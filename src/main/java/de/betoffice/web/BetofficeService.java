@@ -24,6 +24,7 @@
 package de.betoffice.web;
 
 import java.util.List;
+import java.util.Optional;
 
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GroupTypeJson;
@@ -139,7 +140,7 @@ public interface BetofficeService {
 	 * @param seasonId the season id
 	 * @return the current round
 	 */
-	RoundJson findCurrent(Long seasonId);
+	Optional<RoundJson> findCurrent(Long seasonId);
 
 	/**
 	 * Find the next round to tipp
@@ -147,7 +148,7 @@ public interface BetofficeService {
 	 * @param seasonId the season id
 	 * @return the round
 	 */
-	RoundJson findTippRound(Long seasonId);
+	Optional<RoundJson> findTippRound(Long seasonId);
 
 	/**
 	 * Find round and tipp of a user
@@ -165,7 +166,7 @@ public interface BetofficeService {
 	 * @param nickName the nickname of the user
 	 * @return the round
 	 */
-	RoundJson findCurrentTipp(Long seasonId, String nickName);
+	Optional<RoundJson> findCurrentTipp(Long seasonId, String nickName);
 
 	/**
 	 * Find the next tipp round
@@ -174,7 +175,7 @@ public interface BetofficeService {
 	 * @param nickName the nickname of the user
 	 * @return a round
 	 */
-	RoundJson findNextTipp(Long roundId, String nickName);
+	Optional<RoundJson> findNextTipp(Long roundId, String nickName);
 
 	/**
 	 * Find the prev tipp round
@@ -183,7 +184,7 @@ public interface BetofficeService {
 	 * @param nickName the nickname of the user
 	 * @return a round
 	 */
-	RoundJson findPrevTipp(Long roundId, String nickName);
+	Optional<RoundJson> findPrevTipp(Long roundId, String nickName);
 
 	/**
 	 * Calculate the user ranking for the season.

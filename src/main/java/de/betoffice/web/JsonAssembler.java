@@ -24,6 +24,7 @@
 package de.betoffice.web;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import de.betoffice.web.json.GameJson;
@@ -70,6 +71,10 @@ public class JsonAssembler {
         public SeasonAssembler currentRound(GameList _currentRound) {
             currentRound = _currentRound;
             return this;
+        }
+        
+        public SeasonAssembler currentRound(Optional<GameList> _currentRound) {
+            return currentRound(_currentRound.orElse(null));
         }
 
         public SeasonJson assemble() {
