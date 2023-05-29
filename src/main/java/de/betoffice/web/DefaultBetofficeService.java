@@ -130,6 +130,13 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
+    public List<RoundJson> findAllRounds(Long seasonId) {
+        Season season = seasonManagerService.findSeasonById(seasonId);
+        List<GameList> rounds = seasonManagerService.findRounds(season);
+        return JsonBuilder.toJsonWithGameList(rounds);
+    }
+
+    @Override
     public SeasonJson findAllRounds(Long seasonId, Long groupTypeId) {
         Season season = seasonManagerService.findSeasonById(seasonId);
         GroupType groupType = masterDataManagerService.findGroupType(groupTypeId);

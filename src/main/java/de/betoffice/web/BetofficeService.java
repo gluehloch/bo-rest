@@ -60,6 +60,14 @@ public interface BetofficeService {
 	List<GroupTypeJson> findAllGroups(Long seasonId);
 
 	/**
+     * Find all rounds of a season
+     *
+     * @param seasonId    the season id
+     * @return the rounds of a season
+     */
+    List<RoundJson> findAllRounds(Long seasonId);
+
+	/**
 	 * Find all rounds of a season
 	 *
 	 * @param seasonId    the season id
@@ -67,7 +75,7 @@ public interface BetofficeService {
 	 * @return the rounds of a season
 	 */
 	SeasonJson findAllRounds(Long seasonId, Long groupTypeId);
-
+	
 	/**
 	 * Find a round by id
 	 *

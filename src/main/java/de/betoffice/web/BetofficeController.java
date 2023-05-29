@@ -84,37 +84,38 @@ public class BetofficeController {
 
 	@RequestMapping(value = "/season/{seasonId}", method = RequestMethod.GET)
 	public SeasonJson findSeasonById(@PathVariable("seasonId") Long seasonId, HttpServletResponse response) {
-
 		return betofficeBasicJsonService.findSeasonById(seasonId);
 	}
 
 	@RequestMapping(value = "/season/{seasonId}/group/all", method = RequestMethod.GET)
 	public List<GroupTypeJson> findGroupTypes(@PathVariable("seasonId") Long seasonId) {
-
 		return betofficeBasicJsonService.findAllGroups(seasonId);
 	}
 
 	@RequestMapping(value = "/season/{seasonId}/group/{groupTypeId}/round/all", method = RequestMethod.GET)
-	public SeasonJson findAllRounds(@PathVariable("seasonId") Long seasonId,
-			@PathVariable("groupTypeId") Long groupTypeId) {
-
+	public SeasonJson findAllRounds(@PathVariable("seasonId") Long seasonId, @PathVariable("groupTypeId") Long groupTypeId) {
 		return betofficeBasicJsonService.findAllRounds(seasonId, groupTypeId);
-	}
-
-	/**
-	 * Return the current (next to play and/or to tipp) round of a season.
-	 *
-	 * @param seasonId Season ID
-	 * @return The current round of a season
-	 */
-	@RequestMapping(value = "/season/{seasonId}/current", method = RequestMethod.GET)
-	public RoundJson findNextTipp(@PathVariable("seasonId") Long seasonId) {
-		return betofficeBasicJsonService.findTippRound(seasonId).orElse(null);
 	}
 
 	//
 	// round
 	//
+
+	/**
+     * Return the current (next to play and/or to tipp) round of a season.
+     *
+     * @param seasonId Season ID
+     * @return The current round of a season
+     */
+    @RequestMapping(value = "/season/{seasonId}/current", method = RequestMethod.GET)
+    public RoundJson findNextTipp(@PathVariable("seasonId") Long seasonId) {
+        return betofficeBasicJsonService.findTippRound(seasonId).orElse(null);
+    }
+    
+    @RequestMapping(value = "/season/{seasonId}/round", method = RequestMethod.GET)
+    public List<RoundJson> findRounds(@PathVariable("seasonId") Long seasonId) {
+        return betofficeBasicJsonService.findAllRounds(seasonId);
+    }
 
 	@RequestMapping(value = "/season/round/{roundId}", method = RequestMethod.GET)
 	public RoundJson findRound(@PathVariable("roundId") Long roundId) {
@@ -155,23 +156,19 @@ public class BetofficeController {
 	 */
 
 	@RequestMapping(value = "/season/roundtable/{roundId}/group/{groupTypeId}", method = RequestMethod.GET)
-	public RoundAndTableJson findRoundTable(@PathVariable("roundId") Long roundId,
-			@PathVariable("groupTypeId") Long groupTypeId) {
-
+	public RoundAndTableJson findRoundTable(@PathVariable("roundId") Long roundId, @PathVariable("groupTypeId") Long groupTypeId) {
 		return betofficeBasicJsonService.findRoundTable(roundId, groupTypeId);
 	}
 
 	// TODO Implement and use me
 	@RequestMapping(value = "/season/roundtable/{roundId}/next", method = RequestMethod.GET)
 	public RoundAndTableJson findNextRoundTable(@PathVariable("roundId") Long roundId) {
-
 		return betofficeBasicJsonService.findNextRoundTable(roundId);
 	}
 
 	// TODO Implement and use me
 	@RequestMapping(value = "/season/roundtable/{roundId}/prev", method = RequestMethod.GET)
 	public RoundAndTableJson findPrevRoundTable(@PathVariable("roundId") Long roundId) {
-
 		return betofficeBasicJsonService.findPrevRoundTable(roundId);
 	}
 
