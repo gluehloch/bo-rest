@@ -479,11 +479,6 @@ public class DefaultBetofficeService implements BetofficeService {
         return JsonBuilder.toJsonWithTeams(teams);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see de.betoffice.web.IBetofficeBasicJsonService#findAllSeason()
-     */
     @Override
     public List<SeasonJson> findAllSeason() {
         List<Season> seasons = seasonManagerService.findAllSeasons();

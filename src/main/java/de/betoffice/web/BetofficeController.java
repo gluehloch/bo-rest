@@ -77,7 +77,7 @@ public class BetofficeController {
 
 	// ------------------------------------------------------------------------
 
-	@RequestMapping(value = "/season/list", method = RequestMethod.GET)
+	@RequestMapping(value = "/season", method = RequestMethod.GET)
 	public List<SeasonJson> findAllSeason(HttpServletResponse response) {
 		return betofficeBasicJsonService.findAllSeason();
 	}

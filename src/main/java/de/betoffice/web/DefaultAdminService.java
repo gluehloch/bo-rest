@@ -37,11 +37,13 @@ import org.springframework.stereotype.Component;
 
 import de.betoffice.openligadb.OpenligadbUpdateService;
 import de.betoffice.web.json.GameJson;
+import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.PartyJson;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SeasonMemberJson;
 import de.betoffice.web.json.TeamJson;
+import de.betoffice.web.json.builder.GroupTypeJsonMapper;
 import de.betoffice.web.json.builder.PartyJsonMapper;
 import de.betoffice.web.json.builder.SeasonJsonMapper;
 import de.betoffice.web.json.builder.SeasonMemberJsonMapper;
@@ -315,5 +317,10 @@ public class DefaultAdminService implements AdminService {
         }
         return users;
     }
+
+	@Override
+	public List<GroupTypeJson> findGroupTypes() {
+		return new GroupTypeJsonMapper().map(masterDataManagerService.findAllGroupTypes());
+	}
 
 }

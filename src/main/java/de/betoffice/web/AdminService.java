@@ -26,6 +26,7 @@ package de.betoffice.web;
 import java.util.List;
 
 import de.betoffice.web.json.GameJson;
+import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.PartyJson;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonJson;
@@ -142,6 +143,10 @@ public interface AdminService {
      * @return the updated party
      */
     PartyJson updateUser(PartyJson user);
+    
+    // -- group administration -----------------------------------------------
+    
+    List<GroupTypeJson> findGroupTypes();
 
     // -- season administration -----------------------------------------------
 

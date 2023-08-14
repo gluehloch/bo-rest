@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.web.json.GameJson;
+import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.PartyJson;
 import de.betoffice.web.json.RoundAndTableJson;
 import de.betoffice.web.json.RoundJson;
@@ -137,7 +138,7 @@ public class AdministrationController {
 		return betofficeBasicJsonService.findSeasonById(seasonId);
 	}
 
-	@RequestMapping(value = "/season/list", method = RequestMethod.GET, headers = { "Content-type=application/json" })
+	@RequestMapping(value = "/season", method = RequestMethod.GET, headers = { "Content-type=application/json" })
 	public List<SeasonJson> findSeasons() {
 		return betofficeBasicJsonService.findAllSeason();
 	}
@@ -171,7 +172,7 @@ public class AdministrationController {
 		return betofficeAdminJsonService.findUser(userId);
 	}
 
-	@RequestMapping(value = "/user/list", method = RequestMethod.GET, headers = { "Content-type=application/json" })
+	@RequestMapping(value = "/user", method = RequestMethod.GET, headers = { "Content-type=application/json" })
 	public List<PartyJson> findUsers() {
 		return betofficeAdminJsonService.findUsers();
 	}
@@ -201,7 +202,7 @@ public class AdministrationController {
 		return betofficeAdminJsonService.findTeam(teamId);
 	}
 
-	@RequestMapping(value = "/team/list", method = RequestMethod.GET, headers = { "Content-type=application/json" })
+	@RequestMapping(value = "/team", method = RequestMethod.GET, headers = { "Content-type=application/json" })
 	public List<TeamJson> findTeams() {
 		return betofficeAdminJsonService.findTeams();
 	}
@@ -224,19 +225,24 @@ public class AdministrationController {
 		return betofficeAdminJsonService.updateTeam(teamJson);
 	}
 
+	// -- group type administration ------------------------------------------
+	
+	@RequestMapping(value = "/groupType", method = RequestMethod.GET, headers = { "Content-type=application/json" })
+	public List<GroupTypeJson> listGroupTypes() {
+		return betofficeAdminJsonService.findGroupTypes();
+	}
+	
 	// -- user/season administration ------------------------------------------
 
 	@RequestMapping(value = "/season/{seasonId}/potentialuser", method = RequestMethod.GET, headers = {
 			"Content-type=application/json" })
 	public List<SeasonMemberJson> listPotentialUsers(@PathVariable("seasonId") Long seasonId) {
-
 		return betofficeAdminJsonService.findPotentialSeasonMembers(seasonId);
 	}
 
 	@RequestMapping(value = "/season/{seasonId}/user", method = RequestMethod.GET, headers = {
 			"Content-type=application/json" })
 	public List<SeasonMemberJson> listUsers(@PathVariable("seasonId") Long seasonId) {
-
 		return betofficeAdminJsonService.findAllSeasonMembers(seasonId);
 	}
 
