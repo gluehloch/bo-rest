@@ -132,19 +132,20 @@ public class AdministrationController {
 
 	// -- season administration -----------------------------------------------
 
-	@RequestMapping(value = "/season/{seasonId}", method = RequestMethod.GET, headers = {
-			"Content-type=application/json" })
+	@CrossOrigin
+	@RequestMapping(value = "/season/{seasonId}", method = RequestMethod.GET, headers = { "Content-type=application/json" })
 	public SeasonJson findSeason(@PathVariable("seasonId") Long seasonId) {
 		return betofficeBasicJsonService.findSeasonById(seasonId);
 	}
 
+	@CrossOrigin
 	@RequestMapping(value = "/season", method = RequestMethod.GET, headers = { "Content-type=application/json" })
 	public List<SeasonJson> findSeasons() {
 		return betofficeBasicJsonService.findAllSeason();
 	}
 
 	@CrossOrigin
-	@RequestMapping(value = "/season/add", method = RequestMethod.POST, headers = { "Content-type=application/json" })
+	@RequestMapping(value = "/season", method = RequestMethod.POST, headers = { "Content-type=application/json" })
 	public SeasonJson addSeason(@RequestBody SeasonJson season,
 			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
 			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
@@ -153,16 +154,14 @@ public class AdministrationController {
 		return betofficeAdminJsonService.addSeason(season);
 	}
 
-	@RequestMapping(value = "/season/update", method = RequestMethod.POST, headers = {
-			"Content-type=application/json" })
-	public SeasonJson updateSeason(@RequestBody SeasonJson season) {
-		return betofficeAdminJsonService.updateSeason(season);
-	}
+	@CrossOrigin
+	@RequestMapping(value = "/season", method = RequestMethod.PUT, headers = { "Content-type=application/json" })
+	public SeasonJson updateSeason(@RequestBody SeasonJson season,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-	@RequestMapping(value = "/season/create", method = RequestMethod.POST, headers = {
-			"Content-type=application/json" })
-	public SeasonJson createSeason(@RequestBody SeasonJson season) {
-		return betofficeAdminJsonService.addSeason(season);
+		betofficeAdminJsonService.validateAdminSession(token);
+		return betofficeAdminJsonService.updateSeason(season);
 	}
 
 	// -- user administration -------------------------------------------------
