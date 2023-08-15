@@ -87,7 +87,7 @@ public class BetofficeController {
 		return betofficeBasicJsonService.findSeasonById(seasonId);
 	}
 
-	@RequestMapping(value = "/season/{seasonId}/group/all", method = RequestMethod.GET)
+	@RequestMapping(value = "/season/{seasonId}/group", method = RequestMethod.GET)
 	public List<GroupTypeJson> findGroupTypes(@PathVariable("seasonId") Long seasonId) {
 		return betofficeBasicJsonService.findAllGroups(seasonId);
 	}
