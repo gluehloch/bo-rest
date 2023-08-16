@@ -379,11 +379,19 @@ public class DefaultAdminService implements AdminService {
 	}
 
 	@Override
-	public void addTeamToGroup(SeasonJson seasonJson, GroupTypeJson groupTypeJson, TeamJson teamJson) {
+    public void addTeamToGroup(SeasonJson seasonJson, GroupTypeJson groupTypeJson, TeamJson teamJson) {
 		Season season = seasonManagerService.findSeasonById(seasonJson.getId());
 		GroupType groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
 		Team team = masterDataManagerService.findTeamById(teamJson.getId());
 		seasonManagerService.addTeam(season, groupType, team);
 	}
+
+    @Override
+    public void removeTeamFromGroup(SeasonJson seasonJson, GroupTypeJson groupTypeJson, TeamJson teamJson) {
+        Season season = seasonManagerService.findSeasonById(seasonJson.getId());
+        GroupType groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
+        Team team = masterDataManagerService.findTeamById(teamJson.getId());
+        seasonManagerService.removeTeam(season, groupType, team);
+    }
 
 }

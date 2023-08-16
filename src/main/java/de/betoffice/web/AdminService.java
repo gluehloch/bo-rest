@@ -161,6 +161,8 @@ public interface AdminService {
     
     void addTeamToGroup(SeasonJson seasonJson, GroupTypeJson groupTypeJson, TeamJson team);
     
+    void removeTeamFromGroup(SeasonJson seasonJson, GroupTypeJson groupTypeJson, TeamJson teamJson);
+
     // -- season administration -----------------------------------------------
 
     /**
