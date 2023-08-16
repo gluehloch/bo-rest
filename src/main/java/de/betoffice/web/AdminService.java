@@ -29,6 +29,7 @@ import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.PartyJson;
 import de.betoffice.web.json.RoundJson;
+import de.betoffice.web.json.SeasonGroupTeamJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SeasonMemberJson;
 import de.betoffice.web.json.TeamJson;
@@ -154,6 +155,8 @@ public interface AdminService {
 
     void removeGroupFromSeason(SeasonJson seasonJson, GroupTypeJson groupTypeJson);
 
+    SeasonGroupTeamJson findSeasonGroupsAndTeams(long seasonId);
+    
     // -- season administration -----------------------------------------------
 
     /**

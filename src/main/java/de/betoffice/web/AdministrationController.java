@@ -46,6 +46,7 @@ import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.PartyJson;
 import de.betoffice.web.json.RoundAndTableJson;
 import de.betoffice.web.json.RoundJson;
+import de.betoffice.web.json.SeasonGroupTeamJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SeasonMemberJson;
 import de.betoffice.web.json.TeamJson;
@@ -195,6 +196,12 @@ public class AdministrationController {
 		betofficeAdminJsonService.removeGroupFromSeason(seasonJson, groupTypeJson);
 
 		return seasonJson;
+	}
+	
+	@CrossOrigin
+	@GetMapping(value = "/season/{seasonId}/groupteams")
+	public SeasonGroupTeamJson findGroupWithTeams(@PathVariable("seasonId") Long seasonId) {
+		return betofficeAdminJsonService.findSeasonGroupsAndTeams(seasonId);
 	}
 
 	// -- user administration -------------------------------------------------

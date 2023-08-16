@@ -37,9 +37,11 @@ import org.springframework.stereotype.Component;
 
 import de.betoffice.openligadb.OpenligadbUpdateService;
 import de.betoffice.web.json.GameJson;
+import de.betoffice.web.json.GroupTeamJson;
 import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.PartyJson;
 import de.betoffice.web.json.RoundJson;
+import de.betoffice.web.json.SeasonGroupTeamJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SeasonMemberJson;
 import de.betoffice.web.json.TeamJson;
@@ -56,6 +58,7 @@ import de.winkler.betoffice.service.SeasonManagerService;
 import de.winkler.betoffice.storage.CommunityReference;
 import de.winkler.betoffice.storage.Game;
 import de.winkler.betoffice.storage.GameList;
+import de.winkler.betoffice.storage.Group;
 import de.winkler.betoffice.storage.GroupType;
 import de.winkler.betoffice.storage.Nickname;
 import de.winkler.betoffice.storage.Season;
@@ -344,4 +347,24 @@ public class DefaultAdminService implements AdminService {
 		seasonManagerService.removeGroupType(season, groupType);
 	}
 	
+	@Override
+	public SeasonGroupTeamJson findSeasonGroupsAndTeams(long seasonId) {
+		Season season = seasonManagerService.findSeasonById(seasonId);
+		List<Group> groups = seasonManagerService.findGroups(season);
+		SeasonGroupTeamJson seasonGroupTeamJson = new SeasonGroupTeamJson();
+
+		GroupTypeJsonMapper groupTypeMapper = new GroupTypeJsonMapper();
+		TeamJsonMapper teamMapper = new TeamJsonMapper();
+		
+		for (Group group : groups) {
+			List<Team> teams = seasonManagerService.findTeams(group);
+			GroupTeamJson groupTeamJson = new GroupTeamJson();
+			groupTeamJson.setGroupType(groupTypeMapper.map(group.getGroupType(), new GroupTypeJson()));
+			groupTeamJson.setTeams(teamMapper.map(teams));
+			seasonGroupTeamJson.getGroupTeams().add(groupTeamJson);
+		}
+		
+		return seasonGroupTeamJson;
+	}
+
 }
