@@ -147,6 +147,12 @@ public interface AdminService {
     // -- group administration -----------------------------------------------
     
     List<GroupTypeJson> findGroupTypes();
+    
+    GroupTypeJson findGroupType(long groupTypeId);
+    
+    SeasonJson addGroupToSeason(SeasonJson season, GroupTypeJson groupType);
+
+    void removeGroupFromSeason(SeasonJson seasonJson, GroupTypeJson groupTypeJson);
 
     // -- season administration -----------------------------------------------
 

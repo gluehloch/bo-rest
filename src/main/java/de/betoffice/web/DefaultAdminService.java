@@ -56,6 +56,7 @@ import de.winkler.betoffice.service.SeasonManagerService;
 import de.winkler.betoffice.storage.CommunityReference;
 import de.winkler.betoffice.storage.Game;
 import de.winkler.betoffice.storage.GameList;
+import de.winkler.betoffice.storage.GroupType;
 import de.winkler.betoffice.storage.Nickname;
 import de.winkler.betoffice.storage.Season;
 import de.winkler.betoffice.storage.Session;
@@ -323,4 +324,24 @@ public class DefaultAdminService implements AdminService {
 		return new GroupTypeJsonMapper().map(masterDataManagerService.findAllGroupTypes());
 	}
 
+	@Override
+	public GroupTypeJson findGroupType(long groupTypeId) {
+		return new GroupTypeJsonMapper().map(masterDataManagerService.findGroupType(groupTypeId), new GroupTypeJson());
+	}
+
+	@Override
+	public SeasonJson addGroupToSeason(SeasonJson seasonJson, GroupTypeJson groupTypeJson) {
+		Season season = seasonManagerService.findSeasonById(seasonJson.getId());
+		GroupType groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
+		Season season2 = seasonManagerService.addGroupType(season, groupType);
+		return new SeasonJsonMapper().map(season2, new SeasonJson());
+	}
+
+	@Override
+	public void removeGroupFromSeason(SeasonJson seasonJson, GroupTypeJson groupTypeJson) {
+		Season season = seasonManagerService.findSeasonById(seasonJson.getId());
+		GroupType groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());		
+		seasonManagerService.removeGroupType(season, groupType);
+	}
+	
 }
