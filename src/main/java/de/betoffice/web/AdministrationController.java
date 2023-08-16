@@ -206,11 +206,25 @@ public class AdministrationController {
 	
 	@CrossOrigin
 	@GetMapping(value = "/season/{seasonId}/groupteam/{groupTypeId}/candidates")
-	public List<TeamJson> findTeamsForAdding(@PathVariable("seasonId") Long seasonId, @PathVariable("groupTypeId")Long groupTypeId) {
+	public List<TeamJson> findTeamsForAdding(@PathVariable("seasonId") Long seasonId, @PathVariable("groupTypeId") Long groupTypeId) {
 		SeasonJson seasonJson = betofficeBasicJsonService.findSeasonById(seasonId);
-		GroupTypeJson groupTypeJson = betofficeAdminJsonService.findGroupType(groupTypeId);		
+		GroupTypeJson groupTypeJson = betofficeAdminJsonService.findGroupType(groupTypeId);
 		return betofficeAdminJsonService.findSeasonGroupAndTeamCandidates(seasonJson, groupTypeJson);
 	}
+	
+	 @CrossOrigin
+	 @PostMapping(value = "/season/{seasonId}/groupteam/{groupTypeId}")
+	 public SeasonJson addTeamToGroup(@PathVariable("seasonId") Long seasonId, @PathVariable("groupTypeId") Long groupTypeId,
+			 	@RequestBody TeamJson team,
+				@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
+				@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {			 
+		 
+		 betofficeAdminJsonService.validateAdminSession(token);
+		 SeasonJson seasonJson = betofficeBasicJsonService.findSeasonById(seasonId);
+		 GroupTypeJson groupTypeJson = betofficeAdminJsonService.findGroupType(groupTypeId);		 
+		 betofficeAdminJsonService.addTeamToGroup(seasonJson, groupTypeJson, team);
+		 return seasonJson;
+	 }
 
 	// -- user administration -------------------------------------------------
 

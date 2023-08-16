@@ -378,4 +378,12 @@ public class DefaultAdminService implements AdminService {
 		return new TeamJsonMapper().map(teamCandidates);
 	}
 
+	@Override
+	public void addTeamToGroup(SeasonJson seasonJson, GroupTypeJson groupTypeJson, TeamJson teamJson) {
+		Season season = seasonManagerService.findSeasonById(seasonJson.getId());
+		GroupType groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
+		Team team = masterDataManagerService.findTeamById(teamJson.getId());
+		seasonManagerService.addTeam(season, groupType, team);
+	}
+
 }
