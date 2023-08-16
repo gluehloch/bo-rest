@@ -157,6 +157,8 @@ public interface AdminService {
 
     SeasonGroupTeamJson findSeasonGroupsAndTeams(long seasonId);
     
+    List<TeamJson> findSeasonGroupAndTeamCandidates(SeasonJson seasonJson, GroupTypeJson groupTypeJson);
+    
     // -- season administration -----------------------------------------------
 
     /**

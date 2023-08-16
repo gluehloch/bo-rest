@@ -199,9 +199,17 @@ public class AdministrationController {
 	}
 	
 	@CrossOrigin
-	@GetMapping(value = "/season/{seasonId}/groupteams")
+	@GetMapping(value = "/season/{seasonId}/groupteam")
 	public SeasonGroupTeamJson findGroupWithTeams(@PathVariable("seasonId") Long seasonId) {
 		return betofficeAdminJsonService.findSeasonGroupsAndTeams(seasonId);
+	}
+	
+	@CrossOrigin
+	@GetMapping(value = "/season/{seasonId}/groupteam/{groupTypeId}/candidates")
+	public List<TeamJson> findTeamsForAdding(@PathVariable("seasonId") Long seasonId, @PathVariable("groupTypeId")Long groupTypeId) {
+		SeasonJson seasonJson = betofficeBasicJsonService.findSeasonById(seasonId);
+		GroupTypeJson groupTypeJson = betofficeAdminJsonService.findGroupType(groupTypeId);		
+		return betofficeAdminJsonService.findSeasonGroupAndTeamCandidates(seasonJson, groupTypeJson);
 	}
 
 	// -- user administration -------------------------------------------------
