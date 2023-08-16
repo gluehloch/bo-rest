@@ -138,6 +138,11 @@ public class DefaultAdminService implements AdminService {
         // Welcher Spieltag soll gemountet werden? Der nächste Spieltag nach
         // dem letzten bekannten Spieltag vielleicht?
 
+        // TODO Hack Bundesliga 2023/24
+        if (round == null) {
+            openligadbUpdateService.createOrUpdateRound(35L, 0);
+        }
+        
         if (round != null) {
             openligadbUpdateService.createOrUpdateRound(round.getSeason().getId(), round.getIndex() + 1);
         }
