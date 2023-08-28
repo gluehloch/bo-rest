@@ -44,33 +44,27 @@ public interface AdminService {
     /**
      * Validate admin session. Throws {@link AccessDeniedException}.
      *
-     * @param token
-     *            the session token
+     * @param token the session token
      */
     void validateAdminSession(String token);
 
     // -- openligadb services -------------------------------------------------
 
     /**
-     * Update round and game informations with the data from openligadb.
-     * (reconcile = abgleichen)
+     * Update round and game informations with the data from openligadb. (reconcile = abgleichen)
      * 
-     * @param token
-     *            the session id / security token
-     * @param roundId
-     *            The round to update
-     * @return The updated round and games
+     * @param  token   the session id / security token
+     * @param  roundId The round to update
+     * @return         The updated round and games
      */
     RoundJson reconcileRoundWithOpenligadb(String token, Long roundId);
 
     /**
      * Append round and game informations
      * 
-     * @param token
-     *            the session id / security token
-     * @param roundId
-     *            create or update the round after roundId
-     * @return The mounted round and games.
+     * @param  token   the session id / security token
+     * @param  roundId create or update the round after roundId
+     * @return         The mounted round and games.
      */
     RoundJson mountRoundWithOpenligadb(String token, Long roundId);
 
@@ -79,8 +73,8 @@ public interface AdminService {
     /**
      * Find a team
      * 
-     * @param teamId
-     * @return the team
+     * @param  teamId
+     * @return        the team
      */
     TeamJson findTeam(long teamId);
 
@@ -94,18 +88,16 @@ public interface AdminService {
     /**
      * Add a new team.
      * 
-     * @param teamJson
-     *            the new team
-     * @return the team
+     * @param  teamJson the new team
+     * @return          the team
      */
     TeamJson addTeam(TeamJson teamJson);
 
     /**
      * Upadate a new team.
      * 
-     * @param teamJson
-     *            the team to update
-     * @return the team
+     * @param  teamJson the team to update
+     * @return          the team
      */
     TeamJson updateTeam(TeamJson teamJson);
 
@@ -114,9 +106,8 @@ public interface AdminService {
     /**
      * Find a user.
      * 
-     * @param userId
-     *            the user id
-     * @return the user
+     * @param  userId the user id
+     * @return        the user
      */
     PartyJson findUser(long userId);
 
@@ -130,37 +121,35 @@ public interface AdminService {
     /**
      * Create a new party.
      * 
-     * @param user
-     *            the new user/party
-     * @return the created party
+     * @param  user the new user/party
+     * @return      the created party
      */
     PartyJson addUser(PartyJson user);
 
     /**
      * Update a party
      * 
-     * @param user
-     *            the updated user/party
-     * @return the updated party
+     * @param  user the updated user/party
+     * @return      the updated party
      */
     PartyJson updateUser(PartyJson user);
-    
+
     // -- group administration -----------------------------------------------
-    
+
     List<GroupTypeJson> findGroupTypes();
-    
+
     GroupTypeJson findGroupType(long groupTypeId);
-    
+
     SeasonJson addGroupToSeason(SeasonJson season, GroupTypeJson groupType);
 
     void removeGroupFromSeason(SeasonJson seasonJson, GroupTypeJson groupTypeJson);
 
     SeasonGroupTeamJson findSeasonGroupsAndTeams(long seasonId);
-    
+
     List<TeamJson> findSeasonGroupAndTeamCandidates(SeasonJson seasonJson, GroupTypeJson groupTypeJson);
-    
+
     void addTeamToGroup(SeasonJson seasonJson, GroupTypeJson groupTypeJson, TeamJson team);
-    
+
     void removeTeamFromGroup(SeasonJson seasonJson, GroupTypeJson groupTypeJson, TeamJson teamJson);
 
     // -- season administration -----------------------------------------------
@@ -168,66 +157,57 @@ public interface AdminService {
     /**
      * Create a new season.
      * 
-     * @param season
-     *            the new season
-     * @return a new season
+     * @param  season the new season
+     * @return        a new season
      */
     SeasonJson addSeason(SeasonJson season);
 
     /**
      * Update a season
      * 
-     * @param season
-     *            the season to update
-     * @return the updated season
+     * @param  season the season to update
+     * @return        the updated season
      */
     SeasonJson updateSeason(SeasonJson season);
 
     /**
      * Update a round
      * 
-     * @param round
-     *            the round to update
+     * @param round the round to update
      */
     void updateRound(RoundJson round);
 
     /**
      * Update a game
      * 
-     * @param game
-     *            the game to update
+     * @param game the game to update
      */
     void updateGame(GameJson game);
 
     // -- season member administration ----------------------------------------
 
     /**
-     * Find all potential season members. So all users who are not member of the
-     * requested season.
+     * Find all potential season members. So all users who are not member of the requested season.
      * 
-     * @param seasonId
-     *            the season id
-     * @return a list of potential season members
+     * @param  seasonId the season id
+     * @return          a list of potential season members
      */
     List<SeasonMemberJson> findPotentialSeasonMembers(long seasonId);
 
     /**
      * Find all season members.
      * 
-     * @param seasonId
-     *            the season id
-     * @return a list of season members
+     * @param  seasonId the season id
+     * @return          a list of season members
      */
     List<SeasonMemberJson> findAllSeasonMembers(long seasonId);
 
     /**
      * Add some members to a season.
      * 
-     * @param seasonId
-     *            the season id
-     * @param seasonMembers
-     *            the new season members
-     * @return a list of current season members
+     * @param  seasonId      the season id
+     * @param  seasonMembers the new season members
+     * @return               a list of current season members
      */
     List<SeasonMemberJson> addSeasonMembers(long seasonId,
             List<SeasonMemberJson> seasonMembers);
@@ -235,11 +215,9 @@ public interface AdminService {
     /**
      * Remove some members from a season.
      * 
-     * @param seasonId
-     *            the season id
-     * @param seasonMembers
-     *            the new season members
-     * @return a list of current season members
+     * @param  seasonId      the season id
+     * @param  seasonMembers the new season members
+     * @return               a list of current season members
      */
     List<SeasonMemberJson> removeSeasonMembers(long seasonId,
             List<SeasonMemberJson> seasonMembers);
