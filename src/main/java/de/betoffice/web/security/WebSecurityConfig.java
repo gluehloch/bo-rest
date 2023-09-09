@@ -41,7 +41,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -69,6 +68,9 @@ import de.winkler.betoffice.storage.User;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private static final String BO_OFFICE = "/bo/office";
+    private static final String BO_ADMIM = "/bo/chiefoperator";
+    
     @Autowired
     private UserDao userDao;
 
@@ -142,24 +144,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers(HttpMethod.GET, "/user").permitAll()
 //                .antMatchers(HttpMethod.PUT, "/user").hasAnyRole("USER", "ADMIN")
 //                .antMatchers(HttpMethod.POST, "/user").hasAnyRole("USER", "ADMIN")
-                .antMatchers(HttpMethod.GET, "/bo/office/ping").permitAll()
-                .antMatchers(HttpMethod.POST, "/bo/office/login").permitAll()
-                .antMatchers(HttpMethod.POST, "/bo/office/logout").hasRole("TIPPER")
-                .antMatchers(HttpMethod.POST, "/bo/office/tipp/submit").hasRole("TIPPER")
-                .antMatchers(HttpMethod.GET, "/bo/chiefoperator").hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT, "/bo/chiefoperator").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "/bo/chiefoperator").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/bo/chiefoperator").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET,    BO_OFFICE + "/ping").permitAll()
+                .antMatchers(HttpMethod.POST,   BO_OFFICE + "/login").permitAll()
+                .antMatchers(HttpMethod.POST,   BO_OFFICE + "/logout").hasRole("TIPPER")
+                .antMatchers(HttpMethod.POST,   BO_OFFICE + "/tipp/submit").hasRole("TIPPER")
+                .antMatchers(HttpMethod.GET,    BO_ADMIM).hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT,    BO_ADMIM).hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST,   BO_ADMIM).hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, BO_ADMIM).hasRole("ADMIN")
         ;
         //.antMatchers(HttpMethod.GET, "/books/**").hasRole("USER")
         //.antMatchers(HttpMethod.POST, "/books").hasRole("ADMIN")
         //.antMatchers(HttpMethod.PUT, "/books/**").hasRole("ADMIN")
         //.antMatchers(HttpMethod.PATCH, "/books/**").hasRole("ADMIN")
         //.antMatchers(HttpMethod.DELETE, "/books/**").hasRole("ADMIN")
-
-        //                .and()
-        //                .csrf().disable()
-        //                .formLogin().disable();
     }
     
 //    @Bean
