@@ -25,8 +25,8 @@ package de.betoffice.web;
 
 import java.time.ZonedDateTime;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -94,7 +94,7 @@ public class AuthenticationController {
         // TODO
         session.invalidate();
         SecurityContextHolder.clearContext();
-        new SecurityContextLogoutHandler().logout(request, null, null);        
+        new SecurityContextLogoutHandler().logout(request, null, null);
         
         return securityTokenJson;
     }
