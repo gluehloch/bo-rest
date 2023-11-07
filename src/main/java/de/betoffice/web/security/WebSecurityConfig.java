@@ -125,6 +125,7 @@ public class WebSecurityConfig implements SecurityConfigurer<DefaultSecurityFilt
     @Override
     public void configure(HttpSecurity http) throws Exception {
                 http
+
                 // .headers().cacheControl().and()
                 .cors().and()
                 .csrf().disable()
@@ -136,9 +137,10 @@ public class WebSecurityConfig implements SecurityConfigurer<DefaultSecurityFilt
                 //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .addFilter(new JWTAuthenticationFilter(authenticationManager, authService))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager, authService))
-                .authorizeRequests()
-                .antMatchers("/**").permitAll()
-                .anyRequest().authenticated();
+                .authorizeHttpRequests()
+                .requestMatchers(HttpMethod.GET, "/**", "/home").permitAll()
+                .requestMatchers(HttpMethod.GET, "/")
+
                 //.antMatchers(HttpMethod.GET, "/**").permitAll()
                 //.antMatchers(HttpMethod.GET, "/demo/ping").permitAll()
                 //.antMatchers(HttpMethod.GET, "/bo/office/**").denyAll()
