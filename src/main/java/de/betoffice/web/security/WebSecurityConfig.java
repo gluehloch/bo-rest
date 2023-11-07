@@ -33,13 +33,16 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.SecurityConfigurer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -48,6 +51,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -59,14 +63,16 @@ import de.winkler.betoffice.service.SecurityToken;
 import de.winkler.betoffice.storage.Nickname;
 import de.winkler.betoffice.storage.User;
 import de.winkler.betoffice.storage.enums.RoleType;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
 /**
  * Security configuration.
  *
  * @author by Andre Winkler
  */
+@Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig implements SecurityConfigurer<DefaultSecurityFilterChain, HttpSecurity> {
 
     private static final String BO_OFFICE = "/bo/office";
     private static final String BO_ADMIM = "/bo/chiefoperator";
@@ -80,6 +86,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationProvider authenticationProvider;
     
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -104,11 +113,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return authProvider;
     }
     
-    @Override
-    public void configure(AuthenticationManagerBuilder builder) {
-        builder.authenticationProvider(authenticationProvider);
-    }
-    
     /* Beispiel: Manuelles Setzen des Authentication-Tokens. Wenn ich das Login selber implementiere? Oder wann? */
 //    private void xxxx() {
 //    	UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(user, pass);
@@ -119,20 +123,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     // Secure the endpoins with HTTP Basic authentication
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
+    public void configure(HttpSecurity http) throws Exception {
+                http
                 // .headers().cacheControl().and()
                 .cors().and()
                 .csrf().disable()
-//                .logout()
-//                .logoutUrl("/logout")
-//                .logoutSuccessHandler(logoutSuccessHandler()).deleteCookies("JSESSIONID")
-//                .and()
+            //                .logout()
+            //                .logoutUrl("/logout")
+            //                .logoutSuccessHandler(logoutSuccessHandler()).deleteCookies("JSESSIONID")
+            //                .and()
                 //                .formLogin().and()
                 //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .addFilter(new JWTAuthenticationFilter(authenticationManager(), authService))
-                .addFilter(new JWTAuthorizationFilter(authenticationManager(), authService))
+                .addFilter(new JWTAuthenticationFilter(authenticationManager, authService))
+                .addFilter(new JWTAuthorizationFilter(authenticationManager, authService))
                 .authorizeRequests()
+                .antMatchers("/**").permitAll()
+                .anyRequest().authenticated();
                 //.antMatchers(HttpMethod.GET, "/**").permitAll()
                 //.antMatchers(HttpMethod.GET, "/demo/ping").permitAll()
                 //.antMatchers(HttpMethod.GET, "/bo/office/**").denyAll()
@@ -144,6 +150,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers(HttpMethod.GET, "/user").permitAll()
 //                .antMatchers(HttpMethod.PUT, "/user").hasAnyRole("USER", "ADMIN")
 //                .antMatchers(HttpMethod.POST, "/user").hasAnyRole("USER", "ADMIN")
+
+/*
                 .antMatchers(HttpMethod.GET,    BO_OFFICE + "/ping").permitAll()
                 .antMatchers(HttpMethod.POST,   BO_OFFICE + "/login").permitAll()
                 .antMatchers(HttpMethod.POST,   BO_OFFICE + "/logout").hasRole("TIPPER")
@@ -152,6 +160,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT,    BO_ADMIM).hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST,   BO_ADMIM).hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, BO_ADMIM).hasRole("ADMIN")
+ */
         ;
         //.antMatchers(HttpMethod.GET, "/books/**").hasRole("USER")
         //.antMatchers(HttpMethod.POST, "/books").hasRole("ADMIN")
@@ -190,6 +199,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             }
         };
         return x;
+    }
+
+    @Override
+    public void init(HttpSecurity builder) throws Exception {
+        // TODO Auto-generated method stub
+        
     }    
 
 }

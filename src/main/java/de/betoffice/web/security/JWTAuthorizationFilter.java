@@ -28,15 +28,15 @@ import static de.betoffice.web.security.SecurityConstants.HEADER_AUTHORIZATION;
 import static de.betoffice.web.security.SecurityConstants.TOKEN_PREFIX;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-import de.winkler.betoffice.storage.enums.RoleType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -45,6 +45,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 import de.winkler.betoffice.service.AuthService;
 import de.winkler.betoffice.storage.Session;
+import de.winkler.betoffice.storage.enums.RoleType;
 
 /**
  * Autorisierungsfilter.
@@ -53,43 +54,43 @@ import de.winkler.betoffice.storage.Session;
  */
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
-	private final AuthService authService;
+    private final AuthService authService;
 
-	public JWTAuthorizationFilter(AuthenticationManager authManager, AuthService authService) {
-		super(authManager);
-		this.authService = authService;
-	}
+    public JWTAuthorizationFilter(AuthenticationManager authManager, AuthService authService) {
+        super(authManager);
+        this.authService = authService;
+    }
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
-			throws IOException, ServletException {
+    @Override
+    protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
+            throws IOException, ServletException {
 
-		String header = req.getHeader(HEADER_AUTHORIZATION);
+        String header = req.getHeader(HEADER_AUTHORIZATION);
 
-		if (header == null || !header.startsWith(TOKEN_PREFIX)) {
-			chain.doFilter(req, res);
-			return;
-		}
+        if (header == null || !header.startsWith(TOKEN_PREFIX)) {
+            chain.doFilter(req, res);
+            return;
+        }
 
-		UsernamePasswordAuthenticationToken authentication = getAuthentication(req);
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		chain.doFilter(req, res);
-	}
+        UsernamePasswordAuthenticationToken authentication = getAuthentication(req);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        chain.doFilter(req, res);
+    }
 
-	private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
+    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
         String token = request.getHeader(HEADER_AUTHORIZATION);
         if (token != null) {
-        	Optional<Session> validateSession = authService.validateSession(token.replace(TOKEN_PREFIX, ""));
+            Optional<Session> validateSession = authService.validateSession(token.replace(TOKEN_PREFIX, ""));
             if (validateSession.isPresent()) {
-				List<RoleType> roleTypes = validateSession.get().getUser().getRoleTypes();
+                List<RoleType> roleTypes = validateSession.get().getUser().getRoleTypes();
 
-				// TODO Spring-Security benoetigt das Prefix "ROLE_". Sonst werden die Rollen nicht identifiziert.
-				List<SimpleGrantedAuthority> authorities = roleTypes.stream()
-						.map(RoleType::name)
-						.map(role -> "ROLE_" + role)
-						.map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+                // TODO Spring-Security benoetigt das Prefix "ROLE_". Sonst werden die Rollen nicht identifiziert.
+                List<SimpleGrantedAuthority> authorities = roleTypes.stream()
+                        .map(RoleType::name)
+                        .map(role -> "ROLE_" + role)
+                        .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
-				String nickname = validateSession.get().getNickname();
+                String nickname = validateSession.get().getNickname();
                 return new UsernamePasswordAuthenticationToken(nickname, null, authorities);
             }
             return null;
