@@ -24,12 +24,11 @@
 
 package de.betoffice.web.security;
 
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.*;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -40,9 +39,11 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.SecurityConfigurer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -53,6 +54,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -63,7 +65,8 @@ import de.winkler.betoffice.service.SecurityToken;
 import de.winkler.betoffice.storage.Nickname;
 import de.winkler.betoffice.storage.User;
 import de.winkler.betoffice.storage.enums.RoleType;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Security configuration.
@@ -72,7 +75,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
  */
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig implements SecurityConfigurer<DefaultSecurityFilterChain, HttpSecurity> {
+@EnableMethodSecurity
+public class WebSecurityConfig {
 
     private static final String BO_OFFICE = "/bo/office";
     private static final String BO_ADMIM = "/bo/chiefoperator";
@@ -85,9 +89,6 @@ public class WebSecurityConfig implements SecurityConfigurer<DefaultSecurityFilt
     
     @Autowired
     private AuthenticationProvider authenticationProvider;
-    
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -112,34 +113,31 @@ public class WebSecurityConfig implements SecurityConfigurer<DefaultSecurityFilt
         authProvider.setPasswordEncoder(passwordEncoder);
         return authProvider;
     }
-    
-    /* Beispiel: Manuelles Setzen des Authentication-Tokens. Wenn ich das Login selber implementiere? Oder wann? */
-//    private void xxxx() {
-//    	UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(user, pass);
-//    	Authentication auth = authenticationManager().authenticate(authReq);
-//      	SecurityContext sc = SecurityContextHolder.getContext();
-//    	sc.setAuthentication(auth);    	
-//    }
 
-    // Secure the endpoins with HTTP Basic authentication
-    @Override
-    public void configure(HttpSecurity http) throws Exception {
-                http
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity httpSecurity) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder = httpSecurity.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.authenticationProvider(authenticationProvider);
+        return authenticationManagerBuilder.build();
+    }
+    
+    @Bean
+    public void configure(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+        http
+            .cors(AbstractHttpConfigurer::disable)
+            .csrf(AbstractHttpConfigurer::disable);
 
                 // .headers().cacheControl().and()
-                .cors().and()
-                .csrf().disable()
+
             //                .logout()
             //                .logoutUrl("/logout")
             //                .logoutSuccessHandler(logoutSuccessHandler()).deleteCookies("JSESSIONID")
             //                .and()
                 //                .formLogin().and()
                 //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .addFilter(new JWTAuthenticationFilter(authenticationManager, authService))
-                .addFilter(new JWTAuthorizationFilter(authenticationManager, authService))
-                .authorizeHttpRequests()
+        http.authorizeHttpRequests(authz -> authz
                 .requestMatchers(HttpMethod.GET, "/**", "/home").permitAll()
-                .requestMatchers(HttpMethod.GET, "/")
+                .requestMatchers(HttpMethod.GET, "/").permitAll()
 
                 //.antMatchers(HttpMethod.GET, "/**").permitAll()
                 //.antMatchers(HttpMethod.GET, "/demo/ping").permitAll()
@@ -153,22 +151,23 @@ public class WebSecurityConfig implements SecurityConfigurer<DefaultSecurityFilt
 //                .antMatchers(HttpMethod.PUT, "/user").hasAnyRole("USER", "ADMIN")
 //                .antMatchers(HttpMethod.POST, "/user").hasAnyRole("USER", "ADMIN")
 
-/*
-                .antMatchers(HttpMethod.GET,    BO_OFFICE + "/ping").permitAll()
-                .antMatchers(HttpMethod.POST,   BO_OFFICE + "/login").permitAll()
-                .antMatchers(HttpMethod.POST,   BO_OFFICE + "/logout").hasRole("TIPPER")
-                .antMatchers(HttpMethod.POST,   BO_OFFICE + "/tipp/submit").hasRole("TIPPER")
-                .antMatchers(HttpMethod.GET,    BO_ADMIM).hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT,    BO_ADMIM).hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST,   BO_ADMIM).hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE, BO_ADMIM).hasRole("ADMIN")
- */
-        ;
+                .requestMatchers(antMatcher(HttpMethod.GET,    BO_OFFICE + "/ping")).permitAll()
+                .requestMatchers(antMatcher(HttpMethod.POST,   BO_OFFICE + "/login")).permitAll()
+                .requestMatchers(antMatcher(HttpMethod.POST,   BO_OFFICE + "/logout")).hasRole("TIPPER")
+                .requestMatchers(antMatcher(HttpMethod.POST,   BO_OFFICE + "/tipp/submit")).hasRole("TIPPER")
+                .requestMatchers(antMatcher(HttpMethod.GET,    BO_ADMIM)).hasRole("ADMIN")
+                .requestMatchers(antMatcher(HttpMethod.PUT,    BO_ADMIM)).hasRole("ADMIN")
+                .requestMatchers(antMatcher(HttpMethod.POST,   BO_ADMIM)).hasRole("ADMIN")
+                .requestMatchers(antMatcher(HttpMethod.DELETE, BO_ADMIM)).hasRole("ADMIN")
+                );
+
         //.antMatchers(HttpMethod.GET, "/books/**").hasRole("USER")
         //.antMatchers(HttpMethod.POST, "/books").hasRole("ADMIN")
         //.antMatchers(HttpMethod.PUT, "/books/**").hasRole("ADMIN")
         //.antMatchers(HttpMethod.PATCH, "/books/**").hasRole("ADMIN")
         //.antMatchers(HttpMethod.DELETE, "/books/**").hasRole("ADMIN")
+        http.addFilter(new JWTAuthenticationFilter(authenticationManager, authService));
+        http.addFilter(new JWTAuthorizationFilter(authenticationManager, authService));
     }
     
 //    @Bean
@@ -202,12 +201,6 @@ public class WebSecurityConfig implements SecurityConfigurer<DefaultSecurityFilt
         };
         return x;
     }
-
-    @Override
-    public void init(HttpSecurity builder) throws Exception {
-        // TODO Auto-generated method stub
-        
-    }    
 
 }
 
