@@ -1,7 +1,7 @@
 /*
  * ============================================================================
  * Project betoffice-jweb
- * Copyright (c) 2000-2021 by Andre Winkler. All rights reserved.
+ * Copyright (c) 2000-2023 by Andre Winkler. All rights reserved.
  * ============================================================================
  *          GNU GENERAL PUBLIC LICENSE
  *  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
@@ -133,8 +133,9 @@ public class WebSecurityConfig {
                 //                .formLogin().and()
                 //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         http.authorizeHttpRequests(authz -> authz
-                .requestMatchers(HttpMethod.GET, "/**", "/home").permitAll()
-                .requestMatchers(HttpMethod.GET, "/").permitAll()
+                .requestMatchers(antMatcher(HttpMethod.GET, "/**")).permitAll()
+                .requestMatchers(antMatcher(HttpMethod.GET, "/home")).permitAll()
+                .requestMatchers(antMatcher(HttpMethod.GET, "/")).permitAll()
 
                 //.antMatchers(HttpMethod.GET, "/**").permitAll()
                 //.antMatchers(HttpMethod.GET, "/demo/ping").permitAll()
