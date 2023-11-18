@@ -131,34 +131,22 @@ public class WebSecurityConfig {
                 //                .formLogin().and()
                 //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         http.authorizeHttpRequests(authz -> authz
-                .requestMatchers(antMatcher(HttpMethod.GET, "/**")).permitAll()
-                .requestMatchers(antMatcher(HttpMethod.GET, "/home")).permitAll()
-                .requestMatchers(antMatcher(HttpMethod.GET, "/")).permitAll()
+                .requestMatchers(HttpMethod.GET, "/**").anonymous()
+                .requestMatchers(HttpMethod.GET, "/home").anonymous()
+                .requestMatchers(HttpMethod.GET, "/").anonymous()
 
-                //.antMatchers(HttpMethod.GET, "/**").permitAll()
-                //.antMatchers(HttpMethod.GET, "/demo/ping").permitAll()
-                //.antMatchers(HttpMethod.GET, "/bo/office/**").denyAll()
-//                .antMatchers(HttpMethod.GET, "/order").hasAnyRole("USER")
-//                .antMatchers(HttpMethod.POST, "/order").hasAnyRole("USER")
-//                .antMatchers(HttpMethod.DELETE, "/order").hasAnyRole("USER")
-//                .antMatchers(HttpMethod.PUT, "/order").hasAnyRole("USER")
-//
-//                .antMatchers(HttpMethod.GET, "/user").permitAll()
-//                .antMatchers(HttpMethod.PUT, "/user").hasAnyRole("USER", "ADMIN")
-//                .antMatchers(HttpMethod.POST, "/user").hasAnyRole("USER", "ADMIN")
-
-                .requestMatchers(antMatcher(HttpMethod.GET,    BetofficeUrlPath.URL_OFFICE_PING)).permitAll()
                 // Authentication Endpoint
-                .requestMatchers(antMatcher(HttpMethod.GET,    BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_PING)).permitAll()
-                .requestMatchers(antMatcher(HttpMethod.POST,   BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_LOGIN)).permitAll()
-                .requestMatchers(antMatcher(HttpMethod.OPTIONS,   BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_LOGIN)).permitAll()
-                .requestMatchers(antMatcher(HttpMethod.POST,   BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_LOGOUT)).hasRole("TIPPER")
+                .requestMatchers(HttpMethod.GET,     BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_PING).anonymous()
+                .requestMatchers(HttpMethod.POST,    BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_LOGIN).anonymous()
+                .requestMatchers(HttpMethod.POST,    BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_LOGOUT).authenticated()
 
+                /*
                 .requestMatchers(antMatcher(HttpMethod.POST,   BetofficeUrlPath.URL_OFFICE + "/tipp/submit")).hasRole("TIPPER")
                 .requestMatchers(antMatcher(HttpMethod.GET,    BetofficeUrlPath.URL_ADMIM)).hasRole("ADMIN")
                 .requestMatchers(antMatcher(HttpMethod.PUT,    BetofficeUrlPath.URL_ADMIM)).hasRole("ADMIN")
                 .requestMatchers(antMatcher(HttpMethod.POST,   BetofficeUrlPath.URL_ADMIM)).hasRole("ADMIN")
                 .requestMatchers(antMatcher(HttpMethod.DELETE, BetofficeUrlPath.URL_ADMIM)).hasRole("ADMIN")
+                */
                 );
 
         //.antMatchers(HttpMethod.GET, "/books/**").hasRole("USER")
