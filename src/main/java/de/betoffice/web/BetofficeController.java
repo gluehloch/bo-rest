@@ -23,8 +23,10 @@
 
 package de.betoffice.web;
 
+import java.net.http.HttpRequest;
 import java.util.List;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +73,7 @@ public class BetofficeController {
     // ------------------------------------------------------------------------
 
     @RequestMapping(value = "/ping", method = RequestMethod.GET)
-    public PingJson ping() {
+    public PingJson ping(HttpServletRequest request) {
         return betofficeBasicJsonService.ping();
     }
 

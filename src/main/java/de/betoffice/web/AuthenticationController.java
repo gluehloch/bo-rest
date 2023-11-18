@@ -50,7 +50,7 @@ import de.winkler.betoffice.service.SecurityToken;
  */
 @CrossOrigin
 @RestController
-@RequestMapping("/authentication")
+@RequestMapping(BetofficeUrlPath.URL_AUTHENTICATION)
 public class AuthenticationController {
 
     private final BetofficeAuthenticationService betofficeAuthenticationService;
@@ -60,14 +60,14 @@ public class AuthenticationController {
         this.betofficeAuthenticationService = authenticationService;
     }
 
-    @RequestMapping(value = "/ping", method = RequestMethod.GET)
+    @RequestMapping(value = BetofficeUrlPath.URL_AUTHENTICATION_PING, method = RequestMethod.GET)
     public PingJson ping() {
         PingJson pingJson = new PingJson();
         pingJson.setDateTime(ZonedDateTime.now());
         return pingJson;
     }
 
-    @PostMapping(value = "/login", headers = { "Content-type=application/json" })
+    @PostMapping(value = BetofficeUrlPath.URL_AUTHENTICATION_LOGIN, headers = { "Content-type=application/json" })
     public ResponseEntity<SecurityTokenJson> login(@RequestBody AuthenticationForm authenticationForm,
                                                    @RequestHeader(required = false, name = BetofficeHttpConsts.HTTP_HEADER_USER_AGENT, defaultValue = BetofficeHttpConsts.HTTP_HEADER_USER_AGENT_UNKNOWN) String userAgent,
                                                    HttpServletRequest request) {
@@ -81,7 +81,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(securityToken);
     }
 
-    @PostMapping(value = "/logout"/*, headers = { "Content-type=application/json" }*/)
+    @PostMapping(value = BetofficeUrlPath.URL_AUTHENTICATION_LOGOUT /*, headers = { "Content-type=application/json" }*/)
     public SecurityTokenJson logout(@RequestBody LogoutFormData logoutFormData,
                                     @RequestHeader(required = false, name = SecurityConstants.HEADER_AUTHORIZATION) String authorization,
                                     HttpServletRequest request) {

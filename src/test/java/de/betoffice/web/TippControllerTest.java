@@ -143,7 +143,7 @@ class TippControllerTest {
     @Test
     @Transactional
     void submitLoginLogout() throws Exception {
-        login();       
+        login();
         logout(findSessionToken().getToken());
         
         List<Session> sessions2 = sessionDao.findByNickname(NICKNAME);
