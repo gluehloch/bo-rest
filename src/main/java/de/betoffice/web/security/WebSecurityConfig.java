@@ -30,6 +30,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -63,8 +66,6 @@ import de.winkler.betoffice.service.SecurityToken;
 import de.winkler.betoffice.storage.Nickname;
 import de.winkler.betoffice.storage.User;
 import de.winkler.betoffice.storage.enums.RoleType;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Security configuration.
@@ -130,15 +131,24 @@ public class WebSecurityConfig {
             //                .and()
                 //                .formLogin().and()
                 //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        /*
         http.authorizeHttpRequests(authz -> authz
-                .requestMatchers(HttpMethod.GET, "/**").anonymous()
-                .requestMatchers(HttpMethod.GET, "/home").anonymous()
-                .requestMatchers(HttpMethod.GET, "/").anonymous()
+);
+                */
 
+        http.authorizeHttpRequests(authz -> authz
+                .requestMatchers(antMatcher(HttpMethod.GET,  "/bo/**")).permitAll()
+                .requestMatchers(antMatcher(HttpMethod.GET,  "/bo" + BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_PING)).permitAll()
+                .requestMatchers(antMatcher(HttpMethod.POST, "/bo" + BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_LOGIN)).permitAll()
+                // .requestMatchers(antMatcher(HttpMethod.POST, "/bo/authentication/login")).permitAll()
+                .requestMatchers(antMatcher(HttpMethod.POST, "/bo" + BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_LOGOUT)).authenticated()
+        );
                 // Authentication Endpoint
-                .requestMatchers(HttpMethod.GET,     BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_PING).anonymous()
+        /*
+                http.requestMatchers(HttpMethod.GET,     BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_PING).anonymous()
                 .requestMatchers(HttpMethod.POST,    BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_LOGIN).anonymous()
                 .requestMatchers(HttpMethod.POST,    BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_LOGOUT).authenticated()
+                */
 
                 /*
                 .requestMatchers(antMatcher(HttpMethod.POST,   BetofficeUrlPath.URL_OFFICE + "/tipp/submit")).hasRole("TIPPER")
@@ -147,7 +157,6 @@ public class WebSecurityConfig {
                 .requestMatchers(antMatcher(HttpMethod.POST,   BetofficeUrlPath.URL_ADMIM)).hasRole("ADMIN")
                 .requestMatchers(antMatcher(HttpMethod.DELETE, BetofficeUrlPath.URL_ADMIM)).hasRole("ADMIN")
                 */
-                );
 
         //.antMatchers(HttpMethod.GET, "/books/**").hasRole("USER")
         //.antMatchers(HttpMethod.POST, "/books").hasRole("ADMIN")
