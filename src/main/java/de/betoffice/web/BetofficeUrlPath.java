@@ -27,10 +27,10 @@ public class BetofficeUrlPath {
 
     public static final String BO = "/bo";
 
-    public static final String URL_OFFICE = BO + "/office";
+    public static final String URL_OFFICE = "/office";
     public static final String URL_OFFICE_PING = URL_OFFICE + "/ping";
 
-    public static final String URL_ADMIM = BO + "/chiefoperator";
+    public static final String URL_ADMIM = "/chiefoperator";
 
     public static final String URL_AUTHENTICATION        = "/authentication";
     public static final String URL_AUTHENTICATION_PING   = "/ping";

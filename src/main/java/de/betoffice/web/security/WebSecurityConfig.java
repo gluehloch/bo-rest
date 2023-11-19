@@ -137,11 +137,18 @@ public class WebSecurityConfig {
                 */
 
         http.authorizeHttpRequests(authz -> authz
-                .requestMatchers(antMatcher(HttpMethod.GET,  "/bo/**")).permitAll()
+                .requestMatchers(antMatcher(HttpMethod.GET,  "/bo" + BetofficeUrlPath.URL_OFFICE + "/**")).permitAll()
+                // Authentication
                 .requestMatchers(antMatcher(HttpMethod.GET,  "/bo" + BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_PING)).permitAll()
                 .requestMatchers(antMatcher(HttpMethod.POST, "/bo" + BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_LOGIN)).permitAll()
-                // .requestMatchers(antMatcher(HttpMethod.POST, "/bo/authentication/login")).permitAll()
                 .requestMatchers(antMatcher(HttpMethod.POST, "/bo" + BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_LOGOUT)).authenticated()
+                // Send tipp form
+                .requestMatchers(antMatcher(HttpMethod.POST, "/bo" + BetofficeUrlPath.URL_OFFICE + "/tipp/submit")).hasRole("TIPPER")
+                // Administration
+                .requestMatchers(antMatcher(HttpMethod.GET,    "/bo" + BetofficeUrlPath.URL_ADMIM + "/**")).hasRole("ADMIN")
+                .requestMatchers(antMatcher(HttpMethod.PUT,    "/bo" + BetofficeUrlPath.URL_ADMIM + "/**")).hasRole("ADMIN")
+                .requestMatchers(antMatcher(HttpMethod.POST,   "/bo" + BetofficeUrlPath.URL_ADMIM + "/**")).hasRole("ADMIN")
+                .requestMatchers(antMatcher(HttpMethod.DELETE, "/bo" + BetofficeUrlPath.URL_ADMIM + "/**")).hasRole("ADMIN")
         );
                 // Authentication Endpoint
         /*
