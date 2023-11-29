@@ -39,6 +39,7 @@ import de.betoffice.openligadb.OpenligadbUpdateService;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GroupTeamJson;
 import de.betoffice.web.json.GroupTypeJson;
+import de.betoffice.web.json.IGameJson;
 import de.betoffice.web.json.PartyJson;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonGroupTeamJson;
@@ -257,7 +258,7 @@ public class DefaultAdminService implements AdminService {
     }
 
     // TODO Gehoert sowas eher in einen JSON-Mapper? JsonAssembler | JsonBuilder?
-    private void updateGame(GameJson match, Game game) {
+    private void updateGame(IGameJson match, Game game) {
         game.setPlayed(match.isFinished());
         game.setKo(match.isKo());
         game.setResult(match.getResult().getHomeGoals(),

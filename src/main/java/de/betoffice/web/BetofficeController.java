@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb Copyright (c) 2015-2021 by Andre Winkler. All rights
+ * Project betoffice-jweb Copyright (c) 2015-2023 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -23,7 +23,6 @@
 
 package de.betoffice.web;
 
-import java.net.http.HttpRequest;
 import java.util.List;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,8 +40,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GroupTypeJson;
+import de.betoffice.web.json.IGameJson;
 import de.betoffice.web.json.PingJson;
 import de.betoffice.web.json.RoundAndTableJson;
 import de.betoffice.web.json.RoundJson;
@@ -140,7 +139,7 @@ public class BetofficeController {
     //
 
     @RequestMapping(value = "/game/{gameId}", method = RequestMethod.GET)
-    public GameJson findGame(@PathVariable("gameId") Long gameId) {
+    public IGameJson findGame(@PathVariable("gameId") Long gameId) {
         return betofficeBasicJsonService.findGame(gameId);
     }
 

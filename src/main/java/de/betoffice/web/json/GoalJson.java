@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jadmin Copyright (c) 2013-2023 by Andre Winkler. All rights
+ * Project betoffice-jweb Copyright (c) 2015-2023 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -20,30 +20,57 @@
  * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
  * Place, Suite 330, Boston, MA 02111-1307 USA
  */
+
 package de.betoffice.web.json;
 
-/**
- * The openligadb id. Could be <code>null</code>.
- *
- * @author Andre Winkler
- */
-public abstract class AbstractOpenligaid extends AbstractIdentifier implements OpenligaObject {
+import de.winkler.betoffice.storage.enums.GoalType;
 
-    private Long openligaid;
+public class GoalJson extends AbstractOpenligaid {
 
-    /**
-     * @return the openligaid
-     */
-    public final Long getOpenligaid() {
-        return openligaid;
-    }
+	private Long gameId;
+	private String playerName;
+	private Integer minute;
+	private GoalType goalType;
+	private GameResultJson gameResult;
 
-    /**
-     * @param openligaid
-     *            the openligaid to set
-     */
-    public final void setOpenligaid(Long openligaid) {
-        this.openligaid = openligaid;
-    }
+	public Long getGameId() {
+		return gameId;
+	}
+
+	public void setGameId(Long gameId) {
+		this.gameId = gameId;
+	}
+
+	public String getPlayerName() {
+		return playerName;
+	}
+
+	public void setPlayerName(String playerName) {
+		this.playerName = playerName;
+	}
+
+	public Integer getMinute() {
+		return minute;
+	}
+
+	public void setMinute(Integer minute) {
+		this.minute = minute;
+	}
+
+	public GoalType getGoalType() {
+		return goalType;
+	}
+
+	public void setGoalType(GoalType goalType) {
+		this.goalType = goalType;
+	}
+
+	public GameResultJson getGameResult() {
+		return gameResult;
+	}
+
+	public void setGameResult(GameResultJson gameResult) {
+		this.gameResult = gameResult;
+	}
 
 }

@@ -30,6 +30,7 @@ import java.util.function.Predicate;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GameResultJson;
 import de.betoffice.web.json.GameTippJson;
+import de.betoffice.web.json.IGameJson;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonJson;
 import de.winkler.betoffice.storage.Game;
@@ -181,7 +182,7 @@ public class JsonAssembler {
                 // No games? Finished or what? I guess, it is finished.
                 finished = false;
             } else {
-                for (GameJson game : round.getGames()) {
+                for (IGameJson game : round.getGames()) {
                     finished = finished && game.isFinished();
                 }
             }

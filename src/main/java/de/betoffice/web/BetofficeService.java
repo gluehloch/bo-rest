@@ -26,8 +26,8 @@ package de.betoffice.web;
 import java.util.List;
 import java.util.Optional;
 
-import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GroupTypeJson;
+import de.betoffice.web.json.IGameJson;
 import de.betoffice.web.json.PingJson;
 import de.betoffice.web.json.RoundAndTableJson;
 import de.betoffice.web.json.RoundJson;
@@ -90,7 +90,7 @@ public interface BetofficeService {
 	 * @param gameId the game id
 	 * @return the game
 	 */
-	GameJson findGame(Long gameId);
+	IGameJson findGame(Long gameId);
 
 	/**
 	 * Find a round by id. Returns only the games of a round with defined groupType.

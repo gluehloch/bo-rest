@@ -34,7 +34,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  * 
  * @author Andre Winkler
  */
-public class GameJson extends AbstractOpenligaid {
+public class GameJson extends AbstractOpenligaid implements IGameJson {
 
     private int index;
     private Long roundId;
@@ -52,91 +52,113 @@ public class GameJson extends AbstractOpenligaid {
 
     private List<GameTippJson> tipps = new ArrayList<>();
 
-    public int getIndex() {
+    @Override
+	public int getIndex() {
         return index;
     }
 
-    public void setIndex(int index) {
+    @Override
+	public void setIndex(int index) {
         this.index = index;
     }
     
-    public Long getRoundId() {
+    @Override
+	public Long getRoundId() {
         return roundId;
     }
     
-    public void setRoundId(Long roundId)  {
+    @Override
+	public void setRoundId(Long roundId)  {
         this.roundId = roundId;
     }
 
-    public ZonedDateTime getDateTime() {
+    @Override
+	public ZonedDateTime getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(ZonedDateTime dateTime) {
+    @Override
+	public void setDateTime(ZonedDateTime dateTime) {
         this.dateTime = dateTime;
     }
 
-    public TeamJson getHomeTeam() {
+    @Override
+	public TeamJson getHomeTeam() {
         return homeTeam;
     }
 
-    public void setHomeTeam(TeamJson homeTeam) {
+    @Override
+	public void setHomeTeam(TeamJson homeTeam) {
         this.homeTeam = homeTeam;
     }
 
-    public TeamJson getGuestTeam() {
+    @Override
+	public TeamJson getGuestTeam() {
         return guestTeam;
     }
 
-    public void setGuestTeam(TeamJson guestTeam) {
+    @Override
+	public void setGuestTeam(TeamJson guestTeam) {
         this.guestTeam = guestTeam;
     }
 
-    public GameResultJson getHalfTimeResult() {
+    @Override
+	public GameResultJson getHalfTimeResult() {
         return halfTimeResult;
     }
 
-    public void setHalfTimeResult(GameResultJson halfTimeResult) {
+    @Override
+	public void setHalfTimeResult(GameResultJson halfTimeResult) {
         this.halfTimeResult = halfTimeResult;
     }
 
-    public GameResultJson getResult() {
+    @Override
+	public GameResultJson getResult() {
         return result;
     }
 
-    public void setResult(GameResultJson result) {
+    @Override
+	public void setResult(GameResultJson result) {
         this.result = result;
     }
 
-    public GameResultJson getOvertimeResult() {
+    @Override
+	public GameResultJson getOvertimeResult() {
         return overtimeResult;
     }
 
-    public void setOvertimeResult(GameResultJson overtimeResult) {
+    @Override
+	public void setOvertimeResult(GameResultJson overtimeResult) {
         this.overtimeResult = overtimeResult;
     }
 
-    public GameResultJson getPenaltyResult() {
+    @Override
+	public GameResultJson getPenaltyResult() {
         return penaltyResult;
     }
 
-    public void setPenaltyResult(GameResultJson penaltyResult) {
+    @Override
+	public void setPenaltyResult(GameResultJson penaltyResult) {
         this.penaltyResult = penaltyResult;
     }
 
-    public boolean isFinished() {
+    @Override
+	public boolean isFinished() {
         return finished;
     }
 
-    public void setFinished(boolean finished) {
+    @Override
+	public void setFinished(boolean finished) {
         this.finished = finished;
     }
     
-    public boolean isKo() {
+    @Override
+	public boolean isKo() {
         return ko;
     }
     
-    public void setKo(boolean ko) {
+    @Override
+	public void setKo(boolean ko) {
         this.ko = ko;
     }
 

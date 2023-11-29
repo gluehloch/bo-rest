@@ -43,6 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GroupTypeJson;
+import de.betoffice.web.json.IGameJson;
 import de.betoffice.web.json.PartyJson;
 import de.betoffice.web.json.RoundAndTableJson;
 import de.betoffice.web.json.RoundJson;
@@ -126,7 +127,7 @@ public class AdministrationController {
     }
 
     @RequestMapping(value = "/game/update", method = RequestMethod.POST, headers = { "Content-type=application/json" })
-    public GameJson updateGame(@RequestBody GameJson gameJson,
+    public IGameJson updateGame(@RequestBody GameJson gameJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 

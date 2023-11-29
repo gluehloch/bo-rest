@@ -36,6 +36,7 @@ import org.springframework.stereotype.Component;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GroupTeamTableJson;
 import de.betoffice.web.json.GroupTypeJson;
+import de.betoffice.web.json.IGameJson;
 import de.betoffice.web.json.PingJson;
 import de.betoffice.web.json.RoundAndTableJson;
 import de.betoffice.web.json.RoundJson;
@@ -258,7 +259,7 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
-    public GameJson findGame(Long gameId) {
+    public IGameJson findGame(Long gameId) {
         Game game = seasonManagerService.findMatch(gameId);
         return JsonBuilder.toJson(game);
     }
@@ -519,7 +520,7 @@ public class DefaultBetofficeService implements BetofficeService {
 
     private boolean isFinished(RoundJson round) {
         boolean finished = false;
-        for (GameJson game : round.getGames()) {
+        for (IGameJson game : round.getGames()) {
             if (!game.isFinished()) {
                 finished = true;
             }

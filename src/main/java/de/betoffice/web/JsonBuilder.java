@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import de.betoffice.web.json.DetailGameJson;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GameResultJson;
 import de.betoffice.web.json.GameTippJson;
@@ -138,6 +139,11 @@ public class JsonBuilder {
 
 	public static GameJson toJson(Game game) {
 		GameJson gameJson = gameJsonMapper.map(game, new GameJson());
+		return gameJson;
+	}
+	
+	public static DetailGameJson toDetailGameJson(Game game) {
+		DetailGameJson gameJson = gameJsonMapper.map(game, new DetailGameJson());
 		return gameJson;
 	}
 
