@@ -40,8 +40,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.betoffice.web.json.DetailGameJson;
+import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GroupTypeJson;
-import de.betoffice.web.json.IGameJson;
 import de.betoffice.web.json.PingJson;
 import de.betoffice.web.json.RoundAndTableJson;
 import de.betoffice.web.json.RoundJson;
@@ -139,10 +140,15 @@ public class BetofficeController {
     //
 
     @RequestMapping(value = "/game/{gameId}", method = RequestMethod.GET)
-    public IGameJson findGame(@PathVariable("gameId") Long gameId) {
+    public GameJson findGame(@PathVariable("gameId") Long gameId) {
         return betofficeBasicJsonService.findGame(gameId);
     }
 
+    @RequestMapping(value = "/game-details/{gameId}", method = RequestMethod.GET)
+    public DetailGameJson findGameDetails(@PathVariable("gameId") Long gameId) {
+    	return betofficeBasicJsonService.findDetailGame(gameId);
+    }
+    
     //
     // round and table
     //

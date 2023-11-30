@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2013-2017 by Andre Winkler. All rights
+ * Project betoffice-jweb-misc Copyright (c) 2013-2023 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -33,8 +33,7 @@ import de.winkler.betoffice.storage.GameResult;
  */
 public class GameResultJsonMapper {
 
-    public GameResultJson map(GameResult gameResult,
-            GameResultJson gameResultJson) {
+    public static GameResultJson map(GameResult gameResult, GameResultJson gameResultJson) {
         gameResultJson.setHomeGoals(gameResult.getHomeGoals());
         gameResultJson.setGuestGoals(gameResult.getGuestGoals());
         return gameResultJson;

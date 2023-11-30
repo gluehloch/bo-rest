@@ -40,7 +40,7 @@ import de.winkler.betoffice.storage.Game;
  */
 public class GameJsonMapper {
 
-	public <T extends IGameJson> T map(Game game, T gameJson) {
+	public static <T extends IGameJson> T map(Game game, T gameJson) {
 		gameJson.setId(game.getId());
 		gameJson.setRoundId(game.getGameList().getId());
 		gameJson.setOpenligaid(game.getOpenligaid());
@@ -67,7 +67,7 @@ public class GameJsonMapper {
 		return gameJson;
 	}
 
-	public <T extends IGameJson> List<T> map(List<Game> games, Supplier<T> supplier) {
+	public static <T extends IGameJson> List<T> map(List<Game> games, Supplier<T> supplier) {
 		return games.stream().map((game) -> {
 			T json = supplier.get();
 			json = map(game, json);

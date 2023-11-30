@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2017-2020 by Andre Winkler.
+ * Project betoffice-jweb-misc Copyright (c) 2017-2023 by Andre Winkler.
  * All rights reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -34,13 +34,13 @@ import de.winkler.betoffice.storage.TeamResult;
  */
 public class TeamResultJsonMapper {
 
-    public TeamResultJson map(TeamResult teamResult, TeamResultJson teamResultJson) {
+    public static TeamResultJson map(TeamResult teamResult, TeamResultJson teamResultJson) {
         teamResultJson.setLost(teamResult.getLost());
         teamResultJson.setNegGoals(teamResult.getNegGoals());
         teamResultJson.setPosGoals(teamResult.getPosGoals());
         teamResultJson.setRemis(teamResult.getRemis());
         teamResultJson.setTablePosition(teamResult.getTabPos());
-        teamResultJson.setTeam(new TeamJsonMapper().map(teamResult.getTeam(), new TeamJson()));
+        teamResultJson.setTeam(TeamJsonMapper.map(teamResult.getTeam(), new TeamJson()));
         teamResultJson.setWin(teamResult.getWin());
         return teamResultJson;
     }

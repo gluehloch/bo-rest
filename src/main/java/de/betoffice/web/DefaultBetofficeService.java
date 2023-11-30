@@ -33,7 +33,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import de.betoffice.web.json.DetailGameJson;
 import de.betoffice.web.json.GameJson;
+import de.betoffice.web.json.GoalJson;
 import de.betoffice.web.json.GroupTeamTableJson;
 import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.IGameJson;
@@ -47,6 +49,8 @@ import de.betoffice.web.json.TeamJson;
 import de.betoffice.web.json.TeamResultJson;
 import de.betoffice.web.json.UserJson;
 import de.betoffice.web.json.UserTableJson;
+import de.betoffice.web.json.builder.GameJsonMapper;
+import de.betoffice.web.json.builder.GoalJsonMapper;
 import de.winkler.betoffice.service.AuthService;
 import de.winkler.betoffice.service.CommunityCalculatorService;
 import de.winkler.betoffice.service.CommunityService;
@@ -57,6 +61,7 @@ import de.winkler.betoffice.service.TippService;
 import de.winkler.betoffice.storage.Game;
 import de.winkler.betoffice.storage.GameList;
 import de.winkler.betoffice.storage.GameTipp;
+import de.winkler.betoffice.storage.Goal;
 import de.winkler.betoffice.storage.Group;
 import de.winkler.betoffice.storage.GroupType;
 import de.winkler.betoffice.storage.Nickname;
@@ -259,10 +264,19 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
-    public IGameJson findGame(Long gameId) {
+    public GameJson findGame(Long gameId) {
         Game game = seasonManagerService.findMatch(gameId);
         return JsonBuilder.toJson(game);
     }
+    
+	@Override
+	public DetailGameJson findDetailGame(Long gameId) {
+		Game game = seasonManagerService.findMatch(gameId);
+		List<Goal> goals = seasonManagerService.findGoalsOfMatch(game);
+		DetailGameJson json = JsonBuilder.toDetailGameJson(game);
+		json.setGoals(GoalJsonMapper.map(goals));
+		return json;
+	}
 
     @Override
     public RoundJson findTipp(Long roundId, String nickName) {

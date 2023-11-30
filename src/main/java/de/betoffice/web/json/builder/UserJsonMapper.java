@@ -37,7 +37,7 @@ import de.winkler.betoffice.storage.UserResult;
  */
 public class UserJsonMapper {
 
-    public UserJson map(UserResult userResult, UserJson userJson) {
+    public static UserJson map(UserResult userResult, UserJson userJson) {
         userJson.setId(userResult.getUser().getId());
         userJson.setNickname(userResult.getUser().getNickname().value());
         userJson.setWin(userResult.getUserWin());
@@ -48,12 +48,16 @@ public class UserJsonMapper {
         return userJson;
     }
 
-    public List<UserJson> map(List<UserResult> userResults) {
+    public static List<UserJson> map(List<UserResult> userResults) {
         return userResults.stream().map((userResult) -> {
             UserJson json = new UserJson();
             json = map(userResult, json);
             return json;
         }).collect(Collectors.toList());
+    }
+    
+    private static UserJson map(UserResult userResult) {
+    	return map(userResult, new UserJson());
     }
 
 }
