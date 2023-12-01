@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2013-2017 by Andre Winkler. All rights
+ * Project betoffice-jweb-misc Copyright (c) 2013-2023 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -24,11 +24,13 @@
 package de.betoffice.web.json.builder;
 
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import de.betoffice.web.JsonBuilder;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GameResultJson;
+import de.betoffice.web.json.IGameJson;
 import de.winkler.betoffice.storage.Game;
 
 /**
@@ -38,42 +40,39 @@ import de.winkler.betoffice.storage.Game;
  */
 public class GameJsonMapper {
 
-    public GameJson map(Game game, GameJson gameJson) {
-        gameJson.setId(game.getId());
-        gameJson.setRoundId(game.getGameList().getId());
-        gameJson.setOpenligaid(game.getOpenligaid());
-        gameJson.setIndex(game.getIndex());
-        gameJson.setFinished(game.isPlayed());
-        gameJson.setKo(game.isKo());
-        gameJson.setDateTime(game.getDateTime());
+	public static <T extends IGameJson> T map(Game game, T gameJson) {
+		gameJson.setId(game.getId());
+		gameJson.setRoundId(game.getGameList().getId());
+		gameJson.setOpenligaid(game.getOpenligaid());
+		gameJson.setIndex(game.getIndex());
+		gameJson.setFinished(game.isPlayed());
+		gameJson.setKo(game.isKo());
+		gameJson.setDateTime(game.getDateTime());
 
-        GameResultJson halfTimeGoals = JsonBuilder
-                .toJson(game.getHalfTimeGoals());
-        gameJson.setHalfTimeResult(halfTimeGoals);
+		GameResultJson halfTimeGoals = JsonBuilder.toJson(game.getHalfTimeGoals());
+		gameJson.setHalfTimeResult(halfTimeGoals);
 
-        GameResultJson gameResult = JsonBuilder.toJson(game.getResult());
-        gameJson.setResult(gameResult);
+		GameResultJson gameResult = JsonBuilder.toJson(game.getResult());
+		gameJson.setResult(gameResult);
 
-        GameResultJson penaltyGoals = JsonBuilder
-                .toJson(game.getPenaltyGoals());
-        gameJson.setPenaltyResult(penaltyGoals);
+		GameResultJson penaltyGoals = JsonBuilder.toJson(game.getPenaltyGoals());
+		gameJson.setPenaltyResult(penaltyGoals);
 
-        GameResultJson overtimeGoals = JsonBuilder
-                .toJson(game.getOverTimeGoals());
-        gameJson.setOvertimeResult(overtimeGoals);
+		GameResultJson overtimeGoals = JsonBuilder.toJson(game.getOverTimeGoals());
+		gameJson.setOvertimeResult(overtimeGoals);
 
-        gameJson.setHomeTeam(JsonBuilder.toJson(game.getHomeTeam()));
-        gameJson.setGuestTeam(JsonBuilder.toJson(game.getGuestTeam()));
+		gameJson.setHomeTeam(JsonBuilder.toJson(game.getHomeTeam()));
+		gameJson.setGuestTeam(JsonBuilder.toJson(game.getGuestTeam()));
 
-        return gameJson;
-    }
+		return gameJson;
+	}
 
-    public List<GameJson> map(List<Game> games) {
-        return games.stream().map((game) -> {
-            GameJson json = new GameJson();
-            json = map(game, json);
-            return json;
-        }).collect(Collectors.toList());
-    }
+	public static <T extends IGameJson> List<T> map(List<Game> games, Supplier<T> supplier) {
+		return games.stream().map((game) -> {
+			T json = supplier.get();
+			json = map(game, json);
+			return json;
+		}).collect(Collectors.toList());
+	}
 
 }

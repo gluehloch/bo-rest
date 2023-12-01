@@ -1,7 +1,7 @@
 /*
  * ============================================================================
  * Project betoffice-jweb-misc 
- * Copyright (c) 2000-2017 by Andre Winkler. All rights reserved.
+ * Copyright (c) 2000-2023 by Andre Winkler. All rights reserved.
  * ============================================================================
  *          GNU GENERAL PUBLIC LICENSE
  *  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
@@ -25,7 +25,6 @@
 package de.betoffice.web.json.builder;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import de.betoffice.web.json.TeamJson;
 import de.winkler.betoffice.storage.Team;
@@ -38,7 +37,7 @@ import de.winkler.betoffice.storage.enums.TeamType;
  */
 public class TeamJsonMapper {
 
-    public TeamJson map(Team team, TeamJson teamJson) {
+    public static TeamJson map(Team team, TeamJson teamJson) {
         teamJson.setId(team.getId());
         teamJson.setOpenligaid(team.getOpenligaid());
         teamJson.setLogo(team.getLogo());
@@ -50,15 +49,15 @@ public class TeamJsonMapper {
         return teamJson;
     }
 
-    public List<TeamJson> map(List<Team> teams) {
-        return teams.stream().map((team) -> {
-            TeamJson json = new TeamJson();
-            json = map(team, json);
-            return json;
-        }).collect(Collectors.toList());
+    public static List<TeamJson> map(List<Team> teams) {
+        return teams.stream().map(TeamJsonMapper::map).toList();
+    }
+    
+    private static TeamJson map(Team team) {
+    	return map(team, new TeamJson());
     }
 
-    public Team reverse(TeamJson teamJson, Team team) {
+    public static Team reverse(TeamJson teamJson, Team team) {
         team.setOpenligaid(teamJson.getOpenligaid());
         team.setLogo(teamJson.getLogo());
         team.setLongName(teamJson.getLongName());

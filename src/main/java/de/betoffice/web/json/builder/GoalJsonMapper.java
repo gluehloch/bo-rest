@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2013-2022 by Andre Winkler. All rights
+ * Project betoffice-jweb Copyright (c) 2015-2023 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -25,32 +25,28 @@ package de.betoffice.web.json.builder;
 
 import java.util.List;
 
-import de.betoffice.web.json.RoundJson;
-import de.winkler.betoffice.storage.GameList;
+import de.betoffice.web.json.GameResultJson;
+import de.betoffice.web.json.GoalJson;
+import de.winkler.betoffice.storage.Goal;
 
-/**
- * A mapper for {@link GameList} to {@link RoundJson}.
- * 
- * @author Andre Winkler
- */
-public class RoundJsonMapper {
+public class GoalJsonMapper {
+	
+	public static GoalJson map(Goal goal, GoalJson json) {
+		json.setGameResult(GameResultJsonMapper.map(goal.getResult(), new GameResultJson()));
+		json.setPlayerName(goal.getPlayer().getName());
+		json.setMinute(goal.getMinute());
+		json.setOpenligaid(goal.getOpenligaid());
+		json.setGoalType(goal.getGoalType());
+		return json;
+	}
 
-    public static RoundJson map(GameList round, RoundJson roundJson) {
-        roundJson.setId(round.getId());
-        roundJson.setDateTime(round.getDateTime());
-        roundJson.setIndex(round.getIndex() + 1);
-        roundJson.setSeasonId(round.getSeason().getId());
-        roundJson.setSeasonName(round.getSeason().getReference().getName());
-        roundJson.setSeasonYear(round.getSeason().getReference().getYear());
-        return roundJson;
-    }
+	public static List<GoalJson> map(List<Goal> goals) {
+		return goals.stream().map(GoalJsonMapper::map).toList();
+	}
 
-    public static List<RoundJson> map(List<GameList> rounds) {
-        return rounds.stream().map(RoundJsonMapper::map).toList();
-    }
-
-    private static RoundJson map(GameList round) {
-    	return map(round, new RoundJson());
-    }
+	private static GoalJson map(Goal goal) {
+		return map(goal, new GoalJson());
+	}
 
 }
+

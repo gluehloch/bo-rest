@@ -39,6 +39,7 @@ import de.betoffice.openligadb.OpenligadbUpdateService;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GroupTeamJson;
 import de.betoffice.web.json.GroupTypeJson;
+import de.betoffice.web.json.IGameJson;
 import de.betoffice.web.json.PartyJson;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonGroupTeamJson;
@@ -157,28 +158,25 @@ public class DefaultAdminService implements AdminService {
     @Override
     public TeamJson findTeam(long teamId) {
         Team team = masterDataManagerService.findTeamById(teamId);
-        return new TeamJsonMapper().map(team, new TeamJson());
+        return TeamJsonMapper.map(team, new TeamJson());
     }
 
     @Override
     public List<TeamJson> findTeams() {
-        return new TeamJsonMapper()
-                .map(masterDataManagerService.findAllTeams());
+        return TeamJsonMapper.map(masterDataManagerService.findAllTeams());
     }
 
     @Override
     public TeamJson addTeam(TeamJson teamJson) {
-        TeamJsonMapper mapper = new TeamJsonMapper();
-        Team team = new TeamJsonMapper().reverse(teamJson, new Team());
+        Team team = TeamJsonMapper.reverse(teamJson, new Team());
         masterDataManagerService.createTeam(team);
-        return mapper.map(team, teamJson);
+        return TeamJsonMapper.map(team, teamJson);
     }
 
     @Override
     public TeamJson updateTeam(TeamJson teamJson) {
-        Team storedTeam = masterDataManagerService
-                .findTeamById(teamJson.getId());
-        Team team = new TeamJsonMapper().reverse(teamJson, storedTeam);
+        Team storedTeam = masterDataManagerService.findTeamById(teamJson.getId());
+        Team team = TeamJsonMapper.reverse(teamJson, storedTeam);
         masterDataManagerService.updateTeam(team);
         return teamJson;
     }
@@ -187,26 +185,25 @@ public class DefaultAdminService implements AdminService {
 
     public PartyJson findUser(long userId) {
         User user = communityService.findUser(userId);
-        return new PartyJsonMapper().map(user, new PartyJson());
+        return PartyJsonMapper.map(user, new PartyJson());
     }
 
     @Override
     public List<PartyJson> findUsers() {
-        return new PartyJsonMapper().map(communityService.findAllUsers());
+        return PartyJsonMapper.map(communityService.findAllUsers());
     }
 
     @Override
     public PartyJson addUser(PartyJson partyJson) {
-        PartyJsonMapper mapper = new PartyJsonMapper();
-        User user = mapper.reverse(partyJson, new User());
+        User user = PartyJsonMapper.reverse(partyJson, new User());
         user = communityService.createUser(user);
-        return mapper.map(user, partyJson);
+        return PartyJsonMapper.map(user, partyJson);
     }
 
     @Override
     public PartyJson updateUser(PartyJson partyJson) {
         User storedUser = communityService.findUser(partyJson.getId());
-        User user = new PartyJsonMapper().reverse(partyJson, storedUser);
+        User user = PartyJsonMapper.reverse(partyJson, storedUser);
         communityService.updateUser(user);
         return partyJson;
     }
@@ -215,8 +212,7 @@ public class DefaultAdminService implements AdminService {
 
     @Override
     public SeasonJson addSeason(SeasonJson seasonJson) {
-        Season season = new SeasonJsonMapper().reverse(seasonJson,
-                new Season());
+        Season season = SeasonJsonMapper.reverse(seasonJson, new Season());
         masterDataManagerService.createSeason(season);
         return seasonJson;
     }
@@ -224,10 +220,10 @@ public class DefaultAdminService implements AdminService {
     @Override
     public SeasonJson updateSeason(SeasonJson seasonJson) {
         Season season = seasonManagerService.findSeasonById(seasonJson.getId());
-        season = new SeasonJsonMapper().reverse(seasonJson, season);
+        season = SeasonJsonMapper.reverse(seasonJson, season);
         masterDataManagerService.updateSeason(season);
 
-        return new SeasonJsonMapper().map(season, seasonJson);
+        return SeasonJsonMapper.map(season, seasonJson);
     }
 
     @Override
@@ -257,7 +253,7 @@ public class DefaultAdminService implements AdminService {
     }
 
     // TODO Gehoert sowas eher in einen JSON-Mapper? JsonAssembler | JsonBuilder?
-    private void updateGame(GameJson match, Game game) {
+    private void updateGame(IGameJson match, Game game) {
         game.setPlayed(match.isFinished());
         game.setKo(match.isKo());
         game.setResult(match.getResult().getHomeGoals(),
@@ -278,11 +274,8 @@ public class DefaultAdminService implements AdminService {
         CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(season.getReference());
         Set<User> activatedUsers = communityService.findMembers(defaultPlayerGroup);
         List<User> users = communityService.findAllUsers();
-
         users.removeAll(activatedUsers);
-
-        SeasonMemberJsonMapper mapper = new SeasonMemberJsonMapper();
-        return mapper.map(users);
+        return SeasonMemberJsonMapper.map(users);
     }
 
     @Override
@@ -290,9 +283,7 @@ public class DefaultAdminService implements AdminService {
         Season season = seasonManagerService.findSeasonById(seasonId);
         CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(season.getReference());
         Set<User> activatedUsers = communityService.findMembers(defaultPlayerGroup);
-
-        SeasonMemberJsonMapper mapper = new SeasonMemberJsonMapper();
-        return mapper.map(activatedUsers);
+        return SeasonMemberJsonMapper.map(activatedUsers);
     }
 
     @Override
@@ -329,12 +320,12 @@ public class DefaultAdminService implements AdminService {
 
 	@Override
 	public List<GroupTypeJson> findGroupTypes() {
-		return new GroupTypeJsonMapper().map(masterDataManagerService.findAllGroupTypes());
+		return GroupTypeJsonMapper.map(masterDataManagerService.findAllGroupTypes());
 	}
 
 	@Override
 	public GroupTypeJson findGroupType(long groupTypeId) {
-		return new GroupTypeJsonMapper().map(masterDataManagerService.findGroupType(groupTypeId), new GroupTypeJson());
+		return GroupTypeJsonMapper.map(masterDataManagerService.findGroupType(groupTypeId), new GroupTypeJson());
 	}
 
 	@Override
@@ -342,7 +333,7 @@ public class DefaultAdminService implements AdminService {
 		Season season = seasonManagerService.findSeasonById(seasonJson.getId());
 		GroupType groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
 		Season season2 = seasonManagerService.addGroupType(season, groupType);
-		return new SeasonJsonMapper().map(season2, new SeasonJson());
+		return SeasonJsonMapper.map(season2, new SeasonJson());
 	}
 
 	@Override
@@ -357,15 +348,12 @@ public class DefaultAdminService implements AdminService {
 		Season season = seasonManagerService.findSeasonById(seasonId);
 		List<Group> groups = seasonManagerService.findGroups(season);
 		SeasonGroupTeamJson seasonGroupTeamJson = new SeasonGroupTeamJson();
-
-		GroupTypeJsonMapper groupTypeMapper = new GroupTypeJsonMapper();
-		TeamJsonMapper teamMapper = new TeamJsonMapper();
 		
 		for (Group group : groups) {
 			List<Team> teams = seasonManagerService.findTeams(group);
 			GroupTeamJson groupTeamJson = new GroupTeamJson();
-			groupTeamJson.setGroupType(groupTypeMapper.map(group.getGroupType(), new GroupTypeJson()));
-			groupTeamJson.setTeams(teamMapper.map(teams));
+			groupTeamJson.setGroupType(GroupTypeJsonMapper.map(group.getGroupType(), new GroupTypeJson()));
+			groupTeamJson.setTeams(TeamJsonMapper.map(teams));
 			seasonGroupTeamJson.getGroupTeams().add(groupTeamJson);
 		}
 		
@@ -380,7 +368,7 @@ public class DefaultAdminService implements AdminService {
 		List<Team> teamCandidates = masterDataManagerService.findTeams(season.getTeamType());
 		teamCandidates.removeAll(teams);
 		
-		return new TeamJsonMapper().map(teamCandidates);
+		return TeamJsonMapper.map(teamCandidates);
 	}
 
 	@Override

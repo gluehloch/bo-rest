@@ -37,16 +37,14 @@ import de.winkler.betoffice.storage.GameTipp;
  */
 public class GameTippJsonMapper {
 
-    private static final GameResultJsonMapper gameResultJsonMapper = new GameResultJsonMapper();
-
-    public GameTippJson map(GameTipp tipp, GameTippJson gameTippJson) {
+    public static GameTippJson map(GameTipp tipp, GameTippJson gameTippJson) {
         gameTippJson.setNickname(tipp.getUser().getNickname().value());
-        gameTippJson.setTipp(gameResultJsonMapper.map(tipp.getTipp(), new GameResultJson()));
+        gameTippJson.setTipp(GameResultJsonMapper.map(tipp.getTipp(), new GameResultJson()));
         gameTippJson.setPoints(tipp.getPoints());
         return gameTippJson;
     }
 
-    public List<GameTippJson> map(List<GameTipp> gameTipp) {
+    public static List<GameTippJson> map(List<GameTipp> gameTipp) {
         return gameTipp.stream().map((tipp) -> {
             GameTippJson json = new GameTippJson();
             json = map(tipp, json);

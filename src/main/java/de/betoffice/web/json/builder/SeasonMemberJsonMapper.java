@@ -36,18 +36,18 @@ import de.winkler.betoffice.storage.User;
  */
 public class SeasonMemberJsonMapper {
 
-    public SeasonMemberJson map(User user, SeasonMemberJson seasonMemberJson) {
+    public static SeasonMemberJson map(User user, SeasonMemberJson seasonMemberJson) {
         seasonMemberJson.setId(user.getId());
         seasonMemberJson.setNickname(user.getNickname().value());
         return seasonMemberJson;
     }
 
-    public List<SeasonMemberJson> map(Collection<User> users) {
-        return users.stream().map((user) -> {
-            SeasonMemberJson json = new SeasonMemberJson();
-            json = map(user, json);
-            return json;
-        }).toList();
+    public static List<SeasonMemberJson> map(Collection<User> users) {
+        return users.stream().map(SeasonMemberJsonMapper::map).toList();
+    }
+
+    private static SeasonMemberJson map(User user) {
+    	return map(user, new SeasonMemberJson());
     }
 
 }

@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2013-2017 by Andre Winkler. All rights
+ * Project betoffice-jweb-misc Copyright (c) 2013-2023 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -24,7 +24,6 @@
 package de.betoffice.web.json.builder;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import de.betoffice.web.json.GroupTypeJson;
 import de.winkler.betoffice.storage.GroupType;
@@ -36,17 +35,18 @@ import de.winkler.betoffice.storage.GroupType;
  */
 public class GroupTypeJsonMapper {
 
-    public GroupTypeJson map(GroupType groupType, GroupTypeJson groupTypeJson) {
+    public static GroupTypeJson map(GroupType groupType, GroupTypeJson groupTypeJson) {
         groupTypeJson.setId(groupType.getId());
         groupTypeJson.setName(groupType.getName());
         return groupTypeJson;
     }
 
-    public List<GroupTypeJson> map(List<GroupType> groupTypes) {
-        return groupTypes.stream().map((groupType) -> {
-            GroupTypeJson json = new GroupTypeJson();
-            json = map(groupType, json);
-            return json;
-        }).collect(Collectors.toList());
+    public static List<GroupTypeJson> map(List<GroupType> groupTypes) {
+        return groupTypes.stream().map(GroupTypeJsonMapper::map).toList();
     }
+    
+    private static GroupTypeJson map(GroupType groupType) {
+    	return map(groupType, new GroupTypeJson());
+    }
+
 }

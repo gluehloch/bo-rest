@@ -34,7 +34,7 @@ import de.winkler.betoffice.storage.enums.RoleType;
  */
 public class SecurityTokenJsonMapper {
 
-    public SecurityTokenJson map(SecurityToken securityToken, SecurityTokenJson securityTokenJson) {
+    public static SecurityTokenJson map(SecurityToken securityToken, SecurityTokenJson securityTokenJson) {
         securityTokenJson.setLoginTime(securityToken.getLoginTime());
         securityTokenJson.setNickname(securityToken.getUser().getNickname().value());
 

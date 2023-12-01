@@ -31,6 +31,7 @@ import java.time.ZonedDateTime;
 import org.junit.jupiter.api.Test;
 
 import de.betoffice.web.json.GameJson;
+import de.betoffice.web.json.IGameJson;
 import de.winkler.betoffice.storage.Game;
 import de.winkler.betoffice.storage.GameList;
 import de.winkler.betoffice.storage.GameResult;
@@ -66,7 +67,7 @@ public class GameJsonMapperTest {
         game.setLocation(gelsenkirchen);
 
         GameJsonMapper gameJsonMapper = new GameJsonMapper();
-        GameJson gameJson = gameJsonMapper.map(game, new GameJson());
+        IGameJson gameJson = gameJsonMapper.map(game, new GameJson());
 
         assertThat(gameJson.isFinished()).isTrue();
         assertThat(gameJson.getDateTime()).isEqualTo(now);
