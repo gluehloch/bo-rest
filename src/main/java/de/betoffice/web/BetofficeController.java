@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb Copyright (c) 2015-2021 by Andre Winkler. All rights
+ * Project betoffice-jweb Copyright (c) 2015-2023 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -23,7 +23,6 @@
 
 package de.betoffice.web;
 
-import java.net.http.HttpRequest;
 import java.util.List;
 
 import jakarta.servlet.http.HttpServletRequest;
