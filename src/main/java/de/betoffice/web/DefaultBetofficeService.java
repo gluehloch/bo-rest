@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2000-2022 by Andre Winkler. All
+ * Project betoffice-jweb-misc Copyright (c) 2000-2024 by Andre Winkler. All
  * rights reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -35,7 +35,6 @@ import org.springframework.stereotype.Component;
 
 import de.betoffice.web.json.DetailGameJson;
 import de.betoffice.web.json.GameJson;
-import de.betoffice.web.json.GoalJson;
 import de.betoffice.web.json.GroupTeamTableJson;
 import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.IGameJson;
@@ -49,7 +48,6 @@ import de.betoffice.web.json.TeamJson;
 import de.betoffice.web.json.TeamResultJson;
 import de.betoffice.web.json.UserJson;
 import de.betoffice.web.json.UserTableJson;
-import de.betoffice.web.json.builder.GameJsonMapper;
 import de.betoffice.web.json.builder.GoalJsonMapper;
 import de.winkler.betoffice.service.AuthService;
 import de.winkler.betoffice.service.CommunityCalculatorService;
@@ -268,15 +266,15 @@ public class DefaultBetofficeService implements BetofficeService {
         Game game = seasonManagerService.findMatch(gameId);
         return JsonBuilder.toJson(game);
     }
-    
-	@Override
-	public DetailGameJson findDetailGame(Long gameId) {
-		Game game = seasonManagerService.findMatch(gameId);
-		List<Goal> goals = seasonManagerService.findGoalsOfMatch(game);
-		DetailGameJson json = JsonBuilder.toDetailGameJson(game);
-		json.setGoals(GoalJsonMapper.map(goals));
-		return json;
-	}
+
+    @Override
+    public DetailGameJson findDetailGame(Long gameId) {
+        Game game = seasonManagerService.findMatch(gameId);
+        List<Goal> goals = seasonManagerService.findGoalsOfMatch(game);
+        DetailGameJson json = JsonBuilder.toDetailGameJson(game);
+        json.setGoals(GoalJsonMapper.map(goals));
+        return json;
+    }
 
     @Override
     public RoundJson findTipp(Long roundId, String nickName) {
@@ -352,13 +350,13 @@ public class DefaultBetofficeService implements BetofficeService {
     @Override
     public Optional<RoundJson> findTippRound(Long seasonId) {
         return tippService.findNextTippRound(seasonId, dateTimeProvider.currentDateTime())
-            .map(gameList -> {
-                RoundJson roundJson = JsonBuilder.toJson(gameList);
-                List<GameJson> gameJson = JsonBuilder.toJsonWithGames(gameList.unmodifiableList());
-                roundJson.getGames().addAll(gameJson);
-                roundJson.setTippable(isFinished(roundJson));
-                return roundJson;
-            });
+                .map(gameList -> {
+                    RoundJson roundJson = JsonBuilder.toJson(gameList);
+                    List<GameJson> gameJson = JsonBuilder.toJsonWithGames(gameList.unmodifiableList());
+                    roundJson.getGames().addAll(gameJson);
+                    roundJson.setTippable(isFinished(roundJson));
+                    return roundJson;
+                });
     }
 
     @Override
