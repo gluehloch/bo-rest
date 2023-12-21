@@ -11,12 +11,14 @@
         -->
 
         <!-- UNDER DEVELOPMENT -->
-        <release version="betoffice-jweb-1.4.1" date="2023-01-??" description="community edition / Bugfix">
+
+        <!-- RELEASED -->
+        <release version="betoffice-jweb-1.4.1" date="2023-12-21" description="community edition / Bugfix">
             <action dev="andrewinkler" type="add" date="2023-01-12">
                 Update of betoffice-storage 3.0.1 and betoffice-openligadb 3.0.1.
             </action>
         </release>
-        
+
         <!-- RELEASED -->
         <release version="betoffice-jweb-1.4.0" date="2023-01-07" description="Merge betoffice-jweb and betoffice-jweb-misc / community edition">
             <action dev="andrewinkler" type="add" date="2022-10-19">
