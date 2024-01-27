@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb Copyright (c) 2015-2023 by Andre Winkler. All rights
+ * Project betoffice-jweb Copyright (c) 2015-2024 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -227,7 +227,9 @@ public class BetofficeController {
      * @return          The tipp of a user for a round
      */
     @RequestMapping(value = "/tipp/{roundId}/{nickName}", method = RequestMethod.GET)
-    public RoundJson findTipp(@PathVariable("roundId") Long roundId, @PathVariable("nickName") String nickName) {
+    public RoundJson findTipp(
+                @PathVariable("roundId") Long roundId,
+                @PathVariable("nickName") String nickName) {
         return betofficeBasicJsonService.findTipp(roundId, nickName);
     }
 
@@ -239,8 +241,9 @@ public class BetofficeController {
      * @return          The current tipp
      */
     @RequestMapping(value = "/tipp/{seasonId}/{nickname}/current", method = RequestMethod.GET)
-    public RoundJson findCurrentTipp(@PathVariable("seasonId") Long seasonId,
-            @PathVariable("nickname") String nickName) {
+    public RoundJson findCurrentTipp(
+                @PathVariable("seasonId") Long seasonId,
+                @PathVariable("nickname") String nickName) {
         return betofficeBasicJsonService.findCurrentTipp(seasonId, nickName).orElse(null);
     }
 
@@ -252,7 +255,9 @@ public class BetofficeController {
      * @return          The next tipp ahead of <code>roundId</code>
      */
     @RequestMapping(value = "/tipp/{roundId}/{nickName}/next", method = RequestMethod.GET)
-    public RoundJson findNextTipp(@PathVariable("roundId") Long roundId, @PathVariable("nickName") String nickName) {
+    public RoundJson findNextTipp(
+                @PathVariable("roundId") Long roundId,
+                @PathVariable("nickName") String nickName) {
         return betofficeBasicJsonService.findNextTipp(roundId, nickName).orElse(null);
     }
 
@@ -264,7 +269,9 @@ public class BetofficeController {
      * @return          The previous tipp behind of <code>roundId</code>
      */
     @RequestMapping(value = "/tipp/{roundId}/{nickName}/prev", method = RequestMethod.GET)
-    public RoundJson findPrevTipp(@PathVariable("roundId") Long roundId, @PathVariable("nickName") String nickName) {
+    public RoundJson findPrevTipp(
+                @PathVariable("roundId") Long roundId,
+                @PathVariable("nickName") String nickName) {
         return betofficeBasicJsonService.findPrevTipp(roundId, nickName).orElse(null);
     }
 
@@ -274,9 +281,10 @@ public class BetofficeController {
     }
 
     @RequestMapping(value = "/tipp/submit", method = RequestMethod.POST, headers = { "Content-type=application/json" })
-    public RoundJson submitTipp(@RequestBody SubmitTippRoundJson tippRoundJson,
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
+    public RoundJson submitTipp(
+                @RequestBody SubmitTippRoundJson tippRoundJson,
+                @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
+                @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
         return betofficeBasicJsonService.submitTipp(token, tippRoundJson);
     }
