@@ -47,10 +47,12 @@ import de.betoffice.web.json.TeamJson;
 public class TippController {
 
     private final BetofficeService betofficeBasicJsonService;
+    private final OfficeTippService officeTippService;
 
     @Autowired
-    public TippController(BetofficeService betofficeService) {
+    public TippController(BetofficeService betofficeService, OfficeTippService officeTippService) {
         this.betofficeBasicJsonService = betofficeService;
+        this.officeTippService = officeTippService;
     }
 
     /**
@@ -64,7 +66,7 @@ public class TippController {
     public RoundJson findTipp(
                 @PathVariable("roundId") Long roundId,
                 @PathVariable("nickName") String nickName) {
-        return betofficeBasicJsonService.findTipp(roundId, nickName);
+        return officeTippService.findTipp(roundId, nickName);
     }
 
     /**
@@ -78,7 +80,7 @@ public class TippController {
     public RoundJson findCurrentTipp(
                 @PathVariable("seasonId") Long seasonId,
                 @PathVariable("nickname") String nickName) {
-        return betofficeBasicJsonService.findCurrentTipp(seasonId, nickName).orElse(null);
+        return officeTippService.findCurrentTipp(seasonId, nickName).orElse(null);
     }
 
     /**
@@ -92,7 +94,7 @@ public class TippController {
     public RoundJson findNextTipp(
                 @PathVariable("roundId") Long roundId,
                 @PathVariable("nickName") String nickName) {
-        return betofficeBasicJsonService.findNextTipp(roundId, nickName).orElse(null);
+        return officeTippService.findNextTipp(roundId, nickName).orElse(null);
     }
 
     /**
@@ -106,7 +108,7 @@ public class TippController {
     public RoundJson findPrevTipp(
                 @PathVariable("roundId") Long roundId,
                 @PathVariable("nickName") String nickName) {
-        return betofficeBasicJsonService.findPrevTipp(roundId, nickName).orElse(null);
+        return officeTippService.findPrevTipp(roundId, nickName).orElse(null);
     }
 
     @RequestMapping(value = "/team/all", method = RequestMethod.GET)
@@ -120,7 +122,7 @@ public class TippController {
                 @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
                 @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
-        return betofficeBasicJsonService.submitTipp(token, tippRoundJson);
+        return officeTippService.submitTipp(token, tippRoundJson);
     }
 
     /**

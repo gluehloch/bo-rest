@@ -104,6 +104,9 @@ class TippControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
+    private OfficeTippService officeTippService;
+
+    @Autowired
     private BetofficeService betofficeService;
 
     @Autowired
@@ -276,8 +279,8 @@ class TippControllerTest {
         tearDown();
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(
-                new SeasonController(betofficeService),
-                new TippController(betofficeService),
+                new SeasonController(betofficeService, officeTippService),
+                new TippController(betofficeService, officeTippService),
                 new AuthenticationController(betofficeAuthenticationService))
                 .build();
 
