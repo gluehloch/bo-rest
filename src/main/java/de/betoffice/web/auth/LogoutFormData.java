@@ -49,8 +49,7 @@ public class LogoutFormData implements Serializable {
     }
 
     /**
-     * @param nickname
-     *            the nickname to set
+     * @param nickname the nickname to set
      */
     public void setNickname(String nickname) {
         this.nickname = nickname;
@@ -64,8 +63,7 @@ public class LogoutFormData implements Serializable {
     }
 
     /**
-     * @param token
-     *            the token to set
+     * @param token the token to set
      */
     public void setToken(String token) {
         this.token = token;

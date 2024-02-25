@@ -27,7 +27,6 @@ import java.util.Optional;
 
 import de.betoffice.web.AccessDeniedException;
 import de.betoffice.web.json.RoundJson;
-import de.betoffice.web.json.SubmitTippRoundJson;
 
 public interface OfficeTippService {
 

@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2013-2015 by Andre Winkler. All
+ * Project betoffice-jweb-misc Copyright (c) 2013-2024 by Andre Winkler. All
  * rights reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -21,7 +21,7 @@
  * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package de.betoffice.web.json;
+package de.betoffice.web.tipp;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -49,8 +49,7 @@ public class SubmitTippRoundJson implements Serializable {
     }
 
     /**
-     * @param nickname
-     *            the nickname to set
+     * @param nickname the nickname to set
      */
     public void setNickname(String nickname) {
         this.nickname = nickname;
@@ -64,8 +63,7 @@ public class SubmitTippRoundJson implements Serializable {
     }
 
     /**
-     * @param roundId
-     *            the roundId to set
+     * @param roundId the roundId to set
      */
     public void setRoundId(long roundId) {
         this.roundId = roundId;
@@ -79,8 +77,7 @@ public class SubmitTippRoundJson implements Serializable {
     }
 
     /**
-     * @param submitTippGames
-     *            the tippGameJsons to set
+     * @param submitTippGames the tippGameJsons to set
      */
     public void setSubmitTippGames(List<SubmitTippGameJson> submitTippGames) {
         this.submitTippGames = submitTippGames;

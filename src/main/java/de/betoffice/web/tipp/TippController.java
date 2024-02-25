@@ -40,7 +40,6 @@ import org.springframework.web.bind.annotation.RestController;
 import de.betoffice.web.AccessDeniedException;
 import de.betoffice.web.BetofficeHttpConsts;
 import de.betoffice.web.json.RoundJson;
-import de.betoffice.web.json.SubmitTippRoundJson;
 import de.betoffice.web.json.TeamJson;
 import de.betoffice.web.season.BetofficeService;
 

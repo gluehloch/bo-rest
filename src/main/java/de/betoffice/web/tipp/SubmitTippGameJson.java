@@ -21,9 +21,11 @@
  * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package de.betoffice.web.json;
+package de.betoffice.web.tipp;
 
 import java.io.Serializable;
+
+import de.betoffice.web.json.GameResultJson;
 
 /**
  * Holds the submit tipp for a game for one user.
@@ -45,8 +47,7 @@ public class SubmitTippGameJson implements Serializable {
     }
 
     /**
-     * @param gameId
-     *            the gameId to set
+     * @param gameId the gameId to set
      */
     public void setGameId(long gameId) {
         this.gameId = gameId;
@@ -60,8 +61,7 @@ public class SubmitTippGameJson implements Serializable {
     }
 
     /**
-     * @param tippResult
-     *            the tippResult to set
+     * @param tippResult the tippResult to set
      */
     public void setTippResult(GameResultJson tippResult) {
         this.tippResult = tippResult;

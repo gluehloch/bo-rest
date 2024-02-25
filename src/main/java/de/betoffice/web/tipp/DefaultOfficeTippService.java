@@ -37,8 +37,6 @@ import de.betoffice.web.json.IGameJson;
 import de.betoffice.web.json.JsonAssembler;
 import de.betoffice.web.json.JsonBuilder;
 import de.betoffice.web.json.RoundJson;
-import de.betoffice.web.json.SubmitTippGameJson;
-import de.betoffice.web.json.SubmitTippRoundJson;
 import de.winkler.betoffice.service.AuthService;
 import de.winkler.betoffice.service.CommunityService;
 import de.winkler.betoffice.service.DateTimeProvider;
