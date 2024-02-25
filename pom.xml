@@ -88,13 +88,13 @@
         <dependency>
             <groupId>de.winkler.betoffice</groupId>
             <artifactId>betoffice-storage</artifactId>
-            <version>3.0.2</version>
+            <version>3.0.3-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>de.betoffice</groupId>
             <artifactId>betoffice-openligadb</artifactId>
-            <version>3.0.1</version>
+            <version>3.0.2-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
