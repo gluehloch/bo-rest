@@ -55,9 +55,5 @@ public class UserJsonMapper {
             return json;
         }).collect(Collectors.toList());
     }
-    
-    private static UserJson map(UserResult userResult) {
-    	return map(userResult, new UserJson());
-    }
 
 }

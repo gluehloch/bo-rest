@@ -22,7 +22,7 @@
  *
  */
 
-package de.betoffice.web;
+package de.betoffice.web.research;
 
 import java.util.List;
 
@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.betoffice.web.json.HistoryTeamVsTeamJson;
 import de.betoffice.web.json.HistoryTeamVsTeamJsonMapper;
+import de.betoffice.web.json.JsonBuilder;
 import de.betoffice.web.json.TeamJson;
 import de.winkler.betoffice.service.MasterDataManagerService;
 import de.winkler.betoffice.service.SeasonManagerService;

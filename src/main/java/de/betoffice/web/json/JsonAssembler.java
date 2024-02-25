@@ -21,18 +21,12 @@
  * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package de.betoffice.web;
+package de.betoffice.web.json;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import de.betoffice.web.json.GameJson;
-import de.betoffice.web.json.GameResultJson;
-import de.betoffice.web.json.GameTippJson;
-import de.betoffice.web.json.IGameJson;
-import de.betoffice.web.json.RoundJson;
-import de.betoffice.web.json.SeasonJson;
 import de.winkler.betoffice.storage.Game;
 import de.winkler.betoffice.storage.GameList;
 import de.winkler.betoffice.storage.GameTipp;

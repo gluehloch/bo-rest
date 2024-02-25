@@ -22,7 +22,7 @@
  * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package de.betoffice.web;
+package de.betoffice.web.auth;
 
 import java.io.Serializable;
 

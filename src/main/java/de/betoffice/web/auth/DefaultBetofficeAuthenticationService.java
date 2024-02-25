@@ -21,7 +21,7 @@
  * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package de.betoffice.web;
+package de.betoffice.web.auth;
 
 import java.util.Optional;
 
@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import de.betoffice.web.json.JsonBuilder;
 import de.betoffice.web.json.SecurityTokenJson;
 import de.winkler.betoffice.service.AuthService;
 import de.winkler.betoffice.service.CommunityService;

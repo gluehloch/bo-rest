@@ -26,10 +26,10 @@ package de.betoffice.web.json.builder;
 import java.util.List;
 import java.util.function.Supplier;
 
-import de.betoffice.web.JsonBuilder;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GameResultJson;
 import de.betoffice.web.json.IGameJson;
+import de.betoffice.web.json.JsonBuilder;
 import de.winkler.betoffice.storage.Game;
 
 /**

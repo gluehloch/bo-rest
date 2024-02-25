@@ -21,10 +21,11 @@
  * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package de.betoffice.web;
+package de.betoffice.web.tipp;
 
 import java.util.Optional;
 
+import de.betoffice.web.AccessDeniedException;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SubmitTippRoundJson;
 

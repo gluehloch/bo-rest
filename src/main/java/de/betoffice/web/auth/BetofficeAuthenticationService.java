@@ -1,4 +1,4 @@
-package de.betoffice.web;
+package de.betoffice.web.auth;
 
 import de.betoffice.web.json.SecurityTokenJson;
 

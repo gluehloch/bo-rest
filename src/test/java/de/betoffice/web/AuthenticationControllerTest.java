@@ -27,6 +27,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import de.betoffice.web.auth.AuthenticationController;
+import de.betoffice.web.auth.AuthenticationForm;
+import de.betoffice.web.auth.BetofficeAuthenticationService;
+import de.betoffice.web.auth.LogoutFormData;
 import de.betoffice.web.json.SecurityTokenJson;
 
 @ExtendWith(SpringExtension.class)

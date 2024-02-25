@@ -21,7 +21,7 @@
  * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package de.betoffice.web;
+package de.betoffice.web.community;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,6 +43,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import de.betoffice.web.BetofficeHttpConsts;
+import de.betoffice.web.PageParam;
+import de.betoffice.web.PageParamObjectMapper;
+import de.betoffice.web.SortParam;
 import de.betoffice.web.json.CommunityJson;
 import de.betoffice.web.json.builder.CommunityJsonMapper;
 import de.winkler.betoffice.service.CommunityService;

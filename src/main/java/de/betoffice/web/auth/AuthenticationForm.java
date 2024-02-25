@@ -22,7 +22,7 @@
  *
  */
 
-package de.betoffice.web;
+package de.betoffice.web.auth;
 
 import java.io.Serializable;
 

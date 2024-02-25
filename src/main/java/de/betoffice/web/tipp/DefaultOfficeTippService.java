@@ -21,7 +21,7 @@
  * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package de.betoffice.web;
+package de.betoffice.web.tipp;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -31,8 +31,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import de.betoffice.web.AccessDeniedException;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.IGameJson;
+import de.betoffice.web.json.JsonAssembler;
+import de.betoffice.web.json.JsonBuilder;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SubmitTippGameJson;
 import de.betoffice.web.json.SubmitTippRoundJson;
@@ -46,8 +49,8 @@ import de.winkler.betoffice.storage.GameTipp;
 import de.winkler.betoffice.storage.Nickname;
 import de.winkler.betoffice.storage.Session;
 import de.winkler.betoffice.storage.TippDto;
-import de.winkler.betoffice.storage.User;
 import de.winkler.betoffice.storage.TippDto.GameTippDto;
+import de.winkler.betoffice.storage.User;
 
 @Service
 public class DefaultOfficeTippService implements OfficeTippService {

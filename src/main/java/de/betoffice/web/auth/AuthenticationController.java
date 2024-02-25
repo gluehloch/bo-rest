@@ -21,7 +21,7 @@
  * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package de.betoffice.web;
+package de.betoffice.web.auth;
 
 import java.time.ZonedDateTime;
 
@@ -40,6 +40,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.betoffice.web.BetofficeHttpConsts;
+import de.betoffice.web.BetofficeUrlPath;
 import de.betoffice.web.json.PingJson;
 import de.betoffice.web.json.SecurityTokenJson;
 import de.betoffice.web.security.SecurityConstants;

@@ -47,11 +47,11 @@ public class PageParam {
         this.size = size;
     }
 
-    PageRequest toPageRequest() {
+    public PageRequest toPageRequest() {
         return PageRequest.of(page, size);
     }
 
-    PageRequest toPageRequest(Sort sort) {
+    public PageRequest toPageRequest(Sort sort) {
         if (sort == null) {
             return PageRequest.of(page, page, Sort.unsorted());
         }
