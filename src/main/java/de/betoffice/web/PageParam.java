@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb Copyright (c) 2015-2021 by Andre Winkler. All rights
+ * Project betoffice-jweb Copyright (c) 2015-2024 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -27,6 +27,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 public class PageParam {
+
     private int page = 0;
     private int size = 10;
 
@@ -51,6 +52,9 @@ public class PageParam {
     }
 
     PageRequest toPageRequest(Sort sort) {
+        if (sort == null) {
+            return PageRequest.of(page, page, Sort.unsorted());
+        }
         return PageRequest.of(page, size, sort);
     }
 

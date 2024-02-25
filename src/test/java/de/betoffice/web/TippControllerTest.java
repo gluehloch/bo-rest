@@ -1,7 +1,7 @@
 /*
  * ============================================================================
  * Project betoffice-jweb
- * Copyright (c) 2000-2022 by Andre Winkler. All rights reserved.
+ * Copyright (c) 2000-2024 by Andre Winkler. All rights reserved.
  * ============================================================================
  *          GNU GENERAL PUBLIC LICENSE
  *  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
@@ -275,7 +275,11 @@ class TippControllerTest {
     void setup() throws Exception {
         tearDown();
         MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(new BetofficeController(betofficeService), new AuthenticationController(betofficeAuthenticationService)).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(
+                new SeasonController(betofficeService),
+                new TippController(betofficeService),
+                new AuthenticationController(betofficeAuthenticationService))
+                .build();
 
         data = new T();
 
