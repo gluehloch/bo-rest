@@ -46,6 +46,7 @@ import de.betoffice.web.json.PingJson;
 import de.betoffice.web.json.RoundAndTableJson;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonJson;
+import de.betoffice.web.json.TeamJson;
 import de.betoffice.web.json.UserTableJson;
 import de.betoffice.web.tipp.OfficeTippService;
 
@@ -208,6 +209,11 @@ public class SeasonController {
     public UserTableJson findUserTableByPrevRound(@PathVariable("roundId") Long roundId) {
 
         return betofficeService.calcUserRankingByPrevRound(roundId);
+    }
+
+    @RequestMapping(value = "/team/all", method = RequestMethod.GET)
+    public List<TeamJson> findAllTeams() {
+        return betofficeService.findAllTeams();
     }
 
     /**

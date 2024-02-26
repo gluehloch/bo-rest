@@ -23,8 +23,6 @@
 
 package de.betoffice.web.tipp;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -40,20 +38,16 @@ import org.springframework.web.bind.annotation.RestController;
 import de.betoffice.web.AccessDeniedException;
 import de.betoffice.web.BetofficeHttpConsts;
 import de.betoffice.web.json.RoundJson;
-import de.betoffice.web.json.TeamJson;
-import de.betoffice.web.season.BetofficeService;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/office")
 public class TippController {
 
-    private final BetofficeService betofficeBasicJsonService;
     private final OfficeTippService officeTippService;
 
     @Autowired
-    public TippController(BetofficeService betofficeService, OfficeTippService officeTippService) {
-        this.betofficeBasicJsonService = betofficeService;
+    public TippController(OfficeTippService officeTippService) {
         this.officeTippService = officeTippService;
     }
 
@@ -111,11 +105,6 @@ public class TippController {
                 @PathVariable("roundId") Long roundId,
                 @PathVariable("nickName") String nickName) {
         return officeTippService.findPrevTipp(roundId, nickName).orElse(null);
-    }
-
-    @RequestMapping(value = "/team/all", method = RequestMethod.GET)
-    public List<TeamJson> findAllTeams() {
-        return betofficeBasicJsonService.findAllTeams();
     }
 
     @RequestMapping(value = "/tipp/submit", method = RequestMethod.POST, headers = { "Content-type=application/json" })

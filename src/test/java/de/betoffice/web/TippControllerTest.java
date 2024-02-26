@@ -288,7 +288,7 @@ class TippControllerTest {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(
                 new SeasonController(betofficeService, officeTippService),
-                new TippController(betofficeService, officeTippService),
+                new TippController(officeTippService),
                 new AuthenticationController(betofficeAuthenticationService))
                 .build();
 
