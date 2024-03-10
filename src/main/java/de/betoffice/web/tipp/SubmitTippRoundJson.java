@@ -83,11 +83,6 @@ public class SubmitTippRoundJson implements Serializable {
         this.submitTippGames = submitTippGames;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return "TippRoundJson [nickname=" + nickname + ", roundId=" + roundId
