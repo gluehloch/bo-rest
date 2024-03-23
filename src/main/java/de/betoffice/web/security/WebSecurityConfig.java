@@ -136,6 +136,7 @@ public class WebSecurityConfig {
 );
                 */
 
+        // TODO mvcReequestMatcher oder antMatcher() Ich habe schon wieder vergessen, wer wann wo verwendet wird.
         http.authorizeHttpRequests(authz -> authz
                 .requestMatchers(antMatcher(HttpMethod.GET,  "/bo" + BetofficeUrlPath.URL_OFFICE + "/**")).permitAll()
                 // Authentication
