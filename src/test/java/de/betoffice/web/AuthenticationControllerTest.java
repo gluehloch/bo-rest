@@ -9,14 +9,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.apache.xpath.operations.String;
+import org.codehaus.jackson.node.NodeCursor.Object;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -27,15 +31,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import de.betoffice.database.config.TestPropertiesConfiguration;
 import de.betoffice.web.auth.AuthenticationController;
 import de.betoffice.web.auth.AuthenticationForm;
 import de.betoffice.web.auth.BetofficeAuthenticationService;
 import de.betoffice.web.auth.LogoutFormData;
 import de.betoffice.web.json.SecurityTokenJson;
+import de.winkler.betoffice.conf.PersistenceJPAConfiguration;
 
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
-@SpringJUnitConfig(locations = { "/betoffice-test-properties.xml", "/betoffice.xml" })
+@ActiveProfiles(profiles = "test")
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = { PersistenceJPAConfiguration.class, TestPropertiesConfiguration.class })
+@ComponentScan({"de.winkler.betoffice", "de.betoffice"})
 public class AuthenticationControllerTest {
 
     private static final String TOKEN = "TOKEN";
