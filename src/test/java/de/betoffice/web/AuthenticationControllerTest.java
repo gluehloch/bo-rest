@@ -11,15 +11,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,20 +23,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import de.betoffice.database.config.TestPropertiesConfiguration;
 import de.betoffice.web.auth.AuthenticationController;
 import de.betoffice.web.auth.AuthenticationForm;
 import de.betoffice.web.auth.BetofficeAuthenticationService;
 import de.betoffice.web.auth.LogoutFormData;
 import de.betoffice.web.json.SecurityTokenJson;
-import de.winkler.betoffice.conf.PersistenceJPAConfiguration;
 
-@WebAppConfiguration
-@ActiveProfiles(profiles = "test")
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = { PersistenceJPAConfiguration.class, TestPropertiesConfiguration.class })
-@ComponentScan({"de.winkler.betoffice", "de.betoffice"})
-public class AuthenticationControllerTest {
+public class AuthenticationControllerTest extends AbstractBetofficeSpringWebTestCase {
 
     private static final String TOKEN = "TOKEN";
     private static final String NICKNAME = "Frosch";
