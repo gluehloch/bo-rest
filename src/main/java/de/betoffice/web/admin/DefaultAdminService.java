@@ -74,7 +74,7 @@ import de.winkler.betoffice.storage.User;
  *
  * @author Andre Winkler
  */
-@Component("betofficeAdminService")
+@Component
 public class DefaultAdminService implements AdminService {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultAdminService.class);

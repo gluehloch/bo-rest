@@ -9,6 +9,11 @@
         <!--
              *** STILL UNDER DEVELOPMENT x.x.x (SNAPSHOT) ***
         -->
+        <release version="betoffice-jweb-1.5.0" date="2024-03-??" description="spring annotation configuration">
+            <action dev="andrewinkler" type="add" date="2024-03-??">
+                Spring annotation configuration
+            </action>
+        </release>
 
         <!-- UNDER DEVELOPMENT -->
         <release version="betoffice-jweb-1.4.2" date="2024-03-??" description="better tipp form">
