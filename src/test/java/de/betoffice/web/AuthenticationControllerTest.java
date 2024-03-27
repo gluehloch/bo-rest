@@ -9,8 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.apache.xpath.operations.String;
-import org.codehaus.jackson.node.NodeCursor.Object;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,7 +37,6 @@ import de.betoffice.web.auth.LogoutFormData;
 import de.betoffice.web.json.SecurityTokenJson;
 import de.winkler.betoffice.conf.PersistenceJPAConfiguration;
 
-@ExtendWith(SpringExtension.class)
 @WebAppConfiguration
 @ActiveProfiles(profiles = "test")
 @ExtendWith(SpringExtension.class)
