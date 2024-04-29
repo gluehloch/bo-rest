@@ -11,7 +11,7 @@
         -->
 
         <!-- UNDER DEVELOPMENT -->
-        <release version="betoffice-jweb-1.4.2" date="2024-03-??" description="better tipp form">
+        <release version="betoffice-jweb-1.5.x" date="2024-03-??" description="better tipp form">
             <action dev="andrewinkler" type="add" date="2024-03-??">
                 Better tipp form. Like showing next ten games. The relationship to a round should should not be the focus.
                 More compact information.
