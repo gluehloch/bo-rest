@@ -98,10 +98,12 @@ public class GameJson extends AbstractOpenligaid implements IGameJson {
         return guestTeam;
     }
 
+    @Override
     public GroupTypeJson getGroupType() {
         return groupType;
     }
 
+    @Override
     public void setGroupType(GroupTypeJson groupType) {
         this.groupType = groupType;
     }

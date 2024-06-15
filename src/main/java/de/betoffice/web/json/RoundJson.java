@@ -29,6 +29,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import de.winkler.betoffice.storage.enums.SeasonType;
+
 /**
  * JSON data for a round.
  * 
@@ -39,6 +41,7 @@ public class RoundJson extends AbstractIdentifier {
     private Long seasonId;
     private String seasonName;
     private String seasonYear;
+    private String seasonType;
     
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JsonDateTimeFormat.DATETIME_PATTERN, timezone = JsonDateTimeFormat.TIMZONE)
     private ZonedDateTime dateTime;
@@ -72,6 +75,14 @@ public class RoundJson extends AbstractIdentifier {
 
     public final void setSeasonYear(String seasonYear) {
         this.seasonYear = seasonYear;
+    }
+
+    public final String getSeasonType() {
+        return seasonType;
+    }
+
+    public final void setSeasonType(SeasonType seasonType) {
+        this.seasonType = seasonType.name();
     }
 
     public final ZonedDateTime getDateTime() {

@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2013-2023 by Andre Winkler. All rights
+ * Project betoffice-jweb-misc Copyright (c) 2013-2024 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -62,6 +62,8 @@ public class GameJsonMapper {
 
         gameJson.setHomeTeam(JsonBuilder.toJson(game.getHomeTeam()));
         gameJson.setGuestTeam(JsonBuilder.toJson(game.getGuestTeam()));
+
+        gameJson.setGroupType(JsonBuilder.toJson(game.getGroup().getGroupType()));
 
         return gameJson;
     }

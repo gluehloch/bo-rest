@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.web.AccessDeniedException;
-import de.betoffice.web.json.DetailGameJson;
+import de.betoffice.web.json.GameWithGoalsJson;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.PingJson;
@@ -140,7 +140,7 @@ public class SeasonController {
     }
 
     @RequestMapping(value = "/game-details/{gameId}", method = RequestMethod.GET)
-    public DetailGameJson findGameDetails(@PathVariable("gameId") Long gameId) {
+    public GameWithGoalsJson findGameDetails(@PathVariable("gameId") Long gameId) {
     	return betofficeService.findDetailGame(gameId);
     }
     

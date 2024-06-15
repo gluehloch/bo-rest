@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import de.betoffice.web.json.DetailGameJson;
+import de.betoffice.web.json.GameWithGoalsJson;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GroupTeamTableJson;
 import de.betoffice.web.json.GroupTypeJson;
@@ -254,10 +254,10 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
-    public DetailGameJson findDetailGame(Long gameId) {
+    public GameWithGoalsJson findDetailGame(Long gameId) {
         Game game = seasonManagerService.findMatch(gameId);
         List<Goal> goals = seasonManagerService.findGoalsOfMatch(game);
-        DetailGameJson json = JsonBuilder.toDetailGameJson(game);
+        GameWithGoalsJson json = JsonBuilder.toGameWithGoalsJson(game);
         json.setGoals(GoalJsonMapper.map(goals));
         return json;
     }
