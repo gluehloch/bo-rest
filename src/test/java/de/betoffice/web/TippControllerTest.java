@@ -46,13 +46,9 @@ import javax.sql.DataSource;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -97,10 +93,7 @@ import de.winkler.betoffice.storage.enums.SeasonType;
 /**
  * Die Spring-Security Konfiguration kann auf diese Art und Weise nicht mit getestet werden.
  */
-@ExtendWith(SpringExtension.class)
-@WebAppConfiguration
-@SpringJUnitConfig(locations = { "/betoffice-test-properties.xml", "/betoffice.xml" })
-class TippControllerTest {
+class TippControllerTest extends AbstractBetofficeSpringWebTestCase {
 
     private static final String NICKNAME = "Frosch";
     private static final String PASSWORD = "Password";

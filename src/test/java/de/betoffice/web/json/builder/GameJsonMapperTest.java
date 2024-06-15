@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2000-2020 by Andre Winkler. All
+ * Project betoffice-jweb-misc Copyright (c) 2000-2024 by Andre Winkler. All
  * rights reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -30,6 +30,8 @@ import java.time.ZonedDateTime;
 
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.IGameJson;
 import de.winkler.betoffice.storage.Game;
@@ -47,7 +49,7 @@ import de.winkler.betoffice.storage.Team;
 public class GameJsonMapperTest {
 
     @Test
-    public void testGameJsonMapper() {
+    public void testGameJsonMapper() throws JsonProcessingException {
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Berlin"));
 
         Game game = new Game();
@@ -66,8 +68,7 @@ public class GameJsonMapperTest {
         gelsenkirchen.setName("Parkstadion");
         game.setLocation(gelsenkirchen);
 
-        GameJsonMapper gameJsonMapper = new GameJsonMapper();
-        IGameJson gameJson = gameJsonMapper.map(game, new GameJson());
+        IGameJson gameJson = GameJsonMapper.map(game, new GameJson());
 
         assertThat(gameJson.isFinished()).isTrue();
         assertThat(gameJson.getDateTime()).isEqualTo(now);
