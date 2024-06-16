@@ -65,13 +65,17 @@ class GameTippJsonAssemblerTest {
 
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Berlin"));
 
-        GroupType groupType = new GroupType();
-        groupType.setName("1. Bundesliga");
+        GroupType groupType = new GroupType() {
+            private static final long serialVersionUID = 1L;
+            {
+                setId(1L);
+                setName("1. Bundesliga");
+            }
+        };
         Group group = new Group();
         group.setGroupType(groupType);
         game.setGroup(group);
         game.setDateTime(now);
-        game.setGroup(new Group());
         game.setHomeTeam(new Team("Heim"));
         game.setGuestTeam(new Team("Gast"));
         game.setHalfTimeGoals(new GameResult(1, 1));
