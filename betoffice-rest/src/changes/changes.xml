@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <properties>
+        <title>Change Notes</title>
+        <author email="andre.winkler@web.de">Andre Winkler</author>
+    </properties>
+    <body>
+
+        <!--
+             *** STILL UNDER DEVELOPMENT x.x.x (SNAPSHOT) ***
+        -->
+
+        <!-- UNDER DEVELOPMENT -->
+        <release version="betoffice-jweb-1.5.x" date="2024-03-??" description="better tipp form">
+            <action dev="andrewinkler" type="add" date="2024-03-??">
+                Better tipp form. Like showing next ten games. The relationship to a round should should not be the focus.
+                More compact information.
+            </action>
+            <action dev="andrewinkler" type="update" date="2024-05-15">
+                Added some informations: Game contains the associated groupe (type). Season contains the associated season type. 
+            </action>
+        </release>
+
+        <!-- RELEASED -->
+        <release version="betoffice-jweb-1.5.0" date="2024-04-29" description="spring annotation configuration">
+            <action dev="andrewinkler" type="add" date="2024-04-29">
+                Spring annotation configuration
+            </action>
+        </release>
+
+        <!-- RELEASED -->
+        <release version="betoffice-jweb-1.4.1" date="2023-12-21" description="community edition / Bugfix">
+            <action dev="andrewinkler" type="add" date="2023-01-12">
+                Update of betoffice-storage 3.0.1 and betoffice-openligadb 3.0.1.
+            </action>
+        </release>
+
+        <!-- RELEASED -->
+        <release version="betoffice-jweb-1.4.0" date="2023-01-07" description="Merge betoffice-jweb and betoffice-jweb-misc / community edition">
+            <action dev="andrewinkler" type="add" date="2022-10-19">
+                Merging betoffice-jweb-misc to betoffice-jweb.
+            </action>
+        </release>
+
+        <!-- RELEASED -->
+        <release version="betoffice-jweb-1.3.2" date="2022-10-18"
+                 description="Openligadb fix">
+            <action dev="andrewinkler" type="fix" date="2022-10-18">
+                Fix for openligadb.
+            </action>
+        </release>
+
+        <!-- RELEASED -->
+        <release version="betoffice-jweb-1.3.1" date="2021-12-24"
+                 description="Dependency Updates">
+            <action dev="andrewinkler" type="add" date="2021-12-24">
+                Dependency updates (removed log4j).
+            </action>
+        </release>
+
+        <!-- RELEASED -->
+        <release version="betoffice-jweb" date="2021-07-19"
+                 description="spring security">
+            <action dev="andrewinkler" type="add" date="2021-03-14">
+                Add Spring security. Updated to maven-war-plugin 3.3.1
+            </action>
+        </release>
+
+        <!-- RELEASED -->
+        <release version="betoffice-jweb-misc-1.2.9" date="2020-11-14"
+                 description="Incomplete test and MockMvc">
+            <action dev="andrewinkler" type="fix" date="2020-11-14">
+                Added Spring´s web test:
+                org.springframework.test.web.servlet.setup.MockMvcBuilders
+            </action>
+        </release>
+
+        <!-- RELEASED -->
+        <release version="betoffice-jweb-misc-1.2.8" date="2020-10-18"
+                 description="">
+            <action dev="andrewinkler" type="fix" date="2020-10-18">
+                betoffice-openligadb: 1.6.1 / betoffice-jweb-misc: 1.2.8
+                NullPointerException (GoalBuilder)
+            </action>
+        </release>
+
+        <!-- RELEASED -->
+        <release version="betoffice-jweb-misc-1.2.7" date="2020-10-11"
+                 description="">
+            <action dev="andrewinkler" type="fix" date="2020-10-10">
+                Season update: Several problems with LazyLoadExceptions and
+                GameList.
+                Changed openligadb connection implementation from WSDL to
+                REST/JSON.
+            </action>
+        </release>
+
+        <!-- RELEASED -->
+        <release version="betoffice-jweb-1.2.6" date="2020-10-07"
+                 description="Hibernate Lazy Exceptions">
+            <action dev="andrewinkler" type="fix" date="2020-10-07">
+                Update betoffice-jweb-misc to 12.6.
+            </action>
+        </release>
+
+        <!-- RELEASED -->
+        <release version="betoffice-jweb-1.2.5" date="2020-10-07"
+                 description="JUnit 5, Java 14">
+            <action dev="andrewinkler" type="update" date="2019-06-07">
+                Updated to JUnit 5.
+            </action>
+            <action dev="andrewinkler" type="add" date="2919-07-30">
+                Add community support.
+            </action>
+            <action dev="andrewinkler" type="add" date="2019-10-09">
+                Ping service.
+            </action>
+        </release>
+
+        <!-- RELEASED -->
+        <release version="betoffice-jweb-1.2.4" date="2020-07-27"
+                 description="Date time and the time zone problem">
+            <action dev="andrewinkler" type="fix" date="2020-06-26">
+                Date and time. Only with timezone.
+            </action>
+        </release>
+
+        <!-- RELEASED -->
+        <release version="betoffice-jweb-1.2.3" date="2019-03-22"
+                 description="Java 11">
+            <action dev="andrewinkler" type="update" date="2019-02-15">
+                Java 11. I have to release faster...
+            </action>
+            <action dev="andrewinkler" type="update" date="2018-10-05">
+                Java 10
+            </action>
+            <action dev="andrewinkler" type="add" date="2018-10-05">
+                Added Jenkinsfile for some experiments with Jenkins and
+                a build pipeline.
+            </action>
+        </release>
+
+        <!-- RELEASED -->
+        <release version="betoffice-jweb-1.2.2" date="2018-07-12"
+                 description="">
+            <action dev="andrewinkler" type="add" date="2018-06-15">
+                Don´t forget to set the round before update. Issue
+                <a href="https://bitbucket.org/teamwinkler/angular2/issues/12/tipp-bersicht-wird-nicht-angezeigt">
+                    #12
+                </a>
+            </action>
+        </release>
+
+        <!-- RELEASED -->
+        <release version="betoffice-jweb-1.2.1" date="2018-06-06"
+                 description="Release 1.2.1">
+            <action dev="andrewinkler" type="update" date="2018-06-06">
+                Find all tipps of a round.
+            </action>
+        </release>
+
+        <!-- RELEASED -->
+        <release version="betoffice-jweb-1.2.0" date="2018-05-11"
+                 description="Release 1.2.0">
+            <action dev="andrewinkler" type="update" date="2018-04-13">
+                Support for ko games (overtime and penalty). New service method
+                for game operations (find and update).
+            </action>
+        </release>
+
+        <!-- RELEASED -->
+        <release version="betoffice-jweb-1.1.2" date="2018-04-01"
+                 description="Release 1.1.2">
+            <action dev="andrewinkler" type="update" date="2018-03-05">
+                Spring and Hibernate version update.
+            </action>
+        </release>
+
+        <!-- RELEASED -->
+        <release version="betoffice-jweb-1.1.1" date="2018-03-03"
+                 description="Release 1.1.1">
+            <action dev="andrewinkler" type="fix" date="2018-02-02">
+                Fix for service: Removing parties from a season.
+            </action>
+        </release>
+
+        <!-- RELEASED -->
+        <release version="betoffice-jweb-1.1.0" date="2017-11-25"
+                 description="Release 1.1.0">
+            <action dev="andrewinkler" type="add" date="2017-11-07">
+                Short and XShort name for team.
+            </action>
+        </release>
+
+        <!-- RELEASED -->
+        <release version="betoffice-jweb-1.0.0" date="2017-11-05"
+                 description="Release 1.0.0">
+            <action dev="andrewinkler" type="add" date="2017-10-26">
+                Release 1.0. Round up. Ranking with round only view.
+            </action>
+        </release>
+
+        <!-- RELEASED -->
+        <release version="betoffice-jweb-0.7.0" date="2016-12-03"
+                 description="Use Spring´s CORS annotation">
+            <action dev="andrewinkler" type="add" date="2016-12-27">
+                Added Spring´s CORS annotation.
+            </action>
+        </release>
+
+        <release version="betoffice-jweb-0.6.0" date="2016-12-03"
+                 description="Role based authorization">
+            <action dev="andrewinkler" type="add" date="2016-10-04">
+                Role based authorization. Added openligadb dependency and Spring
+                Security.
+            </action>
+        </release>
+
+        <release version="betoffice-jweb-0.5.0" date="2016-09-26"
+                 description="Date and time validation of the game tipps">
+            <action dev="andrewinkler" type="update" date="2016-09-10">
+                Update dependencies.
+            </action>
+        </release>
+
+        <release version="betoffice-jweb-0.4.0" date="2016-07-27"
+                 description="More services">
+            <action dev="andrewinkler" type="update" date="2016-07-28">
+                Moved to Tomcat 8, Spring 4, Hibernate 5 and Java 8.
+            </action>
+            <action dev="andrewinkler" type="update" date="2015-07-28">
+                New service to find the next tipp round.
+            </action>
+            <action dev="andrewinkler" type="add" date="2015-06-05">
+                Moved the JSON objects to betoffice-jweb-misc project. This is
+                a sharing project between betoffice-jweb and betoffice-jadmin.
+            </action>
+            <action dev="andrewinkler" type="update" date="2015-06-04">
+                New services to find, select and browse a season.
+            </action>
+        </release>
+
+        <release version="betoffice-jweb-0.3.0" date="2014-10-26"
+                 description="Dependency update">
+            <action dev="andrewinkler" type="update" date="2014-10-26">
+                Dependency updates.
+            </action>
+        </release>
+
+        <release version="betoffice-jweb-0.2.3" date="2014-03-09"
+                 description="Team history finder">
+            <action dev="andrewinkler" type="update" date="2014-03-09">
+                Remove 'evaluate-tipp.jsp'. I will use spring auto
+                configuration.
+            </action>
+        </release>
+
+        <release version="betoffice-jweb-0.2.2" date="2014-12-26"
+                 description="Fix">
+            <action dev="andrewinkler" type="fix" date="2014-12-26">
+                Change check for security token.
+            </action>
+            <action dev="andrewinkler" type="fix" date="2014-12-26">
+                Updated to betoffice-storage 1.3.1. (Round number fix).
+            </action>
+        </release>
+
+        <release version="betoffice-jweb-0.2.1" date="2014-12-20"
+                 description="Second">
+            <action dev="andrewinkler" type="add" date="2014-12-20?">
+                Send special response header to disable caching.
+            </action>
+        </release>
+
+        <release version="betoffice-jweb-0.2.0" date="2013-12-15"
+                 description="Second">
+            <action dev="andrewinkler" type="add" date="2013-08-25">
+                New URLs:
+                -root-/bo/tipp/submit
+                -root-/bo/tipp/receive/{round}/{nickname}
+                -root-/bo/tipp/auth
+            </action>
+        </release>
+
+        <release version="betoffice-jweb-0.1.0" date="2013-07-31"
+                 description="First">
+            <action dev="andrewinkler" type="add" date="2013-07-31">
+                The first release. Read and store tipp data.
+            </action>
+        </release>
+
+    </body>
+    <footer>
+        <legal>
+            Copyright (c) @year@ The 'betoffice-jweb' project.
+        </legal>
+    </footer>
+</document>

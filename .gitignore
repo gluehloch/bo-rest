@@ -1,32 +1,10 @@
-# Eclipse
-eclipse-bin
-eclipse-target
-.classpath
-.project
-.settings
-.springbeans
-/bin
-
 # Maven
-target
-*.log
-build.properties
-database.properties
-betoffice.log.*
+/target
 
-project.index
-project.xml.md5
+# Visual Code
+/.vscode
 
-tmp
+# Eclipse
+/.project
+/.settings
 
-pirates
-*.iml
-.dbeaver
-
-# VisualCode
-.vscode
-.idea
-.dbeaver
-
-# IntelliJ
-.idea

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <properties>
+        <title>Change Notes</title>
+        <author email="andre.winkler@web.de">Andre Winkler</author>
+    </properties>
+    <body>
+
+        <!--
+             *** STILL UNDER DEVELOPMENT x.x.x (SNAPSHOT) ***
+        -->
+        
+        <!-- RELEASED -->
+        <release version="betoffice-war-1.5.0" date="2024-04-29" description="spring annotation configuration">
+            <action dev="andrewinkler" type="add" date="2024-04-29">
+                Wrapper project for betoffice-jweb. Creates a war file.
+            </action>
+        </release>
+
+    </body>
+    <footer>
+        <legal>
+            Copyright (c) @year@ The 'betoffice-jweb' project.
+        </legal>
+    </footer>
+</document>
