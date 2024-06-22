@@ -43,6 +43,7 @@ public class GameJson extends AbstractOpenligaid implements IGameJson {
     private ZonedDateTime dateTime;
     private TeamJson homeTeam;
     private TeamJson guestTeam;
+    private GroupTypeJson groupType;
     private GameResultJson halfTimeResult;
     private GameResultJson result;
     private GameResultJson overtimeResult;
@@ -95,6 +96,16 @@ public class GameJson extends AbstractOpenligaid implements IGameJson {
     @Override
 	public TeamJson getGuestTeam() {
         return guestTeam;
+    }
+
+    @Override
+    public GroupTypeJson getGroupType() {
+        return groupType;
+    }
+
+    @Override
+    public void setGroupType(GroupTypeJson groupType) {
+        this.groupType = groupType;
     }
 
     @Override

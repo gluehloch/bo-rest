@@ -38,6 +38,7 @@ import de.winkler.betoffice.storage.Game;
 import de.winkler.betoffice.storage.GameList;
 import de.winkler.betoffice.storage.GameResult;
 import de.winkler.betoffice.storage.Group;
+import de.winkler.betoffice.storage.GroupType;
 import de.winkler.betoffice.storage.Location;
 import de.winkler.betoffice.storage.Team;
 
@@ -52,9 +53,13 @@ public class GameJsonMapperTest {
     public void testGameJsonMapper() throws JsonProcessingException {
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Berlin"));
 
+        GroupType groupType = new GroupType();
+        groupType.setName("1. Bundesliga");
+        Group group = new Group();
+        group.setGroupType(groupType);
         Game game = new Game();
         game.setDateTime(now);
-        game.setGroup(new Group());
+        game.setGroup(group);
         game.setGuestTeam(new Team("RWE"));
         game.setHomeTeam(new Team("S04"));
         game.setHalfTimeGoals(new GameResult(1, 0));

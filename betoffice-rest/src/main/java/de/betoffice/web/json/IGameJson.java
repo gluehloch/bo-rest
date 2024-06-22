@@ -3,53 +3,56 @@ package de.betoffice.web.json;
 import java.time.ZonedDateTime;
 
 public interface IGameJson extends OpenligaObject {
+    void setId(Long id);
 
-	void setId(Long id);
-	
-	Long getId();
+    Long getId();
 
-	int getIndex();
+    int getIndex();
 
-	void setIndex(int index);
+    void setIndex(int index);
 
-	Long getRoundId();
+    Long getRoundId();
 
-	void setRoundId(Long roundId);
+    void setRoundId(Long roundId);
 
-	ZonedDateTime getDateTime();
+    ZonedDateTime getDateTime();
 
-	void setDateTime(ZonedDateTime dateTime);
+    void setDateTime(ZonedDateTime dateTime);
 
-	TeamJson getHomeTeam();
+    TeamJson getHomeTeam();
 
-	void setHomeTeam(TeamJson homeTeam);
+    void setHomeTeam(TeamJson homeTeam);
 
-	TeamJson getGuestTeam();
+    TeamJson getGuestTeam();
 
-	void setGuestTeam(TeamJson guestTeam);
+    void setGroupType(GroupTypeJson groupType);
 
-	GameResultJson getHalfTimeResult();
+    GroupTypeJson getGroupType();
 
-	void setHalfTimeResult(GameResultJson halfTimeResult);
+    void setGuestTeam(TeamJson guestTeam);
 
-	GameResultJson getResult();
+    GameResultJson getHalfTimeResult();
 
-	void setResult(GameResultJson result);
+    void setHalfTimeResult(GameResultJson halfTimeResult);
 
-	GameResultJson getOvertimeResult();
+    GameResultJson getResult();
 
-	void setOvertimeResult(GameResultJson overtimeResult);
+    void setResult(GameResultJson result);
 
-	GameResultJson getPenaltyResult();
+    GameResultJson getOvertimeResult();
 
-	void setPenaltyResult(GameResultJson penaltyResult);
+    void setOvertimeResult(GameResultJson overtimeResult);
 
-	boolean isFinished();
+    GameResultJson getPenaltyResult();
 
-	void setFinished(boolean finished);
+    void setPenaltyResult(GameResultJson penaltyResult);
 
-	boolean isKo();
+    boolean isFinished();
 
-	void setKo(boolean ko);
+    void setFinished(boolean finished);
+
+    boolean isKo();
+
+    void setKo(boolean ko);
 
 }

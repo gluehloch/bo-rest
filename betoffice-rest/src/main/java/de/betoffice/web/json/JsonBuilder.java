@@ -120,8 +120,8 @@ public class JsonBuilder {
         return gameJson;
     }
 
-    public static DetailGameJson toDetailGameJson(Game game) {
-        DetailGameJson gameJson = GameJsonMapper.map(game, new DetailGameJson());
+    public static GameWithGoalsJson toGameWithGoalsJson(Game game) {
+        GameWithGoalsJson gameJson = GameJsonMapper.map(game, new GameWithGoalsJson());
         return gameJson;
     }
 

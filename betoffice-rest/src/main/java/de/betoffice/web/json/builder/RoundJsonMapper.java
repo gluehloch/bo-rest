@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2013-2022 by Andre Winkler. All rights
+ * Project betoffice-jweb-misc Copyright (c) 2013-2024 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -42,6 +42,7 @@ public class RoundJsonMapper {
         roundJson.setSeasonId(round.getSeason().getId());
         roundJson.setSeasonName(round.getSeason().getReference().getName());
         roundJson.setSeasonYear(round.getSeason().getReference().getYear());
+        roundJson.setSeasonType(round.getSeason().getMode());
         return roundJson;
     }
 

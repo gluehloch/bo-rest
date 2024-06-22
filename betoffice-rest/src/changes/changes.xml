@@ -16,6 +16,9 @@
                 Better tipp form. Like showing next ten games. The relationship to a round should should not be the focus.
                 More compact information.
             </action>
+            <action dev="andrewinkler" type="update" date="2024-05-15">
+                Added some informations: Game contains the associated groupe (type). Season contains the associated season type. 
+            </action>
         </release>
 
         <!-- RELEASED -->

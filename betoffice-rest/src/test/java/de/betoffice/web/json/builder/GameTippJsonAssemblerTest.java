@@ -40,6 +40,7 @@ import de.winkler.betoffice.storage.GameList;
 import de.winkler.betoffice.storage.GameResult;
 import de.winkler.betoffice.storage.GameTipp;
 import de.winkler.betoffice.storage.Group;
+import de.winkler.betoffice.storage.GroupType;
 import de.winkler.betoffice.storage.Nickname;
 import de.winkler.betoffice.storage.Team;
 import de.winkler.betoffice.storage.User;
@@ -64,8 +65,17 @@ class GameTippJsonAssemblerTest {
 
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Berlin"));
 
+        GroupType groupType = new GroupType() {
+            private static final long serialVersionUID = 1L;
+            {
+                setId(1L);
+                setName("1. Bundesliga");
+            }
+        };
+        Group group = new Group();
+        group.setGroupType(groupType);
+        game.setGroup(group);
         game.setDateTime(now);
-        game.setGroup(new Group());
         game.setHomeTeam(new Team("Heim"));
         game.setGuestTeam(new Team("Gast"));
         game.setHalfTimeGoals(new GameResult(1, 1));

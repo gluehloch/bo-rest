@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jadmin Copyright (c) 2013 by Andre Winkler. All rights
+ * Project betoffice-jadmin Copyright (c) 2013-2024 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -26,6 +26,8 @@ package de.betoffice.web.json;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import de.winkler.betoffice.storage.enums.SeasonType;
 
 /**
  * Season for JSON serialization.
@@ -55,8 +57,7 @@ public class SeasonJson extends AbstractIdentifier implements Serializable {
     }
 
     /**
-     * @param name
-     *            the name to set
+     * @param name the name to set
      */
     public void setName(String name) {
         this.name = name;
@@ -70,8 +71,7 @@ public class SeasonJson extends AbstractIdentifier implements Serializable {
     }
 
     /**
-     * @param year
-     *            the year to set
+     * @param year the year to set
      */
     public void setYear(String year) {
         this.year = year;
@@ -80,8 +80,7 @@ public class SeasonJson extends AbstractIdentifier implements Serializable {
     /**
      * Add a round
      *
-     * @param round
-     *            the round to add
+     * @param round the round to add
      */
     public void addRound(RoundJson round) {
         rounds.add(round);
@@ -104,11 +103,17 @@ public class SeasonJson extends AbstractIdentifier implements Serializable {
     }
 
     /**
-     * @param seasonType
-     *            the seasonType to set
+     * @param seasonType the seasonType to set
      */
     public void setSeasonType(String seasonType) {
         this.seasonType = seasonType;
+    }
+
+    /**
+     * @param seasonType the seasonType to set
+     */
+    public void setSeasonType(SeasonType seasonType) {
+        this.seasonType = seasonType.name();
     }
 
     /**
@@ -119,8 +124,7 @@ public class SeasonJson extends AbstractIdentifier implements Serializable {
     }
 
     /**
-     * @param teamType
-     *            the teamType to set
+     * @param teamType the teamType to set
      */
     public void setTeamType(String teamType) {
         this.teamType = teamType;
