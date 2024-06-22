@@ -4,3 +4,7 @@
 # Visual Code
 /.vscode
 
+# Eclipse
+/.project
+/.settings
+
