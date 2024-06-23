@@ -13,6 +13,9 @@
     <groupId>de.betoffice</groupId>
     <artifactId>betoffice-jweb</artifactId>
     <version>1.5.1-SNAPSHOT</version>
+    <!--
+    <version>${betoffice.web.version}</version>
+    -->
     <packaging>jar</packaging>
 
     <dependencyManagement>
