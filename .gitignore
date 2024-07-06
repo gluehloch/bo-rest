@@ -8,6 +8,9 @@
 /.project
 /.settings
 
+# IntelliJ
+/.idea
+
 # Misc
 /bin
 
