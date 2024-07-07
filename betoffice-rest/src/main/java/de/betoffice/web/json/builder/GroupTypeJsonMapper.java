@@ -38,6 +38,7 @@ public class GroupTypeJsonMapper {
     public static GroupTypeJson map(GroupType groupType, GroupTypeJson groupTypeJson) {
         groupTypeJson.setId(groupType.getId());
         groupTypeJson.setName(groupType.getName());
+        groupTypeJson.setType(groupType.getType().name());
         return groupTypeJson;
     }
 
