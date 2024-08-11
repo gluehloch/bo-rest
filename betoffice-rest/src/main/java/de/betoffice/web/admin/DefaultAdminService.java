@@ -125,34 +125,33 @@ public class DefaultAdminService implements AdminService {
     // ------------------------------------------------------------------------
 
     @Override
-    public RoundJson reconcileRoundWithOpenligadb(String token, Long roundId) {
-        GameList gameList = seasonManagerService.findRound(roundId);
-        openligadbUpdateService.createOrUpdateRound(gameList.getSeason().getId(), gameList.getIndex());
-        GameList updatedGameList = seasonManagerService.findRoundGames(roundId).orElseThrow();
-        return JsonBuilder.toJsonWithGames(updatedGameList);
+    public RoundJson reconcileRoundWithOpenligadb(String token, Long seasonId, Long roundId) {
+        Season season = seasonManagerService.findSeasonById(seasonId);
+        GameList round = seasonManagerService.findRound(roundId);
+
+        if (round == null) {
+            openligadbUpdateService.createOrUpdateRound(seasonId, 0);
+        } else  {
+            openligadbUpdateService.createOrUpdateRound(round.getSeason().getId(), round.getIndex());
+        }
+
+        GameList updatedGameList = seasonManagerService.findNextRound(roundId).orElseGet(() -> seasonManagerService.findFirstRound(season).orElseThrow());
+        return JsonBuilder.toJsonWithGames(seasonManagerService.findRoundGames(updatedGameList.getId()).get());
     }
 
     @Override
-    public RoundJson mountRoundWithOpenligadb(String token, Long roundId) {
+    public RoundJson mountRoundWithOpenligadb(String token, Long seasonId, Long roundId) {
+        Season season = seasonManagerService.findSeasonById(seasonId);
         GameList round = seasonManagerService.findRound(roundId);
 
-        // TODO Dieser ganze Mechanismus funktioniert nur mit einer Liga.
-        // WM und EM sind damit nicht abbildbar.
-        // Welcher Spieltag soll gemountet werden? Der nächste Spieltag nach
-        // dem letzten bekannten Spieltag vielleicht?
-
-        // TODO Hack Bundesliga 2023/24
         if (round == null) {
-            openligadbUpdateService.createOrUpdateRound(35L, 0);
-        }
-        
-        if (round != null) {
-            openligadbUpdateService.createOrUpdateRound(round.getSeason().getId(), round.getIndex() + 1);
+            openligadbUpdateService.createOrUpdateRound(seasonId, 0);
+        } else {
+            openligadbUpdateService.createOrUpdateRound(seasonId, round.getIndex() + 1);
         }
 
-        // TODO ... get() .... get() .... get()
-        Optional<GameList> updatedGameList = seasonManagerService.findNextRound(roundId);
-        return JsonBuilder.toJsonWithGames(seasonManagerService.findRoundGames(updatedGameList.get().getId()).get());
+        GameList updatedGameList = seasonManagerService.findNextRound(roundId).orElseGet(() -> seasonManagerService.findFirstRound(season).orElseThrow());
+        return JsonBuilder.toJsonWithGames(seasonManagerService.findRoundGames(updatedGameList.getId()).get());
     }
 
     // -- team administration -------------------------------------------------
@@ -305,7 +304,8 @@ public class DefaultAdminService implements AdminService {
         Season season = seasonManagerService.findSeasonById(seasonId);
         CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(season.getReference());
 
-        Set<Nickname> nicknames = new HashSet<>(seasonMembers.stream().map(sm -> Nickname.of(sm.getNickname())).toList());
+        Set<Nickname> nicknames = new HashSet<>(
+                seasonMembers.stream().map(sm -> Nickname.of(sm.getNickname())).toList());
         communityService.removeMembers(defaultPlayerGroup, nicknames);
 
         return findAllSeasonMembers(seasonId);
@@ -320,66 +320,66 @@ public class DefaultAdminService implements AdminService {
         return users;
     }
 
-	@Override
-	public List<GroupTypeJson> findGroupTypes() {
-		return GroupTypeJsonMapper.map(masterDataManagerService.findAllGroupTypes());
-	}
+    @Override
+    public List<GroupTypeJson> findGroupTypes() {
+        return GroupTypeJsonMapper.map(masterDataManagerService.findAllGroupTypes());
+    }
 
-	@Override
-	public GroupTypeJson findGroupType(long groupTypeId) {
-		return GroupTypeJsonMapper.map(masterDataManagerService.findGroupType(groupTypeId), new GroupTypeJson());
-	}
+    @Override
+    public GroupTypeJson findGroupType(long groupTypeId) {
+        return GroupTypeJsonMapper.map(masterDataManagerService.findGroupType(groupTypeId), new GroupTypeJson());
+    }
 
-	@Override
-	public SeasonJson addGroupToSeason(SeasonJson seasonJson, GroupTypeJson groupTypeJson) {
-		Season season = seasonManagerService.findSeasonById(seasonJson.getId());
-		GroupType groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
-		Season season2 = seasonManagerService.addGroupType(season, groupType);
-		return SeasonJsonMapper.map(season2, new SeasonJson());
-	}
+    @Override
+    public SeasonJson addGroupToSeason(SeasonJson seasonJson, GroupTypeJson groupTypeJson) {
+        Season season = seasonManagerService.findSeasonById(seasonJson.getId());
+        GroupType groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
+        Season season2 = seasonManagerService.addGroupType(season, groupType);
+        return SeasonJsonMapper.map(season2, new SeasonJson());
+    }
 
-	@Override
-	public void removeGroupFromSeason(SeasonJson seasonJson, GroupTypeJson groupTypeJson) {
-		Season season = seasonManagerService.findSeasonById(seasonJson.getId());
-		GroupType groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());		
-		seasonManagerService.removeGroupType(season, groupType);
-	}
-	
-	@Override
-	public SeasonGroupTeamJson findSeasonGroupsAndTeams(long seasonId) {
-		Season season = seasonManagerService.findSeasonById(seasonId);
-		List<Group> groups = seasonManagerService.findGroups(season);
-		SeasonGroupTeamJson seasonGroupTeamJson = new SeasonGroupTeamJson();
-		
-		for (Group group : groups) {
-			List<Team> teams = seasonManagerService.findTeams(group);
-			GroupTeamJson groupTeamJson = new GroupTeamJson();
-			groupTeamJson.setGroupType(GroupTypeJsonMapper.map(group.getGroupType(), new GroupTypeJson()));
-			groupTeamJson.setTeams(TeamJsonMapper.map(teams));
-			seasonGroupTeamJson.getGroupTeams().add(groupTeamJson);
-		}
-		
-		return seasonGroupTeamJson;
-	}
+    @Override
+    public void removeGroupFromSeason(SeasonJson seasonJson, GroupTypeJson groupTypeJson) {
+        Season season = seasonManagerService.findSeasonById(seasonJson.getId());
+        GroupType groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
+        seasonManagerService.removeGroupType(season, groupType);
+    }
 
-	@Override
-	public List<TeamJson> findSeasonGroupAndTeamCandidates(SeasonJson seasonJson, GroupTypeJson groupTypeJson) {
-		Season season = seasonManagerService.findSeasonById(seasonJson.getId());
-		GroupType groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
-		List<Team> teams = seasonManagerService.findTeams(season, groupType);
-		List<Team> teamCandidates = masterDataManagerService.findTeams(season.getTeamType());
-		teamCandidates.removeAll(teams);
-		
-		return TeamJsonMapper.map(teamCandidates);
-	}
+    @Override
+    public SeasonGroupTeamJson findSeasonGroupsAndTeams(long seasonId) {
+        Season season = seasonManagerService.findSeasonById(seasonId);
+        List<Group> groups = seasonManagerService.findGroups(season);
+        SeasonGroupTeamJson seasonGroupTeamJson = new SeasonGroupTeamJson();
 
-	@Override
+        for (Group group : groups) {
+            List<Team> teams = seasonManagerService.findTeams(group);
+            GroupTeamJson groupTeamJson = new GroupTeamJson();
+            groupTeamJson.setGroupType(GroupTypeJsonMapper.map(group.getGroupType(), new GroupTypeJson()));
+            groupTeamJson.setTeams(TeamJsonMapper.map(teams));
+            seasonGroupTeamJson.getGroupTeams().add(groupTeamJson);
+        }
+
+        return seasonGroupTeamJson;
+    }
+
+    @Override
+    public List<TeamJson> findSeasonGroupAndTeamCandidates(SeasonJson seasonJson, GroupTypeJson groupTypeJson) {
+        Season season = seasonManagerService.findSeasonById(seasonJson.getId());
+        GroupType groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
+        List<Team> teams = seasonManagerService.findTeams(season, groupType);
+        List<Team> teamCandidates = masterDataManagerService.findTeams(season.getTeamType());
+        teamCandidates.removeAll(teams);
+
+        return TeamJsonMapper.map(teamCandidates);
+    }
+
+    @Override
     public void addTeamToGroup(SeasonJson seasonJson, GroupTypeJson groupTypeJson, TeamJson teamJson) {
-		Season season = seasonManagerService.findSeasonById(seasonJson.getId());
-		GroupType groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
-		Team team = masterDataManagerService.findTeamById(teamJson.getId());
-		seasonManagerService.addTeam(season, groupType, team);
-	}
+        Season season = seasonManagerService.findSeasonById(seasonJson.getId());
+        GroupType groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
+        Team team = masterDataManagerService.findTeamById(teamJson.getId());
+        seasonManagerService.addTeam(season, groupType, team);
+    }
 
     @Override
     public void removeTeamFromGroup(SeasonJson seasonJson, GroupTypeJson groupTypeJson, TeamJson teamJson) {

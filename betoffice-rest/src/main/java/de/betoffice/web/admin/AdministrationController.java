@@ -91,42 +91,49 @@ public class AdministrationController {
 
     // -- openligadb ----------------------------------------------------------
 
-    @RequestMapping(value = "/season/round/{roundId}/group/{groupId}/ligadbupdate", method = RequestMethod.POST, headers = {
+    @RequestMapping(value = "/season/{seasonId}/round/{roundId}/group/{groupId}/ligadbupdate", method = RequestMethod.POST, headers = {
             "Content-type=application/json" })
-    public RoundAndTableJson updateRoundByOpenligaDb(@PathVariable("roundId") Long roundId,
+    public RoundAndTableJson updateRoundByOpenligaDb(
+            @PathVariable("seasonId") Long seasonId,
+            @PathVariable("roundId") Long roundId,
             @PathVariable("groupId") Long groupId,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
         betofficeAdminJsonService.validateAdminSession(token);
-        betofficeAdminJsonService.reconcileRoundWithOpenligadb(token, roundId);
-        return betofficeBasicJsonService.findRoundTable(roundId, groupId);
+        betofficeAdminJsonService.reconcileRoundWithOpenligadb(token, seasonId, roundId);
+        return betofficeBasicJsonService.findRoundTable(seasonId, roundId, groupId);
     }
 
-    @RequestMapping(value = "/season/round/{roundId}/group/{groupId}/ligadbcreate", method = RequestMethod.POST, headers = {
+    @RequestMapping(value = "/season/{seasonId}/round/{roundId}/group/{groupId}/ligadbcreate", method = RequestMethod.POST, headers = {
             "Content-type=application/json" })
-    public RoundAndTableJson createOrUpdateRoundByOpenligaDb(@PathVariable("roundId") Long roundId,
+    public RoundAndTableJson createOrUpdateRoundByOpenligaDb(
+            @PathVariable("seasonId") Long seasonId,
+            @PathVariable("roundId") Long roundId,
             @PathVariable("groupId") Long groupId,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
         betofficeAdminJsonService.validateAdminSession(token);
-        betofficeAdminJsonService.mountRoundWithOpenligadb(token, roundId);
-        return betofficeBasicJsonService.findRoundTable(roundId, groupId);
+        betofficeAdminJsonService.mountRoundWithOpenligadb(token, seasonId, roundId);
+        return betofficeBasicJsonService.findRoundTable(seasonId, roundId, groupId);
     }
 
     // -- round update --------------------------------------------------------
 
-    @RequestMapping(value = "/season/round/{roundId}/group/{groupId}/update", method = RequestMethod.POST, headers = {
+    @RequestMapping(value = "/season/{seasonId}/round/{roundId}/group/{groupId}/update", method = RequestMethod.POST, headers = {
             "Content-type=application/json" })
-    public RoundAndTableJson updateRound(@PathVariable("roundId") Long roundId, @PathVariable("groupId") Long groupId,
+    public RoundAndTableJson updateRound(
+            @PathVariable("seasonId") Long seasonId,
+            @PathVariable("roundId") Long roundId,
+            @PathVariable("groupId") Long groupId,
             @RequestBody RoundJson roundJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
         betofficeAdminJsonService.validateAdminSession(token);
         betofficeAdminJsonService.updateRound(roundJson);
-        return betofficeBasicJsonService.findRoundTable(roundId, groupId);
+        return betofficeBasicJsonService.findRoundTable(seasonId, roundId, groupId);
     }
 
     @RequestMapping(value = "/game/update", method = RequestMethod.POST, headers = { "Content-type=application/json" })

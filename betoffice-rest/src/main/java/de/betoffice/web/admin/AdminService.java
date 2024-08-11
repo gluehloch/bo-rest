@@ -54,20 +54,22 @@ public interface AdminService {
     /**
      * Update round and game informations with the data from openligadb. (reconcile = abgleichen)
      * 
-     * @param  token   the session id / security token
-     * @param  roundId The round to update
-     * @return         The updated round and games
+     * @param  token    the session id / security token
+     * @param  seasonId the season id
+     * @param  roundId  The round to update
+     * @return          The updated round and games
      */
-    RoundJson reconcileRoundWithOpenligadb(String token, Long roundId);
+    RoundJson reconcileRoundWithOpenligadb(String token, Long seasonId, Long roundId);
 
     /**
      * Append round and game informations
      * 
-     * @param  token   the session id / security token
-     * @param  roundId create or update the round after roundId
-     * @return         The mounted round and games.
+     * @param  token    the session id / security token
+     * @param  seasonId the season id
+     * @param  roundId  create or update the round after roundId
+     * @return          The mounted round and games.
      */
-    RoundJson mountRoundWithOpenligadb(String token, Long roundId);
+    RoundJson mountRoundWithOpenligadb(String token, Long seasonId, Long roundId);
 
     // -- team administration -------------------------------------------------
 

@@ -146,11 +146,17 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
-    public RoundJson findRound(Long roundId) {
+    public RoundJson findRound(Long seasonId, Long roundId) {
+        Season season = seasonManagerService.findSeasonById(seasonId);
         GameList gameList = seasonManagerService.findRound(roundId);
         RoundJson roundJson = null;
 
-        if (gameList != null) {
+        if (gameList == null) {
+            Optional<GameList> firstRound = seasonManagerService.findFirstRound(season);
+
+            JsonAssembler jsonAssembler = new JsonAssembler();
+            roundJson = jsonAssembler.build(firstRound.get()).games().lastRound(true).assemble();
+        } else {
             Optional<GameList> nextRound = seasonManagerService.findNextRound(roundId);
 
             JsonAssembler jsonAssembler = new JsonAssembler();
@@ -161,10 +167,11 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
-    public RoundJson findRound(Long roundId, Long groupTypeId) {
-        Optional<GameList> gameList = seasonManagerService.findRoundGames(roundId);
+    public RoundJson findRoundByGroup(Long seasonId, Long roundId, Long groupTypeId) {
+        Season season = seasonManagerService.findSeasonById(seasonId);
+        GameList gameList = seasonManagerService.findRoundGames(roundId).orElseGet(() -> seasonManagerService.findFirstRound(season).orElseThrow());
         GroupType groupType = masterDataManagerService.findGroupType(groupTypeId);
-        Group group = seasonManagerService.findGroup(gameList.get().getSeason(), groupType);
+        Group group = seasonManagerService.findGroup(season, groupType);
 
         RoundJson roundJson = null;
 
@@ -172,15 +179,17 @@ public class DefaultBetofficeService implements BetofficeService {
             Optional<GameList> nextRound = seasonManagerService.findNextRound(roundId);
 
             JsonAssembler jsonAssembler = new JsonAssembler();
-            roundJson = jsonAssembler.build(gameList.get()).games(gameList.get().toList(group))
-                    .lastRound(!nextRound.isPresent()).assemble();
+            roundJson = jsonAssembler.build(gameList)
+                    .games(gameList.toList(group))
+                    .lastRound(!nextRound.isPresent())
+                    .assemble();
         }
 
         return roundJson;
     }
 
     @Override
-    public RoundJson findNextRound(Long roundId) {
+    public RoundJson findNextRound(Long seasonId, Long roundId) {
         Optional<GameList> nextRound = seasonManagerService.findNextRound(roundId);
         RoundJson roundJson = null;
 
@@ -195,7 +204,7 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
-    public RoundJson findPrevRound(Long roundId) {
+    public RoundJson findPrevRound(Long seasonId, Long roundId) {
         Optional<GameList> prevRound = seasonManagerService.findPrevRound(roundId);
         RoundJson roundJson = null;
 
@@ -208,10 +217,9 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
-    public RoundAndTableJson findRoundTable(Long roundId, Long groupTypeId) {
-        RoundJson roundJson = findRound(roundId, groupTypeId);
-
-        Season season = seasonManagerService.findSeasonById(roundJson.getSeasonId());
+    public RoundAndTableJson findRoundTable(Long seasonId, Long roundId, Long groupTypeId) {
+        RoundJson roundJson = findRoundByGroup(seasonId, roundId, groupTypeId);
+        Season season = seasonManagerService.findSeasonById(seasonId);
         GroupType groupType = masterDataManagerService.findGroupType(groupTypeId);
 
         RoundAndTableJson roundAndTableJson = new RoundAndTableJson();
@@ -234,15 +242,15 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
-    public RoundAndTableJson findNextRoundTable(Long roundId) {
-        return findRoundTable(roundId, null);
+    public RoundAndTableJson findNextRoundTable(Long seasonId, Long roundId) {
+        return findRoundTable(seasonId, roundId, null);
         // TODO Auto-generated method stub
         // return null;
     }
 
     @Override
-    public RoundAndTableJson findPrevRoundTable(Long roundId) {
-        return findRoundTable(roundId, null);
+    public RoundAndTableJson findPrevRoundTable(Long seasonId, Long roundId) {
+        return findRoundTable(seasonId, roundId, null);
         // TODO Auto-generated method stub
         // return null;
     }
