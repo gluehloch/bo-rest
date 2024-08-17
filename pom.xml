@@ -16,7 +16,9 @@
     <packaging>pom</packaging>
 
     <properties>
-        <betoffice.web.version>1.5.1-SNAPSHOT</betoffice.web.version>
+        <betoffice.openligadb.version>3.2.0-SNAPSHOT</betoffice.openligadb.version>
+        <betoffice.storage.version>3.1.1-SNAPSHOT</betoffice.storage.version>
+        <betoffice.testutils.version>1.5.1-SNAPSHOT</betoffice.testutils.version>
     </properties>
 
     <modules>
@@ -33,4 +35,23 @@
         </repository>
     </repositories>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>de.betoffice</groupId>
+                <artifactId>betoffice-openligadb</artifactId>
+                <version>${betoffice.openligadb.version}</version>
+            </dependency>            
+            <dependency>
+                <groupId>de.winkler.betoffice</groupId>
+                <artifactId>betoffice-storage</artifactId>
+                <version>${betoffice.storage.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.betoffice</groupId>
+                <artifactId>betoffice-testutils</artifactId>
+                <version>${betoffice.testutils.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>

@@ -11,15 +11,19 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.betoffice</groupId>
-    <artifactId>betoffice-jweb</artifactId>
+    <artifactId>betoffice-rest</artifactId>
     <version>1.5.1-SNAPSHOT</version>
-    <!--
-    <version>${betoffice.web.version}</version>
-    -->
     <packaging>jar</packaging>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>de.betoffice</groupId>
+                <artifactId>betoffice-web</artifactId>
+                <version>1.5.1-SNAPSHOT</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-bom -->
             <dependency>
                 <groupId>org.springframework.security</groupId>
@@ -46,13 +50,11 @@
         <dependency>
             <groupId>de.winkler.betoffice</groupId>
             <artifactId>betoffice-storage</artifactId>
-            <version>3.1.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>de.betoffice</groupId>
             <artifactId>betoffice-openligadb</artifactId>
-            <version>3.2.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 

@@ -44,32 +44,6 @@
                     <artifactId>maven-war-plugin</artifactId>
                     <version>3.3.1</version>
                 </plugin>
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>cz.habarta.typescript-generator</groupId>
-                                        <artifactId>
-                                            typescript-generator-maven-plugin
-                                        </artifactId>
-                                        <versionRange>[2.12.476,)</versionRange>
-                                        <goals>
-                                            <goal>generate</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore></ignore>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -77,8 +51,8 @@
     <dependencies>
         <dependency>
             <groupId>de.betoffice</groupId>
-            <artifactId>betoffice-jweb</artifactId>
-            <version>1.5.1-SNAPSHOT</version>
+            <artifactId>betoffice-rest</artifactId>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

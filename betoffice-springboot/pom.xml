@@ -94,11 +94,23 @@
         </pluginManagement>
     </build>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>de.betoffice</groupId>
+                <artifactId>betoffice-web</artifactId>
+                <version>1.5.1-SNAPSHOT</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>de.betoffice</groupId>
-            <artifactId>betoffice-jweb</artifactId>
-            <version>1.5.1-SNAPSHOT</version>
+            <artifactId>betoffice-rest</artifactId>
+            <version>${project.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-logging</groupId>
@@ -113,7 +125,6 @@
         <dependency>
             <groupId>de.winkler.betoffice</groupId>
             <artifactId>betoffice-storage</artifactId>
-            <version>3.1.1-SNAPSHOT</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -129,7 +140,6 @@
         <dependency>
             <groupId>de.betoffice</groupId>
             <artifactId>betoffice-openligadb</artifactId>
-            <version>3.2.0-SNAPSHOT</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -189,7 +199,8 @@
             <url>
                 scp://maven.gluehloch.de/var/www/projects.gluehloch/betoffice/pom</url>
         </site>
-    </distributionManagement>
+    </distributionManagement
+>
     <repositories>
         <repository>
             <id>gluehloch-repository</id>
