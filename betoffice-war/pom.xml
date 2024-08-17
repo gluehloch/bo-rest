@@ -24,15 +24,6 @@
                 <version>6.1.5</version>
                 <type>pom</type>
             </dependency>
-            <!--
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>3.1.5</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            -->
         </dependencies>
     </dependencyManagement>
 
@@ -75,15 +66,6 @@
             <version>3.3.3</version>
         </dependency>
 
-        <!--
-        <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-jdbc</artifactId>
-            <version>8.5.20</version>
-            <scope>provided</scope>
-        </dependency>
-        -->
-
         <!-- https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
@@ -91,41 +73,6 @@
             <version>6.0.0</version>
             <scope>provided</scope>
         </dependency>
-
-        <!-- Jakarte Servlet 9.0 Specification / Currently not supported by the
-        Spring Framework -->
-        <!--
-		<dependency>
-			<groupId>jakarta.servlet</groupId>
-			<artifactId>jakarta.servlet-api</artifactId>
-			<version>5.0.0</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>jakarta.servlet.jsp</groupId>
-			<artifactId>jakarta.servlet.jsp-api</artifactId>
-			<version>3.0.0</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>jakarta.el</groupId>
-			<artifactId>jakarta.el-api</artifactId>
-			<version>4.0.0</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>jakarta.websocket</groupId>
-			<artifactId>jakarta.websocket-api</artifactId>
-			<version>2.0.0</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>jakarta.security.enterprise</groupId>
-			<artifactId>jakarta.security.enterprise-api</artifactId>
-			<version>2.0.0</version>
-			<scope>provided</scope>
-		</dependency>
-		-->
 
         <!-- Spring Web Framework -->
         <dependency>
