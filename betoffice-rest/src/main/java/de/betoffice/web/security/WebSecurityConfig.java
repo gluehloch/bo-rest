@@ -82,7 +82,7 @@ public class WebSecurityConfig {
 
     @Autowired
     private AuthService authService;
-    
+
     @Autowired
     private AuthenticationProvider authenticationProvider;
 
@@ -90,20 +90,21 @@ public class WebSecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    
+
     @Bean
     public UserDetailsService userDetailsService() {
-    	return new BetofficeUserAccountDetailsService(userDao);
+        return new BetofficeUserAccountDetailsService(userDao);
     }
-    
+
     /**
      * Funktioniert dieses Konstrukt aus @Bean und @Autowired?
      *
-     * @param userDetailsService ...
-     * @return ...
+     * @param  userDetailsService ...
+     * @return                    ...
      */
     @Bean
-    public DaoAuthenticationProvider authProvider(@Autowired UserDetailsService userDetailsService, @Autowired PasswordEncoder passwordEncoder) {
+    public DaoAuthenticationProvider authProvider(@Autowired UserDetailsService userDetailsService,
+            @Autowired PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder);
@@ -112,11 +113,12 @@ public class WebSecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity httpSecurity) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = httpSecurity.getSharedObject(AuthenticationManagerBuilder.class);
+        AuthenticationManagerBuilder authenticationManagerBuilder = httpSecurity
+                .getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.authenticationProvider(authenticationProvider);
         return authenticationManagerBuilder.build();
     }
-    
+
     @Bean
     public SecurityFilterChain configure(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         http
@@ -144,6 +146,11 @@ public class WebSecurityConfig {
                 .requestMatchers(antMatcher(HttpMethod.POST,   BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_LOGOUT)).authenticated()
                 // Send tipp form
                 .requestMatchers(antMatcher(HttpMethod.POST,   BetofficeUrlPath.URL_OFFICE + "/tipp/submit")).hasRole("TIPPER")
+                // Community Administration
+                .requestMatchers(antMatcher(HttpMethod.GET,    BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**")).hasRole("ADMIN")
+                .requestMatchers(antMatcher(HttpMethod.PUT,    BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**")).hasRole("ADMIN")
+                .requestMatchers(antMatcher(HttpMethod.POST,   BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**")).hasRole("ADMIN")
+                .requestMatchers(antMatcher(HttpMethod.DELETE, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**")).hasRole("ADMIN")
                 // Administration
                 .requestMatchers(antMatcher(HttpMethod.GET,    BetofficeUrlPath.URL_ADMIM + "/**")).hasRole("ADMIN")
                 .requestMatchers(antMatcher(HttpMethod.PUT,    BetofficeUrlPath.URL_ADMIM + "/**")).hasRole("ADMIN")
@@ -175,11 +182,11 @@ public class WebSecurityConfig {
         
         return http.build();
     }
-    
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        return loginService;
-//    }
+
+    //    @Bean
+    //    public UserDetailsService userDetailsService() {
+    //        return loginService;
+    //    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -199,10 +206,11 @@ public class WebSecurityConfig {
     public LogoutSuccessHandler logoutSuccessHandler() {
         var x = new LogoutSuccessHandler() {
             @Override
-            public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+            public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
+                    Authentication authentication) {
                 /* throws IOException, ServletException */
-            	SecurityToken securityToken = null; // TODO Wo bekommen ich den denn her? Aus dem Request vermutlich!!!
-            	authService.logout(null);
+                SecurityToken securityToken = null; // TODO Wo bekommen ich den denn her? Aus dem Request vermutlich!!!
+                authService.logout(null);
             }
         };
         return x;
@@ -230,16 +238,17 @@ class BetofficeUserAccountDetailsService implements UserDetailsService {
 
 class BetofficeUserDetails implements UserDetails {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private final User user;
-	private final List<SimpleGrantedAuthority> authorities;
-    
+    private final User user;
+    private final List<SimpleGrantedAuthority> authorities;
+
     BetofficeUserDetails(User user, List<RoleType> roleTypes) {
         this.user = user;
-        this.authorities = roleTypes.stream().map(RoleType::name).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        this.authorities = roleTypes.stream().map(RoleType::name).map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
-    
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;

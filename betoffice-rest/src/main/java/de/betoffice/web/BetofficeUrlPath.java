@@ -25,11 +25,12 @@ package de.betoffice.web;
 
 public class BetofficeUrlPath {
 
-    public static final String BO = "/bo";
+    // public static final String BO = "/bo";
 
     public static final String URL_OFFICE = "/office";
     public static final String URL_OFFICE_PING = URL_OFFICE + "/ping";
 
+    public static final String URL_COMMUNITY_ADMIN = "/community-admin";
     public static final String URL_ADMIM = "/chiefoperator";
 
     public static final String URL_AUTHENTICATION        = "/authentication";
