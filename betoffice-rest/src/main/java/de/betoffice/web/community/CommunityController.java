@@ -23,6 +23,8 @@
 
 package de.betoffice.web.community;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -48,9 +50,16 @@ import de.betoffice.web.PageParam;
 import de.betoffice.web.PageParamObjectMapper;
 import de.betoffice.web.SortParam;
 import de.betoffice.web.json.CommunityJson;
+import de.betoffice.web.json.PartyJson;
+import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.builder.CommunityJsonMapper;
 import de.winkler.betoffice.service.CommunityService;
+import de.winkler.betoffice.storage.Community;
 import de.winkler.betoffice.storage.CommunityFilter;
+import de.winkler.betoffice.storage.CommunityReference;
+import de.winkler.betoffice.storage.Nickname;
+import de.winkler.betoffice.storage.SeasonReference;
+import de.winkler.betoffice.validation.BetofficeServiceResult;
 
 /**
  * Community management.
@@ -95,7 +104,22 @@ public class CommunityController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        return null;
+        PartyJson communityManager = communityJson.getCommunityManager();
+        SeasonJson season = communityJson.getSeason();
+        String name = communityJson.getName();
+        String shortName = communityJson.getShortName();
+        String year = communityJson.getYear();
+
+        CommunityReference communityReference = CommunityReference.of(shortName);
+        SeasonReference seasonReference = SeasonReference.of(season.getYear(), season.getName());
+        Nickname nickname = Nickname.of(communityManager.getNickname());
+
+        BetofficeServiceResult<Community> betofficeServiceResult = communityService.create(communityReference, seasonReference, name, year,
+                nickname);
+
+        Optional<CommunityJson> community = betofficeServiceResult.result().map(CommunityJsonMapper::map);
+
+        return community.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @PutMapping(value = "/community", headers = { "Content-type=application/json" })
