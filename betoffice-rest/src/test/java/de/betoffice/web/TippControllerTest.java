@@ -316,7 +316,7 @@ class TippControllerTest extends AbstractBetofficeSpringWebTestCase {
         communityService.createUser(data.user);
         
         CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(data.season.getReference());
-        communityService.create(defaultPlayerGroup, data.season.getReference(), defaultPlayerGroup.getShortName(), Nickname.of(NICKNAME));
+        communityService.create(defaultPlayerGroup, data.season.getReference(), defaultPlayerGroup.getShortName(), "2024", Nickname.of(NICKNAME));
         communityService.addMember(CommunityService.defaultPlayerGroup(data.season.getReference()), data.user.getNickname());
     }
 
