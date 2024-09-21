@@ -25,11 +25,14 @@ package de.betoffice.web.json;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  * Holds the user data.
  * 
  * @author Andre Winkler
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PartyJson extends AbstractIdentifier implements Serializable {
 
     private static final long serialVersionUID = -1479900122605812841L;

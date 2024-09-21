@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb Copyright (c) 2016-2022 by Andre Winkler. All rights
+ * Project betoffice-jweb Copyright (c) 2016-2024 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -36,6 +36,15 @@ import de.winkler.betoffice.storage.User;
  */
 public class PartyJsonMapper {
 
+    public static PartyJson mapSmall(User user, PartyJson partyJson) {
+        partyJson.setId(user.getId());
+        partyJson.setName(user.getName());
+        partyJson.setSurname(user.getSurname());
+        partyJson.setMail(user.getEmail());
+        partyJson.setNickname(user.getNickname().value());
+        return partyJson;
+    }
+
     public static PartyJson map(User user, PartyJson partyJson) {
         partyJson.setId(user.getId());
         partyJson.setName(user.getName());
@@ -51,9 +60,9 @@ public class PartyJsonMapper {
     public static List<PartyJson> map(List<User> users) {
         return users.stream().map(PartyJsonMapper::map).toList();
     }
-    
+
     private static PartyJson map(User user) {
-    	return map(user, new PartyJson());
+        return map(user, new PartyJson());
     }
 
     public static User reverse(PartyJson partyJson, User user) {

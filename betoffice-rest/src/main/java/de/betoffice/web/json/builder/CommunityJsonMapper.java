@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb Copyright (c) 2013-2023 by Andre Winkler. All rights
+ * Project betoffice-jweb Copyright (c) 2013-2024 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -39,7 +39,7 @@ public class CommunityJsonMapper {
         json.setName(community.getName());
         json.setYear(community.getYear());
         json.setShortName(community.getReference().getShortName());
-        json.setCommunityManager(PartyJsonMapper.map(community.getCommunityManager(), new PartyJson()));
+        json.setCommunityManager(PartyJsonMapper.mapSmall(community.getCommunityManager(), new PartyJson()));
         json.setSeason(SeasonJsonMapper.map(community.getSeason(), new SeasonJson()));
         return json;
     }

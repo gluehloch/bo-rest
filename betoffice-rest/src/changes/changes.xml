@@ -17,7 +17,10 @@
                 More compact information.
             </action>
             <action dev="andrewinkler" type="update" date="2024-05-15">
-                Added some informations: Game contains the associated groupe (type). Season contains the associated season type. 
+                Added some informations: Game contains the associated groupe (type). Season contains the associated season type.
+            </action>
+            <action dev="andrewinkler" type="update" date="2024-09-21">
+                Implement community management.
             </action>
         </release>
 
