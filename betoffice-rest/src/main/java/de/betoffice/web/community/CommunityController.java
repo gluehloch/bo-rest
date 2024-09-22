@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -98,6 +99,16 @@ public class CommunityController {
         return ResponseEntity.ok(communities);
     }
 
+    @GetMapping(value = "/community/{communityId}", headers = { "Content-type=application/json" })
+    public ResponseEntity<CommunityJson> findCommunity(
+            @PathVariable("communityId") Long communityId,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
+
+        return ResponseEntity.ok(CommunityJsonMapper.map(communityService.find(communityId)));
+        
+    }
+
     @PostMapping(value = "/community", headers = { "Content-type=application/json" })
     public ResponseEntity<CommunityJson> createCommunity(
             @RequestBody CommunityJson communityJson,
@@ -114,7 +125,11 @@ public class CommunityController {
         SeasonReference seasonReference = SeasonReference.of(season.getYear(), season.getName());
         Nickname nickname = Nickname.of(communityManager.getNickname());
 
-        BetofficeServiceResult<Community> betofficeServiceResult = communityService.create(communityReference, seasonReference, name, year,
+        BetofficeServiceResult<Community> betofficeServiceResult = communityService.create(
+                communityReference,
+                seasonReference,
+                name,
+                year,
                 nickname);
 
         Optional<CommunityJson> community = betofficeServiceResult.result().map(CommunityJsonMapper::map);
