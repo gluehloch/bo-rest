@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2000-2017 by Andre Winkler. All
+ * Project betoffice-jweb-misc Copyright (c) 2000-2024 by Andre Winkler. All
  * rights reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -24,6 +24,7 @@
 package de.betoffice.web.admin;
 
 import java.util.List;
+import java.util.Optional;
 
 import de.betoffice.web.AccessDeniedException;
 import de.betoffice.web.json.GameJson;
@@ -34,6 +35,7 @@ import de.betoffice.web.json.SeasonGroupTeamJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SeasonMemberJson;
 import de.betoffice.web.json.TeamJson;
+import de.winkler.betoffice.storage.enums.TeamType;
 
 /**
  * Betoffice administration JSON service interface
@@ -87,6 +89,15 @@ public interface AdminService {
      * @return all teams
      */
     List<TeamJson> findTeams();
+
+    /**
+     * Find all teams
+     * 
+     * @param  teamType   the requested team type
+     * @param  nameFilter a filter for the team name
+     * @return            all teams matching the request
+     */
+    List<TeamJson> findTeams(Optional<TeamType> teamType, String nameFilter);
 
     /**
      * Add a new team.

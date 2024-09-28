@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb Copyright (c) 2015-2021 by Andre Winkler. All rights
+ * Project betoffice-jweb Copyright (c) 2015-2024 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -54,6 +55,7 @@ import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SeasonMemberJson;
 import de.betoffice.web.json.TeamJson;
 import de.betoffice.web.season.BetofficeService;
+import de.winkler.betoffice.storage.enums.TeamType;
 
 /**
  * The administration part of the betoffice.
@@ -241,7 +243,7 @@ public class AdministrationController {
         betofficeAdminJsonService.addTeamToGroup(seasonJson, groupTypeJson, teamJson);
         return seasonJson;
     }
-    
+
     @CrossOrigin
     @DeleteMapping(value = "/season/{seasonId}/groupteam/{groupTypeId}/team/{teamId}")
     public SeasonJson removeTeamFromGroup(@PathVariable("seasonId") Long seasonId,
@@ -249,7 +251,7 @@ public class AdministrationController {
             @PathVariable("teamId") Long teamId,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
-        
+
         betofficeAdminJsonService.validateAdminSession(token);
         SeasonJson seasonJson = betofficeBasicJsonService.findSeasonById(seasonId);
         GroupTypeJson groupTypeJson = betofficeAdminJsonService.findGroupType(groupTypeId);
@@ -293,6 +295,12 @@ public class AdministrationController {
     @RequestMapping(value = "/team/{teamId}", method = RequestMethod.GET, headers = { "Content-type=application/json" })
     public TeamJson findTeam(@PathVariable("teamId") Long teamId) {
         return betofficeAdminJsonService.findTeam(teamId);
+    }
+
+    @RequestMapping(value = "/team", method = RequestMethod.GET, headers = { "Content-type=application/json" })
+    public List<TeamJson> findTeams(@RequestParam("filter") String teamFilter,
+            @RequestParam("type") TeamType teamType) {
+        return betofficeAdminJsonService.findTeams();
     }
 
     @RequestMapping(value = "/team", method = RequestMethod.GET, headers = { "Content-type=application/json" })

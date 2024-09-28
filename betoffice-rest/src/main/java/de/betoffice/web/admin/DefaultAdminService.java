@@ -68,6 +68,7 @@ import de.winkler.betoffice.storage.Season;
 import de.winkler.betoffice.storage.Session;
 import de.winkler.betoffice.storage.Team;
 import de.winkler.betoffice.storage.User;
+import de.winkler.betoffice.storage.enums.TeamType;
 
 /**
  * Betoffice administration JSON service interface.
@@ -131,11 +132,12 @@ public class DefaultAdminService implements AdminService {
 
         if (round == null) {
             openligadbUpdateService.createOrUpdateRound(seasonId, 0);
-        } else  {
+        } else {
             openligadbUpdateService.createOrUpdateRound(round.getSeason().getId(), round.getIndex());
         }
 
-        GameList updatedGameList = seasonManagerService.findNextRound(roundId).orElseGet(() -> seasonManagerService.findFirstRound(season).orElseThrow());
+        GameList updatedGameList = seasonManagerService.findNextRound(roundId)
+                .orElseGet(() -> seasonManagerService.findFirstRound(season).orElseThrow());
         return JsonBuilder.toJsonWithGames(seasonManagerService.findRoundGames(updatedGameList.getId()).get());
     }
 
@@ -150,11 +152,17 @@ public class DefaultAdminService implements AdminService {
             openligadbUpdateService.createOrUpdateRound(seasonId, round.getIndex() + 1);
         }
 
-        GameList updatedGameList = seasonManagerService.findNextRound(roundId).orElseGet(() -> seasonManagerService.findFirstRound(season).orElseThrow());
+        GameList updatedGameList = seasonManagerService.findNextRound(roundId)
+                .orElseGet(() -> seasonManagerService.findFirstRound(season).orElseThrow());
         return JsonBuilder.toJsonWithGames(seasonManagerService.findRoundGames(updatedGameList.getId()).get());
     }
 
     // -- team administration -------------------------------------------------
+
+    @Override
+    public List<TeamJson> findTeams(Optional<TeamType> teamType, String filter) {
+        return TeamJsonMapper.map(masterDataManagerService.findTeams(teamType, filter));
+    }
 
     @Override
     public TeamJson findTeam(long teamId) {
