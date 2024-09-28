@@ -26,7 +26,6 @@ package de.betoffice.web.research;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,22 +50,16 @@ import de.winkler.betoffice.storage.enums.TeamType;
  */
 @Controller
 @RequestMapping("/research")
-public class ResearchDataServlet {
+public class ResearchController {
 
-    private SeasonManagerService seasonManagerService;
+    private final SeasonManagerService seasonManagerService;
+    private final MasterDataManagerService masterDataManagerService;
 
-    @Autowired
-    public void setSeasonManagerService(
-            SeasonManagerService _seasonManagerService) {
-        seasonManagerService = _seasonManagerService;
-    }
+    public ResearchController(SeasonManagerService seasonManagerService,
+            MasterDataManagerService masterDataManagerService) {
 
-    private MasterDataManagerService masterDataManagerService;
-
-    @Autowired
-    public void setMasterDataManagerService(
-            MasterDataManagerService _masterDataManagerService) {
-        masterDataManagerService = _masterDataManagerService;
+        this.seasonManagerService = seasonManagerService;
+        this.masterDataManagerService = masterDataManagerService;
     }
 
     // ------------------------------------------------------------------------
@@ -81,8 +74,7 @@ public class ResearchDataServlet {
     @CrossOrigin
     @RequestMapping(value = "/findFifaTeams", method = RequestMethod.GET)
     public @ResponseBody List<TeamJson> findFifaTeams() {
-        List<Team> fifaTeams = masterDataManagerService
-                .findTeams(TeamType.FIFA);
+        List<Team> fifaTeams = masterDataManagerService.findTeams(TeamType.FIFA);
         return JsonBuilder.toJsonWithTeams(fifaTeams);
     }
 
@@ -90,13 +82,18 @@ public class ResearchDataServlet {
     @RequestMapping(value = "/teamvsteam", method = RequestMethod.GET)
     public @ResponseBody HistoryTeamVsTeamJson research(
             @RequestParam(value = "homeTeam", required = true) long homeTeamId,
-            @RequestParam(value = "guestTeam", required = true) long guestTeamId) {
+            @RequestParam(value = "guestTeam", required = true) long guestTeamId,
+            @RequestParam(value = "spin", required = false) Boolean spin) {
 
         Team homeTeam = masterDataManagerService.findTeamById(homeTeamId);
         Team guestTeam = masterDataManagerService.findTeamById(guestTeamId);
 
-        List<Game> findMatches = seasonManagerService.findMatches(homeTeam,
-                guestTeam);
+        List<Game> findMatches = null;
+        if (spin == null) {
+            findMatches = seasonManagerService.findMatches(homeTeam, guestTeam);
+        } else {
+            findMatches = seasonManagerService.findMatches(homeTeam, guestTeam, spin);
+        }
 
         return HistoryTeamVsTeamJsonMapper.map(findMatches);
     }
