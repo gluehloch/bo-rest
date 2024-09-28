@@ -24,6 +24,7 @@
 package de.betoffice.web.admin;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -297,10 +298,11 @@ public class AdministrationController {
         return betofficeAdminJsonService.findTeam(teamId);
     }
 
-    @RequestMapping(value = "/team", method = RequestMethod.GET, headers = { "Content-type=application/json" })
-    public List<TeamJson> findTeams(@RequestParam("filter") String teamFilter,
-            @RequestParam("type") TeamType teamType) {
-        return betofficeAdminJsonService.findTeams();
+    @RequestMapping(value = "/team-search", method = RequestMethod.GET, headers = { "Content-type=application/json" })
+    public List<TeamJson> findTeams(
+            @RequestParam("filter") String teamFilter,
+            @RequestParam(name = "type", required = false) TeamType teamType) {
+        return betofficeAdminJsonService.findTeams(Optional.ofNullable(teamType), teamFilter);
     }
 
     @RequestMapping(value = "/team", method = RequestMethod.GET, headers = { "Content-type=application/json" })
