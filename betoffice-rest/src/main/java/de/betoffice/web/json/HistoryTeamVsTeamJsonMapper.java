@@ -44,7 +44,7 @@ public class HistoryTeamVsTeamJsonMapper {
             json.setHomeTeamGoals(game.getResult().getHomeGoals());
             json.setGuestTeamGoals(game.getResult().getGuestGoals());
             json.setMatchDate(game.getDateTime());
-            history.addTeamVsTeamJson(json);
+            history.addGame(json);
         }
         return history;
     }

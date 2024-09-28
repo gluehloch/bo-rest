@@ -1,7 +1,7 @@
 /*
  * ============================================================================
  * Project betoffice-jweb
- * Copyright (c) 2000-2019 by Andre Winkler. All rights reserved.
+ * Copyright (c) 2000-2024 by Andre Winkler. All rights reserved.
  * ============================================================================
  *          GNU GENERAL PUBLIC LICENSE
  *  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
@@ -26,12 +26,12 @@ package de.betoffice.web.research;
 
 import java.util.List;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.web.json.HistoryTeamVsTeamJson;
 import de.betoffice.web.json.HistoryTeamVsTeamJsonMapper;
@@ -48,8 +48,9 @@ import de.winkler.betoffice.storage.enums.TeamType;
  * 
  * @author Andre Winkler
  */
-@Controller
-@RequestMapping("/research")
+@CrossOrigin
+@RestController
+@RequestMapping("/office/research")
 public class ResearchController {
 
     private final SeasonManagerService seasonManagerService;
@@ -64,21 +65,18 @@ public class ResearchController {
 
     // ------------------------------------------------------------------------
 
-    @CrossOrigin
     @RequestMapping(value = "/findDfbTeams", method = RequestMethod.GET)
     public @ResponseBody List<TeamJson> findDfbTeams() {
         List<Team> dfbTeams = masterDataManagerService.findTeams(TeamType.DFB);
         return JsonBuilder.toJsonWithTeams(dfbTeams);
     }
 
-    @CrossOrigin
     @RequestMapping(value = "/findFifaTeams", method = RequestMethod.GET)
     public @ResponseBody List<TeamJson> findFifaTeams() {
         List<Team> fifaTeams = masterDataManagerService.findTeams(TeamType.FIFA);
         return JsonBuilder.toJsonWithTeams(fifaTeams);
     }
 
-    @CrossOrigin
     @RequestMapping(value = "/teamvsteam", method = RequestMethod.GET)
     public @ResponseBody HistoryTeamVsTeamJson research(
             @RequestParam(value = "homeTeam", required = true) long homeTeamId,

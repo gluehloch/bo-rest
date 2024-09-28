@@ -1,8 +1,7 @@
 /*
- * $Id$
  * ============================================================================
  * Project betoffice-jweb
- * Copyright (c) 2000-2014 by Andre Winkler. All rights reserved.
+ * Copyright (c) 2000-2024 by Andre Winkler. All rights reserved.
  * ============================================================================
  *          GNU GENERAL PUBLIC LICENSE
  *  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
@@ -32,14 +31,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 /**
  * Team versus team info.
  * 
- * @author by Andre Winkler, $LastChangedBy$
- * @version $LastChangedRevision$ $LastChangedDate$
  */
 public class TeamVsTeamJson {
 
     private String homeTeamName;
     private String guestTeamName;
-    
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JsonDateTimeFormat.DATETIME_PATTERN, timezone = JsonDateTimeFormat.TIMZONE)
     private ZonedDateTime matchDate;
     private int homeTeamGoals;
@@ -53,8 +50,7 @@ public class TeamVsTeamJson {
     }
 
     /**
-     * @param homeTeamName
-     *            the homeTeamName to set
+     * @param homeTeamName the homeTeamName to set
      */
     public void setHomeTeamName(String homeTeamName) {
         this.homeTeamName = homeTeamName;
@@ -68,8 +64,7 @@ public class TeamVsTeamJson {
     }
 
     /**
-     * @param guestTeamName
-     *            the guestTeamName to set
+     * @param guestTeamName the guestTeamName to set
      */
     public void setGuestTeamName(String guestTeamName) {
         this.guestTeamName = guestTeamName;
@@ -83,8 +78,7 @@ public class TeamVsTeamJson {
     }
 
     /**
-     * @param matchDate
-     *            the matchDate to set
+     * @param matchDate the matchDate to set
      */
     public void setMatchDate(ZonedDateTime matchDate) {
         this.matchDate = matchDate;
@@ -98,8 +92,7 @@ public class TeamVsTeamJson {
     }
 
     /**
-     * @param homeTeamGoals
-     *            the homeTeamGoals to set
+     * @param homeTeamGoals the homeTeamGoals to set
      */
     public void setHomeTeamGoals(int homeTeamGoals) {
         this.homeTeamGoals = homeTeamGoals;
@@ -113,8 +106,7 @@ public class TeamVsTeamJson {
     }
 
     /**
-     * @param guestTeamGoals
-     *            the guestTeamGoals to set
+     * @param guestTeamGoals the guestTeamGoals to set
      */
     public void setGuestTeamGoals(int guestTeamGoals) {
         this.guestTeamGoals = guestTeamGoals;

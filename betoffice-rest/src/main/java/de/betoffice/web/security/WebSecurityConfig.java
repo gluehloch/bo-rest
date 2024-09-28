@@ -120,57 +120,68 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain configure(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+    public SecurityFilterChain configure(HttpSecurity http, AuthenticationManager authenticationManager)
+            throws Exception {
         http
-            .cors(AbstractHttpConfigurer::disable)
-            .csrf(AbstractHttpConfigurer::disable);
+                .cors(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable);
 
-                // .headers().cacheControl().and()
+        // .headers().cacheControl().and()
 
-            //                .logout()
-            //                .logoutUrl("/logout")
-            //                .logoutSuccessHandler(logoutSuccessHandler()).deleteCookies("JSESSIONID")
-            //                .and()
-                //                .formLogin().and()
-                //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        //                .logout()
+        //                .logoutUrl("/logout")
+        //                .logoutSuccessHandler(logoutSuccessHandler()).deleteCookies("JSESSIONID")
+        //                .and()
+        //                .formLogin().and()
+        //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         /*
         http.authorizeHttpRequests(authz -> authz
-);
+        );
                 */
 
         http.authorizeHttpRequests(authz -> authz /*.anyRequest().permitAll()*/
-                .requestMatchers(antMatcher(HttpMethod.GET,    BetofficeUrlPath.URL_OFFICE + "/**")).permitAll()
+                .requestMatchers(antMatcher(HttpMethod.GET, BetofficeUrlPath.URL_OFFICE + "/**")).permitAll()
                 // Authentication
-                .requestMatchers(antMatcher(HttpMethod.GET,    BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_PING)).permitAll()
-                .requestMatchers(antMatcher(HttpMethod.POST,   BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_LOGIN)).permitAll()
-                .requestMatchers(antMatcher(HttpMethod.POST,   BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_LOGOUT)).authenticated()
+                .requestMatchers(antMatcher(HttpMethod.GET,
+                        BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_PING))
+                .permitAll()
+                .requestMatchers(antMatcher(HttpMethod.POST,
+                        BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_LOGIN))
+                .permitAll()
+                .requestMatchers(antMatcher(HttpMethod.POST,
+                        BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_LOGOUT))
+                .authenticated()
                 // Send tipp form
-                .requestMatchers(antMatcher(HttpMethod.POST,   BetofficeUrlPath.URL_OFFICE + "/tipp/submit")).hasRole("TIPPER")
+                .requestMatchers(antMatcher(HttpMethod.POST, BetofficeUrlPath.URL_OFFICE + "/tipp/submit"))
+                .hasRole("TIPPER")
                 // Community Administration
-                .requestMatchers(antMatcher(HttpMethod.GET,    BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**")).hasRole("ADMIN")
-                .requestMatchers(antMatcher(HttpMethod.PUT,    BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**")).hasRole("ADMIN")
-                .requestMatchers(antMatcher(HttpMethod.POST,   BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**")).hasRole("ADMIN")
-                .requestMatchers(antMatcher(HttpMethod.DELETE, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**")).hasRole("ADMIN")
+                .requestMatchers(antMatcher(HttpMethod.GET, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**"))
+                .hasRole("ADMIN")
+                .requestMatchers(antMatcher(HttpMethod.PUT, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**"))
+                .hasRole("ADMIN")
+                .requestMatchers(antMatcher(HttpMethod.POST, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**"))
+                .hasRole("ADMIN")
+                .requestMatchers(antMatcher(HttpMethod.DELETE, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**"))
+                .hasRole("ADMIN")
                 // Administration
-                .requestMatchers(antMatcher(HttpMethod.GET,    BetofficeUrlPath.URL_ADMIM + "/**")).hasRole("ADMIN")
-                .requestMatchers(antMatcher(HttpMethod.PUT,    BetofficeUrlPath.URL_ADMIM + "/**")).hasRole("ADMIN")
-                .requestMatchers(antMatcher(HttpMethod.POST,   BetofficeUrlPath.URL_ADMIM + "/**")).hasRole("ADMIN")
-                .requestMatchers(antMatcher(HttpMethod.DELETE, BetofficeUrlPath.URL_ADMIM + "/**")).hasRole("ADMIN")
-        );
-                // Authentication Endpoint
+                .requestMatchers(antMatcher(HttpMethod.GET, BetofficeUrlPath.URL_ADMIM + "/**")).hasRole("ADMIN")
+                .requestMatchers(antMatcher(HttpMethod.PUT, BetofficeUrlPath.URL_ADMIM + "/**")).hasRole("ADMIN")
+                .requestMatchers(antMatcher(HttpMethod.POST, BetofficeUrlPath.URL_ADMIM + "/**")).hasRole("ADMIN")
+                .requestMatchers(antMatcher(HttpMethod.DELETE, BetofficeUrlPath.URL_ADMIM + "/**")).hasRole("ADMIN"));
+        // Authentication Endpoint
         /*
                 http.requestMatchers(HttpMethod.GET,     BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_PING).anonymous()
                 .requestMatchers(HttpMethod.POST,    BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_LOGIN).anonymous()
                 .requestMatchers(HttpMethod.POST,    BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_LOGOUT).authenticated()
                 */
 
-                /*
-                .requestMatchers(antMatcher(HttpMethod.POST,   BetofficeUrlPath.URL_OFFICE + "/tipp/submit")).hasRole("TIPPER")
-                .requestMatchers(antMatcher(HttpMethod.GET,    BetofficeUrlPath.URL_ADMIM)).hasRole("ADMIN")
-                .requestMatchers(antMatcher(HttpMethod.PUT,    BetofficeUrlPath.URL_ADMIM)).hasRole("ADMIN")
-                .requestMatchers(antMatcher(HttpMethod.POST,   BetofficeUrlPath.URL_ADMIM)).hasRole("ADMIN")
-                .requestMatchers(antMatcher(HttpMethod.DELETE, BetofficeUrlPath.URL_ADMIM)).hasRole("ADMIN")
-                */
+        /*
+        .requestMatchers(antMatcher(HttpMethod.POST,   BetofficeUrlPath.URL_OFFICE + "/tipp/submit")).hasRole("TIPPER")
+        .requestMatchers(antMatcher(HttpMethod.GET,    BetofficeUrlPath.URL_ADMIM)).hasRole("ADMIN")
+        .requestMatchers(antMatcher(HttpMethod.PUT,    BetofficeUrlPath.URL_ADMIM)).hasRole("ADMIN")
+        .requestMatchers(antMatcher(HttpMethod.POST,   BetofficeUrlPath.URL_ADMIM)).hasRole("ADMIN")
+        .requestMatchers(antMatcher(HttpMethod.DELETE, BetofficeUrlPath.URL_ADMIM)).hasRole("ADMIN")
+        */
 
         //.antMatchers(HttpMethod.GET, "/books/**").hasRole("USER")
         //.antMatchers(HttpMethod.POST, "/books").hasRole("ADMIN")
@@ -179,7 +190,7 @@ public class WebSecurityConfig {
         //.antMatchers(HttpMethod.DELETE, "/books/**").hasRole("ADMIN")
         http.addFilter(new JWTAuthenticationFilter(authenticationManager, authService));
         http.addFilter(new JWTAuthorizationFilter(authenticationManager, authService));
-        
+
         return http.build();
     }
 

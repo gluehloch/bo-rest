@@ -34,21 +34,21 @@ import java.util.List;
  */
 public class HistoryTeamVsTeamJson {
 
-    private List<TeamVsTeamJson> teamVsTeamJsons = new ArrayList<>();
+    private List<TeamVsTeamJson> games = new ArrayList<>();
 
-    public List<TeamVsTeamJson> getTeamVsTeamJsons() {
-        return teamVsTeamJsons;
+    public List<TeamVsTeamJson> getGames() {
+        return games;
     }
 
-    public void addTeamVsTeamJson(TeamVsTeamJson teamVsTeamJson) {
-        teamVsTeamJsons.add(teamVsTeamJson);
+    public void addGame(TeamVsTeamJson teamVsTeamJson) {
+        games.add(teamVsTeamJson);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("HistoryTeamVsTeamJson [");
         sb.append("]");
-        for (TeamVsTeamJson match : teamVsTeamJsons) {
+        for (TeamVsTeamJson match : games) {
             sb.append("(").append(match).append(")");
         }
         return sb.toString();
