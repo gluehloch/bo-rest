@@ -35,6 +35,7 @@ import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.TeamJson;
 import de.betoffice.web.json.UserTableJson;
+import de.winkler.betoffice.storage.enums.TeamType;
 
 /**
  * Betoffice JSON service interface
@@ -211,6 +212,15 @@ public interface BetofficeService {
      * @return all teams
      */
     List<TeamJson> findAllTeams();
+
+    /**
+     * Find all teams
+     * 
+     * @param  teamType   the requested team type
+     * @param  nameFilter a filter for the team name
+     * @return            all teams matching the request
+     */
+    List<TeamJson> findTeams(Optional<TeamType> teamType, String nameFilter);
 
     /**
      * Find all seasons

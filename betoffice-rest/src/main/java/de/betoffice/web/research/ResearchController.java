@@ -25,6 +25,7 @@
 package de.betoffice.web.research;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +38,7 @@ import de.betoffice.web.json.HistoryTeamVsTeamJson;
 import de.betoffice.web.json.HistoryTeamVsTeamJsonMapper;
 import de.betoffice.web.json.JsonBuilder;
 import de.betoffice.web.json.TeamJson;
+import de.betoffice.web.json.builder.TeamJsonMapper;
 import de.winkler.betoffice.service.MasterDataManagerService;
 import de.winkler.betoffice.service.SeasonManagerService;
 import de.winkler.betoffice.storage.Game;
@@ -75,6 +77,13 @@ public class ResearchController {
     public @ResponseBody List<TeamJson> findFifaTeams() {
         List<Team> fifaTeams = masterDataManagerService.findTeams(TeamType.FIFA);
         return JsonBuilder.toJsonWithTeams(fifaTeams);
+    }
+
+    @RequestMapping(value = "/team-search", method = RequestMethod.GET, headers = { "Content-type=application/json" })
+    public List<TeamJson> findTeams(
+            @RequestParam(name = "filter", required = false) String teamFilter,
+            @RequestParam(name = "type", required = false) TeamType teamType) {
+        return TeamJsonMapper.map(masterDataManagerService.findTeams(Optional.ofNullable(teamType), teamFilter));
     }
 
     @RequestMapping(value = "/game/team-vs-team", method = RequestMethod.GET)

@@ -47,6 +47,7 @@ import de.betoffice.web.json.TeamResultJson;
 import de.betoffice.web.json.UserJson;
 import de.betoffice.web.json.UserTableJson;
 import de.betoffice.web.json.builder.GoalJsonMapper;
+import de.betoffice.web.json.builder.TeamJsonMapper;
 import de.winkler.betoffice.service.CommunityCalculatorService;
 import de.winkler.betoffice.service.CommunityService;
 import de.winkler.betoffice.service.DateTimeProvider;
@@ -64,6 +65,7 @@ import de.winkler.betoffice.storage.SeasonRange;
 import de.winkler.betoffice.storage.Team;
 import de.winkler.betoffice.storage.TeamResult;
 import de.winkler.betoffice.storage.UserResult;
+import de.winkler.betoffice.storage.enums.TeamType;
 
 /**
  * Basic rest service features for betoffice.
@@ -408,6 +410,11 @@ public class DefaultBetofficeService implements BetofficeService {
     public List<TeamJson> findAllTeams() {
         List<Team> teams = masterDataManagerService.findAllTeams();
         return JsonBuilder.toJsonWithTeams(teams);
+    }
+
+    @Override
+    public List<TeamJson> findTeams(Optional<TeamType> teamType, String filter) {
+        return TeamJsonMapper.map(masterDataManagerService.findTeams(teamType, filter));
     }
 
     @Override
