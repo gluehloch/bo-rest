@@ -65,13 +65,13 @@ public class ResearchController {
 
     // ------------------------------------------------------------------------
 
-    @RequestMapping(value = "/findDfbTeams", method = RequestMethod.GET)
+    @RequestMapping(value = "/team/dfb", method = RequestMethod.GET)
     public @ResponseBody List<TeamJson> findDfbTeams() {
         List<Team> dfbTeams = masterDataManagerService.findTeams(TeamType.DFB);
         return JsonBuilder.toJsonWithTeams(dfbTeams);
     }
 
-    @RequestMapping(value = "/findFifaTeams", method = RequestMethod.GET)
+    @RequestMapping(value = "/team/fifa", method = RequestMethod.GET)
     public @ResponseBody List<TeamJson> findFifaTeams() {
         List<Team> fifaTeams = masterDataManagerService.findTeams(TeamType.FIFA);
         return JsonBuilder.toJsonWithTeams(fifaTeams);
