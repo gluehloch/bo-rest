@@ -300,7 +300,7 @@ public class AdministrationController {
 
     @RequestMapping(value = "/team-search", method = RequestMethod.GET, headers = { "Content-type=application/json" })
     public List<TeamJson> findTeams(
-            @RequestParam("filter") String teamFilter,
+            @RequestParam(name = "filter", required = false) String teamFilter,
             @RequestParam(name = "type", required = false) TeamType teamType) {
         return betofficeAdminJsonService.findTeams(Optional.ofNullable(teamType), teamFilter);
     }
