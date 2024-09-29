@@ -77,7 +77,7 @@ public class ResearchController {
         return JsonBuilder.toJsonWithTeams(fifaTeams);
     }
 
-    @RequestMapping(value = "/teamvsteam", method = RequestMethod.GET)
+    @RequestMapping(value = "/game/team-vs-team", method = RequestMethod.GET)
     public @ResponseBody HistoryTeamVsTeamJson research(
             @RequestParam(value = "homeTeam", required = true) long homeTeamId,
             @RequestParam(value = "guestTeam", required = true) long guestTeamId,
@@ -94,6 +94,30 @@ public class ResearchController {
         }
 
         return HistoryTeamVsTeamJsonMapper.map(findMatches);
+    }
+
+    @RequestMapping(value = "/game/team", method = RequestMethod.GET)
+    public @ResponseBody HistoryTeamVsTeamJson researchByTeam(
+            @RequestParam(value = "team", required = true) long teamId) {
+        Team team = masterDataManagerService.findTeamById(teamId);
+        final var matches = seasonManagerService.findMatches(team);
+        return HistoryTeamVsTeamJsonMapper.map(matches);
+    }
+
+    @RequestMapping(value = "/game/home-team", method = RequestMethod.GET)
+    public @ResponseBody HistoryTeamVsTeamJson researchByHomeTeam(
+            @RequestParam(value = "team", required = true) long teamId) {
+        Team team = masterDataManagerService.findTeamById(teamId);
+        final var matches = seasonManagerService.findMatchesWithHomeTeam(team);
+        return HistoryTeamVsTeamJsonMapper.map(matches);
+    }
+
+    @RequestMapping(value = "/game/guest-team", method = RequestMethod.GET)
+    public @ResponseBody HistoryTeamVsTeamJson researchByGuestTeam(
+            @RequestParam(value = "team", required = true) long teamId) {
+        Team team = masterDataManagerService.findTeamById(teamId);
+        final var matches = seasonManagerService.findMatchesWithGuestTeam(team);
+        return HistoryTeamVsTeamJsonMapper.map(matches);
     }
 
 }
