@@ -115,9 +115,10 @@ public class ResearchController {
 
     @RequestMapping(value = "/game/home-team", method = RequestMethod.GET)
     public @ResponseBody HistoryTeamVsTeamJson researchByHomeTeam(
-            @RequestParam(value = "team", required = true) long teamId) {
+            @RequestParam(value = "team", required = true) long teamId,
+            @RequestParam(value = "limit", required = false, defaultValue = "100") int limit) {
         Team team = masterDataManagerService.findTeamById(teamId);
-        final var matches = seasonManagerService.findMatchesWithHomeTeam(team);
+        final var matches = seasonManagerService.findMatchesWithHomeTeam(team, limit);
         return HistoryTeamVsTeamJsonMapper.map(matches);
     }
 
