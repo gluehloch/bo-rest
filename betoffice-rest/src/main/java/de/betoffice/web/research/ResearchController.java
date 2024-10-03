@@ -90,16 +90,17 @@ public class ResearchController {
     public @ResponseBody HistoryTeamVsTeamJson research(
             @RequestParam(value = "homeTeam", required = true) long homeTeamId,
             @RequestParam(value = "guestTeam", required = true) long guestTeamId,
-            @RequestParam(value = "spin", required = false) Boolean spin) {
+            @RequestParam(value = "spin", required = false) Boolean spin,
+            @RequestParam(value = "limit", required = false, defaultValue = "100") int limit) {
 
         Team homeTeam = masterDataManagerService.findTeamById(homeTeamId);
         Team guestTeam = masterDataManagerService.findTeamById(guestTeamId);
 
         List<Game> findMatches = null;
         if (spin == null) {
-            findMatches = seasonManagerService.findMatches(homeTeam, guestTeam);
+            findMatches = seasonManagerService.findMatches(homeTeam, guestTeam, limit);
         } else {
-            findMatches = seasonManagerService.findMatches(homeTeam, guestTeam, spin);
+            findMatches = seasonManagerService.findMatches(homeTeam, guestTeam, spin, limit);
         }
 
         return HistoryTeamVsTeamJsonMapper.map(findMatches);
@@ -107,9 +108,10 @@ public class ResearchController {
 
     @RequestMapping(value = "/game/team", method = RequestMethod.GET)
     public @ResponseBody HistoryTeamVsTeamJson researchByTeam(
-            @RequestParam(value = "team", required = true) long teamId) {
+            @RequestParam(value = "team", required = true) long teamId,
+            @RequestParam(value = "limit", required = false, defaultValue = "100") int limit) {
         Team team = masterDataManagerService.findTeamById(teamId);
-        final var matches = seasonManagerService.findMatches(team);
+        final var matches = seasonManagerService.findMatches(team, limit);
         return HistoryTeamVsTeamJsonMapper.map(matches);
     }
 
@@ -124,9 +126,10 @@ public class ResearchController {
 
     @RequestMapping(value = "/game/guest-team", method = RequestMethod.GET)
     public @ResponseBody HistoryTeamVsTeamJson researchByGuestTeam(
-            @RequestParam(value = "team", required = true) long teamId) {
+            @RequestParam(value = "team", required = true) long teamId,
+            @RequestParam(value = "limit", required = false, defaultValue = "100") int limit) {
         Team team = masterDataManagerService.findTeamById(teamId);
-        final var matches = seasonManagerService.findMatchesWithGuestTeam(team);
+        final var matches = seasonManagerService.findMatchesWithGuestTeam(team, limit);
         return HistoryTeamVsTeamJsonMapper.map(matches);
     }
 
