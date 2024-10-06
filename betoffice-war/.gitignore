@@ -19,6 +19,7 @@ project.xml.md5
 
 tmp
 
+build-deploy.sh
 pirates
 *.iml
 .dbeaver
