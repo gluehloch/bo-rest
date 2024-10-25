@@ -22,6 +22,9 @@
             <action dev="andrewinkler" type="update" date="2024-09-21">
                 Implement community management.
             </action>
+            <action dev="andrewinkler" type="update" date="2024-10-05">
+                Research function: Last games of a team.
+            </action>
         </release>
 
         <!-- RELEASED -->
