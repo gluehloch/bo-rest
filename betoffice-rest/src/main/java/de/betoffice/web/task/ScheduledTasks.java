@@ -39,6 +39,11 @@ public class ScheduledTasks {
 
     @Scheduled(fixedRate = 1, timeUnit = TimeUnit.HOURS)
     public void scheduler() {
+
+        // TODO Wie stelle ich sicher, dass die Mail für einen Spieltag nur einmal rausgeschickt wird?
+        // Der Job läuft nur einmal am Tag. Falls Spiele an diesem Tag sind, wird eine Mail verschickt.
+        // Ist ein Spieltag über mehrere Tage verteilt, bekommt man dann für jeden Tag eine Email.
+
         Optional<GameList> nextTippRound = tippService.findNextTippRound(ZonedDateTime.now());
         Season season = nextTippRound.get().getSeason();
 
@@ -46,13 +51,11 @@ public class ScheduledTasks {
         members.stream().filter(ScheduledTasks::notify).forEach(u -> {
             try {
                 mailTask.send("betoffice@andre-winkler.de", u.getEmail(), "Spieltag!",
-                        "Heute ist Spieltag. Vergiss deinen Tipp nicht: https://andre-winkler.de");
+                        "Heute ist Spieltag. Vergiss deinen Tipp nicht: https://tippdiekistebier.de");
             } catch (Exception ex) {
                 LOG.error(String.format("Unable to send an email to %s", u.getEmail()), ex);
             }
         });
-
-        System.out.println("Hallo. Hallo. Hallo");
     }
 
     public static boolean notify(User user) {
