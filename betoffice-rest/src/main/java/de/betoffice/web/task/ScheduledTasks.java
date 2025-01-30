@@ -2,6 +2,8 @@ package de.betoffice.web.task;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -12,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.tipp.OfficeTippService;
 import de.winkler.betoffice.service.CommunityService;
@@ -53,28 +56,50 @@ public class ScheduledTasks {
         // Der Job läuft nur einmal am Tag. Falls Spiele an diesem Tag sind, wird eine Mail verschickt.
         // Ist ein Spieltag über mehrere Tage verteilt, bekommt man dann für jeden Tag eine Email.
 
-        Optional<GameList> nextTippRound = tippService.findNextTippRound(ZonedDateTime.now());
-        Season season = nextTippRound.get().getSeason();
+        final var now = ZonedDateTime.now();
+        final var localNow = now.toLocalDate();
 
-        Set<User> members = communityService.findMembers(CommunityService.defaultPlayerGroup(season.getReference()));
-        members.stream().filter(ScheduledTasks::notify).forEach(u -> {
-            try {
-                RoundJson roundJson = officeTippService.findTipp(nextTippRound.get().getId(),
-                        u.getNickname().getNickname());
+        Optional<GameList> nextTippRound = tippService.findNextTippRound(now);
+        nextTippRound.ifPresent(ntr -> {
+            Season season = nextTippRound.get().getSeason();
+            Set<User> members = communityService
+                    .findMembers(CommunityService.defaultPlayerGroup(season.getReference()));
+            members.stream().filter(ScheduledTasks::notify).forEach(u -> {
+                try {
+                    RoundJson roundJson = officeTippService.findTipp(
+                            nextTippRound.get().getId(),
+                            u.getNickname().getNickname());
 
-                StringBuilder sb = new StringBuilder();
-                sb.append("Heute ist Spieltag. Vergiss deinen Tipp nicht: https://tippdiekistebier.de\n");
-                for (var game : roundJson.getGames()) {
-                    sb.append("\n").append(game.getDateTime().format(formatter)).append(" ");
-                    sb.append(game.getHomeTeam().getName()).append(" - ").append(game.getGuestTeam().getName());
+                    List<GameJson> sortedGames = roundJson.getGames();
+                    sortedGames.sort(new Comparator<GameJson>() {
+                        @Override
+                        public int compare(GameJson o1, GameJson o2) {
+                            return o1.getDateTime().compareTo(o2.getDateTime());
+                        }
+                    });
+
+                    if (!sortedGames.isEmpty()
+                            && sortedGames.get(0).getDateTime().toLocalDate().compareTo(localNow) == 0) {
+                        StringBuilder sb = new StringBuilder();
+                        sb.append("Heute ist Spieltag. Vergiss deinen Tipp nicht: https://tippdiekistebier.de\n");
+                        sb.append("Für den aktuellen Spieltag liegen die folgenden Tipps von dir vor:");
+
+                        for (var game : sortedGames) {
+                            sb.append("\n").append(game.getDateTime().format(formatter)).append(" ");
+                            sb.append(game.getHomeTeam().getName()).append(" - ").append(game.getGuestTeam().getName());
+
+                            for (var tipp : game.getTipps()) {
+                                sb.append(" ");
+                                sb.append(tipp.getTipp().getHomeGoals()).append(":")
+                                        .append(tipp.getTipp().getGuestGoals());
+                            }
+                        }
+                        mailTask.send("betoffice@andre-winkler.de", u.getEmail(), "Spieltag!", sb.toString());
+                    }
+                } catch (Exception ex) {
+                    LOG.error(String.format("Unable to send an email to %s", u.getEmail()), ex);
                 }
-
-                // roundJson.getGames().get(0).getTipps();
-
-                mailTask.send("betoffice@andre-winkler.de", u.getEmail(), "Spieltag!", sb.toString());
-            } catch (Exception ex) {
-                LOG.error(String.format("Unable to send an email to %s", u.getEmail()), ex);
-            }
+            });
         });
     }
 
