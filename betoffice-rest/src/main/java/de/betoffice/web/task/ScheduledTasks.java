@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +47,8 @@ public class ScheduledTasks {
         this.mailTask = mailTask;
     }
 
-    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.DAYS)
+    // @Scheduled(fixedRate = 1, timeUnit = TimeUnit.DAYS)
+    @Scheduled(cron = "0 0 1 * * *")
     public void scheduler() {
         LOG.info("Start scheduler...");
 
