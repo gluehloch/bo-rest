@@ -25,9 +25,6 @@ package de.betoffice.web.auth;
 
 import java.time.ZonedDateTime;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -46,6 +43,8 @@ import de.betoffice.web.json.PingJson;
 import de.betoffice.web.json.SecurityTokenJson;
 import de.betoffice.web.security.SecurityConstants;
 import de.winkler.betoffice.service.SecurityToken;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 /**
  * Authentication controller: Login and logout.
@@ -70,9 +69,10 @@ public class AuthenticationController {
     }
 
     @PostMapping(value = BetofficeUrlPath.URL_AUTHENTICATION_LOGIN, headers = { "Content-type=application/json" })
-    public ResponseEntity<SecurityTokenJson> login(@RequestBody AuthenticationForm authenticationForm,
-                                                   @RequestHeader(required = false, name = BetofficeHttpConsts.HTTP_HEADER_USER_AGENT, defaultValue = BetofficeHttpConsts.HTTP_HEADER_USER_AGENT_UNKNOWN) String userAgent,
-                                                   HttpServletRequest request) {
+    public ResponseEntity<SecurityTokenJson> login(
+            @RequestBody AuthenticationForm authenticationForm,
+            @RequestHeader(required = false, name = BetofficeHttpConsts.HTTP_HEADER_USER_AGENT, defaultValue = BetofficeHttpConsts.HTTP_HEADER_USER_AGENT_UNKNOWN) String userAgent,
+            HttpServletRequest request) {
 
         SecurityTokenJson securityToken = betofficeAuthenticationService.login(authenticationForm.getNickname(),
                 authenticationForm.getPassword(), request.getSession().getId(), request.getRemoteAddr(), userAgent);
@@ -84,20 +84,22 @@ public class AuthenticationController {
     }
 
     @PostMapping(value = BetofficeUrlPath.URL_AUTHENTICATION_LOGOUT /*, headers = { "Content-type=application/json" }*/)
-    public SecurityTokenJson logout(@RequestBody LogoutFormData logoutFormData,
-                                    @RequestHeader(required = false, name = SecurityConstants.HEADER_AUTHORIZATION) String authorization,
-                                    HttpServletRequest request) {
+    public SecurityTokenJson logout(
+            @RequestBody LogoutFormData logoutFormData,
+            @RequestHeader(required = false, name = SecurityConstants.HEADER_AUTHORIZATION) String authorization,
+            HttpServletRequest request) {
 
-        SecurityTokenJson securityTokenJson = betofficeAuthenticationService.logout(logoutFormData.getNickname(), logoutFormData.getToken());
+        SecurityTokenJson securityTokenJson = betofficeAuthenticationService.logout(logoutFormData.getNickname(),
+                logoutFormData.getToken());
 
         HttpSession session = request.getSession();
         session.removeAttribute(SecurityToken.class.getName());
-        
+
         // TODO
         session.invalidate();
         SecurityContextHolder.clearContext();
         new SecurityContextLogoutHandler().logout(request, null, null);
-        
+
         return securityTokenJson;
     }
 
