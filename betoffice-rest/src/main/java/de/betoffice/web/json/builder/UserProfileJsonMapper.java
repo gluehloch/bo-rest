@@ -26,7 +26,7 @@ package de.betoffice.web.json.builder;
 import java.util.List;
 
 import de.betoffice.web.json.PartyJson;
-import de.betoffice.web.json.ProfileJson;
+import de.betoffice.web.json.UserProfileJson;
 import de.winkler.betoffice.storage.Nickname;
 import de.winkler.betoffice.storage.User;
 
@@ -35,13 +35,13 @@ import de.winkler.betoffice.storage.User;
  * 
  * @author Andre Winkler
  */
-public class ProfileJsonMapper {
+public class UserProfileJsonMapper {
 
-    public static ProfileJson map(User user) {
-        return map(user, new ProfileJson());
+    public static UserProfileJson map(User user) {
+        return map(user, new UserProfileJson());
     }
 
-    public static ProfileJson map(User user, ProfileJson partyJson) {
+    public static UserProfileJson map(User user, UserProfileJson partyJson) {
         partyJson.setName(user.getName());
         partyJson.setSurname(user.getSurname());
         partyJson.setMail(user.getEmail());
@@ -50,11 +50,11 @@ public class ProfileJsonMapper {
         return partyJson;
     }
 
-    public static List<ProfileJson> map(List<User> users) {
-        return users.stream().map(ProfileJsonMapper::map).toList();
+    public static List<UserProfileJson> map(List<User> users) {
+        return users.stream().map(UserProfileJsonMapper::map).toList();
     }
 
-    public static User reverse(ProfileJson partyJson, User user) {
+    public static User reverse(UserProfileJson partyJson, User user) {
         user.setName(partyJson.getName());
         user.setSurname(partyJson.getSurname());
         user.setEmail(partyJson.getMail());

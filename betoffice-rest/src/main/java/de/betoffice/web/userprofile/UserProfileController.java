@@ -21,7 +21,7 @@
  * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package de.betoffice.web.profile;
+package de.betoffice.web.userprofile;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -33,8 +33,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.web.AccessDeniedException;
 import de.betoffice.web.BetofficeHttpConsts;
-import de.betoffice.web.json.ProfileJson;
-import de.betoffice.web.json.builder.ProfileJsonMapper;
+import de.betoffice.web.json.UserProfileJson;
+import de.betoffice.web.json.builder.UserProfileJsonMapper;
 import de.winkler.betoffice.service.AuthService;
 import de.winkler.betoffice.service.CommunityService;
 import de.winkler.betoffice.storage.Nickname;
@@ -43,19 +43,19 @@ import de.winkler.betoffice.storage.Session;
 @CrossOrigin
 @RestController
 @RequestMapping("/office")
-public class ProfileController {
+public class UserProfileController {
 
     private final AuthService authService;
     private final CommunityService communityService;
 
-    public ProfileController(AuthService authService, CommunityService communityService) {
+    public UserProfileController(AuthService authService, CommunityService communityService) {
         this.authService = authService;
         this.communityService = communityService;
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
     @GetMapping(value = "/profile/{nickname}", headers = { "Content-type=application/json" })
-    public ResponseEntity<ProfileJson> findProfile(
+    public ResponseEntity<UserProfileJson> findProfile(
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
@@ -63,7 +63,7 @@ public class ProfileController {
         if (!session.getNickname().equals(nickname)) {
             throw new IllegalStateException();
         }
-        return ResponseEntity.of(communityService.findUser(Nickname.of(nickname)).map(ProfileJsonMapper::map));
+        return ResponseEntity.of(communityService.findUser(Nickname.of(nickname)).map(UserProfileJsonMapper::map));
     }
 
 }

@@ -28,7 +28,7 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ProfileJson implements Serializable {
+public class UserProfileJson implements Serializable {
 
     private String nickname;
     private String name;
