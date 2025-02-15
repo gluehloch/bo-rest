@@ -23,47 +23,64 @@
 
 package de.betoffice.web.userprofile;
 
+import java.util.Optional;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.betoffice.web.AccessDeniedException;
 import de.betoffice.web.BetofficeHttpConsts;
 import de.betoffice.web.json.UserProfileJson;
 import de.betoffice.web.json.builder.UserProfileJsonMapper;
 import de.winkler.betoffice.service.AuthService;
 import de.winkler.betoffice.service.CommunityService;
 import de.winkler.betoffice.storage.Nickname;
-import de.winkler.betoffice.storage.Session;
+import de.winkler.betoffice.storage.User;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/office")
 public class UserProfileController {
 
-    private final AuthService authService;
     private final CommunityService communityService;
 
     public UserProfileController(AuthService authService, CommunityService communityService) {
-        this.authService = authService;
         this.communityService = communityService;
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
+    @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
     @GetMapping(value = "/profile/{nickname}", headers = { "Content-type=application/json" })
     public ResponseEntity<UserProfileJson> findProfile(
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
+            @PathVariable("nickname") String nickname,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
 
-        Session session = authService.validateSession(token).orElseThrow(() -> new AccessDeniedException());
-        if (!session.getNickname().equals(nickname)) {
-            throw new IllegalStateException();
-        }
-        return ResponseEntity.of(communityService.findUser(Nickname.of(nickname)).map(UserProfileJsonMapper::map));
+        return ResponseEntity
+                .of(communityService.findUser(Nickname.of(headerNickname)).map(UserProfileJsonMapper::map));
+    }
+
+    @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
+    @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
+    @PostMapping(value = "/profile/{nickname}", headers = { "Content-type=application/json" })
+    public ResponseEntity<UserProfileJson> updateProfile(
+            @PathVariable("nickname") String nickname,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
+
+        Optional<User> user = communityService.findUser(Nickname.of(headerNickname));
+        user.ifPresent(u -> {
+            communityService.updateUser(u);
+        });
+
+        return ResponseEntity.of(user.map(UserProfileJsonMapper::map));
     }
 
 }
