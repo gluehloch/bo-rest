@@ -50,25 +50,27 @@ import de.winkler.betoffice.storage.User;
 public class UserProfileController {
 
     private final CommunityService communityService;
+    private final ValidateSessionService validateSessionService;
 
-    public UserProfileController(AuthService authService, CommunityService communityService) {
+    public UserProfileController(CommunityService communityService, ValidateSessionService validateSessionService) {
         this.communityService = communityService;
+        this.validateSessionService = validateSessionService;
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
-    @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
     @GetMapping(value = "/profile/{nickname}", headers = { "Content-type=application/json" })
     public ResponseEntity<UserProfileJson> findProfile(
             @PathVariable("nickname") String nickname,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
 
+        validateSessionService.validate(headerToken, headerNickname);
         return ResponseEntity
                 .of(communityService.findUser(Nickname.of(headerNickname)).map(UserProfileJsonMapper::map));
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
-    @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
+    //@PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
     @PostMapping(value = "/profile/{nickname}", headers = { "Content-type=application/json" })
     public ResponseEntity<UserProfileJson> updateProfile(
             @PathVariable("nickname") String nickname,

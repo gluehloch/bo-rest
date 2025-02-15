@@ -44,6 +44,19 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <release>21</release>
+                    <source>${compiler.version}</source>
+                    <target>${compiler.version}</target>
+                    <encoding>${compiler.encoding}</encoding>
+                    <debug>true</debug>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
     <dependencies>
