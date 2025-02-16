@@ -32,8 +32,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.web.BetofficeHttpConsts;
@@ -75,14 +77,36 @@ public class UserProfileController {
     public ResponseEntity<UserProfileJson> updateProfile(
             @PathVariable("nickname") String nickname,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname,
+            @RequestBody UserProfileJson userProfileJson) {
 
+        /*
         Optional<User> user = communityService.findUser(Nickname.of(headerNickname));
         user.ifPresent(u -> {
+            u.setName(userProfileJson.getName());
+            u.setSurname(userProfileJson.getSurname());
+            u.setEmail(userProfileJson.getMail());
+            u.setPhone(userProfileJson.getPhone());
             communityService.updateUser(u);
         });
+         */
 
-        return ResponseEntity.of(user.map(UserProfileJsonMapper::map));
+         /*
+        if (user.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+             */
+
+        return communityService.findUser(Nickname.of(headerNickname)).map(u -> {
+            u.setName(userProfileJson.getName());
+            u.setSurname(userProfileJson.getSurname());
+            u.setEmail(userProfileJson.getMail());
+            u.setPhone(userProfileJson.getPhone());
+            communityService.updateUser(u);
+            return ResponseEntity.of(UserProfileJsonMapper.map(u));
+        }).orElse(
+            ResponseEntity.notFound().build()
+        );
     }
 
 }
