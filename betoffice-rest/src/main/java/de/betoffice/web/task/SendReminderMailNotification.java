@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.tipp.OfficeTippService;
-
 import de.winkler.betoffice.service.CommunityService;
 import de.winkler.betoffice.service.TippService;
 import de.winkler.betoffice.storage.GameList;
@@ -22,7 +21,7 @@ import de.winkler.betoffice.storage.Season;
 import de.winkler.betoffice.storage.User;
 import de.winkler.betoffice.storage.enums.NotificationType;
 
-@Service 
+@Service
 public class SendReminderMailNotification {
 
     private static final Logger LOG = LoggerFactory.getLogger(SendReminderMailNotification.class);
@@ -98,6 +97,6 @@ public class SendReminderMailNotification {
 
     public static boolean notify(User user) {
         return NotificationType.TIPP.equals(user.getNotification());
-    }        
+    }
 
 }
