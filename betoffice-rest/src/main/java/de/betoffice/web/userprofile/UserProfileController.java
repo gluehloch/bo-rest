@@ -95,7 +95,7 @@ public class UserProfileController {
         if (user.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-             */
+        */
 
         return communityService.findUser(Nickname.of(headerNickname)).map(u -> {
             u.setName(userProfileJson.getName());
@@ -103,7 +103,7 @@ public class UserProfileController {
             u.setEmail(userProfileJson.getMail());
             u.setPhone(userProfileJson.getPhone());
             communityService.updateUser(u);
-            return ResponseEntity.of(UserProfileJsonMapper.map(u));
+            return ResponseEntity.of(Optional.of(UserProfileJsonMapper.map(u)));
         }).orElse(
             ResponseEntity.notFound().build()
         );

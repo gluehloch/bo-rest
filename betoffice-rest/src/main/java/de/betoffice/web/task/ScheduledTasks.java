@@ -29,82 +29,17 @@ public class ScheduledTasks {
 
     private static final Logger LOG = LoggerFactory.getLogger(ScheduledTasks.class);
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-dd-MM HH:mm");
+    private final SendReminderMailNotification sendReminderMailNotification;
 
-    private final OfficeTippService officeTippService;
-    private final TippService tippService;
-    private final CommunityService communityService;
-    private final MailTask mailTask;
-
-    public ScheduledTasks(
-            final OfficeTippService officeTippService,
-            final TippService tippService,
-            final CommunityService communityService,
-            final MailTask mailTask) {
-        this.officeTippService = officeTippService;
-        this.tippService = tippService;
-        this.communityService = communityService;
-        this.mailTask = mailTask;
+    public ScheduledTasks(SendReminderMailNotification sendReminderMailNotification) {
+        this.sendReminderMailNotification = sendReminderMailNotification;   
     }
 
     // @Scheduled(fixedRate = 1, timeUnit = TimeUnit.DAYS)
     @Scheduled(cron = "0 0 1 * * *")
     public void scheduler() {
         LOG.info("Start scheduler...");
-
-        // TODO Wie stelle ich sicher, dass die Mail für einen Spieltag nur einmal rausgeschickt wird?
-        // Der Job läuft nur einmal am Tag. Falls Spiele an diesem Tag sind, wird eine Mail verschickt.
-        // Ist ein Spieltag über mehrere Tage verteilt, bekommt man dann für jeden Tag eine Email.
-
-        final var now = ZonedDateTime.now();
-        final var localNow = now.toLocalDate();
-
-        Optional<GameList> nextTippRound = tippService.findNextTippRound(now);
-        nextTippRound.ifPresent(ntr -> {
-            Season season = nextTippRound.get().getSeason();
-            Set<User> members = communityService
-                    .findMembers(CommunityService.defaultPlayerGroup(season.getReference()));
-            members.stream().filter(ScheduledTasks::notify).forEach(u -> {
-                try {
-                    RoundJson roundJson = officeTippService.findTipp(
-                            nextTippRound.get().getId(),
-                            u.getNickname().getNickname());
-
-                    List<GameJson> sortedGames = roundJson.getGames();
-                    sortedGames.sort(new Comparator<GameJson>() {
-                        @Override
-                        public int compare(GameJson o1, GameJson o2) {
-                            return o1.getDateTime().compareTo(o2.getDateTime());
-                        }
-                    });
-
-                    if (!sortedGames.isEmpty()
-                            && sortedGames.get(0).getDateTime().toLocalDate().compareTo(localNow) == 0) {
-                        StringBuilder sb = new StringBuilder();
-                        sb.append("Heute ist Spieltag. Vergiss deinen Tipp nicht: https://tippdiekistebier.de\n");
-                        sb.append("Für den aktuellen Spieltag liegen die folgenden Tipps von dir vor:");
-
-                        for (var game : sortedGames) {
-                            sb.append("\n").append(game.getDateTime().format(formatter)).append(" ");
-                            sb.append(game.getHomeTeam().getName()).append(" - ").append(game.getGuestTeam().getName());
-
-                            for (var tipp : game.getTipps()) {
-                                sb.append(" ");
-                                sb.append(tipp.getTipp().getHomeGoals()).append(":")
-                                        .append(tipp.getTipp().getGuestGoals());
-                            }
-                        }
-                        mailTask.send("betoffice@andre-winkler.de", u.getEmail(), "Spieltag!", sb.toString());
-                    }
-                } catch (Exception ex) {
-                    LOG.error(String.format("Unable to send an email to %s", u.getEmail()), ex);
-                }
-            });
-        });
-    }
-
-    public static boolean notify(User user) {
-        return NotificationType.TIPP.equals(user.getNotification());
+        sendReminderMailNotification.send();
     }
 
 }
