@@ -25,6 +25,7 @@ package de.betoffice.web.task;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import de.winkler.betoffice.storage.User;
@@ -35,9 +36,13 @@ public class SendUserProfileChangeMailNotification {
     private static final Logger LOG = LoggerFactory.getLogger(SendUserProfileChangeMailNotification.class);
 
     private final MailTask mailTask;
+    private final String confirmMailAddressUrl;
 
-    public SendUserProfileChangeMailNotification(MailTask mailTask) {
+    public SendUserProfileChangeMailNotification(
+            final MailTask mailTask,
+            @Value("betoffice.mail.confirm.url") final String confirmMailAddressUrl) {
         this.mailTask = mailTask;
+        this.confirmMailAddressUrl = confirmMailAddressUrl;
     }
 
     /**
@@ -50,7 +55,7 @@ public class SendUserProfileChangeMailNotification {
         sb.append("Hallo ")
                 .append(user.getNickname())
                 .append(". Du möchtest deine Mail Adresse ändern? Dann bitte bestätige deine neue Mail-Adresse über den folgenden Link: ")
-                .append("https://tippdiekistebier.de/betoffice-war/office/profile/confirm-update/")
+                .append(confirmMailAddressUrl)
                 .append(user.getChangeToken());
 
         // https://tippdiekistebier.de/betoffice-war/office/profile/confirm-update
