@@ -53,8 +53,8 @@ public class SendUserProfileChangeMailNotification {
     public void send(User user) {
         final StringBuilder sb = new StringBuilder();
         sb.append("Hallo ")
-                .append(user.getNickname())
-                .append(". Du möchtest deine Mail Adresse ändern? Dann bitte bestätige deine neue Mail-Adresse über den folgenden Link: ")
+                .append(user.getNickname().value()).append("!")
+                .append(" Du möchtest deine Mail Adresse ändern? Dann bitte bestätige deine neue Mail-Adresse über den folgenden Link: ")
                 .append(confirmMailAddressUrl)
                 .append(user.getChangeToken());
 
