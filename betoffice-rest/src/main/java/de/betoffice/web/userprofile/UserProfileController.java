@@ -93,6 +93,8 @@ public class UserProfileController {
             u.setSurname(userProfileJson.getSurname());
             u.setPhone(userProfileJson.getPhone());
 
+            // TODO Das wäre ein schönes Beispiel für Spring-Modulith: Event 'Passwort ändern' und 
+            // entsprechender Komponente die auf das Ereignis reagiert.
             if (!StringUtils.equals(u.getEmail(), userProfileJson.getMail())) {
                 u.setChangeEmail(userProfileJson.getMail());
                 u.setChangeToken(UUID.randomUUID().toString());
