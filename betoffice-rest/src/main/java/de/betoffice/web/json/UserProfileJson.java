@@ -34,6 +34,7 @@ public class UserProfileJson implements Serializable {
     private String name;
     private String surname;
     private String mail;
+    private String alternativeMail;
     private String phone;
 
     public String getNickname() {
@@ -68,6 +69,14 @@ public class UserProfileJson implements Serializable {
         this.mail = mail;
     }
 
+    public String getAlternativeMail() {
+        return alternativeMail;
+    }
+
+    public void setAlternativeMail(String alternativeMail) {
+        this.alternativeMail = alternativeMail;
+    }
+
     public String getPhone() {
         return phone;
     }
@@ -78,8 +87,8 @@ public class UserProfileJson implements Serializable {
 
     @Override
     public String toString() {
-        return "ProfileJson [nickname=" + nickname + ", name=" + name + ", surname=" + surname + ", mail=" + mail
-                + ", phone=" + phone + "]";
+        return "UserProfileJson [nickname=" + nickname + ", name=" + name + ", surname=" + surname + ", mail=" + mail
+                + ", alternativeMail=" + alternativeMail + ", phone=" + phone + "]";
     }
 
 }

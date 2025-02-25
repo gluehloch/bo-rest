@@ -45,6 +45,7 @@ public class UserProfileJsonMapper {
         partyJson.setName(user.getName());
         partyJson.setSurname(user.getSurname());
         partyJson.setMail(user.getEmail());
+        partyJson.setAlternativeMail(user.getChangeEmail());
         partyJson.setNickname(user.getNickname().value());
         partyJson.setPhone(user.getPhone());
         return partyJson;
