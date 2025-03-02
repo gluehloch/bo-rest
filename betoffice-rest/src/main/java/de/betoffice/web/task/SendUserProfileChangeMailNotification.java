@@ -40,7 +40,7 @@ public class SendUserProfileChangeMailNotification {
 
     public SendUserProfileChangeMailNotification(
             final MailTask mailTask,
-            @Value("betoffice.mail.confirm.url") final String confirmMailAddressUrl) {
+            @Value("${betoffice.mail.confirm.url}") final String confirmMailAddressUrl) {
         this.mailTask = mailTask;
         this.confirmMailAddressUrl = confirmMailAddressUrl;
     }

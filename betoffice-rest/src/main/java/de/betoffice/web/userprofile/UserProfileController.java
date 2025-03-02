@@ -53,15 +53,12 @@ import de.winkler.betoffice.storage.Nickname;
 public class UserProfileController {
 
     private final CommunityService communityService;
-    private final ValidateSessionService validateSessionService;
     private final SendUserProfileChangeMailNotification sendUserProfileChangeMailNotification;
 
     public UserProfileController(
             final CommunityService communityService,
-            final ValidateSessionService validateSessionService,
             final SendUserProfileChangeMailNotification sendUserProfileChangeMailNotification) {
         this.communityService = communityService;
-        this.validateSessionService = validateSessionService;
         this.sendUserProfileChangeMailNotification = sendUserProfileChangeMailNotification;
     }
 
@@ -73,7 +70,6 @@ public class UserProfileController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
 
-        validateSessionService.validate(headerToken, headerNickname);
         return ResponseEntity
                 .of(communityService.findUser(Nickname.of(headerNickname)).map(UserProfileJsonMapper::map));
     }
