@@ -29,6 +29,7 @@ import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,8 +66,7 @@ public class UserProfileController {
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
-    // TODO Aktuell werden die Parameter #headerToken und #nickname nicht gesetzt und sind mit NULL belegt.
-    // @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
+    @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
     @GetMapping(value = "/profile/{nickname}", headers = { "Content-type=application/json" })
     public ResponseEntity<UserProfileJson> findProfile(
             @PathVariable("nickname") String nickname,
@@ -79,8 +79,7 @@ public class UserProfileController {
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
-    // TODO Aktuell werden die Parameter #headerToken und #nickname nicht gesetzt und sind mit NULL belegt.
-    //@PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
+    @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
     @PutMapping(value = "/profile/{nickname}", headers = { "Content-type=application/json" })
     public ResponseEntity<UserProfileJson> updateProfile(
             @PathVariable("nickname") String nickname,
@@ -106,8 +105,7 @@ public class UserProfileController {
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
-    // TODO Aktuell werden die Parameter #headerToken und #nickname nicht gesetzt und sind mit NULL belegt.
-    //@PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
+    @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
     @PostMapping(value = "/profile/confirm-update/{changeToken}", headers = { "Content-type=application/json" })
     public ResponseEntity<UserProfileJson> confirmUpdateProfile(@PathVariable("changeToken") String changeToken) {
         return communityService.findUserByChangeToken(changeToken).map(u -> {
