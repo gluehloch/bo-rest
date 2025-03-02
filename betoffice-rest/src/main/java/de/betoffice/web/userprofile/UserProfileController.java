@@ -73,7 +73,7 @@ public class UserProfileController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
 
-        // validateSessionService.validate(headerToken, headerNickname);
+        validateSessionService.validate(headerToken, headerNickname);
         return ResponseEntity
                 .of(communityService.findUser(Nickname.of(headerNickname)).map(UserProfileJsonMapper::map));
     }

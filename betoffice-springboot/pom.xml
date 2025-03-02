@@ -22,14 +22,37 @@
 
     <build>
         <plugins>
-           <plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <parameters>true</parameters>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>default-testCompile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                        <configuration>
+                            <parameters>true</parameters>
+                        </configuration>
+                    </execution>
+                </executions>
                 <configuration>
                     <release>21</release>
                     <source>${compiler.version}</source>
                     <target>${compiler.version}</target>
                     <encoding>${compiler.encoding}</encoding>
+                    <parameters>true</parameters>
                 </configuration>
             </plugin>
             <plugin>
@@ -57,7 +80,7 @@
                 <artifactId>wagon-ssh</artifactId>
                 <version>3.4.2</version>
             </extension>
-        </extensions>        
+        </extensions>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -203,8 +226,7 @@
             <url>
                 scp://maven.gluehloch.de/var/www/projects.gluehloch/betoffice/pom</url>
         </site>
-    </distributionManagement
->
+    </distributionManagement>
     <repositories>
         <repository>
             <id>gluehloch-repository</id>
