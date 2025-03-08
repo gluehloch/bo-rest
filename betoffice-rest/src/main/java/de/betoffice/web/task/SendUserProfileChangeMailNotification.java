@@ -55,7 +55,7 @@ public class SendUserProfileChangeMailNotification {
         sb.append("Hallo ")
                 .append(user.getNickname().value()).append("!")
                 .append(" Du möchtest deine Mail Adresse ändern? Dann bitte bestätige deine neue Mail-Adresse über den folgenden Link: ")
-                .append(confirmMailAddressUrl)
+                .append(confirmMailAddressUrl).append("/")
                 .append(user.getChangeToken());
 
         // https://tippdiekistebier.de/betoffice-war/office/profile/confirm-update

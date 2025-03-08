@@ -160,6 +160,8 @@ public class WebSecurityConfig {
                 .hasRole("TIPPER")
                 .requestMatchers(antMatcher(HttpMethod.PUT, BetofficeUrlPath.URL_OFFICE + "/profile/**"))
                 .hasRole("TIPPER")
+                .requestMatchers(antMatcher(HttpMethod.POST, BetofficeUrlPath.URL_OFFICE + "/profile/**"))
+                .hasRole("TIPPER")
 
                 // Community Administration
                 .requestMatchers(antMatcher(HttpMethod.GET, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**"))

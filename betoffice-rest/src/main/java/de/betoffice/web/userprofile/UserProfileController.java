@@ -46,71 +46,85 @@ import de.betoffice.web.json.builder.UserProfileJsonMapper;
 import de.betoffice.web.task.SendUserProfileChangeMailNotification;
 import de.winkler.betoffice.service.CommunityService;
 import de.winkler.betoffice.storage.Nickname;
+import de.winkler.betoffice.storage.User;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/office")
 public class UserProfileController {
 
-    private final CommunityService communityService;
-    private final SendUserProfileChangeMailNotification sendUserProfileChangeMailNotification;
+	private final CommunityService communityService;
+	private final SendUserProfileChangeMailNotification sendUserProfileChangeMailNotification;
 
-    public UserProfileController(
-            final CommunityService communityService,
-            final SendUserProfileChangeMailNotification sendUserProfileChangeMailNotification) {
-        this.communityService = communityService;
-        this.sendUserProfileChangeMailNotification = sendUserProfileChangeMailNotification;
-    }
+	public UserProfileController(final CommunityService communityService,
+			final SendUserProfileChangeMailNotification sendUserProfileChangeMailNotification) {
+		this.communityService = communityService;
+		this.sendUserProfileChangeMailNotification = sendUserProfileChangeMailNotification;
+	}
 
-    @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
-    @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
-    @GetMapping(value = "/profile/{nickname}", headers = { "Content-type=application/json" })
-    public ResponseEntity<UserProfileJson> findProfile(
-            @PathVariable("nickname") String nickname,
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
+	@Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
+	@PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
+	@GetMapping(value = "/profile/{nickname}", headers = { "Content-type=application/json" })
+	public ResponseEntity<UserProfileJson> findProfile(@PathVariable("nickname") String nickname,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
 
-        return ResponseEntity
-                .of(communityService.findUser(Nickname.of(headerNickname)).map(UserProfileJsonMapper::map));
-    }
+		return ResponseEntity
+				.of(communityService.findUser(Nickname.of(headerNickname)).map(UserProfileJsonMapper::map));
+	}
 
-    @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
-    @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
-    @PutMapping(value = "/profile/{nickname}", headers = { "Content-type=application/json" })
-    public ResponseEntity<UserProfileJson> updateProfile(
-            @PathVariable("nickname") String nickname,
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname,
-            @RequestBody UserProfileJson userProfileJson) {
+	@Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
+	@PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
+	@PutMapping(value = "/profile/{nickname}", headers = { "Content-type=application/json" })
+	public ResponseEntity<UserProfileJson> updateProfile(@PathVariable("nickname") String nickname,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname,
+			@RequestBody UserProfileJson userProfileJson) {
 
-        return communityService.findUser(Nickname.of(headerNickname)).map(u -> {
-            u.setName(userProfileJson.getName());
-            u.setSurname(userProfileJson.getSurname());
-            u.setPhone(userProfileJson.getPhone());
+		return communityService.findUser(Nickname.of(headerNickname)).map(u -> {
+			u.setName(userProfileJson.getName());
+			u.setSurname(userProfileJson.getSurname());
+			u.setPhone(userProfileJson.getPhone());
 
-            // TODO Das wäre ein schönes Beispiel für Spring-Modulith: Event 'Passwort ändern' und 
-            // entsprechender Komponente die auf das Ereignis reagiert.
-            if (!StringUtils.equals(u.getEmail(), userProfileJson.getMail())) {
-                u.setChangeEmail(userProfileJson.getMail());
-                u.setChangeToken(UUID.randomUUID().toString());
-                sendUserProfileChangeMailNotification.send(u);
-            }
-            communityService.updateUser(u);
-            return ResponseEntity.of(Optional.of(UserProfileJsonMapper.map(u)));
-        }).orElse(ResponseEntity.notFound().build());
-    }
+			// TODO Das wäre ein schönes Beispiel für Spring-Modulith: Event 'Passwort
+			// ändern' und
+			// entsprechender Komponente die auf das Ereignis reagiert.
+			if (!StringUtils.equals(u.getEmail(), userProfileJson.getMail())) {
+				u.setChangeEmail(userProfileJson.getMail());
+				u.setChangeToken(UUID.randomUUID().toString());
+				sendUserProfileChangeMailNotification.send(u);
+			}
+			communityService.updateUser(u);
+			return ResponseEntity.of(Optional.of(UserProfileJsonMapper.map(u)));
+		}).orElse(ResponseEntity.notFound().build());
+	}
 
-    @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
-    @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
-    @PostMapping(value = "/profile/confirm-update/{changeToken}", headers = { "Content-type=application/json" })
-    public ResponseEntity<UserProfileJson> confirmUpdateProfile(@PathVariable("changeToken") String changeToken) {
-        return communityService.findUserByChangeToken(changeToken).map(u -> {
-            u.setEmail(u.getChangeEmail());
-            u.setChangeEmail(null);
-            u.setChangeToken(null);
-            communityService.updateUser(u);
-            return ResponseEntity.of(Optional.of(UserProfileJsonMapper.map(u)));
-        }).orElse(ResponseEntity.notFound().build());
-    }
+	@Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
+	@PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
+	@PutMapping(value = "/profile/{nickname}/resubmitMailConfirmation", headers = { "Content-type=application/json" })
+	public ResponseEntity<UserProfileJson> resubmitConfirmationMail(@PathVariable("nickname") String nickname,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
+			@RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
+
+		return communityService.findUser(Nickname.of(nickname))
+				.filter(u -> StringUtils.isNotEmpty(u.getChangeEmail()))
+				.map(u -> {
+					sendUserProfileChangeMailNotification.send(u);
+					return ResponseEntity.of(Optional.of(UserProfileJsonMapper.map(u)));
+				}).orElse(ResponseEntity.notFound().build());
+	}
+
+	@Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
+	@PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
+	@PostMapping(value = "/profile/confirm-update/{changeToken}", headers = { "Content-type=application/json" })
+	public ResponseEntity<UserProfileJson> confirmUpdateProfile(@PathVariable("changeToken") String changeToken) {
+		return communityService.findUserByChangeToken(changeToken).map(u -> {
+			u.setEmail(u.getChangeEmail());
+			u.setChangeEmail(null);
+			u.setChangeToken(null);
+			communityService.updateUser(u);
+			return ResponseEntity.of(Optional.of(UserProfileJsonMapper.map(u)));
+		}).orElse(ResponseEntity.notFound().build());
+	}
 
 }
