@@ -23,6 +23,8 @@
 
 package de.betoffice.web.task;
 
+import jakarta.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,8 +37,8 @@ public class SendUserProfileChangeMailNotification {
 
     private static final Logger LOG = LoggerFactory.getLogger(SendUserProfileChangeMailNotification.class);
 
-    private final MailTask mailTask;
     private final String confirmMailAddressUrl;
+    private final MailTask mailTask;
 
     public SendUserProfileChangeMailNotification(
             final MailTask mailTask,
@@ -50,6 +52,7 @@ public class SendUserProfileChangeMailNotification {
      * 
      * @param user The user
      */
+    @Transactional
     public void send(User user) {
         final StringBuilder sb = new StringBuilder();
         sb.append("Hallo ")
