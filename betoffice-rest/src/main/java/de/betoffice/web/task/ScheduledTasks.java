@@ -29,6 +29,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import de.winkler.betoffice.mail.SendReminderMailNotification;
+
 @Configuration
 @EnableScheduling
 public class ScheduledTasks {

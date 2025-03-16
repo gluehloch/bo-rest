@@ -43,7 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
 import de.betoffice.web.BetofficeHttpConsts;
 import de.betoffice.web.json.UserProfileJson;
 import de.betoffice.web.json.builder.UserProfileJsonMapper;
-import de.betoffice.web.task.SendUserProfileChangeMailNotification;
+import de.winkler.betoffice.mail.SendUserProfileChangeMailNotification;
 import de.winkler.betoffice.service.CommunityService;
 import de.winkler.betoffice.storage.Nickname;
 
