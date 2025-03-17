@@ -24,6 +24,7 @@
 package de.betoffice.web.json.builder;
 
 import java.util.List;
+import java.util.Optional;
 
 import de.betoffice.web.json.PartyJson;
 import de.betoffice.web.json.UserProfileJson;
@@ -36,6 +37,10 @@ import de.winkler.betoffice.storage.User;
  * @author Andre Winkler
  */
 public class UserProfileJsonMapper {
+
+    public static Optional<UserProfileJson> map(Optional<User> user) {
+        return user.map(UserProfileJsonMapper::map);
+    }
 
     public static UserProfileJson map(User user) {
         return map(user, new UserProfileJson());

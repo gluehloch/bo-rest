@@ -24,7 +24,6 @@
 package de.betoffice.web.userprofile;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
@@ -80,22 +79,12 @@ public class UserProfileController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname,
             @RequestBody UserProfileJson userProfileJson) {
 
-        return communityService.findUser(Nickname.of(headerNickname)).map(u -> {
-            u.setName(userProfileJson.getName());
-            u.setSurname(userProfileJson.getSurname());
-            u.setPhone(userProfileJson.getPhone());
-
-            // TODO Das wäre ein schönes Beispiel für Spring-Modulith: Event 'Passwort
-            // ändern' und
-            // entsprechender Komponente die auf das Ereignis reagiert.
-            if (!StringUtils.equals(u.getEmail(), userProfileJson.getMail())) {
-                u.setChangeEmail(userProfileJson.getMail());
-                u.setChangeToken(UUID.randomUUID().toString());
-                sendUserProfileChangeMailNotification.send(u);
-            }
-            communityService.updateUser(u);
-            return ResponseEntity.of(Optional.of(UserProfileJsonMapper.map(u)));
-        }).orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.of(UserProfileJsonMapper.map(
+                communityService.updateUser(Nickname.of(nickname),
+                        userProfileJson.getName(),
+                        userProfileJson.getSurname(),
+                        userProfileJson.getMail(),
+                        userProfileJson.getPhone())));
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
