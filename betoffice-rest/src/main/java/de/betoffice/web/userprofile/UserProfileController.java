@@ -103,15 +103,13 @@ public class UserProfileController {
                 }).orElse(ResponseEntity.notFound().build());
     }
 
-    @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
-    @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
+    // TODO Sollte der Nutzer sich nicht noch einmal einloggen, wenn er den Bestätigungslink klickt?
+    // @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
+    // @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
     @PostMapping(value = "/profile/confirm-update/{changeToken}", headers = { "Content-type=application/json" })
     public ResponseEntity<UserProfileJson> confirmUpdateProfile(@PathVariable("changeToken") String changeToken) {
         return communityService.findUserByChangeToken(changeToken).map(u -> {
-            u.setEmail(u.getChangeEmail());
-            u.setChangeEmail(null);
-            u.setChangeToken(null);
-            communityService.updateUser(u);
+            communityService.confirmMailAddressChange(u.getNickname(), changeToken);
             return ResponseEntity.of(Optional.of(UserProfileJsonMapper.map(u)));
         }).orElse(ResponseEntity.notFound().build());
     }
