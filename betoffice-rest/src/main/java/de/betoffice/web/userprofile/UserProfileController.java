@@ -80,7 +80,9 @@ public class UserProfileController {
             @RequestBody UserProfileJson userProfileJson) {
 
         return ResponseEntity.of(UserProfileJsonMapper.map(
-                communityService.updateUser(Nickname.of(nickname),
+                communityService.updateUser(
+                        false,
+                        Nickname.of(nickname),
                         userProfileJson.getName(),
                         userProfileJson.getSurname(),
                         userProfileJson.getMail(),

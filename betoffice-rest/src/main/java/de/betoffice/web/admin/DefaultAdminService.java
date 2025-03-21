@@ -213,7 +213,13 @@ public class DefaultAdminService implements AdminService {
     public PartyJson updateUser(PartyJson partyJson) {
         User storedUser = communityService.findUser(partyJson.getId());
         User user = PartyJsonMapper.reverse(partyJson, storedUser);
-        communityService.updateUser(user);
+        communityService.updateUser(
+                true,
+                Nickname.of(partyJson.getNickname()),
+                partyJson.getName(),
+                partyJson.getSurname(),
+                partyJson.getMail(),
+                partyJson.getPhone());
         return partyJson;
     }
 
