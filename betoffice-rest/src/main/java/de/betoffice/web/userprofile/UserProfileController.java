@@ -32,7 +32,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,7 +72,7 @@ public class UserProfileController {
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
     @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
-    @PutMapping(value = "/profile/{nickname}", headers = { "Content-type=application/json" })
+    @PostMapping(value = "/profile/{nickname}", headers = { "Content-type=application/json" })
     public ResponseEntity<UserProfileJson> updateProfile(@PathVariable("nickname") String nickname,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname,
@@ -90,7 +90,8 @@ public class UserProfileController {
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
     @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
-    @PutMapping(value = "/profile/{nickname}/resubmit-confirmation-mail", headers = { "Content-type=application/json" })
+    @PostMapping(value = "/profile/{nickname}/resubmit-confirmation-mail", headers = {
+            "Content-type=application/json" })
     public ResponseEntity<UserProfileJson> resubmitConfirmationMail(@PathVariable("nickname") String nickname,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
@@ -106,8 +107,8 @@ public class UserProfileController {
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
     @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
-    @PutMapping(value = "/profile/{nickname}/confirm-update/{changeToken}", headers = {
-            "Content-type=application/json" })
+    @PostMapping(value = "/profile/{nickname}/confirm-update/{changeToken}", headers = {
+            "Content-type=text/plain" })
     public ResponseEntity<UserProfileJson> confirmUpdateProfile(@PathVariable("nickname") String nickname,
             @PathVariable("changeToken") String changeToken, @RequestBody String changeTokenAsBody) {
         return communityService.findUserByChangeToken(changeToken).map(u -> {
