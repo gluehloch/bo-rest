@@ -30,9 +30,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -66,6 +63,8 @@ import de.winkler.betoffice.service.SecurityToken;
 import de.winkler.betoffice.storage.Nickname;
 import de.winkler.betoffice.storage.User;
 import de.winkler.betoffice.storage.enums.RoleType;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Security configuration.
@@ -156,6 +155,7 @@ public class WebSecurityConfig {
                 // Send tipp form
                 .requestMatchers(antMatcher(HttpMethod.POST, BetofficeUrlPath.URL_OFFICE + "/tipp/submit"))
                 .hasRole("TIPPER")
+                // user profile update
                 .requestMatchers(antMatcher(HttpMethod.GET, BetofficeUrlPath.URL_OFFICE + "/profile/**"))
                 .hasRole("TIPPER")
                 .requestMatchers(antMatcher(HttpMethod.PUT, BetofficeUrlPath.URL_OFFICE + "/profile/**"))
