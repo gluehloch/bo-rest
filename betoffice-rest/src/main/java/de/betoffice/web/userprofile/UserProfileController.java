@@ -123,4 +123,16 @@ public class UserProfileController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
+    @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
+    @PostMapping(value = "/profile/{nickname}/abort-update", headers = {
+            "Content-type=text/plain" })
+    public ResponseEntity<UserProfileJson> abortUpdateProfile(@PathVariable("nickname") String nickname,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
+        return communityService.findUser(Nickname.of(nickname)).map(u -> {
+            communityService.abortMailAddressChange(u.getNickname());
+            return ResponseEntity.of(Optional.of(UserProfileJsonMapper.map(u)));
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
 }
