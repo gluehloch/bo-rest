@@ -25,7 +25,6 @@ package de.betoffice.web.userprofile;
 
 import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -91,21 +90,14 @@ public class UserProfileController {
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
-    // TODO Diese Prüfung ist überflüssig. War aber auch nur als Proof-of-Concept Lösung gedacht.
-    @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
     @PostMapping(value = "/profile/{nickname}/resubmit-confirmation-mail", headers = {
             "Content-type=application/json" })
     public ResponseEntity<UserProfileJson> resubmitConfirmationMail(@PathVariable("nickname") String nickname,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
 
-        return communityService.findUser(Nickname.of(nickname))
-                .filter(u -> StringUtils.isNotEmpty(u.getChangeEmail()))
-                .filter(u -> u.getChangeSend() < 4) // TODO Filtern wenn mehr als 3. Hochzaehlen oder Fehlermeldung an den Nutzer.
-                .map(u -> {
-                    sendUserProfileChangeMailNotification.send(u);
-                    return ResponseEntity.of(Optional.of(UserProfileJsonMapper.map(u)));
-                }).orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.of(UserProfileJsonMapper.map(
+                communityService.resubmitConfirmationMail(Nickname.of(nickname))));
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
@@ -117,10 +109,9 @@ public class UserProfileController {
             @PathVariable("changeToken") String changeToken, @RequestBody String changeTokenAsBody,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
-        return communityService.findUserByChangeToken(changeToken).map(u -> {
-            communityService.confirmMailAddressChange(u.getNickname(), changeToken);
-            return ResponseEntity.of(Optional.of(UserProfileJsonMapper.map(u)));
-        }).orElse(ResponseEntity.notFound().build());
+
+        return ResponseEntity.of(UserProfileJsonMapper.map(communityService.findUserByChangeToken(changeToken)
+                .flatMap(u -> communityService.confirmMailAddressChange(u.getNickname(), changeToken))));
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
@@ -129,6 +120,7 @@ public class UserProfileController {
     public ResponseEntity<UserProfileJson> abortUpdateProfile(@PathVariable("nickname") String nickname,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
+
         return communityService.findUser(Nickname.of(nickname)).map(u -> {
             communityService.abortMailAddressChange(u.getNickname());
             return ResponseEntity.of(Optional.of(UserProfileJsonMapper.map(u)));
