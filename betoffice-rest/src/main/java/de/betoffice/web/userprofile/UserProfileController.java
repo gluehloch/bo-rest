@@ -60,6 +60,7 @@ public class UserProfileController {
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
+    // TODO Diese Prüfung ist überflüssig. War aber auch nur als Proof-of-Concept Lösung gedacht.
     @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
     @GetMapping(value = "/profile/{nickname}", headers = { "Content-type=application/json" })
     public ResponseEntity<UserProfileJson> findProfile(@PathVariable("nickname") String nickname,
@@ -71,6 +72,7 @@ public class UserProfileController {
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
+    // TODO Diese Prüfung ist überflüssig. War aber auch nur als Proof-of-Concept Lösung gedacht.
     @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
     @PostMapping(value = "/profile/{nickname}", headers = { "Content-type=application/json" })
     public ResponseEntity<UserProfileJson> updateProfile(@PathVariable("nickname") String nickname,
@@ -89,6 +91,7 @@ public class UserProfileController {
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
+    // TODO Diese Prüfung ist überflüssig. War aber auch nur als Proof-of-Concept Lösung gedacht.
     @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
     @PostMapping(value = "/profile/{nickname}/resubmit-confirmation-mail", headers = {
             "Content-type=application/json" })
@@ -106,6 +109,7 @@ public class UserProfileController {
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
+    // TODO Diese Prüfung ist überflüssig. War aber auch nur als Proof-of-Concept Lösung gedacht.    
     @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
     @PostMapping(value = "/profile/{nickname}/confirm-update/{changeToken}", headers = {
             "Content-type=text/plain" })
