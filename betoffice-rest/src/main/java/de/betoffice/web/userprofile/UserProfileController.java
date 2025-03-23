@@ -23,8 +23,6 @@
 
 package de.betoffice.web.userprofile;
 
-import java.util.Optional;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,7 +38,6 @@ import org.springframework.web.bind.annotation.RestController;
 import de.betoffice.web.BetofficeHttpConsts;
 import de.betoffice.web.json.UserProfileJson;
 import de.betoffice.web.json.builder.UserProfileJsonMapper;
-import de.winkler.betoffice.mail.SendUserProfileChangeMailNotification;
 import de.winkler.betoffice.service.CommunityService;
 import de.winkler.betoffice.storage.Nickname;
 
@@ -50,12 +47,9 @@ import de.winkler.betoffice.storage.Nickname;
 public class UserProfileController {
 
     private final CommunityService communityService;
-    private final SendUserProfileChangeMailNotification sendUserProfileChangeMailNotification;
 
-    public UserProfileController(final CommunityService communityService,
-            final SendUserProfileChangeMailNotification sendUserProfileChangeMailNotification) {
+    public UserProfileController(final CommunityService communityService) {
         this.communityService = communityService;
-        this.sendUserProfileChangeMailNotification = sendUserProfileChangeMailNotification;
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
@@ -71,8 +65,6 @@ public class UserProfileController {
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
-    // TODO Diese Prüfung ist überflüssig. War aber auch nur als Proof-of-Concept Lösung gedacht.
-    @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
     @PostMapping(value = "/profile/{nickname}", headers = { "Content-type=application/json" })
     public ResponseEntity<UserProfileJson> updateProfile(@PathVariable("nickname") String nickname,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
@@ -101,8 +93,6 @@ public class UserProfileController {
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
-    // TODO Diese Prüfung ist überflüssig. War aber auch nur als Proof-of-Concept Lösung gedacht.    
-    @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
     @PostMapping(value = "/profile/{nickname}/confirm-update/{changeToken}", headers = {
             "Content-type=text/plain" })
     public ResponseEntity<UserProfileJson> confirmUpdateProfile(@PathVariable("nickname") String nickname,
@@ -121,10 +111,8 @@ public class UserProfileController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
 
-        return communityService.findUser(Nickname.of(nickname)).map(u -> {
-            communityService.abortMailAddressChange(u.getNickname());
-            return ResponseEntity.of(Optional.of(UserProfileJsonMapper.map(u)));
-        }).orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.of(UserProfileJsonMapper.map(communityService.findUser(Nickname.of(nickname))
+                .flatMap(u -> communityService.abortMailAddressChange(u.getNickname()))));
     }
 
 }
