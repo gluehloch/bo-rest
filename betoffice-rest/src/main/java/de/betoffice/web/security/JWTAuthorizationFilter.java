@@ -32,11 +32,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
+import org.slf4j.Logger;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -46,6 +42,10 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import de.winkler.betoffice.service.AuthService;
 import de.winkler.betoffice.storage.Session;
 import de.winkler.betoffice.storage.enums.RoleType;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Autorisierungsfilter.
@@ -53,6 +53,8 @@ import de.winkler.betoffice.storage.enums.RoleType;
  * @author Andre Winkler
  */
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
+
+    private static final Logger LOG = org.slf4j.LoggerFactory.getLogger(JWTAuthorizationFilter.class);
 
     private final AuthService authService;
 
@@ -79,6 +81,8 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
         String token = request.getHeader(HEADER_AUTHORIZATION);
+        LOG.info("Validate token {}, {}", token, request.getRequestURI());
+
         if (token != null) {
             Optional<Session> validateSession = authService.validateSession(token.replace(TOKEN_PREFIX, ""));
             if (validateSession.isPresent()) {
