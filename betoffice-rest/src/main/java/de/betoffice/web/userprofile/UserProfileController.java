@@ -110,7 +110,9 @@ public class UserProfileController {
     @PostMapping(value = "/profile/{nickname}/confirm-update/{changeToken}", headers = {
             "Content-type=text/plain" })
     public ResponseEntity<UserProfileJson> confirmUpdateProfile(@PathVariable("nickname") String nickname,
-            @PathVariable("changeToken") String changeToken, @RequestBody String changeTokenAsBody) {
+            @PathVariable("changeToken") String changeToken, @RequestBody String changeTokenAsBody,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
         return communityService.findUserByChangeToken(changeToken).map(u -> {
             communityService.confirmMailAddressChange(u.getNickname(), changeToken);
             return ResponseEntity.of(Optional.of(UserProfileJsonMapper.map(u)));
