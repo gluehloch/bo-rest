@@ -30,6 +30,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -63,8 +66,6 @@ import de.winkler.betoffice.service.SecurityToken;
 import de.winkler.betoffice.storage.Nickname;
 import de.winkler.betoffice.storage.User;
 import de.winkler.betoffice.storage.enums.RoleType;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Security configuration.
@@ -139,8 +140,8 @@ public class WebSecurityConfig {
                 */
 
         http.authorizeHttpRequests(authz -> authz /*.anyRequest().permitAll()*/
-                .requestMatchers("/actuator/**").permitAll()
-                .requestMatchers("/actuator/env/**").permitAll()
+                //.requestMatchers(antMatcher("/actuator/**")).permitAll()
+                //.requestMatchers(antMatcher("/actuator/env/**")).permitAll()
                 .requestMatchers(antMatcher(HttpMethod.GET, BetofficeUrlPath.URL_OFFICE + "/**")).permitAll()
                 // Authentication
                 .requestMatchers(antMatcher(HttpMethod.GET,
