@@ -34,6 +34,7 @@ public class UserProfileJson implements Serializable {
     private String name;
     private String surname;
     private String mail;
+    private boolean emailNotificationEnabled;
     private String alternativeMail;
     private String phone;
 
@@ -69,6 +70,14 @@ public class UserProfileJson implements Serializable {
         this.mail = mail;
     }
 
+    public void setEmailNotificationEnabled(boolean emailNotificationEnabled) {
+        this.emailNotificationEnabled = emailNotificationEnabled;
+    }
+
+    public boolean isEmailNotificationEnabled() {
+        return emailNotificationEnabled;
+    }
+
     public String getAlternativeMail() {
         return alternativeMail;
     }
@@ -88,7 +97,8 @@ public class UserProfileJson implements Serializable {
     @Override
     public String toString() {
         return "UserProfileJson [nickname=" + nickname + ", name=" + name + ", surname=" + surname + ", mail=" + mail
-                + ", alternativeMail=" + alternativeMail + ", phone=" + phone + "]";
+                + ", emailNotificationEnabled=" + emailNotificationEnabled + ", alternativeMail=" + alternativeMail
+                + ", phone=" + phone + "]";
     }
 
 }

@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2000-2017 by Andre Winkler. All
+ * Project betoffice-jweb-misc Copyright (c) 2000-2025 by Andre Winkler. All
  * rights reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -44,6 +44,7 @@ public class PartyJson extends AbstractIdentifier implements Serializable {
     private String phone;
     private String password;
     private String title;
+    private boolean enableEmailNotification;
 
     public String getNickname() {
         return nickname;
@@ -101,11 +102,19 @@ public class PartyJson extends AbstractIdentifier implements Serializable {
         this.title = title;
     }
 
+    public boolean isEmailNotificationEnabled() {
+        return enableEmailNotification;
+    }
+
+    public void setEmailNotificationEnabled(boolean emailNotificationEnabled) {
+        this.enableEmailNotification = emailNotificationEnabled;
+    }
+
     @Override
     public String toString() {
-        return "PartyJson [nickname=" + nickname + ", name=" + name
-                + ", surname=" + surname + ", mail=" + mail + ", phone=" + phone
-                + ", password=" + password + ", title=" + title + "]";
+        return "PartyJson [nickname=" + nickname + ", name=" + name + ", surname=" + surname + ", mail=" + mail
+                + ", phone=" + phone + ", password=" + password + ", title=" + title + ", enableEmailNotification="
+                + enableEmailNotification + "]";
     }
 
 }

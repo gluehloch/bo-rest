@@ -28,6 +28,7 @@ import java.util.List;
 import de.betoffice.web.json.PartyJson;
 import de.winkler.betoffice.storage.Nickname;
 import de.winkler.betoffice.storage.User;
+import de.winkler.betoffice.storage.enums.NotificationType;
 
 /**
  * Map {@link User} to {@link PartyJson}.
@@ -54,6 +55,7 @@ public class PartyJsonMapper {
         partyJson.setPassword(user.getPassword());
         partyJson.setPhone(user.getPhone());
         partyJson.setTitle(user.getTitle());
+        partyJson.setEmailNotificationEnabled(NotificationType.TIPP.equals(user.getNotification()));
         return partyJson;
     }
 
@@ -73,6 +75,7 @@ public class PartyJsonMapper {
         user.setPassword(partyJson.getPassword());
         user.setPhone(partyJson.getPhone());
         user.setTitle(partyJson.getTitle());
+        user.setNotification(partyJson.isEmailNotificationEnabled() ? NotificationType.TIPP : NotificationType.NONE);
         return user;
     }
 

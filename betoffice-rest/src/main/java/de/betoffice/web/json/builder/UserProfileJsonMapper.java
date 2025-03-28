@@ -30,6 +30,7 @@ import de.betoffice.web.json.PartyJson;
 import de.betoffice.web.json.UserProfileJson;
 import de.winkler.betoffice.storage.Nickname;
 import de.winkler.betoffice.storage.User;
+import de.winkler.betoffice.storage.enums.NotificationType;
 
 /**
  * Map {@link User} to {@link PartyJson}.
@@ -50,6 +51,7 @@ public class UserProfileJsonMapper {
         partyJson.setName(user.getName());
         partyJson.setSurname(user.getSurname());
         partyJson.setMail(user.getEmail());
+        partyJson.setEmailNotificationEnabled(NotificationType.TIPP.equals(user.getNotification()));
         partyJson.setAlternativeMail(user.getChangeEmail());
         partyJson.setNickname(user.getNickname().value());
         partyJson.setPhone(user.getPhone());
@@ -64,6 +66,7 @@ public class UserProfileJsonMapper {
         user.setName(partyJson.getName());
         user.setSurname(partyJson.getSurname());
         user.setEmail(partyJson.getMail());
+        user.setNotification(partyJson.isEmailNotificationEnabled() ? NotificationType.TIPP : NotificationType.NONE);
         user.setNickname(Nickname.of(partyJson.getNickname()));
         user.setPhone(partyJson.getPhone());
         return user;

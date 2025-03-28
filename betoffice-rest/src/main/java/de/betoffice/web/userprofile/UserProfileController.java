@@ -78,6 +78,7 @@ public class UserProfileController {
                         userProfileJson.getName(),
                         userProfileJson.getSurname(),
                         userProfileJson.getMail(),
+                        userProfileJson.isEmailNotificationEnabled(),
                         userProfileJson.getPhone())));
     }
 

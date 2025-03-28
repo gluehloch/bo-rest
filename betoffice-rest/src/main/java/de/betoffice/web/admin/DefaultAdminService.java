@@ -219,6 +219,7 @@ public class DefaultAdminService implements AdminService {
                 partyJson.getName(),
                 partyJson.getSurname(),
                 partyJson.getMail(),
+                partyJson.isEmailNotificationEnabled(),
                 partyJson.getPhone());
         return partyJson;
     }
