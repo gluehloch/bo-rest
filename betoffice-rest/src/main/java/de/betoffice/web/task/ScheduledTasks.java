@@ -45,8 +45,8 @@ public class ScheduledTasks {
         this.sendReminderMailNotification = sendReminderMailNotification;
     }
 
-    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.DAYS)
-    // @Scheduled(cron = "0 0 1 * * *")
+    // @Scheduled(fixedRate = 1, timeUnit = TimeUnit.DAYS)
+    @Scheduled(cron = "0 0 1 * * *")
     public void scheduler() {
         LOG.info("Start scheduler...");
         sendReminderMailNotification.send();
