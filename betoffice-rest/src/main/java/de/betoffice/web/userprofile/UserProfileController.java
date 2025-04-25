@@ -102,7 +102,7 @@ public class UserProfileController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
 
         return ResponseEntity.of(UserProfileJsonMapper.map(communityService.findUserByChangeToken(changeToken)
-                .flatMap(u -> communityService.confirmMailAddressChange(u.getNickname(), changeToken))));
+                .flatMap(u -> communityService.confirmMailAddressChange(u.getNickname(), changeToken).result())));
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })

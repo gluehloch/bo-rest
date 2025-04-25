@@ -60,7 +60,7 @@ import de.winkler.betoffice.storage.CommunityFilter;
 import de.winkler.betoffice.storage.CommunityReference;
 import de.winkler.betoffice.storage.Nickname;
 import de.winkler.betoffice.storage.SeasonReference;
-import de.winkler.betoffice.validation.BetofficeServiceResult;
+import de.winkler.betoffice.validation.ServiceResult;
 
 /**
  * Community management.
@@ -123,7 +123,7 @@ public class CommunityController {
         SeasonReference seasonReference = SeasonReference.of(season.getYear(), season.getName());
         Nickname nickname = Nickname.of(communityManager.getNickname());
 
-        BetofficeServiceResult<Community> betofficeServiceResult = communityService.create(
+        ServiceResult<Community> betofficeServiceResult = communityService.create(
                 communityReference,
                 seasonReference,
                 name,
