@@ -23,8 +23,6 @@
 
 package de.betoffice.web.task;
 
-import java.util.concurrent.TimeUnit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
@@ -45,8 +43,8 @@ public class ScheduledTasks {
         this.sendReminderMailNotification = sendReminderMailNotification;
     }
 
-    // @Scheduled(fixedRate = 1, timeUnit = TimeUnit.DAYS)
-    @Scheduled(cron = "0 0 1 * * *")
+    // @Scheduled(fixedRate = 1, timeUnit = TimeUnit.DAYS) // Local test setup
+    @Scheduled(cron = "0 0 1 * * *") // production setup. Should be configured.
     public void scheduler() {
         LOG.info("Start scheduler...");
         sendReminderMailNotification.send();
