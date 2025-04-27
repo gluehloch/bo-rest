@@ -23,6 +23,9 @@
 
 package de.betoffice.web.userprofile;
 
+import java.util.Optional;
+import java.util.function.Function;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,6 +43,9 @@ import de.betoffice.web.json.UserProfileJson;
 import de.betoffice.web.json.builder.UserProfileJsonMapper;
 import de.winkler.betoffice.service.CommunityService;
 import de.winkler.betoffice.storage.Nickname;
+import de.winkler.betoffice.storage.User;
+import de.winkler.betoffice.validation.ServiceResult;
+import de.winkler.betoffice.validation.ValidationMessages;
 
 @CrossOrigin
 @RestController
@@ -96,13 +102,21 @@ public class UserProfileController {
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
     @PostMapping(value = "/profile/{nickname}/confirm-update/{changeToken}", headers = {
             "Content-type=text/plain" })
-    public ResponseEntity<UserProfileJson> confirmUpdateProfile(@PathVariable("nickname") String nickname,
+    public ResponseEntity<RestResult<UserProfileJson>> confirmUpdateProfile(@PathVariable("nickname") String nickname,
             @PathVariable("changeToken") String changeToken, @RequestBody String changeTokenAsBody,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
 
-        return ResponseEntity.of(UserProfileJsonMapper.map(communityService.findUserByChangeToken(changeToken)
-                .flatMap(u -> communityService.confirmMailAddressChange(u.getNickname(), changeToken).result())));
+        final Optional<User> optionalUser = communityService.findUserByChangeToken(changeToken);
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        final User user = optionalUser.get();
+        final ServiceResult<User> confirmMailAddressChangeServiceResult = communityService
+                .confirmMailAddressChange(user.getNickname(), changeToken);
+
+        return ResponseEntity.ofNullable(RestResult.of(
+                confirmMailAddressChangeServiceResult, UserProfileJsonMapper::map));
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
@@ -114,6 +128,44 @@ public class UserProfileController {
 
         return ResponseEntity.of(UserProfileJsonMapper.map(communityService.findUser(Nickname.of(nickname))
                 .flatMap(u -> communityService.abortMailAddressChange(u.getNickname()))));
+    }
+
+    public static class RestResult<T> {
+        private final boolean successful;
+        private final T result;
+        private final ValidationMessages messages;
+
+        public static <T, R> RestResult<T> of(final ServiceResult<R> serviceResult, final Function<R, T> mapper) {
+            if (serviceResult.isSuccessful()) {
+                final R resultObject = serviceResult.result().get();
+                final T mappedResultObject = mapper.apply(resultObject);
+                return new RestResult<T>(mappedResultObject, serviceResult.messages(), true);
+            } else {
+                return new RestResult<T>(null, serviceResult.messages(), false);
+            }
+        }
+
+        private RestResult(final T result, final ValidationMessages messages, final boolean successful) {
+            this.result = result;
+            this.messages = messages;
+            this.successful = successful;
+        }
+
+        public T getResult() {
+            return result;
+        }
+
+        public ValidationMessages getMessages() {
+            return messages;
+        }
+
+        public ResponseEntity<RestResult<T>> toResponseEntity() {
+            if (successful) {
+                return ResponseEntity.ok(this);
+            } else {
+                return ResponseEntity.badRequest().body(this);
+            }
+        }
     }
 
 }
