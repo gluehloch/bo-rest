@@ -6,16 +6,16 @@
             </Pattern>
         </encoder>
     </appender>
-    <logger name="org.hibernate" level="error" additivity="false">
+    <logger name="org.hibernate" level="error">
         <appender-ref ref="STDOUT"/>
     </logger>
-    <logger name="de.betoffice" level="warn" additivity="false">
+    <logger name="de.betoffice" level="warn">
         <appender-ref ref="STDOUT"/>
     </logger>
-    <logger name=" de.betoffice.web" level="info" additivity="false">
+    <logger name="de.betoffice.web" level="info" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>    
-    <logger name=" de.betoffice.openligadb" level="info" additivity="false">
+    <logger name="de.betoffice.openligadb" level="info" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
     <root level="info">

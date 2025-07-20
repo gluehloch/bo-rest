@@ -17,13 +17,16 @@
                 More compact information.
             </action>
             <action dev="andrewinkler" type="update" date="2024-05-15">
-                Added some informations: Game contains the associated groupe (type). Season contains the associated season type.
+                Added some informations: Game contains the associated group (type). Season contains the associated season type.
             </action>
             <action dev="andrewinkler" type="update" date="2024-09-21">
                 Implement community management.
             </action>
             <action dev="andrewinkler" type="update" date="2024-10-05">
                 Research function: Last games of a team.
+            </action>
+            <action dev="andrewinkler" type="add" date="2025-02-11">
+                Sending an email notification on game day as a reminder.
             </action>
         </release>
 

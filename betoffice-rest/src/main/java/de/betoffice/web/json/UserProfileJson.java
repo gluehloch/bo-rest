@@ -27,24 +27,16 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-/**
- * Holds the user data.
- * 
- * @author Andre Winkler
- */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class PartyJson extends AbstractIdentifier implements Serializable {
-
-    private static final long serialVersionUID = -1479900122605812841L;
+public class UserProfileJson implements Serializable {
 
     private String nickname;
     private String name;
     private String surname;
     private String mail;
+    private boolean emailNotificationEnabled;
+    private String alternativeMail;
     private String phone;
-    private String password;
-    private String title;
-    private boolean enableEmailNotification;
 
     public String getNickname() {
         return nickname;
@@ -78,6 +70,22 @@ public class PartyJson extends AbstractIdentifier implements Serializable {
         this.mail = mail;
     }
 
+    public void setEmailNotificationEnabled(boolean emailNotificationEnabled) {
+        this.emailNotificationEnabled = emailNotificationEnabled;
+    }
+
+    public boolean isEmailNotificationEnabled() {
+        return emailNotificationEnabled;
+    }
+
+    public String getAlternativeMail() {
+        return alternativeMail;
+    }
+
+    public void setAlternativeMail(String alternativeMail) {
+        this.alternativeMail = alternativeMail;
+    }
+
     public String getPhone() {
         return phone;
     }
@@ -86,35 +94,11 @@ public class PartyJson extends AbstractIdentifier implements Serializable {
         this.phone = phone;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public boolean isEmailNotificationEnabled() {
-        return enableEmailNotification;
-    }
-
-    public void setEmailNotificationEnabled(boolean emailNotificationEnabled) {
-        this.enableEmailNotification = emailNotificationEnabled;
-    }
-
     @Override
     public String toString() {
-        return "PartyJson [nickname=" + nickname + ", name=" + name + ", surname=" + surname + ", mail=" + mail
-                + ", phone=" + phone + ", password=" + password + ", title=" + title + ", enableEmailNotification="
-                + enableEmailNotification + "]";
+        return "UserProfileJson [nickname=" + nickname + ", name=" + name + ", surname=" + surname + ", mail=" + mail
+                + ", emailNotificationEnabled=" + emailNotificationEnabled + ", alternativeMail=" + alternativeMail
+                + ", phone=" + phone + "]";
     }
 
 }
