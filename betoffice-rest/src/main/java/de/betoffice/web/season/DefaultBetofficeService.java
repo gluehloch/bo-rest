@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import de.betoffice.web.json.GameWithGoalsJson;
 import de.betoffice.web.json.GameJson;
@@ -169,6 +170,7 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public RoundJson findRoundByGroup(Long seasonId, Long roundId, Long groupTypeId) {
         Season season = seasonManagerService.findSeasonById(seasonId);
         GameList gameList = seasonManagerService.findRoundGames(roundId).orElseGet(() -> seasonManagerService.findFirstRound(season).orElseThrow());
@@ -219,6 +221,7 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public RoundAndTableJson findRoundTable(Long seasonId, Long roundId, Long groupTypeId) {
         RoundJson roundJson = findRoundByGroup(seasonId, roundId, groupTypeId);
         Season season = seasonManagerService.findSeasonById(seasonId);
@@ -310,6 +313,7 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserTableJson calcUserRankingByRoundOnly(Long roundId) {
         // GameList round = seasonManagerService.findRound(roundId);
         // return calcUserRanking(round, round.getIndex());
@@ -346,6 +350,7 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserTableJson calcUserRankingByRound(Long roundId) {
         Optional<GameList> round = seasonManagerService.findRoundGames(roundId);
 
