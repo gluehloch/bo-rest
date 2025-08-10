@@ -39,8 +39,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.web.AccessDeniedException;
-import de.betoffice.web.json.GameWithGoalsJson;
 import de.betoffice.web.json.GameJson;
+import de.betoffice.web.json.GameWithGoalsJson;
 import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.PingJson;
 import de.betoffice.web.json.RoundAndTableJson;

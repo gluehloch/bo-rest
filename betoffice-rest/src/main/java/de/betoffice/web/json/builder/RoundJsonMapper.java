@@ -25,8 +25,8 @@ package de.betoffice.web.json.builder;
 
 import java.util.List;
 
+import de.betoffice.storage.season.entity.GameList;
 import de.betoffice.web.json.RoundJson;
-import de.winkler.betoffice.storage.GameList;
 
 /**
  * A mapper for {@link GameList} to {@link RoundJson}.

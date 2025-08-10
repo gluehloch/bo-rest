@@ -27,11 +27,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
+import de.betoffice.storage.group.entity.GroupType;
+import de.betoffice.storage.season.entity.Season;
+import de.betoffice.storage.team.TeamResult;
+import de.betoffice.storage.team.entity.Team;
 import de.betoffice.web.json.TeamResultJson;
-import de.winkler.betoffice.storage.GroupType;
-import de.winkler.betoffice.storage.Season;
-import de.winkler.betoffice.storage.Team;
-import de.winkler.betoffice.storage.TeamResult;
 
 /**
  * Mapping test for {@link TeamResult} to {@link TeamResultJson}.

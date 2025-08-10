@@ -23,9 +23,9 @@
 
 package de.betoffice.web.json.builder;
 
+import de.betoffice.service.SecurityToken;
+import de.betoffice.storage.user.RoleType;
 import de.betoffice.web.json.SecurityTokenJson;
-import de.winkler.betoffice.service.SecurityToken;
-import de.winkler.betoffice.storage.enums.RoleType;
 
 /**
  * Map a {@link SecurityToken} to {@link SecurityTokenJson}.

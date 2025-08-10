@@ -26,11 +26,11 @@ package de.betoffice.web.json.builder;
 import java.util.List;
 import java.util.Optional;
 
+import de.betoffice.mail.NotificationType;
+import de.betoffice.storage.user.entity.Nickname;
+import de.betoffice.storage.user.entity.User;
 import de.betoffice.web.json.PartyJson;
 import de.betoffice.web.json.UserProfileJson;
-import de.winkler.betoffice.storage.Nickname;
-import de.winkler.betoffice.storage.User;
-import de.winkler.betoffice.storage.enums.NotificationType;
 
 /**
  * Map {@link User} to {@link PartyJson}.

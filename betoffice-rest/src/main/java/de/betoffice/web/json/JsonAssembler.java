@@ -27,10 +27,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import de.winkler.betoffice.storage.Game;
-import de.winkler.betoffice.storage.GameList;
-import de.winkler.betoffice.storage.GameTipp;
-import de.winkler.betoffice.storage.Season;
+import de.betoffice.storage.season.entity.Game;
+import de.betoffice.storage.season.entity.GameList;
+import de.betoffice.storage.season.entity.Season;
+import de.betoffice.storage.tip.GameTipp;
 
 /**
  * Assembles JSON objects with other JSON objects.

@@ -23,7 +23,7 @@
 
 package de.betoffice.web.json;
 
-import de.winkler.betoffice.storage.enums.GoalType;
+import de.betoffice.storage.season.GoalType;
 
 public class GoalJson extends AbstractOpenligaid {
 

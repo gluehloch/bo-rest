@@ -17,7 +17,7 @@
 
     <properties>
         <betoffice.openligadb.version>3.2.0-SNAPSHOT</betoffice.openligadb.version>
-        <betoffice.storage.version>3.1.1-SNAPSHOT</betoffice.storage.version>
+        <betoffice.storage.version>3.2.0-SNAPSHOT</betoffice.storage.version>
         <betoffice.testutils.version>1.4.1-SNAPSHOT</betoffice.testutils.version>
     </properties>
 

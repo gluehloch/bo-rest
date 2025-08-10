@@ -25,6 +25,9 @@ package de.betoffice.web.auth;
 
 import java.time.ZonedDateTime;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,14 +40,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.betoffice.service.SecurityToken;
 import de.betoffice.web.BetofficeHttpConsts;
 import de.betoffice.web.BetofficeUrlPath;
 import de.betoffice.web.json.PingJson;
 import de.betoffice.web.json.SecurityTokenJson;
 import de.betoffice.web.security.SecurityConstants;
-import de.winkler.betoffice.service.SecurityToken;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 /**
  * Authentication controller: Login and logout.

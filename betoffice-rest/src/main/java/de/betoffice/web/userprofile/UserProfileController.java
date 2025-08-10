@@ -38,14 +38,14 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.betoffice.service.CommunityService;
+import de.betoffice.storage.user.entity.Nickname;
+import de.betoffice.storage.user.entity.User;
+import de.betoffice.validation.ServiceResult;
+import de.betoffice.validation.ValidationMessages;
 import de.betoffice.web.BetofficeHttpConsts;
 import de.betoffice.web.json.UserProfileJson;
 import de.betoffice.web.json.builder.UserProfileJsonMapper;
-import de.winkler.betoffice.service.CommunityService;
-import de.winkler.betoffice.storage.Nickname;
-import de.winkler.betoffice.storage.User;
-import de.winkler.betoffice.validation.ServiceResult;
-import de.winkler.betoffice.validation.ValidationMessages;
 
 @CrossOrigin
 @RestController

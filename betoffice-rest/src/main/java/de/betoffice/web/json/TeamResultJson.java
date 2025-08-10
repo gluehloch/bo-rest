@@ -25,7 +25,7 @@ package de.betoffice.web.json;
 
 import java.io.Serializable;
 
-import de.winkler.betoffice.storage.TeamResult;
+import de.betoffice.storage.team.TeamResult;
 
 /**
  * A {@link TeamResult} as JSON object.

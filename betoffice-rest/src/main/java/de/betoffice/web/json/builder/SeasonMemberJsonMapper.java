@@ -26,8 +26,8 @@ package de.betoffice.web.json.builder;
 import java.util.Collection;
 import java.util.List;
 
+import de.betoffice.storage.user.entity.User;
 import de.betoffice.web.json.SeasonMemberJson;
-import de.winkler.betoffice.storage.User;
 
 /**
  * Map {@link User} to {@link SeasonMemberJson}.
@@ -47,7 +47,7 @@ public class SeasonMemberJsonMapper {
     }
 
     private static SeasonMemberJson map(User user) {
-    	return map(user, new SeasonMemberJson());
+        return map(user, new SeasonMemberJson());
     }
 
 }

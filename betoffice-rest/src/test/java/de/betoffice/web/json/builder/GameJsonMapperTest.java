@@ -32,15 +32,15 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import de.betoffice.storage.group.entity.GroupType;
+import de.betoffice.storage.season.entity.Game;
+import de.betoffice.storage.season.entity.GameList;
+import de.betoffice.storage.season.entity.GameResult;
+import de.betoffice.storage.season.entity.Group;
+import de.betoffice.storage.season.entity.Location;
+import de.betoffice.storage.team.entity.Team;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.IGameJson;
-import de.winkler.betoffice.storage.Game;
-import de.winkler.betoffice.storage.GameList;
-import de.winkler.betoffice.storage.GameResult;
-import de.winkler.betoffice.storage.Group;
-import de.winkler.betoffice.storage.GroupType;
-import de.winkler.betoffice.storage.Location;
-import de.winkler.betoffice.storage.Team;
 
 /**
  * Test for {@link GameJsonMapper}.

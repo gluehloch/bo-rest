@@ -36,6 +36,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import de.betoffice.openligadb.OpenligadbUpdateService;
+import de.betoffice.service.AuthService;
+import de.betoffice.service.CommunityService;
+import de.betoffice.service.MasterDataManagerService;
+import de.betoffice.service.SeasonManagerService;
+import de.betoffice.storage.community.entity.CommunityReference;
+import de.betoffice.storage.group.entity.GroupType;
+import de.betoffice.storage.season.entity.Game;
+import de.betoffice.storage.season.entity.GameList;
+import de.betoffice.storage.season.entity.Group;
+import de.betoffice.storage.season.entity.Season;
+import de.betoffice.storage.session.entity.Session;
+import de.betoffice.storage.team.TeamType;
+import de.betoffice.storage.team.entity.Team;
+import de.betoffice.storage.time.DateTimeProvider;
+import de.betoffice.storage.user.entity.Nickname;
+import de.betoffice.storage.user.entity.User;
 import de.betoffice.web.AccessDeniedException;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GroupTeamJson;
@@ -53,22 +69,6 @@ import de.betoffice.web.json.builder.PartyJsonMapper;
 import de.betoffice.web.json.builder.SeasonJsonMapper;
 import de.betoffice.web.json.builder.SeasonMemberJsonMapper;
 import de.betoffice.web.json.builder.TeamJsonMapper;
-import de.winkler.betoffice.service.AuthService;
-import de.winkler.betoffice.service.CommunityService;
-import de.winkler.betoffice.service.DateTimeProvider;
-import de.winkler.betoffice.service.MasterDataManagerService;
-import de.winkler.betoffice.service.SeasonManagerService;
-import de.winkler.betoffice.storage.CommunityReference;
-import de.winkler.betoffice.storage.Game;
-import de.winkler.betoffice.storage.GameList;
-import de.winkler.betoffice.storage.Group;
-import de.winkler.betoffice.storage.GroupType;
-import de.winkler.betoffice.storage.Nickname;
-import de.winkler.betoffice.storage.Season;
-import de.winkler.betoffice.storage.Session;
-import de.winkler.betoffice.storage.Team;
-import de.winkler.betoffice.storage.User;
-import de.winkler.betoffice.storage.enums.TeamType;
 
 /**
  * Betoffice administration JSON service interface.

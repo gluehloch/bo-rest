@@ -29,7 +29,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import de.winkler.betoffice.storage.enums.SeasonType;
+import de.betoffice.storage.season.SeasonType;
 
 /**
  * JSON data for a round.

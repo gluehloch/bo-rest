@@ -27,12 +27,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
+import de.betoffice.storage.season.entity.Season;
+import de.betoffice.storage.season.entity.SeasonReference;
+import de.betoffice.storage.user.UserResult;
+import de.betoffice.storage.user.entity.Nickname;
+import de.betoffice.storage.user.entity.User;
 import de.betoffice.web.json.UserJson;
-import de.winkler.betoffice.storage.Nickname;
-import de.winkler.betoffice.storage.Season;
-import de.winkler.betoffice.storage.SeasonReference;
-import de.winkler.betoffice.storage.User;
-import de.winkler.betoffice.storage.UserResult;
 
 /**
  * Test for {@link UserJsonMapper}.

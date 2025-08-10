@@ -30,6 +30,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,15 +58,13 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import de.betoffice.service.AuthService;
+import de.betoffice.service.SecurityToken;
+import de.betoffice.storage.user.RoleType;
+import de.betoffice.storage.user.UserDao;
+import de.betoffice.storage.user.entity.Nickname;
+import de.betoffice.storage.user.entity.User;
 import de.betoffice.web.BetofficeUrlPath;
-import de.winkler.betoffice.dao.UserDao;
-import de.winkler.betoffice.service.AuthService;
-import de.winkler.betoffice.service.SecurityToken;
-import de.winkler.betoffice.storage.Nickname;
-import de.winkler.betoffice.storage.User;
-import de.winkler.betoffice.storage.enums.RoleType;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Security configuration.

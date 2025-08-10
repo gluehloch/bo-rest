@@ -27,8 +27,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import de.winkler.betoffice.service.AuthService;
-import de.winkler.betoffice.storage.Session;
+import de.betoffice.service.AuthService;
+import de.betoffice.storage.session.entity.Session;
 
 @Service
 public class BetofficeAuthorizationService {

@@ -26,9 +26,9 @@ package de.betoffice.web.json.builder;
 
 import java.util.List;
 
+import de.betoffice.storage.team.TeamType;
+import de.betoffice.storage.team.entity.Team;
 import de.betoffice.web.json.TeamJson;
-import de.winkler.betoffice.storage.Team;
-import de.winkler.betoffice.storage.enums.TeamType;
 
 /**
  * Maps the properties of a {@link Team} to {@link TeamJson}

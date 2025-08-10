@@ -23,10 +23,10 @@
 
 package de.betoffice.web.json.builder;
 
+import de.betoffice.storage.community.entity.Community;
 import de.betoffice.web.json.CommunityJson;
 import de.betoffice.web.json.PartyJson;
 import de.betoffice.web.json.SeasonJson;
-import de.winkler.betoffice.storage.Community;
 
 public class CommunityJsonMapper {
 
