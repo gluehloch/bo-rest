@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import de.betoffice.service.CommunityCalculatorService;
 import de.betoffice.service.CommunityService;
@@ -75,6 +76,7 @@ import de.betoffice.web.json.builder.TeamJsonMapper;
  * @author Andre Winkler
  */
 @Component("betofficeBasicService")
+@Transactional(readOnly = true)
 public class DefaultBetofficeService implements BetofficeService {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultBetofficeService.class);

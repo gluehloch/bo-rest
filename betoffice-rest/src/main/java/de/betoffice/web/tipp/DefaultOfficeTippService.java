@@ -30,6 +30,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import de.betoffice.service.AuthService;
 import de.betoffice.service.CommunityService;
@@ -51,6 +52,7 @@ import de.betoffice.web.json.JsonBuilder;
 import de.betoffice.web.json.RoundJson;
 
 @Service
+@Transactional(readOnly = true)
 public class DefaultOfficeTippService implements OfficeTippService {
 
     @Autowired
@@ -69,6 +71,7 @@ public class DefaultOfficeTippService implements OfficeTippService {
     private AuthService authService;
 
     @Override
+    @Transactional
     public RoundJson submitTipp(String token, SubmitTippRoundJson tippRoundJson) throws AccessDeniedException {
         Session session = authService.validateSession(token).orElseThrow(() -> new AccessDeniedException());
 
