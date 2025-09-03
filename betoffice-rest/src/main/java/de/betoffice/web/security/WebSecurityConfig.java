@@ -135,6 +135,13 @@ public class WebSecurityConfig {
                 .requestMatchers(antMatcher(HttpMethod.POST,
                         BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_LOGOUT))
                 .authenticated()
+                // Google OAuth2 endpoints
+                .requestMatchers(antMatcher(HttpMethod.GET,
+                        BetofficeUrlPath.URL_AUTHENTICATION + "/google/callback"))
+                .permitAll()
+                .requestMatchers(antMatcher(HttpMethod.GET,
+                        BetofficeUrlPath.URL_AUTHENTICATION + "/google/status"))
+                .authenticated()
                 // Send tipp form
                 .requestMatchers(antMatcher(HttpMethod.POST, BetofficeUrlPath.URL_OFFICE + "/tipp/submit"))
                 .hasRole("TIPPER")
@@ -152,6 +159,12 @@ public class WebSecurityConfig {
                 .requestMatchers(antMatcher(HttpMethod.PUT, BetofficeUrlPath.URL_ADMIM + "/**")).hasRole("ADMIN")
                 .requestMatchers(antMatcher(HttpMethod.POST, BetofficeUrlPath.URL_ADMIM + "/**")).hasRole("ADMIN")
                 .requestMatchers(antMatcher(HttpMethod.DELETE, BetofficeUrlPath.URL_ADMIM + "/**")).hasRole("ADMIN"));
+
+        // Enable OAuth2 login
+        http.oauth2Login(oauth2 -> oauth2
+                .loginPage("/oauth2/authorization/google")
+                .defaultSuccessUrl(BetofficeUrlPath.URL_AUTHENTICATION + "/google/callback", true)
+        );
         // Authentication Endpoint
         /*
                 http.requestMatchers(HttpMethod.GET,     BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_PING).anonymous()
