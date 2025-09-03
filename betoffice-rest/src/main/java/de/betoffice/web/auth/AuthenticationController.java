@@ -33,6 +33,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -99,6 +100,16 @@ public class AuthenticationController {
         new SecurityContextLogoutHandler().logout(request, null, null);
         
         return securityTokenJson;
+    }
+
+    /**
+     * Get Google OAuth2 login URL.
+     */
+    @GetMapping(value = "/google/login-url")
+    public ResponseEntity<String> getGoogleLoginUrl(HttpServletRequest request) {
+        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+        String googleLoginUrl = baseUrl + "/oauth2/authorization/google";
+        return ResponseEntity.ok("{\"url\":\"" + googleLoginUrl + "\"}");
     }
 
 }
