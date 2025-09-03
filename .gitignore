@@ -1,5 +1,6 @@
 # Maven
 /target
+*/target/
 
 # Visual Code
 /.vscode
@@ -13,4 +14,7 @@
 
 # Misc
 /bin
+
+# Java compilation artifacts
+*.class
 
