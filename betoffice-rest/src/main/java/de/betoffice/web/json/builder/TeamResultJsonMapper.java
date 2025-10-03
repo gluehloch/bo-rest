@@ -23,9 +23,9 @@
 
 package de.betoffice.web.json.builder;
 
+import de.betoffice.storage.team.TeamResult;
 import de.betoffice.web.json.TeamJson;
 import de.betoffice.web.json.TeamResultJson;
-import de.winkler.betoffice.storage.TeamResult;
 
 /**
  * Mapping from {@link TeamResult} to {@link TeamResultJson}.

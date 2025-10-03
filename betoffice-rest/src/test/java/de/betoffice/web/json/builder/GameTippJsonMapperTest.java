@@ -27,14 +27,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
+import de.betoffice.storage.season.entity.Game;
+import de.betoffice.storage.season.entity.GameResult;
+import de.betoffice.storage.team.entity.Team;
+import de.betoffice.storage.tip.GameTipp;
+import de.betoffice.storage.tip.TippStatusType;
+import de.betoffice.storage.user.entity.Nickname;
+import de.betoffice.storage.user.entity.User;
 import de.betoffice.web.json.GameTippJson;
-import de.winkler.betoffice.storage.Game;
-import de.winkler.betoffice.storage.GameResult;
-import de.winkler.betoffice.storage.GameTipp;
-import de.winkler.betoffice.storage.Nickname;
-import de.winkler.betoffice.storage.Team;
-import de.winkler.betoffice.storage.User;
-import de.winkler.betoffice.storage.enums.TippStatusType;
 
 /**
  * Test for class {@link GameTippJsonMapper}.

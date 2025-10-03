@@ -46,6 +46,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import de.betoffice.service.CommunityService;
+import de.betoffice.storage.community.CommunityFilter;
+import de.betoffice.storage.community.entity.Community;
+import de.betoffice.storage.community.entity.CommunityReference;
+import de.betoffice.storage.season.entity.SeasonReference;
+import de.betoffice.storage.user.entity.Nickname;
+import de.betoffice.validation.ServiceResult;
 import de.betoffice.web.BetofficeHttpConsts;
 import de.betoffice.web.PageParam;
 import de.betoffice.web.PageParamObjectMapper;
@@ -54,13 +61,6 @@ import de.betoffice.web.json.CommunityJson;
 import de.betoffice.web.json.PartyJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.builder.CommunityJsonMapper;
-import de.winkler.betoffice.service.CommunityService;
-import de.winkler.betoffice.storage.Community;
-import de.winkler.betoffice.storage.CommunityFilter;
-import de.winkler.betoffice.storage.CommunityReference;
-import de.winkler.betoffice.storage.Nickname;
-import de.winkler.betoffice.storage.SeasonReference;
-import de.winkler.betoffice.validation.BetofficeServiceResult;
 
 /**
  * Community management.
@@ -123,7 +123,7 @@ public class CommunityController {
         SeasonReference seasonReference = SeasonReference.of(season.getYear(), season.getName());
         Nickname nickname = Nickname.of(communityManager.getNickname());
 
-        BetofficeServiceResult<Community> betofficeServiceResult = communityService.create(
+        ServiceResult<Community> betofficeServiceResult = communityService.create(
                 communityReference,
                 seasonReference,
                 name,

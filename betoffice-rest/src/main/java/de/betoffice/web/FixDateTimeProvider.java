@@ -28,7 +28,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-import de.winkler.betoffice.service.DateTimeProvider;
+import de.betoffice.storage.time.DateTimeProvider;
 
 /**
  * 

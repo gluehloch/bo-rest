@@ -26,6 +26,7 @@ package de.betoffice.web.admin;
 import java.util.List;
 import java.util.Optional;
 
+import de.betoffice.storage.team.TeamType;
 import de.betoffice.web.AccessDeniedException;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GroupTypeJson;
@@ -35,7 +36,6 @@ import de.betoffice.web.json.SeasonGroupTeamJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SeasonMemberJson;
 import de.betoffice.web.json.TeamJson;
-import de.winkler.betoffice.storage.enums.TeamType;
 
 /**
  * Betoffice administration JSON service interface

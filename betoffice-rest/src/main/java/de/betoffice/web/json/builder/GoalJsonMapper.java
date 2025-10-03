@@ -25,9 +25,9 @@ package de.betoffice.web.json.builder;
 
 import java.util.List;
 
+import de.betoffice.storage.season.entity.Goal;
 import de.betoffice.web.json.GameResultJson;
 import de.betoffice.web.json.GoalJson;
-import de.winkler.betoffice.storage.Goal;
 
 public class GoalJsonMapper {
 	

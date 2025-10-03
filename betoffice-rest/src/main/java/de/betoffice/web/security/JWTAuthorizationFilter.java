@@ -37,15 +37,16 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-import de.winkler.betoffice.service.AuthService;
-import de.winkler.betoffice.storage.Session;
-import de.winkler.betoffice.storage.enums.RoleType;
+import de.betoffice.service.AuthService;
+import de.betoffice.storage.session.entity.Session;
+import de.betoffice.storage.user.RoleType;
 
 /**
  * Autorisierungsfilter.
@@ -53,6 +54,8 @@ import de.winkler.betoffice.storage.enums.RoleType;
  * @author Andre Winkler
  */
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
+
+    private static final Logger LOG = org.slf4j.LoggerFactory.getLogger(JWTAuthorizationFilter.class);
 
     private final AuthService authService;
 
@@ -78,9 +81,15 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
-        String token = request.getHeader(HEADER_AUTHORIZATION);
+        final var token = request.getHeader(HEADER_AUTHORIZATION);
+        LOG.info("Validate token [{}], [{}]", token, request.getRequestURI());
+
         if (token != null) {
-            Optional<Session> validateSession = authService.validateSession(token.replace(TOKEN_PREFIX, ""));
+            final var tokenWithoutPrefix = token.replace(TOKEN_PREFIX, "");
+            LOG.info("Found a token: [{}]", tokenWithoutPrefix);
+
+            Optional<Session> validateSession = authService.validateSession(tokenWithoutPrefix);
+
             if (validateSession.isPresent()) {
                 List<RoleType> roleTypes = validateSession.get().getUser().getRoleTypes();
 

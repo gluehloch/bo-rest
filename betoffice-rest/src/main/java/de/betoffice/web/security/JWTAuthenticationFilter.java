@@ -36,10 +36,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import de.betoffice.service.AuthService;
+import de.betoffice.service.SecurityToken;
+import de.betoffice.storage.user.entity.Nickname;
 import de.betoffice.web.BetofficeHttpConsts;
-import de.winkler.betoffice.service.AuthService;
-import de.winkler.betoffice.service.SecurityToken;
-import de.winkler.betoffice.storage.Nickname;
 
 /**
  * This filter tries to authenticate the user. So there has to be an instance the {@link de.winkler.betoffice.storage.User} as JSON

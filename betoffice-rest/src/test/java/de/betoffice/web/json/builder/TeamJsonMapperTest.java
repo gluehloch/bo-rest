@@ -31,10 +31,10 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import de.betoffice.storage.season.entity.Location;
+import de.betoffice.storage.team.TeamType;
+import de.betoffice.storage.team.entity.Team;
 import de.betoffice.web.json.TeamJson;
-import de.winkler.betoffice.storage.Location;
-import de.winkler.betoffice.storage.Team;
-import de.winkler.betoffice.storage.enums.TeamType;
 
 /**
  * Test for {@link TeamJsonMapper}.

@@ -34,16 +34,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.betoffice.service.MasterDataManagerService;
+import de.betoffice.service.SeasonManagerService;
+import de.betoffice.storage.season.entity.Game;
+import de.betoffice.storage.team.TeamType;
+import de.betoffice.storage.team.entity.Team;
 import de.betoffice.web.json.HistoryTeamVsTeamJson;
 import de.betoffice.web.json.HistoryTeamVsTeamJsonMapper;
 import de.betoffice.web.json.JsonBuilder;
 import de.betoffice.web.json.TeamJson;
 import de.betoffice.web.json.builder.TeamJsonMapper;
-import de.winkler.betoffice.service.MasterDataManagerService;
-import de.winkler.betoffice.service.SeasonManagerService;
-import de.winkler.betoffice.storage.Game;
-import de.winkler.betoffice.storage.Team;
-import de.winkler.betoffice.storage.enums.TeamType;
 
 /**
  * Researching data...

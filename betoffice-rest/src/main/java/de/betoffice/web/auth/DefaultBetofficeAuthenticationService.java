@@ -30,14 +30,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import de.betoffice.service.AuthService;
+import de.betoffice.service.CommunityService;
+import de.betoffice.service.SecurityToken;
+import de.betoffice.storage.time.DateTimeProvider;
+import de.betoffice.storage.user.entity.Nickname;
+import de.betoffice.storage.user.entity.User;
 import de.betoffice.web.json.JsonBuilder;
 import de.betoffice.web.json.SecurityTokenJson;
-import de.winkler.betoffice.service.AuthService;
-import de.winkler.betoffice.service.CommunityService;
-import de.winkler.betoffice.service.DateTimeProvider;
-import de.winkler.betoffice.service.SecurityToken;
-import de.winkler.betoffice.storage.Nickname;
-import de.winkler.betoffice.storage.User;
 
 @Component
 public class DefaultBetofficeAuthenticationService implements BetofficeAuthenticationService {

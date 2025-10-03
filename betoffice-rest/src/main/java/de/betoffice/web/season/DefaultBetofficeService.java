@@ -30,9 +30,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import de.betoffice.web.json.GameWithGoalsJson;
+import de.betoffice.service.CommunityCalculatorService;
+import de.betoffice.service.CommunityService;
+import de.betoffice.service.MasterDataManagerService;
+import de.betoffice.service.SeasonManagerService;
+import de.betoffice.service.TippService;
+import de.betoffice.storage.group.entity.GroupType;
+import de.betoffice.storage.season.SeasonRange;
+import de.betoffice.storage.season.entity.Game;
+import de.betoffice.storage.season.entity.GameList;
+import de.betoffice.storage.season.entity.Goal;
+import de.betoffice.storage.season.entity.Group;
+import de.betoffice.storage.season.entity.Season;
+import de.betoffice.storage.team.TeamResult;
+import de.betoffice.storage.team.TeamType;
+import de.betoffice.storage.team.entity.Team;
+import de.betoffice.storage.time.DateTimeProvider;
+import de.betoffice.storage.tip.GameTipp;
+import de.betoffice.storage.user.UserResult;
 import de.betoffice.web.json.GameJson;
+import de.betoffice.web.json.GameWithGoalsJson;
 import de.betoffice.web.json.GroupTeamTableJson;
 import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.IGameJson;
@@ -48,24 +67,6 @@ import de.betoffice.web.json.UserJson;
 import de.betoffice.web.json.UserTableJson;
 import de.betoffice.web.json.builder.GoalJsonMapper;
 import de.betoffice.web.json.builder.TeamJsonMapper;
-import de.winkler.betoffice.service.CommunityCalculatorService;
-import de.winkler.betoffice.service.CommunityService;
-import de.winkler.betoffice.service.DateTimeProvider;
-import de.winkler.betoffice.service.MasterDataManagerService;
-import de.winkler.betoffice.service.SeasonManagerService;
-import de.winkler.betoffice.service.TippService;
-import de.winkler.betoffice.storage.Game;
-import de.winkler.betoffice.storage.GameList;
-import de.winkler.betoffice.storage.GameTipp;
-import de.winkler.betoffice.storage.Goal;
-import de.winkler.betoffice.storage.Group;
-import de.winkler.betoffice.storage.GroupType;
-import de.winkler.betoffice.storage.Season;
-import de.winkler.betoffice.storage.SeasonRange;
-import de.winkler.betoffice.storage.Team;
-import de.winkler.betoffice.storage.TeamResult;
-import de.winkler.betoffice.storage.UserResult;
-import de.winkler.betoffice.storage.enums.TeamType;
 
 /**
  * Basic rest service features for betoffice.
@@ -75,6 +76,7 @@ import de.winkler.betoffice.storage.enums.TeamType;
  * @author Andre Winkler
  */
 @Component("betofficeBasicService")
+@Transactional(readOnly = true)
 public class DefaultBetofficeService implements BetofficeService {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultBetofficeService.class);
@@ -171,7 +173,8 @@ public class DefaultBetofficeService implements BetofficeService {
     @Override
     public RoundJson findRoundByGroup(Long seasonId, Long roundId, Long groupTypeId) {
         Season season = seasonManagerService.findSeasonById(seasonId);
-        GameList gameList = seasonManagerService.findRoundGames(roundId).orElseGet(() -> seasonManagerService.findFirstRound(season).orElseThrow());
+        GameList gameList = seasonManagerService.findRoundGames(roundId)
+                .orElseGet(() -> seasonManagerService.findFirstRound(season).orElseThrow());
         GroupType groupType = masterDataManagerService.findGroupType(groupTypeId);
         Group group = seasonManagerService.findGroup(season, groupType);
 
