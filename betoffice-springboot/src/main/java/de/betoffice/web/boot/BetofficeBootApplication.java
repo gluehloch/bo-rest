@@ -29,10 +29,6 @@ public class BetofficeBootApplication {
     }
 
     private String profilesToString(String[] profiles) {
-        StringBuilder sb = new StringBuilder();
-        for (String p : profiles) {
-            sb.append(p).append(",");
-        }
-        return sb.toString();
+        return String.join(",", profiles);
     }
 }
