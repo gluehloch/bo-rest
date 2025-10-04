@@ -23,8 +23,8 @@
 
 package de.betoffice.web.json.builder;
 
+import de.betoffice.storage.season.entity.GameResult;
 import de.betoffice.web.json.GameResultJson;
-import de.winkler.betoffice.storage.GameResult;
 
 /**
  * Maps {@link GameResult} to {@link GameResultJson}.

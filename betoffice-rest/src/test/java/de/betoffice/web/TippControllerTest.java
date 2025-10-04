@@ -24,7 +24,6 @@
 
 package de.betoffice.web;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.equalTo;
@@ -33,6 +32,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -61,6 +62,23 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import de.betoffice.database.data.DeleteDatabase;
+import de.betoffice.service.CommunityService;
+import de.betoffice.service.MasterDataManagerService;
+import de.betoffice.service.SeasonManagerService;
+import de.betoffice.storage.community.entity.CommunityReference;
+import de.betoffice.storage.group.entity.GroupType;
+import de.betoffice.storage.season.SeasonType;
+import de.betoffice.storage.season.entity.Game;
+import de.betoffice.storage.season.entity.GameList;
+import de.betoffice.storage.season.entity.Group;
+import de.betoffice.storage.season.entity.Season;
+import de.betoffice.storage.season.entity.SeasonReference;
+import de.betoffice.storage.session.SessionDao;
+import de.betoffice.storage.session.entity.Session;
+import de.betoffice.storage.team.entity.Team;
+import de.betoffice.storage.tip.GameTipp;
+import de.betoffice.storage.user.entity.Nickname;
+import de.betoffice.storage.user.entity.User;
 import de.betoffice.web.auth.AuthenticationController;
 import de.betoffice.web.auth.AuthenticationForm;
 import de.betoffice.web.auth.BetofficeAuthenticationService;
@@ -72,23 +90,6 @@ import de.betoffice.web.tipp.OfficeTippService;
 import de.betoffice.web.tipp.SubmitTippGameJson;
 import de.betoffice.web.tipp.SubmitTippRoundJson;
 import de.betoffice.web.tipp.TippController;
-import de.winkler.betoffice.dao.SessionDao;
-import de.winkler.betoffice.service.CommunityService;
-import de.winkler.betoffice.service.MasterDataManagerService;
-import de.winkler.betoffice.service.SeasonManagerService;
-import de.winkler.betoffice.storage.CommunityReference;
-import de.winkler.betoffice.storage.Game;
-import de.winkler.betoffice.storage.GameList;
-import de.winkler.betoffice.storage.GameTipp;
-import de.winkler.betoffice.storage.Group;
-import de.winkler.betoffice.storage.GroupType;
-import de.winkler.betoffice.storage.Nickname;
-import de.winkler.betoffice.storage.Season;
-import de.winkler.betoffice.storage.SeasonReference;
-import de.winkler.betoffice.storage.Session;
-import de.winkler.betoffice.storage.Team;
-import de.winkler.betoffice.storage.User;
-import de.winkler.betoffice.storage.enums.SeasonType;
 
 /**
  * Die Spring-Security Konfiguration kann auf diese Art und Weise nicht mit getestet werden.
@@ -121,10 +122,10 @@ class TippControllerTest extends AbstractBetofficeSpringWebTestCase {
 
     @Autowired
     private SessionDao sessionDao;
-    
+
     @Autowired
     private CommunityService communityService;
-    
+
     @Autowired
     private DataSource dataSource;
 
@@ -149,7 +150,7 @@ class TippControllerTest extends AbstractBetofficeSpringWebTestCase {
     void submitLoginLogout() throws Exception {
         login();
         logout(findSessionToken().getToken());
-        
+
         List<Session> sessions2 = sessionDao.findByNickname(NICKNAME);
         assertThat(sessions2).hasSize(1);
         ZonedDateTime logout = sessions2.get(0).getLogout();
@@ -231,7 +232,7 @@ class TippControllerTest extends AbstractBetofficeSpringWebTestCase {
         Session logoutSession = findSessionToken();
         assertThat(logoutSession.getLogout()).isNotNull();
         assertThat(logoutSession.getToken()).isEqualTo(token);
-        
+
         mockMvc.perform(post("/office/tipp/submit")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toString(tipp))
@@ -240,17 +241,17 @@ class TippControllerTest extends AbstractBetofficeSpringWebTestCase {
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk()/*.isForbidden()*/); // TODO MockMvc Kontext ohne Spring-Security Filter.
-        
+
         //
         // Tippabgabe zum richtigen Zeitpunkt. Einen Tag vor dem Spieltag.
         //
 
         // TODO Wie stelle ich die Uhrzeit im Server fuer den Test passend ein?
-        
-//        assertThat(tipps.get(0).getToken()).isEqualTo("1");
-//        assertThat(tipps.get(0).getUser().getNickname()).isEqualTo(NICKNAME);
-//        assertThat(tipps.get(0).getTipp().getHomeGoals()).isEqualTo(2);
-//        assertThat(tipps.get(0).getTipp().getGuestGoals()).isEqualTo(3);
+
+        //        assertThat(tipps.get(0).getToken()).isEqualTo("1");
+        //        assertThat(tipps.get(0).getUser().getNickname()).isEqualTo(NICKNAME);
+        //        assertThat(tipps.get(0).getTipp().getHomeGoals()).isEqualTo(2);
+        //        assertThat(tipps.get(0).getTipp().getGuestGoals()).isEqualTo(3);
     }
 
     private String toString(Object object) throws JsonProcessingException {
@@ -259,7 +260,7 @@ class TippControllerTest extends AbstractBetofficeSpringWebTestCase {
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         return ow.writeValueAsString(object);
     }
-    
+
     public void tearDown() throws SQLException {
         Connection conn = getConnection();
         try {
@@ -307,17 +308,21 @@ class TippControllerTest extends AbstractBetofficeSpringWebTestCase {
         seasonManagerService.addTeam(data.season, data.bundesliga, data.luebeck);
 
         data.round = seasonManagerService.addRound(data.season, DATE_1971_03_24, data.bundesliga);
-        data.luebeckVsRwe = seasonManagerService.addMatch(data.round, DATE_1971_03_24, data.group, data.luebeck, data.rwe);
-        data.rweVsLuebeck = seasonManagerService.addMatch(data.round, DATE_1971_03_24, data.group, data.rwe, data.luebeck);
+        data.luebeckVsRwe = seasonManagerService.addMatch(data.round, DATE_1971_03_24, data.group, data.luebeck,
+                data.rwe);
+        data.rweVsLuebeck = seasonManagerService.addMatch(data.round, DATE_1971_03_24, data.group, data.rwe,
+                data.luebeck);
 
         data.user = new User();
         data.user.setNickname(Nickname.of(NICKNAME));
         data.user.setPassword(PASSWORD);
         communityService.createUser(data.user);
-        
+
         CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(data.season.getReference());
-        communityService.create(defaultPlayerGroup, data.season.getReference(), defaultPlayerGroup.getShortName(), "2024", Nickname.of(NICKNAME));
-        communityService.addMember(CommunityService.defaultPlayerGroup(data.season.getReference()), data.user.getNickname());
+        communityService.create(defaultPlayerGroup, data.season.getReference(), defaultPlayerGroup.getShortName(),
+                "2024", Nickname.of(NICKNAME));
+        communityService.addMember(CommunityService.defaultPlayerGroup(data.season.getReference()),
+                data.user.getNickname());
     }
 
     private static class T {
@@ -332,8 +337,8 @@ class TippControllerTest extends AbstractBetofficeSpringWebTestCase {
         Game rweVsLuebeck;
     }
 
-	private ResultActions login() throws Exception, JsonProcessingException {
-		AuthenticationForm authenticationForm = new AuthenticationForm();
+    private ResultActions login() throws Exception, JsonProcessingException {
+        AuthenticationForm authenticationForm = new AuthenticationForm();
         authenticationForm.setNickname(NICKNAME);
         authenticationForm.setPassword(PASSWORD);
 
@@ -347,15 +352,15 @@ class TippControllerTest extends AbstractBetofficeSpringWebTestCase {
                 .andExpect(jsonPath("token", notNullValue()))
                 .andExpect(jsonPath("nickname", equalTo(NICKNAME)))
                 .andExpect(jsonPath("role", equalTo("TIPPER")));
-        
-        return loginAction;
-	}
 
-	private ResultActions logout(String token) throws Exception, JsonProcessingException {
-		LogoutFormData logoutFormData = new LogoutFormData();
+        return loginAction;
+    }
+
+    private ResultActions logout(String token) throws Exception, JsonProcessingException {
+        LogoutFormData logoutFormData = new LogoutFormData();
         logoutFormData.setNickname(NICKNAME);
         logoutFormData.setToken(token);
-        
+
         ResultActions logoutAction = mockMvc.perform(post("/authentication/logout")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toString(logoutFormData))
@@ -363,14 +368,14 @@ class TippControllerTest extends AbstractBetofficeSpringWebTestCase {
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
-        
-        return logoutAction;
-	}
 
-	private Session findSessionToken() {
-		List<Session> sessions = sessionDao.findByNickname(NICKNAME);
+        return logoutAction;
+    }
+
+    private Session findSessionToken() {
+        List<Session> sessions = sessionDao.findByNickname(NICKNAME);
         assertThat(sessions).hasSize(1);
         return sessions.get(0);
-	}
-	
+    }
+
 }

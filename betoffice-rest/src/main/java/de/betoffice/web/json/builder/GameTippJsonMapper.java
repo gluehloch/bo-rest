@@ -26,9 +26,9 @@ package de.betoffice.web.json.builder;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import de.betoffice.storage.tip.GameTipp;
 import de.betoffice.web.json.GameResultJson;
 import de.betoffice.web.json.GameTippJson;
-import de.winkler.betoffice.storage.GameTipp;
 
 /**
  * Map a {@link GameTipp} to {@link GameTippJson}.

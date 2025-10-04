@@ -26,9 +26,8 @@ package de.betoffice.web.json.builder;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import de.betoffice.storage.user.UserResult;
 import de.betoffice.web.json.UserJson;
-import de.winkler.betoffice.storage.User;
-import de.winkler.betoffice.storage.UserResult;
 
 /**
  * Map {@link User} to {@link UserJson}.

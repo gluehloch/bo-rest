@@ -25,11 +25,11 @@ package de.betoffice.web.json.builder;
 
 import java.util.List;
 
+import de.betoffice.storage.season.SeasonType;
+import de.betoffice.storage.season.entity.Season;
+import de.betoffice.storage.season.entity.SeasonReference;
+import de.betoffice.storage.team.TeamType;
 import de.betoffice.web.json.SeasonJson;
-import de.winkler.betoffice.storage.Season;
-import de.winkler.betoffice.storage.SeasonReference;
-import de.winkler.betoffice.storage.enums.SeasonType;
-import de.winkler.betoffice.storage.enums.TeamType;
 
 /**
  * Mapping for {@link Season} to {@link SeasonJson}.

@@ -43,6 +43,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.betoffice.storage.team.TeamType;
 import de.betoffice.web.AccessDeniedException;
 import de.betoffice.web.BetofficeHttpConsts;
 import de.betoffice.web.json.GameJson;
@@ -56,7 +57,6 @@ import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SeasonMemberJson;
 import de.betoffice.web.json.TeamJson;
 import de.betoffice.web.season.BetofficeService;
-import de.winkler.betoffice.storage.enums.TeamType;
 
 /**
  * The administration part of the betoffice.

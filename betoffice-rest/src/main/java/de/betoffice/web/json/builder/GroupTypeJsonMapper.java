@@ -25,8 +25,8 @@ package de.betoffice.web.json.builder;
 
 import java.util.List;
 
+import de.betoffice.storage.group.entity.GroupType;
 import de.betoffice.web.json.GroupTypeJson;
-import de.winkler.betoffice.storage.GroupType;
 
 /**
  * Map a {@link GroupType} to {@link GroupTypeJson}.

@@ -26,8 +26,9 @@ package de.betoffice.web.season;
 import java.util.List;
 import java.util.Optional;
 
-import de.betoffice.web.json.GameWithGoalsJson;
+import de.betoffice.storage.team.TeamType;
 import de.betoffice.web.json.GameJson;
+import de.betoffice.web.json.GameWithGoalsJson;
 import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.PingJson;
 import de.betoffice.web.json.RoundAndTableJson;
@@ -35,7 +36,6 @@ import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.TeamJson;
 import de.betoffice.web.json.UserTableJson;
-import de.winkler.betoffice.storage.enums.TeamType;
 
 /**
  * Betoffice JSON service interface

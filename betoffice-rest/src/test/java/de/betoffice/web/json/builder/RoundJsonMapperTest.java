@@ -30,13 +30,13 @@ import java.time.ZonedDateTime;
 
 import org.junit.jupiter.api.Test;
 
+import de.betoffice.storage.group.entity.GroupType;
+import de.betoffice.storage.season.SeasonType;
+import de.betoffice.storage.season.entity.GameList;
+import de.betoffice.storage.season.entity.Group;
+import de.betoffice.storage.season.entity.Season;
+import de.betoffice.storage.season.entity.SeasonReference;
 import de.betoffice.web.json.RoundJson;
-import de.winkler.betoffice.storage.GameList;
-import de.winkler.betoffice.storage.Group;
-import de.winkler.betoffice.storage.GroupType;
-import de.winkler.betoffice.storage.Season;
-import de.winkler.betoffice.storage.SeasonReference;
-import de.winkler.betoffice.storage.enums.SeasonType;
 
 /**
  * Test for {@link RoundJsonMapper}.

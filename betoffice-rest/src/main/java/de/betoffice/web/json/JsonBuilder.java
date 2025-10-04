@@ -28,6 +28,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import de.betoffice.service.SecurityToken;
+import de.betoffice.storage.group.entity.GroupType;
+import de.betoffice.storage.season.entity.Game;
+import de.betoffice.storage.season.entity.GameList;
+import de.betoffice.storage.season.entity.GameResult;
+import de.betoffice.storage.season.entity.Season;
+import de.betoffice.storage.team.TeamResult;
+import de.betoffice.storage.team.entity.Team;
+import de.betoffice.storage.tip.GameTipp;
+import de.betoffice.storage.user.UserResult;
 import de.betoffice.web.json.builder.GameJsonMapper;
 import de.betoffice.web.json.builder.GameResultJsonMapper;
 import de.betoffice.web.json.builder.GameTippJsonMapper;
@@ -38,16 +48,6 @@ import de.betoffice.web.json.builder.SecurityTokenJsonMapper;
 import de.betoffice.web.json.builder.TeamJsonMapper;
 import de.betoffice.web.json.builder.TeamResultJsonMapper;
 import de.betoffice.web.json.builder.UserJsonMapper;
-import de.winkler.betoffice.service.SecurityToken;
-import de.winkler.betoffice.storage.Game;
-import de.winkler.betoffice.storage.GameList;
-import de.winkler.betoffice.storage.GameResult;
-import de.winkler.betoffice.storage.GameTipp;
-import de.winkler.betoffice.storage.GroupType;
-import de.winkler.betoffice.storage.Season;
-import de.winkler.betoffice.storage.Team;
-import de.winkler.betoffice.storage.TeamResult;
-import de.winkler.betoffice.storage.UserResult;
 
 /**
  * Create JSON objects.

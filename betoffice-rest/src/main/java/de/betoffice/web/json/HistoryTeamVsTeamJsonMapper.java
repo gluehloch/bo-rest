@@ -26,7 +26,7 @@ package de.betoffice.web.json;
 
 import java.util.List;
 
-import de.winkler.betoffice.storage.Game;
+import de.betoffice.storage.season.entity.Game;
 
 /**
  * Mapping

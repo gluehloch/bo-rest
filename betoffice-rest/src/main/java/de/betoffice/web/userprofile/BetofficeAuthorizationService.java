@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb Copyright (c) 2013-2024 by Andre Winkler. All rights
+ * Project betoffice-jweb Copyright (c) 2015-2025 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -21,27 +21,31 @@
  * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package de.betoffice.web.json.builder;
+package de.betoffice.web.userprofile;
 
-import de.betoffice.storage.community.entity.Community;
-import de.betoffice.web.json.CommunityJson;
-import de.betoffice.web.json.PartyJson;
-import de.betoffice.web.json.SeasonJson;
+import java.util.Optional;
 
-public class CommunityJsonMapper {
+import org.springframework.stereotype.Service;
 
-    public static CommunityJson map(Community community) {
-        return map(community, new CommunityJson());
+import de.betoffice.service.AuthService;
+import de.betoffice.storage.session.entity.Session;
+
+@Service
+public class BetofficeAuthorizationService {
+
+    private final AuthService authService;
+
+    public BetofficeAuthorizationService(AuthService authService) {
+        this.authService = authService;
     }
 
-    public static CommunityJson map(Community community, CommunityJson json) {
-        json.setId(community.getId());
-        json.setName(community.getName());
-        json.setYear(community.getYear());
-        json.setShortName(community.getReference().getShortName());
-        json.setCommunityManager(PartyJsonMapper.mapSmall(community.getCommunityManager(), new PartyJson()));
-        json.setSeason(SeasonJsonMapper.map(community.getSeason(), new SeasonJson()));
-        return json;
+    public boolean validateSession(String token, String nickname) {
+        Optional<Session> session = authService.validateSession(token);
+        if (session.isEmpty())
+            return false;
+        if (!session.get().getNickname().equals(nickname))
+            return false;
+        return true;
     }
 
 }

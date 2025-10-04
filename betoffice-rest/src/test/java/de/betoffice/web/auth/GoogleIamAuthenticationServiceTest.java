@@ -3,7 +3,6 @@ package de.betoffice.web.auth;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -18,13 +17,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
+import de.betoffice.service.AuthService;
+import de.betoffice.service.CommunityService;
+import de.betoffice.service.SecurityToken;
+import de.betoffice.storage.time.DateTimeProvider;
+import de.betoffice.storage.user.entity.Nickname;
+import de.betoffice.storage.user.entity.User;
 import de.betoffice.web.json.SecurityTokenJson;
-import de.winkler.betoffice.service.AuthService;
-import de.winkler.betoffice.service.CommunityService;
-import de.winkler.betoffice.service.DateTimeProvider;
-import de.winkler.betoffice.service.SecurityToken;
-import de.winkler.betoffice.storage.Nickname;
-import de.winkler.betoffice.storage.User;
 
 public class GoogleIamAuthenticationServiceTest {
 
@@ -63,9 +62,9 @@ public class GoogleIamAuthenticationServiceTest {
         SecurityToken securityToken = createMockSecurityToken();
 
         when(communityService.findUser(Nickname.of(TEST_EMAIL))).thenReturn(Optional.of(existingUser));
-        when(authService.login(any(Nickname.class), eq(TEST_GOOGLE_ID), 
+        when(authService.login(any(Nickname.class), eq(TEST_GOOGLE_ID),
                 eq(TEST_SESSION_ID), eq(TEST_ADDRESS), eq(TEST_BROWSER_ID)))
-                .thenReturn(securityToken);
+                        .thenReturn(securityToken);
 
         // Act
         SecurityTokenJson result = googleIamAuthenticationService.authenticateWithGoogle(
@@ -121,8 +120,7 @@ public class GoogleIamAuthenticationServiceTest {
         when(oauth2User.getAttributes()).thenReturn(Map.of(
                 "email", email,
                 "sub", googleId,
-                "name", name
-        ));
+                "name", name));
         return oauth2User;
     }
 

@@ -7,8 +7,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import de.winkler.betoffice.conf.PersistenceJPAConfiguration;
-import de.winkler.betoffice.conf.TestPropertiesConfiguration;
+import de.betoffice.conf.PersistenceJPAConfiguration;
+import de.betoffice.conf.TestPropertiesConfiguration;
 
 @WebAppConfiguration
 @ActiveProfiles(profiles = "test")

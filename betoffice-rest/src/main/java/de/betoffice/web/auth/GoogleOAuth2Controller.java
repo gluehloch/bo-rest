@@ -27,6 +27,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -36,14 +37,13 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.betoffice.service.SecurityToken;
 import de.betoffice.web.BetofficeHttpConsts;
 import de.betoffice.web.BetofficeUrlPath;
 import de.betoffice.web.json.SecurityTokenJson;
-import de.winkler.betoffice.service.SecurityToken;
 
 /**
- * Google OAuth2 authentication controller.
- * Handles Google IAM authentication flow.
+ * Google OAuth2 authentication controller. Handles Google IAM authentication flow.
  */
 @CrossOrigin
 @RestController
@@ -58,8 +58,7 @@ public class GoogleOAuth2Controller {
     }
 
     /**
-     * Handle successful Google OAuth2 authentication.
-     * This endpoint is called after successful Google authentication.
+     * Handle successful Google OAuth2 authentication. This endpoint is called after successful Google authentication.
      */
     @GetMapping("/google/callback")
     public ResponseEntity<SecurityTokenJson> googleCallback(
@@ -68,7 +67,7 @@ public class GoogleOAuth2Controller {
             HttpServletRequest request) {
 
         if (principal == null) {
-            return ResponseEntity.unauthorized().build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         SecurityTokenJson securityToken = googleIamAuthenticationService.authenticateWithGoogle(
@@ -93,16 +92,16 @@ public class GoogleOAuth2Controller {
             HttpServletRequest request) {
 
         if (principal == null) {
-            return ResponseEntity.unauthorized().build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         HttpSession session = request.getSession();
         SecurityTokenJson token = (SecurityTokenJson) session.getAttribute(SecurityToken.class.getName());
-        
+
         if (token != null) {
             return ResponseEntity.ok(token);
         } else {
-            return ResponseEntity.unauthorized().build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 }

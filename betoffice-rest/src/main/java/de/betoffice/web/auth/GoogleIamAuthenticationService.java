@@ -31,18 +31,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 
+import de.betoffice.service.AuthService;
+import de.betoffice.service.CommunityService;
+import de.betoffice.service.SecurityToken;
+import de.betoffice.storage.time.DateTimeProvider;
+import de.betoffice.storage.user.entity.Nickname;
+import de.betoffice.storage.user.entity.User;
 import de.betoffice.web.json.JsonBuilder;
 import de.betoffice.web.json.SecurityTokenJson;
-import de.winkler.betoffice.service.AuthService;
-import de.winkler.betoffice.service.CommunityService;
-import de.winkler.betoffice.service.DateTimeProvider;
-import de.winkler.betoffice.service.SecurityToken;
-import de.winkler.betoffice.storage.Nickname;
-import de.winkler.betoffice.storage.User;
 
 /**
- * Google IAM authentication service implementation.
- * Handles OAuth2 authentication with Google Identity and Access Management.
+ * Google IAM authentication service implementation. Handles OAuth2 authentication with Google Identity and Access
+ * Management.
  */
 @Component
 public class GoogleIamAuthenticationService {
@@ -50,26 +50,27 @@ public class GoogleIamAuthenticationService {
     private static final Logger LOG = LoggerFactory.getLogger(GoogleIamAuthenticationService.class);
 
     @Autowired
-    private DateTimeProvider dateTimeProvider;
+    DateTimeProvider dateTimeProvider;
 
     @Autowired
-    private AuthService authService;
+    AuthService authService;
 
     @Autowired
-    private CommunityService communityService;
+    CommunityService communityService;
 
     /**
      * Authenticate user via Google OAuth2.
      *
-     * @param oauth2User the OAuth2 user from Google
-     * @param sessionId  Java Servlet session id
-     * @param address    IP address
-     * @param browserId  browser id (mozilla/firefox/ie/...)
-     * @return a security token
+     * @param  oauth2User the OAuth2 user from Google
+     * @param  sessionId  Java Servlet session id
+     * @param  address    IP address
+     * @param  browserId  browser id (mozilla/firefox/ie/...)
+     * @return            a security token
      */
-    public SecurityTokenJson authenticateWithGoogle(OAuth2User oauth2User, String sessionId, String address, String browserId) {
+    public SecurityTokenJson authenticateWithGoogle(OAuth2User oauth2User, String sessionId, String address,
+            String browserId) {
         if (LOG.isInfoEnabled()) {
-            LOG.info("Google OAuth2 authentication for: {}", oauth2User.getAttribute("email"));
+            LOG.info(String.format("Google OAuth2 authentication for: %s", oauth2User.getAttribute("email")));
         }
 
         String email = oauth2User.getAttribute("email");
@@ -84,7 +85,7 @@ public class GoogleIamAuthenticationService {
         // Try to find existing user by email (using nickname as email for now)
         Nickname nickname = Nickname.of(email);
         Optional<User> existingUser = communityService.findUser(nickname);
-        
+
         if (existingUser.isEmpty()) {
             LOG.warn("User not found for Google authentication: {}. User must be created manually.", email);
             return createFailedAuthenticationToken(email);

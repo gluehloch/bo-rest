@@ -30,27 +30,29 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import de.betoffice.service.AuthService;
+import de.betoffice.service.CommunityService;
+import de.betoffice.service.SeasonManagerService;
+import de.betoffice.service.TippService;
+import de.betoffice.storage.season.entity.GameList;
+import de.betoffice.storage.session.entity.Session;
+import de.betoffice.storage.time.DateTimeProvider;
+import de.betoffice.storage.tip.GameTipp;
+import de.betoffice.storage.tip.TippDto;
+import de.betoffice.storage.tip.TippDto.GameTippDto;
+import de.betoffice.storage.user.entity.Nickname;
+import de.betoffice.storage.user.entity.User;
 import de.betoffice.web.AccessDeniedException;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.IGameJson;
 import de.betoffice.web.json.JsonAssembler;
 import de.betoffice.web.json.JsonBuilder;
 import de.betoffice.web.json.RoundJson;
-import de.winkler.betoffice.service.AuthService;
-import de.winkler.betoffice.service.CommunityService;
-import de.winkler.betoffice.service.DateTimeProvider;
-import de.winkler.betoffice.service.SeasonManagerService;
-import de.winkler.betoffice.service.TippService;
-import de.winkler.betoffice.storage.GameList;
-import de.winkler.betoffice.storage.GameTipp;
-import de.winkler.betoffice.storage.Nickname;
-import de.winkler.betoffice.storage.Session;
-import de.winkler.betoffice.storage.TippDto;
-import de.winkler.betoffice.storage.TippDto.GameTippDto;
-import de.winkler.betoffice.storage.User;
 
 @Service
+@Transactional(readOnly = true)
 public class DefaultOfficeTippService implements OfficeTippService {
 
     @Autowired
@@ -69,6 +71,7 @@ public class DefaultOfficeTippService implements OfficeTippService {
     private AuthService authService;
 
     @Override
+    @Transactional
     public RoundJson submitTipp(String token, SubmitTippRoundJson tippRoundJson) throws AccessDeniedException {
         Session session = authService.validateSession(token).orElseThrow(() -> new AccessDeniedException());
 

@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb Copyright (c) 2016-2024 by Andre Winkler. All rights
+ * Project betoffice-jweb Copyright (c) 2016-2025 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -24,58 +24,51 @@
 package de.betoffice.web.json.builder;
 
 import java.util.List;
+import java.util.Optional;
 
 import de.betoffice.mail.NotificationType;
 import de.betoffice.storage.user.entity.Nickname;
 import de.betoffice.storage.user.entity.User;
 import de.betoffice.web.json.PartyJson;
+import de.betoffice.web.json.UserProfileJson;
 
 /**
  * Map {@link User} to {@link PartyJson}.
  * 
  * @author Andre Winkler
  */
-public class PartyJsonMapper {
+public class UserProfileJsonMapper {
 
-    public static PartyJson mapSmall(User user, PartyJson partyJson) {
-        partyJson.setId(user.getId());
-        partyJson.setName(user.getName());
-        partyJson.setSurname(user.getSurname());
-        partyJson.setMail(user.getEmail());
-        partyJson.setNickname(user.getNickname().value());
-        return partyJson;
+    public static Optional<UserProfileJson> map(Optional<User> user) {
+        return user.map(UserProfileJsonMapper::map);
     }
 
-    public static PartyJson map(User user, PartyJson partyJson) {
-        partyJson.setId(user.getId());
+    public static UserProfileJson map(User user) {
+        return map(user, new UserProfileJson());
+    }
+
+    public static UserProfileJson map(User user, UserProfileJson partyJson) {
         partyJson.setName(user.getName());
         partyJson.setSurname(user.getSurname());
         partyJson.setMail(user.getEmail());
-        partyJson.setNickname(user.getNickname().value());
-        partyJson.setPassword(user.getPassword());
-        partyJson.setPhone(user.getPhone());
-        partyJson.setTitle(user.getTitle());
         partyJson.setEmailNotificationEnabled(NotificationType.TIPP.equals(user.getNotification()));
+        partyJson.setAlternativeMail(user.getChangeEmail());
+        partyJson.setNickname(user.getNickname().value());
+        partyJson.setPhone(user.getPhone());
         return partyJson;
     }
 
-    public static List<PartyJson> map(List<User> users) {
-        return users.stream().map(PartyJsonMapper::map).toList();
+    public static List<UserProfileJson> map(List<User> users) {
+        return users.stream().map(UserProfileJsonMapper::map).toList();
     }
 
-    private static PartyJson map(User user) {
-        return map(user, new PartyJson());
-    }
-
-    public static User reverse(PartyJson partyJson, User user) {
+    public static User reverse(UserProfileJson partyJson, User user) {
         user.setName(partyJson.getName());
         user.setSurname(partyJson.getSurname());
         user.setEmail(partyJson.getMail());
-        user.setNickname(Nickname.of(partyJson.getNickname()));
-        user.setPassword(partyJson.getPassword());
-        user.setPhone(partyJson.getPhone());
-        user.setTitle(partyJson.getTitle());
         user.setNotification(partyJson.isEmailNotificationEnabled() ? NotificationType.TIPP : NotificationType.NONE);
+        user.setNickname(Nickname.of(partyJson.getNickname()));
+        user.setPhone(partyJson.getPhone());
         return user;
     }
 

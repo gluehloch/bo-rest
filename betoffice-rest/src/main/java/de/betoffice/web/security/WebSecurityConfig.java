@@ -58,13 +58,13 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import de.betoffice.service.AuthService;
+import de.betoffice.service.SecurityToken;
+import de.betoffice.storage.user.RoleType;
+import de.betoffice.storage.user.UserDao;
+import de.betoffice.storage.user.entity.Nickname;
+import de.betoffice.storage.user.entity.User;
 import de.betoffice.web.BetofficeUrlPath;
-import de.winkler.betoffice.dao.UserDao;
-import de.winkler.betoffice.service.AuthService;
-import de.winkler.betoffice.service.SecurityToken;
-import de.winkler.betoffice.storage.Nickname;
-import de.winkler.betoffice.storage.User;
-import de.winkler.betoffice.storage.enums.RoleType;
 
 /**
  * Security configuration.
@@ -73,7 +73,7 @@ import de.winkler.betoffice.storage.enums.RoleType;
  */
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class WebSecurityConfig {
 
     @Autowired
@@ -124,6 +124,8 @@ public class WebSecurityConfig {
                 */
 
         http.authorizeHttpRequests(authz -> authz /*.anyRequest().permitAll()*/
+                //.requestMatchers(antMatcher("/actuator/**")).permitAll()
+                //.requestMatchers(antMatcher("/actuator/env/**")).permitAll()
                 .requestMatchers(antMatcher(HttpMethod.GET, BetofficeUrlPath.URL_OFFICE + "/**")).permitAll()
                 // Authentication
                 .requestMatchers(antMatcher(HttpMethod.GET,
@@ -145,6 +147,14 @@ public class WebSecurityConfig {
                 // Send tipp form
                 .requestMatchers(antMatcher(HttpMethod.POST, BetofficeUrlPath.URL_OFFICE + "/tipp/submit"))
                 .hasRole("TIPPER")
+                // user profile update
+                .requestMatchers(antMatcher(HttpMethod.GET, BetofficeUrlPath.URL_OFFICE + "/profile/**"))
+                .hasRole("TIPPER")
+                .requestMatchers(antMatcher(HttpMethod.PUT, BetofficeUrlPath.URL_OFFICE + "/profile/**"))
+                .hasRole("TIPPER")
+                .requestMatchers(antMatcher(HttpMethod.POST, BetofficeUrlPath.URL_OFFICE + "/profile/**"))
+                .hasRole("TIPPER")
+
                 // Community Administration
                 .requestMatchers(antMatcher(HttpMethod.GET, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**"))
                 .hasRole("ADMIN")

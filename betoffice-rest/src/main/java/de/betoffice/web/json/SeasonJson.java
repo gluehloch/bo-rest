@@ -27,7 +27,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.winkler.betoffice.storage.enums.SeasonType;
+import de.betoffice.storage.season.SeasonType;
 
 /**
  * Season for JSON serialization.

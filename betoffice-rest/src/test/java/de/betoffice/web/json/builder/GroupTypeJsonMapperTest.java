@@ -27,8 +27,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
+import de.betoffice.storage.group.entity.GroupType;
 import de.betoffice.web.json.GroupTypeJson;
-import de.winkler.betoffice.storage.GroupType;
 
 /**
  * Test for {@link GroupTypeJsonMapper}.

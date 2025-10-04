@@ -39,9 +39,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.winkler.betoffice.service.AuthService;
-import de.winkler.betoffice.storage.Nickname;
-import de.winkler.betoffice.storage.User;
+import de.betoffice.service.AuthService;
+import de.betoffice.storage.user.entity.Nickname;
+import de.betoffice.storage.user.entity.User;
 
 /**
  * Custom Authentification Provider: Defines my own authentication implementation. A nickname/password comparison.
