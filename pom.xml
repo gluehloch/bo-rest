@@ -12,12 +12,12 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.betoffice</groupId>
     <artifactId>betoffice-web</artifactId>
-    <version>1.5.1-SNAPSHOT</version>
+    <version>1.5.1</version>
     <packaging>pom</packaging>
 
     <properties>
-        <betoffice.openligadb.version>3.2.0-SNAPSHOT</betoffice.openligadb.version>
-        <betoffice.storage.version>3.2.0-SNAPSHOT</betoffice.storage.version>
+        <betoffice.openligadb.version>3.2.0</betoffice.openligadb.version>
+        <betoffice.storage.version>3.2.0</betoffice.storage.version>
         <betoffice.testutils.version>1.4.1</betoffice.testutils.version>
     </properties>
 
