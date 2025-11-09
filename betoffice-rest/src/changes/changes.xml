@@ -9,12 +9,20 @@
         <!--
              *** STILL UNDER DEVELOPMENT x.x.x (SNAPSHOT) ***
         -->
-
-        <!-- UNDER DEVELOPMENT -->
-        <release version="betoffice-jweb-1.5.x" date="2024-03-??" description="better tipp form">
+        
+        <!-- 
             <action dev="andrewinkler" type="add" date="2024-03-??">
                 Better tipp form. Like showing next ten games. The relationship to a round should should not be the focus.
                 More compact information.
+            </action>
+         -->
+
+        <!-- UNDER DEVELOPMENT -->
+
+        <!-- RELEASED -->
+        <release version="betoffice-jweb-1.5.1" date="2025-11-08" description="better tipp form">
+            <action dev="andrewinkler" tpye="update" date="2025-10-31">
+                Update to JDK 25.
             </action>
             <action dev="andrewinkler" type="update" date="2024-05-15">
                 Added some informations: Game contains the associated group (type). Season contains the associated season type.

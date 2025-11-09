@@ -9,7 +9,13 @@
         <!--
              *** STILL UNDER DEVELOPMENT x.x.x (SNAPSHOT) ***
         -->
-        
+        <!-- RELEASED -->
+        <release version="betoffice-boot-1.5.1" date="2025-11-08" description="JDK 25">
+            <action dev="andrewinkler" type="add" date="2025-11-08">
+                JDK 25
+            </action>
+        </release>
+
         <!-- RELEASED -->
         <release version="betoffice-war-1.5.0" date="2024-04-29" description="spring annotation configuration">
             <action dev="andrewinkler" type="add" date="2024-04-29">

@@ -14,7 +14,7 @@ import de.betoffice.conf.TestPropertiesConfiguration;
 @ActiveProfiles(profiles = "test")
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { PersistenceJPAConfiguration.class, TestPropertiesConfiguration.class })
-@ComponentScan({"de.winkler.betoffice", "de.betoffice"})
+@ComponentScan({ "de.betoffice" })
 public abstract class AbstractBetofficeSpringWebTestCase {
 
 }
