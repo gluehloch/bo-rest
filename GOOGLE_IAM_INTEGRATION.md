@@ -27,7 +27,7 @@ The Google IAM integration allows users to authenticate using their Google accou
    - For local development: `http://localhost:8080/login/oauth2/code/google`
    - AWI Local development with Spring-Boot (Spielt der Pfad `/bo` für das Redirect eine Rolle?):
       - `http://localhost:7878/bo/office/ping`
-      - `http://localhost:7878/login/oauth2/code/google`
+      - `http://localhost:7878/bo/login/oauth2/code/google`
    
    - For production: `https://yourdomain.com/login/oauth2/code/google`
 7. Note down the Client ID and Client Secret

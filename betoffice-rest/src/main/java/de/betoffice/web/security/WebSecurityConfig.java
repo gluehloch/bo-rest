@@ -139,6 +139,9 @@ public class WebSecurityConfig {
                 .authenticated()
                 // Google OAuth2 endpoints
                 .requestMatchers(antMatcher(HttpMethod.GET,
+                        "/oauth2/authorization/google")) // TODO Remove Me. Probably not needed...?!?
+                .permitAll()
+                .requestMatchers(antMatcher(HttpMethod.GET,
                         BetofficeUrlPath.URL_AUTHENTICATION + "/google/callback"))
                 .permitAll()
                 .requestMatchers(antMatcher(HttpMethod.GET,
@@ -172,9 +175,9 @@ public class WebSecurityConfig {
 
         // Enable OAuth2 login
         http.oauth2Login(oauth2 -> oauth2
-                .loginPage("/oauth2/authorization/google")
-                .defaultSuccessUrl(BetofficeUrlPath.URL_AUTHENTICATION + "/google/callback", true)
-        );
+                // .loginPage("/oauth2/authorization/google")
+                .loginPage("http://localhost:9999/betoffice-boot/oauth2/authorization/google")
+                .defaultSuccessUrl(BetofficeUrlPath.URL_AUTHENTICATION + "/google/callback", true));
         // Authentication Endpoint
         /*
                 http.requestMatchers(HttpMethod.GET,     BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_PING).anonymous()
