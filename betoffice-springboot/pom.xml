@@ -5,19 +5,19 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.4</version>
+        <version>3.5.9</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.betoffice.web</groupId>
     <artifactId>betoffice-springboot</artifactId>
-    <version>1.5.1</version>
+    <version>1.5.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <compiler.encoding>UTF-8</compiler.encoding>
-        <compiler.version>21</compiler.version>
+        <compiler.version>25</compiler.version>
     </properties>
 
     <build>
@@ -48,7 +48,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <release>21</release>
+                    <release>${compiler.version}</release>
                     <source>${compiler.version}</source>
                     <target>${compiler.version}</target>
                     <encoding>${compiler.encoding}</encoding>
@@ -122,7 +122,7 @@
             <dependency>
                 <groupId>de.betoffice</groupId>
                 <artifactId>betoffice-web</artifactId>
-                <version>1.5.1</version>
+                <version>1.5.2-SNAPSHOT</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -146,7 +146,7 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>de.winkler.betoffice</groupId>
+            <groupId>de.betoffice</groupId>
             <artifactId>betoffice-storage</artifactId>
             <scope>compile</scope>
             <exclusions>
@@ -186,10 +186,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

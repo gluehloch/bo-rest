@@ -12,7 +12,7 @@ import jakarta.annotation.PostConstruct;
 
 @SpringBootApplication
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })
-@ComponentScan(basePackages = { "de.betoffice", "de.winkler.betoffice" })
+@ComponentScan(basePackages = { "de.betoffice" })
 public class BetofficeBootApplication {
 
     @Autowired
