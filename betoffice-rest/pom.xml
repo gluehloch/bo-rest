@@ -4,20 +4,13 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
-    <!--
-        <groupId>de.winkler.betoffice</groupId>
-        <artifactId>betoffice-maven-parent</artifactId>
-        <version>1.15.1</version>
-        -->
-                <groupId>de.betoffice</groupId>
-                <artifactId>betoffice-web</artifactId>
-                <version>1.5.2-SNAPSHOT</version>        
+        <groupId>de.betoffice</groupId>
+        <artifactId>betoffice-web</artifactId>
+        <version>1.5.2-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>de.betoffice</groupId>
     <artifactId>betoffice-rest</artifactId>
-    <version>1.5.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <dependencyManagement>

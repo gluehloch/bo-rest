@@ -15,9 +15,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>de.betoffice</groupId>
     <artifactId>betoffice-war</artifactId>
-    <version>1.5.2-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <properties>
@@ -74,14 +72,12 @@
     </build>
 
     <dependencies>
-    	<!--
         <dependency>
             <groupId>de.betoffice</groupId>
             <artifactId>betoffice-rest</artifactId>
             <version>1.5.2-SNAPSHOT</version>
             <scope>compile</scope>            
         </dependency>
-        -->
         <dependency>
             <groupId>de.betoffice</groupId>
             <artifactId>betoffice-openligadb</artifactId>
