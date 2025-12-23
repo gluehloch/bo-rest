@@ -78,16 +78,6 @@
             <version>1.5.2-SNAPSHOT</version>
             <scope>compile</scope>            
         </dependency>
-        <dependency>
-            <groupId>de.betoffice</groupId>
-            <artifactId>betoffice-openligadb</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.betoffice</groupId>
-            <artifactId>betoffice-storage</artifactId>
-            <scope>compile</scope>
-        </dependency>
 
         <!--
         https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client -->

@@ -51,6 +51,7 @@
                 <groupId>de.betoffice</groupId>
                 <artifactId>betoffice-testutils</artifactId>
                 <version>${betoffice.testutils.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
