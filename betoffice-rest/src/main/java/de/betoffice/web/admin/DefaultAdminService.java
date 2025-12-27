@@ -52,7 +52,6 @@ import de.betoffice.storage.team.entity.Team;
 import de.betoffice.storage.time.DateTimeProvider;
 import de.betoffice.storage.user.entity.Nickname;
 import de.betoffice.storage.user.entity.User;
-import de.betoffice.web.AccessDeniedException;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GroupTeamJson;
 import de.betoffice.web.json.GroupTypeJson;
@@ -105,8 +104,8 @@ public class DefaultAdminService implements AdminService {
         Optional<Session> session = authService.validateSession(token);
 
         if (!session.isPresent()) {
-            throw new AccessDeniedException();
-            // TODO Is this better? throw new WebApplicationException(Status.FORBIDDEN);
+            // throw new AccessDeniedException();
+            throw new WebApplicationException(Status.FORBIDDEN);
         }
 
         if (session.get().getLogout() != null) {

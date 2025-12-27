@@ -27,10 +27,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,11 +38,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.storage.team.TeamType;
-import de.betoffice.web.AccessDeniedException;
 import de.betoffice.web.BetofficeHttpConsts;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GroupTypeJson;
@@ -366,14 +362,6 @@ public class AdministrationController {
 
         betofficeAdminJsonService.validateAdminSession(token);
         return betofficeAdminJsonService.removeSeasonMembers(seasonId, members);
-    }
-
-    /**
-     * Convert a predefined exception to an HTTP Status code
-     */
-    @ResponseStatus(value = HttpStatus.FORBIDDEN, reason = "Access denied")
-    @ExceptionHandler(AccessDeniedException.class)
-    public void forbidden() {
     }
 
 }
