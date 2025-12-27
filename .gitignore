@@ -17,3 +17,6 @@
 betoffice-test.log
 betoffice-jweb.iml
 .classpath
+
+application-google-oauth.properties
+
