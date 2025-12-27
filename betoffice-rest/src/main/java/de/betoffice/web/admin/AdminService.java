@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Optional;
 
 import de.betoffice.storage.team.TeamType;
-import de.betoffice.web.AccessDeniedException;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.PartyJson;
@@ -45,7 +44,7 @@ import de.betoffice.web.json.TeamJson;
 public interface AdminService {
 
     /**
-     * Validate admin session. Throws {@link AccessDeniedException}.
+     * Validate admin session.
      *
      * @param token the session token
      */
