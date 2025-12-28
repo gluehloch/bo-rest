@@ -105,20 +105,20 @@ public class DefaultAdminService implements AdminService {
 
         if (!session.isPresent()) {
             // throw new AccessDeniedException();
-            throw new WebApplicationException(Status.FORBIDDEN);
+            throw new IllegalStateException("No valid session found for token: " + token);
         }
 
         if (session.get().getLogout() != null) {
-            throw new AccessDeniedException();
+            throw new IllegalStateException("User is already logged out for token: " + token);
         }
 
         ZonedDateTime loginDate = session.get().getLogin();
         if (loginDate.isBefore(ZonedDateTime.now(dateTimeProvider.defaultZoneId()).minusDays(3))) {
-            throw new AccessDeniedException();
+            throw new IllegalStateException("Login token is older than 3 days:  " + token);
         }
 
         if (!session.get().getUser().isAdmin()) {
-            throw new AccessDeniedException();
+            throw new IllegalStateException("This is not an admin user token: " + token);
         }
     }
 

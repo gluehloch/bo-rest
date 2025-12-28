@@ -24,18 +24,15 @@
 package de.betoffice.web.tipp;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.betoffice.web.AccessDeniedException;
 import de.betoffice.web.BetofficeHttpConsts;
 import de.betoffice.web.json.RoundJson;
 
@@ -58,10 +55,10 @@ public class TippController {
      * @param  nickName nick name
      * @return          The tipp of a user for a round
      */
-    @RequestMapping(value = "/tipp/{roundId}/{nickName}", method = RequestMethod.GET)
+    @GetMapping(value = "/tipp/{roundId}/{nickName}")
     public RoundJson findTipp(
-                @PathVariable("roundId") Long roundId,
-                @PathVariable("nickName") String nickName) {
+            @PathVariable("roundId") Long roundId,
+            @PathVariable("nickName") String nickName) {
         return officeTippService.findTipp(roundId, nickName);
     }
 
@@ -72,10 +69,10 @@ public class TippController {
      * @param  nickName Der Name des Users
      * @return          The current tipp
      */
-    @RequestMapping(value = "/tipp/{seasonId}/{nickname}/current", method = RequestMethod.GET)
+    @GetMapping(value = "/tipp/{seasonId}/{nickname}/current")
     public RoundJson findCurrentTipp(
-                @PathVariable("seasonId") Long seasonId,
-                @PathVariable("nickname") String nickName) {
+            @PathVariable("seasonId") Long seasonId,
+            @PathVariable("nickname") String nickName) {
         return officeTippService.findCurrentTipp(seasonId, nickName).orElse(null);
     }
 
@@ -86,10 +83,10 @@ public class TippController {
      * @param  nickName nick name
      * @return          The next tipp ahead of <code>roundId</code>
      */
-    @RequestMapping(value = "/tipp/{roundId}/{nickName}/next", method = RequestMethod.GET)
+    @GetMapping(value = "/tipp/{roundId}/{nickName}/next")
     public RoundJson findNextTipp(
-                @PathVariable("roundId") Long roundId,
-                @PathVariable("nickName") String nickName) {
+            @PathVariable("roundId") Long roundId,
+            @PathVariable("nickName") String nickName) {
         return officeTippService.findNextTipp(roundId, nickName).orElse(null);
     }
 
@@ -100,28 +97,20 @@ public class TippController {
      * @param  nickName nick name
      * @return          The previous tipp behind of <code>roundId</code>
      */
-    @RequestMapping(value = "/tipp/{roundId}/{nickName}/prev", method = RequestMethod.GET)
+    @GetMapping(value = "/tipp/{roundId}/{nickName}/prev")
     public RoundJson findPrevTipp(
-                @PathVariable("roundId") Long roundId,
-                @PathVariable("nickName") String nickName) {
+            @PathVariable("roundId") Long roundId,
+            @PathVariable("nickName") String nickName) {
         return officeTippService.findPrevTipp(roundId, nickName).orElse(null);
     }
 
     @RequestMapping(value = "/tipp/submit", method = RequestMethod.POST, headers = { "Content-type=application/json" })
     public RoundJson submitTipp(
-                @RequestBody SubmitTippRoundJson tippRoundJson,
-                @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
-                @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
+            @RequestBody SubmitTippRoundJson tippRoundJson,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
         return officeTippService.submitTipp(token, tippRoundJson);
-    }
-
-    /**
-     * Convert a predefined exception to an HTTP Status code
-     */
-    @ResponseStatus(value = HttpStatus.FORBIDDEN, reason = "Access denied")
-    @ExceptionHandler(AccessDeniedException.class)
-    public void forbidden() {
     }
 
 }
