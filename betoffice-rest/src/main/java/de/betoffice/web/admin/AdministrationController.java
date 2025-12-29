@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -61,7 +60,6 @@ import de.betoffice.web.season.BetofficeService;
  * 
  * @author Andre Winkler
  */
-@Secured("ROLE_ADMIN")
 @CrossOrigin
 @RestController
 @RequestMapping("/chiefoperator")
