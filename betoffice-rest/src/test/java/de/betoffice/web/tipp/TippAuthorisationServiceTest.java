@@ -104,7 +104,8 @@ class TippAuthorisationServiceTest {
     void testFailedAuthorization_WhenSessionNicknameDoesNotMatch() {
         // Arrange
         // Create a session where user.nickname matches but session.nickname doesn't
-        // This tests the redundant check: session.getNickname().equals(nickname)
+        // This tests the dual nickname check: both session.getUser().getNickname().value()
+        // and session.getNickname() must match the submitted nickname
         Session mockSession = createMockSessionWithDifferentSessionNickname(NICKNAME, DIFFERENT_NICKNAME);
         when(authService.validateSession(VALID_TOKEN)).thenReturn(Optional.of(mockSession));
 
@@ -171,7 +172,8 @@ class TippAuthorisationServiceTest {
 
     /**
      * Creates a mock session where user.nickname and session.nickname differ.
-     * This helps test the redundant nickname check in the authorization logic.
+     * This helps test the dual nickname check in the authorization logic,
+     * where both the user's nickname and the session's nickname must match.
      */
     private Session createMockSessionWithDifferentSessionNickname(String userNickname, String sessionNickname) {
         Session session = mock(Session.class);
