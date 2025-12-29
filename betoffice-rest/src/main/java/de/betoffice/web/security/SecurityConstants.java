@@ -24,6 +24,8 @@
 
 package de.betoffice.web.security;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 public class SecurityConstants {
 
     public static final String SECRET = "SecretKeyToGenJWTs";
@@ -31,5 +33,13 @@ public class SecurityConstants {
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_AUTHORIZATION = "Authorization";
     public static final String SIGN_UP_URL = "/users/sign-up";
+
+    public static String getToken(HttpServletRequest request) {   
+        final var token = request.getHeader(HEADER_AUTHORIZATION);
+        if (token != null) {
+            return token.replace(TOKEN_PREFIX, "");
+        }        
+        return null;
+    }
 
 }

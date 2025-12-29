@@ -82,9 +82,10 @@ public class DefaultBetofficeAuthenticationService implements BetofficeAuthentic
     @Override
     public SecurityTokenJson logout(String nickname, String token) {
         Optional<User> user = communityService.findUser(Nickname.of(nickname));
-        SecurityToken securityToken = new SecurityToken(token, user.get(), user.get().getRoleTypes(),
+        SecurityToken securityToken = new SecurityToken(
+                token, user.get(), user.get().getRoleTypes(),
                 dateTimeProvider.currentDateTime());
-        authService.logout(securityToken);
+        authService.logout(token);
 
         return JsonBuilder.toJson(securityToken);
     }
