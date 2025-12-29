@@ -16,6 +16,7 @@ public class TippAuthorisationService {
     }
 
     public boolean isSubmissionAllowed(String token, String nickname) {
+        if (nickname == null) return false;
         return authService.validateSession(token)
                 .map(session -> session.getUser().getNickname().value().contentEquals(nickname)
                         && session.getNickname().equals(nickname))
