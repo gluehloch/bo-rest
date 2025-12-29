@@ -24,6 +24,7 @@
 package de.betoffice.web.tipp;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -105,12 +106,12 @@ public class TippController {
     }
 
     @RequestMapping(value = "/tipp/submit", method = RequestMethod.POST, headers = { "Content-type=application/json" })
-    public RoundJson submitTipp(
+    public ResponseEntity<RoundJson> submitTipp(
             @RequestBody SubmitTippRoundJson tippRoundJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
-        return officeTippService.submitTipp(token, tippRoundJson);
+        return ResponseEntity.ok(officeTippService.submitTipp(token, tippRoundJson));
     }
 
 }
