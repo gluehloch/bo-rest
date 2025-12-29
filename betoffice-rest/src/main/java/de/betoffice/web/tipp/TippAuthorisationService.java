@@ -18,7 +18,7 @@ public class TippAuthorisationService {
     public boolean isSubmissionAllowed(String token, String nickname) {
         return authService.validateSession(token)
                 .map(session -> session.getUser().getNickname().value().contentEquals(nickname)
-                /*&& session.getNickname().equals(nickname)*/)
+                        && session.getNickname().equals(nickname))
                 .orElse(false);
     }
 }
