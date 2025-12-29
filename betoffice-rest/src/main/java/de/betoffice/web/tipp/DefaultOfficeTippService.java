@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2000-2024 by Andre Winkler. All
+ * Project betoffice-jweb-misc Copyright (c) 2000-2025 by Andre Winkler. All
  * rights reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -32,7 +32,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.betoffice.service.AuthService;
 import de.betoffice.service.CommunityService;
 import de.betoffice.service.SeasonManagerService;
 import de.betoffice.service.TippService;
@@ -64,9 +63,6 @@ public class DefaultOfficeTippService implements OfficeTippService {
 
     @Autowired
     private TippService tippService;
-
-    @Autowired
-    private AuthService authService;
 
     @PreAuthorize("@tippAuthorisationService.isSubmissionAllowed(#token, #tippRoundJson.nickname)")
     @Override
