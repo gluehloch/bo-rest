@@ -65,29 +65,11 @@ import de.betoffice.web.season.BetofficeService;
 @RequestMapping("/chiefoperator")
 public class AdministrationController {
 
-    // ------------------------------------------------------------------------
-    // The beans
-    // ------------------------------------------------------------------------
-
-    // -- betofficeBasicJsonService -------------------------------------------
-
-    private BetofficeService betofficeBasicJsonService;
+    @Autowired
+    private BetofficeService betofficeService;
 
     @Autowired
-    public void setBetofficeBasicJsonService(BetofficeService _betofficeBasicJsonService) {
-
-        betofficeBasicJsonService = _betofficeBasicJsonService;
-    }
-
-    // -- betofficeAdminJsonService -------------------------------------------
-
-    private AdminService betofficeAdminJsonService;
-
-    @Autowired
-    public void setBetofficeAdminJsonService(AdminService _betofficeAdminJsonService) {
-
-        betofficeAdminJsonService = _betofficeAdminJsonService;
-    }
+    private AdminService betofficeAdminService;
 
     // -- openligadb ----------------------------------------------------------
 
@@ -101,9 +83,9 @@ public class AdministrationController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        betofficeAdminJsonService.validateAdminSession(token);
-        betofficeAdminJsonService.reconcileRoundWithOpenligadb(token, seasonId, roundId);
-        return betofficeBasicJsonService.findRoundTable(seasonId, roundId, groupId);
+        betofficeAdminService.validateAdminSession(token);
+        betofficeAdminService.reconcileRoundWithOpenligadb(token, seasonId, roundId);
+        return betofficeService.findRoundTable(seasonId, roundId, groupId);
     }
 
     @PreAuthorize("@authService.isAdminSession(#token)")
@@ -116,9 +98,9 @@ public class AdministrationController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        betofficeAdminJsonService.validateAdminSession(token);
-        betofficeAdminJsonService.mountRoundWithOpenligadb(token, seasonId, roundId);
-        return betofficeBasicJsonService.findRoundTable(seasonId, roundId, groupId);
+        betofficeAdminService.validateAdminSession(token);
+        betofficeAdminService.mountRoundWithOpenligadb(token, seasonId, roundId);
+        return betofficeService.findRoundTable(seasonId, roundId, groupId);
     }
 
     // -- round update --------------------------------------------------------
@@ -134,9 +116,9 @@ public class AdministrationController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        betofficeAdminJsonService.validateAdminSession(token);
-        betofficeAdminJsonService.updateRound(roundJson);
-        return betofficeBasicJsonService.findRoundTable(seasonId, roundId, groupId);
+        betofficeAdminService.validateAdminSession(token);
+        betofficeAdminService.updateRound(roundJson);
+        return betofficeService.findRoundTable(seasonId, roundId, groupId);
     }
 
     @PreAuthorize("@authService.isAdminSession(#token)")
@@ -145,9 +127,9 @@ public class AdministrationController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        betofficeAdminJsonService.validateAdminSession(token);
-        betofficeAdminJsonService.updateGame(gameJson);
-        return betofficeBasicJsonService.findGame(gameJson.getId());
+        betofficeAdminService.validateAdminSession(token);
+        betofficeAdminService.updateGame(gameJson);
+        return betofficeService.findGame(gameJson.getId());
     }
 
     // -- season administration -----------------------------------------------
@@ -155,13 +137,13 @@ public class AdministrationController {
     @CrossOrigin
     @GetMapping(value = "/season/{seasonId}", headers = { "Content-type=application/json" })
     public SeasonJson findSeason(@PathVariable("seasonId") Long seasonId) {
-        return betofficeBasicJsonService.findSeasonById(seasonId);
+        return betofficeService.findSeasonById(seasonId);
     }
 
     @CrossOrigin
     @GetMapping(value = "/season", headers = { "Content-type=application/json" })
     public List<SeasonJson> findSeasons() {
-        return betofficeBasicJsonService.findAllSeason();
+        return betofficeService.findAllSeason();
     }
 
     @PreAuthorize("@authService.isAdminSession(#token)")
@@ -171,8 +153,8 @@ public class AdministrationController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        betofficeAdminJsonService.validateAdminSession(token);
-        return betofficeAdminJsonService.addSeason(season);
+        betofficeAdminService.validateAdminSession(token);
+        return betofficeAdminService.addSeason(season);
     }
 
     @PreAuthorize("@authService.isAdminSession(#token)")
@@ -182,8 +164,8 @@ public class AdministrationController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        betofficeAdminJsonService.validateAdminSession(token);
-        return betofficeAdminJsonService.updateSeason(season);
+        betofficeAdminService.validateAdminSession(token);
+        return betofficeAdminService.updateSeason(season);
     }
 
     // -- season-group-team administration ------------------------------------
@@ -196,9 +178,9 @@ public class AdministrationController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        betofficeAdminJsonService.validateAdminSession(token);
-        SeasonJson seasonJson = betofficeBasicJsonService.findSeasonById(seasonId);
-        betofficeAdminJsonService.addGroupToSeason(seasonJson, groupTypeJson);
+        betofficeAdminService.validateAdminSession(token);
+        SeasonJson seasonJson = betofficeService.findSeasonById(seasonId);
+        betofficeAdminService.addGroupToSeason(seasonJson, groupTypeJson);
 
         return seasonJson;
     }
@@ -211,10 +193,10 @@ public class AdministrationController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        betofficeAdminJsonService.validateAdminSession(token);
-        SeasonJson seasonJson = betofficeBasicJsonService.findSeasonById(seasonId);
-        GroupTypeJson groupTypeJson = betofficeAdminJsonService.findGroupType(groupTypeId);
-        betofficeAdminJsonService.removeGroupFromSeason(seasonJson, groupTypeJson);
+        betofficeAdminService.validateAdminSession(token);
+        SeasonJson seasonJson = betofficeService.findSeasonById(seasonId);
+        GroupTypeJson groupTypeJson = betofficeAdminService.findGroupType(groupTypeId);
+        betofficeAdminService.removeGroupFromSeason(seasonJson, groupTypeJson);
 
         return seasonJson;
     }
@@ -222,16 +204,16 @@ public class AdministrationController {
     @CrossOrigin
     @GetMapping(value = "/season/{seasonId}/groupteam")
     public SeasonGroupTeamJson findGroupWithTeams(@PathVariable("seasonId") Long seasonId) {
-        return betofficeAdminJsonService.findSeasonGroupsAndTeams(seasonId);
+        return betofficeAdminService.findSeasonGroupsAndTeams(seasonId);
     }
 
     @CrossOrigin
     @GetMapping(value = "/season/{seasonId}/groupteam/{groupTypeId}/candidates")
     public List<TeamJson> findTeamsForAdding(@PathVariable("seasonId") Long seasonId,
             @PathVariable("groupTypeId") Long groupTypeId) {
-        SeasonJson seasonJson = betofficeBasicJsonService.findSeasonById(seasonId);
-        GroupTypeJson groupTypeJson = betofficeAdminJsonService.findGroupType(groupTypeId);
-        return betofficeAdminJsonService.findSeasonGroupAndTeamCandidates(seasonJson, groupTypeJson);
+        SeasonJson seasonJson = betofficeService.findSeasonById(seasonId);
+        GroupTypeJson groupTypeJson = betofficeAdminService.findGroupType(groupTypeId);
+        return betofficeAdminService.findSeasonGroupAndTeamCandidates(seasonJson, groupTypeJson);
     }
 
     @PreAuthorize("@authService.isAdminSession(#token)")
@@ -243,10 +225,10 @@ public class AdministrationController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        betofficeAdminJsonService.validateAdminSession(token);
-        SeasonJson seasonJson = betofficeBasicJsonService.findSeasonById(seasonId);
-        GroupTypeJson groupTypeJson = betofficeAdminJsonService.findGroupType(groupTypeId);
-        betofficeAdminJsonService.addTeamToGroup(seasonJson, groupTypeJson, teamJson);
+        betofficeAdminService.validateAdminSession(token);
+        SeasonJson seasonJson = betofficeService.findSeasonById(seasonId);
+        GroupTypeJson groupTypeJson = betofficeAdminService.findGroupType(groupTypeId);
+        betofficeAdminService.addTeamToGroup(seasonJson, groupTypeJson, teamJson);
         return seasonJson;
     }
 
@@ -259,11 +241,11 @@ public class AdministrationController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        betofficeAdminJsonService.validateAdminSession(token);
-        SeasonJson seasonJson = betofficeBasicJsonService.findSeasonById(seasonId);
-        GroupTypeJson groupTypeJson = betofficeAdminJsonService.findGroupType(groupTypeId);
-        TeamJson teamJson = betofficeAdminJsonService.findTeam(teamId);
-        betofficeAdminJsonService.removeTeamFromGroup(seasonJson, groupTypeJson, teamJson);
+        betofficeAdminService.validateAdminSession(token);
+        SeasonJson seasonJson = betofficeService.findSeasonById(seasonId);
+        GroupTypeJson groupTypeJson = betofficeAdminService.findGroupType(groupTypeId);
+        TeamJson teamJson = betofficeAdminService.findTeam(teamId);
+        betofficeAdminService.removeTeamFromGroup(seasonJson, groupTypeJson, teamJson);
         return seasonJson;
     }
 
@@ -271,12 +253,12 @@ public class AdministrationController {
 
     @GetMapping(value = "/user/{userId}", headers = { "Content-type=application/json" })
     public PartyJson findUser(@PathVariable("userId") Long userId) {
-        return betofficeAdminJsonService.findUser(userId);
+        return betofficeAdminService.findUser(userId);
     }
 
     @GetMapping(value = "/user", headers = { "Content-type=application/json" })
     public List<PartyJson> findUsers() {
-        return betofficeAdminJsonService.findUsers();
+        return betofficeAdminService.findUsers();
     }
 
     @PreAuthorize("@authService.isAdminSession(#token)")
@@ -285,8 +267,8 @@ public class AdministrationController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
-        betofficeAdminJsonService.validateAdminSession(token);
-        return betofficeAdminJsonService.addUser(partyJson);
+        betofficeAdminService.validateAdminSession(token);
+        return betofficeAdminService.addUser(partyJson);
     }
 
     @PostMapping(value = "/user/update", headers = { "Content-type=application/json" })
@@ -294,27 +276,27 @@ public class AdministrationController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
-        betofficeAdminJsonService.validateAdminSession(token);
-        return betofficeAdminJsonService.updateUser(partyJson);
+        betofficeAdminService.validateAdminSession(token);
+        return betofficeAdminService.updateUser(partyJson);
     }
 
     // -- team administration -------------------------------------------------
 
     @GetMapping(value = "/team/{teamId}", headers = { "Content-type=application/json" })
     public TeamJson findTeam(@PathVariable("teamId") Long teamId) {
-        return betofficeAdminJsonService.findTeam(teamId);
+        return betofficeAdminService.findTeam(teamId);
     }
 
     @GetMapping(value = "/team-search", headers = { "Content-type=application/json" })
     public List<TeamJson> findTeams(
             @RequestParam(name = "filter", required = false) String teamFilter,
             @RequestParam(name = "type", required = false) TeamType teamType) {
-        return betofficeAdminJsonService.findTeams(Optional.ofNullable(teamType), teamFilter);
+        return betofficeAdminService.findTeams(Optional.ofNullable(teamType), teamFilter);
     }
 
     @GetMapping(value = "/team", headers = { "Content-type=application/json" })
     public List<TeamJson> findTeams() {
-        return betofficeAdminJsonService.findTeams();
+        return betofficeAdminService.findTeams();
     }
 
     @PreAuthorize("@authService.isAdminSession(#token)")
@@ -323,8 +305,8 @@ public class AdministrationController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
-        betofficeAdminJsonService.validateAdminSession(token);
-        return betofficeAdminJsonService.addTeam(teamJson);
+        betofficeAdminService.validateAdminSession(token);
+        return betofficeAdminService.addTeam(teamJson);
     }
 
     @PreAuthorize("@authService.isAdminSession(#token)")
@@ -333,27 +315,27 @@ public class AdministrationController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
-        betofficeAdminJsonService.validateAdminSession(token);
-        return betofficeAdminJsonService.updateTeam(teamJson);
+        betofficeAdminService.validateAdminSession(token);
+        return betofficeAdminService.updateTeam(teamJson);
     }
 
     // -- group type administration ------------------------------------------
 
     @GetMapping(value = "/groupType", headers = { "Content-type=application/json" })
     public List<GroupTypeJson> listGroupTypes() {
-        return betofficeAdminJsonService.findGroupTypes();
+        return betofficeAdminService.findGroupTypes();
     }
 
     // -- user/season administration ------------------------------------------
 
     @GetMapping(value = "/season/{seasonId}/potentialuser", headers = { "Content-type=application/json" })
     public List<SeasonMemberJson> listPotentialUsers(@PathVariable("seasonId") Long seasonId) {
-        return betofficeAdminJsonService.findPotentialSeasonMembers(seasonId);
+        return betofficeAdminService.findPotentialSeasonMembers(seasonId);
     }
 
     @GetMapping(value = "/season/{seasonId}/user", headers = { "Content-type=application/json" })
     public List<SeasonMemberJson> listUsers(@PathVariable("seasonId") Long seasonId) {
-        return betofficeAdminJsonService.findAllSeasonMembers(seasonId);
+        return betofficeAdminService.findAllSeasonMembers(seasonId);
     }
 
     @PreAuthorize("@authService.isAdminSession(#token)")
@@ -363,8 +345,8 @@ public class AdministrationController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
-        betofficeAdminJsonService.validateAdminSession(token);
-        return betofficeAdminJsonService.addSeasonMembers(seasonId, members);
+        betofficeAdminService.validateAdminSession(token);
+        return betofficeAdminService.addSeasonMembers(seasonId, members);
     }
 
     @PreAuthorize("@authService.isAdminSession(#token)")
@@ -374,8 +356,8 @@ public class AdministrationController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
-        betofficeAdminJsonService.validateAdminSession(token);
-        return betofficeAdminJsonService.removeSeasonMembers(seasonId, members);
+        betofficeAdminService.validateAdminSession(token);
+        return betofficeAdminService.removeSeasonMembers(seasonId, members);
     }
 
 }
