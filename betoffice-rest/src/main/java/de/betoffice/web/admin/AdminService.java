@@ -46,7 +46,8 @@ public interface AdminService {
     /**
      * Validate admin session.
      *
-     * @param token the session token
+     * @param  token             the session token
+     * @throws SecurityException if the token is invalid, expired, or does not represent a valid administrator session
      */
     void validateAdminSession(String token);
 
