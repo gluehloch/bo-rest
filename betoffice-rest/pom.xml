@@ -187,13 +187,6 @@
             <version>2.12.3</version>
         </dependency>
 
-        <!-- Make it testable... -->
-        <dependency>
-            <groupId>net.sourceforge.htmlunit</groupId>
-            <artifactId>htmlunit</artifactId>
-            <version>2.9</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>de.betoffice</groupId>
             <artifactId>betoffice-testutils</artifactId>

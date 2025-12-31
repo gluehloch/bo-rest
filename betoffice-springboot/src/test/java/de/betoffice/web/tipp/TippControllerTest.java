@@ -22,7 +22,7 @@
  *
  */
 
-package de.betoffice.web;
+package de.betoffice.web.tipp;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -47,13 +47,21 @@ import javax.sql.DataSource;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
+import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -61,6 +69,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import de.betoffice.conf.PersistenceJPAConfiguration;
+import de.betoffice.conf.TestPropertiesConfiguration;
 import de.betoffice.database.data.DeleteDatabase;
 import de.betoffice.service.CommunityService;
 import de.betoffice.service.MasterDataManagerService;
@@ -79,22 +89,26 @@ import de.betoffice.storage.team.entity.Team;
 import de.betoffice.storage.tip.GameTipp;
 import de.betoffice.storage.user.entity.Nickname;
 import de.betoffice.storage.user.entity.User;
-import de.betoffice.web.auth.AuthenticationController;
+import de.betoffice.web.BetofficeHttpConsts;
 import de.betoffice.web.auth.AuthenticationForm;
 import de.betoffice.web.auth.BetofficeAuthenticationService;
 import de.betoffice.web.auth.LogoutFormData;
+import de.betoffice.web.boot.BetofficeBootApplication;
 import de.betoffice.web.json.GameResultJson;
 import de.betoffice.web.season.BetofficeService;
-import de.betoffice.web.season.SeasonController;
-import de.betoffice.web.tipp.OfficeTippService;
-import de.betoffice.web.tipp.SubmitTippGameJson;
-import de.betoffice.web.tipp.SubmitTippRoundJson;
-import de.betoffice.web.tipp.TippController;
+import de.betoffice.web.security.SecurityConstants;
 
 /**
  * Die Spring-Security Konfiguration kann auf diese Art und Weise nicht mit getestet werden.
  */
-class TippControllerTest extends AbstractBetofficeSpringWebTestCase {
+@SpringBootTest( classes = { BetofficeBootApplication.class })
+@AutoConfigureMockMvc
+@WebAppConfiguration
+@ActiveProfiles(profiles = "test")
+@ContextConfiguration(classes = { PersistenceJPAConfiguration.class, TestPropertiesConfiguration.class})
+// @ComponentScan({ "de.betoffice" })
+@EnableAutoConfiguration(exclude = {LiquibaseAutoConfiguration.class, DataSourceAutoConfiguration.class, DataSourceTransactionManagerAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
+class TippControllerTest  {
 
     private static final String NICKNAME = "Frosch";
     private static final String PASSWORD = "Password";
@@ -103,6 +117,7 @@ class TippControllerTest extends AbstractBetofficeSpringWebTestCase {
     private static final LocalDateTime LDT_1971_03_24 = LocalDateTime.of(1971, 3, 24, 20, 30, 0);
     private static final ZonedDateTime DATE_1971_03_24 = ZonedDateTime.of(LDT_1971_03_24, EUROPE_BERLIN);
 
+    @Autowired
     private MockMvc mockMvc;
 
     @Autowired
@@ -171,8 +186,8 @@ class TippControllerTest extends AbstractBetofficeSpringWebTestCase {
                 .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN, "token")
                 .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME, NICKNAME)
                 .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isForbidden());
+                .andExpect(status().isForbidden())
+                .andDo(print());
 
         //
         // Authentifizierung starten...
@@ -210,6 +225,7 @@ class TippControllerTest extends AbstractBetofficeSpringWebTestCase {
         ResultActions submitAction = mockMvc.perform(post("/office/tipp/submit")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toString(tipp))
+                .header(SecurityConstants.HEADER_AUTHORIZATION, SecurityConstants.TOKEN_PREFIX + token)
                 .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN, token)
                 .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME, NICKNAME)
                 .accept(MediaType.APPLICATION_JSON))
@@ -236,6 +252,7 @@ class TippControllerTest extends AbstractBetofficeSpringWebTestCase {
         mockMvc.perform(post("/office/tipp/submit")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toString(tipp))
+                .header(SecurityConstants.HEADER_AUTHORIZATION, SecurityConstants.TOKEN_PREFIX + token)
                 .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN, token)
                 .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME, NICKNAME)
                 .accept(MediaType.APPLICATION_JSON))
@@ -275,16 +292,18 @@ class TippControllerTest extends AbstractBetofficeSpringWebTestCase {
         conn.setAutoCommit(false);
         return conn;
     }
-
+    
     @BeforeEach
     void setup() throws Exception {
         tearDown();
-        MockitoAnnotations.initMocks(this);
+
+        /*
         mockMvc = MockMvcBuilders.standaloneSetup(
                 new SeasonController(betofficeService, officeTippService),
                 new TippController(officeTippService),
                 new AuthenticationController(betofficeAuthenticationService))
                 .build();
+                */
 
         data = new T();
 
@@ -365,6 +384,7 @@ class TippControllerTest extends AbstractBetofficeSpringWebTestCase {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toString(logoutFormData))
                 .header("User-Agent", USER_AGENT_TEST)
+                .header(SecurityConstants.HEADER_AUTHORIZATION, SecurityConstants.TOKEN_PREFIX + token)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());

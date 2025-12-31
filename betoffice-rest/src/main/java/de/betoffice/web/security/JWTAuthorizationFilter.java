@@ -81,14 +81,9 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
-        final var token = request.getHeader(HEADER_AUTHORIZATION);
-        LOG.info("Validate token [{}], [{}]", token, request.getRequestURI());
-
+        String token = SecurityConstants.getToken(request);
         if (token != null) {
-            final var tokenWithoutPrefix = token.replace(TOKEN_PREFIX, "");
-            LOG.info("Found a token: [{}]", tokenWithoutPrefix);
-
-            Optional<Session> validateSession = authService.validateSession(tokenWithoutPrefix);
+            Optional<Session> validateSession = authService.validateSession(token);
 
             if (validateSession.isPresent()) {
                 List<RoleType> roleTypes = validateSession.get().getUser().getRoleTypes();
