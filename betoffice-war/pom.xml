@@ -4,15 +4,18 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
+		<groupId>de.betoffice</groupId>
+        <artifactId>betoffice-web</artifactId>
+        <version>1.5.2-SNAPSHOT</version>
+    <!--
         <groupId>de.winkler.betoffice</groupId>
         <artifactId>betoffice-maven-parent</artifactId>
-        <version>1.15.0</version>
+        <version>1.15.1</version>
+        -->
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>de.betoffice</groupId>
     <artifactId>betoffice-war</artifactId>
-    <version>1.5.1</version>
     <packaging>war</packaging>
 
     <properties>
@@ -72,20 +75,8 @@
         <dependency>
             <groupId>de.betoffice</groupId>
             <artifactId>betoffice-rest</artifactId>
-            <version>${project.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.betoffice</groupId>
-            <artifactId>betoffice-openligadb</artifactId>
-            <version>3.2.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.winkler.betoffice</groupId>
-            <artifactId>betoffice-storage</artifactId>
-            <version>3.2.0</version>
-            <scope>compile</scope>
+            <version>1.5.2-SNAPSHOT</version>
+            <scope>compile</scope>            
         </dependency>
 
         <!--
@@ -181,7 +172,6 @@
         <dependency>
             <groupId>de.betoffice</groupId>
             <artifactId>betoffice-testutils</artifactId>
-            <version>1.4.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>

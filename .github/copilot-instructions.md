@@ -1,19 +1,31 @@
-# BetOffice REST API
 
 BetOffice is a Java-based sports betting office application with REST API, web frontend, and Spring Boot deployment options. The project uses Maven for build management and MariaDB for data persistence.
 
 Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.
 
+# BetOffice AI Agent Instructions
+
+**Canonical Guide for AI Coding Agents**
+
+This file is the authoritative source for all AI coding agents working in this repository. If additional AI instructions or conventions are introduced elsewhere, they must be merged here. Always consult and update this file first for any project-specific AI guidance.
+
+---
+
+## BetOffice REST API
+
+BetOffice is a Java-based sports betting office application with REST API, web frontend, and Spring Boot deployment options. The project uses Maven for build management and MariaDB for data persistence.
+
+Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.
 ## Working Effectively
 
 ### Prerequisites and Setup
-- Install Java 21 JDK (required for Spring Boot module):
+- Install Java 25 JDK (required for Spring Boot module):
   ```bash
-  sudo apt update && sudo apt install -y openjdk-21-jdk
-  export JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-amd64
-  java -version  # Should show Java 21
+  sudo apt update && sudo apt install -y openjdk-25-jdk
+  export JAVA_HOME=/usr/lib/jvm/temurin-25-jdk-amd64
+  java -version  # Should show Java 25
   ```
-- **CRITICAL**: Always set JAVA_HOME before running Maven commands. Maven may default to Java 17 even when Java 21 is installed.
+- **CRITICAL**: Always set JAVA_HOME before running Maven commands. Maven may default to Java 17 even when Java 25 is installed.
 - Maven 3.x is required (usually pre-installed)
 - MariaDB database server is required for full functionality
 
@@ -21,7 +33,7 @@ Always reference these instructions first and fallback to search or bash command
 - **CRITICAL BUILD LIMITATION**: This project depends on external Maven repositories (maven.gluehloch.de) that may not be accessible in all environments
 - **ALWAYS** set JAVA_HOME before building:
   ```bash
-  export JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-amd64
+  export JAVA_HOME=/usr/lib/jvm/temurin-25-jdk-amd64
   mvn clean install  # NEVER CANCEL: Takes 10-15 minutes. Set timeout to 30+ minutes.
   ```
 - If build fails due to repository access issues:
@@ -51,7 +63,7 @@ Always reference these instructions first and fallback to search or bash command
 - Run with:
   ```bash
   cd betoffice-springboot
-  export JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-amd64
+  export JAVA_HOME=/usr/lib/jvm/temurin-25-jdk-amd64
   mvn spring-boot:run  # NEVER CANCEL: Startup takes 2-5 minutes. Set timeout to 10+ minutes.
   ```
 - Application will be available at: `http://localhost:7878/bo`
@@ -66,7 +78,7 @@ Always reference these instructions first and fallback to search or bash command
 - Unit tests are located in `src/test/java` directories
 - **ALWAYS** set JAVA_HOME before running tests:
   ```bash
-  export JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-amd64
+  export JAVA_HOME=/usr/lib/jvm/temurin-25-jdk-amd64
   mvn test  # NEVER CANCEL: Takes 5-10 minutes. Set timeout to 20+ minutes.
   ```
 - Integration tests require database connectivity
@@ -79,8 +91,8 @@ Always reference these instructions first and fallback to search or bash command
 
 ### Validation
 - **Environment Validation Checklist**:
-  1. `java -version` shows Java 21
-  2. `export JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-amd64` is set
+  1. `java -version` shows Java 25
+  2. `export JAVA_HOME=/usr/lib/jvm/temurin-25-jdk-amd64` is set
   3. `sudo systemctl is-active mariadb` returns "active"
   4. `mysql -u betoffice -pbetoffice -e "SELECT 'SUCCESS';" betoffice` succeeds
 - **Manual Validation Scenarios** (once build succeeds):
@@ -114,12 +126,6 @@ betoffice-springboot/   # Spring Boot application (JAR) - 1 Java file
 pom.xml                # Root Maven POM (multi-module)
 ```
 
-**Project Statistics**:
-- Total Java files: 93
-- Total test files: 14
-- Controller classes: 8 (AuthenticationController, TippController, SeasonController, etc.)
-- Main modules: 3 (REST API, WAR packaging, Spring Boot app)
-
 ### Key Configuration Files
 - `betoffice-springboot/src/main/resources/application.properties`:
   ```properties
@@ -148,7 +154,7 @@ pom.xml                # Root Maven POM (multi-module)
 - Jakarta Servlet API 6.0.0
 
 ### Development Workflow
-1. Always set Java 21 environment: `export JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-amd64`
+1. Always set Java 25 environment: `export JAVA_HOME=/usr/lib/jvm/temurin-25-jdk-amd64`
 2. Ensure MariaDB is running and database exists
 3. Build with Maven: `mvn clean install` (if repositories accessible)
 4. Run Spring Boot app: `cd betoffice-springboot && mvn spring-boot:run`
@@ -156,13 +162,13 @@ pom.xml                # Root Maven POM (multi-module)
 
 ### Troubleshooting
 - **Build fails with repository errors**: External Maven repositories not accessible
-- **Application won't start**: Check Java 21 is active and MariaDB is running
+- **Application won't start**: Check Java 25 is active and MariaDB is running
 - **Database connection errors**: Verify MariaDB service and betoffice database exists
 - **Port conflicts**: Change server.port in application.properties if 7878 is in use
 
 ### CI/CD Information
 - Jenkins pipeline exists: `betoffice-rest/Jenkinsfile`
-- Pipeline uses Maven 3.6.0 and JDK 11 (may need updating for Java 21)
+- Pipeline uses Maven 3.9.11 and JDK 25
 - Deployment target: Custom Maven repository (maven.gluehloch.de)
 
 **IMPORTANT**: This project requires external Maven repositories that may not be accessible in all environments. If build fails with repository errors, this is expected and should be documented in any changes you make.

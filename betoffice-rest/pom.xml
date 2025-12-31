@@ -4,31 +4,31 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
-        <groupId>de.winkler.betoffice</groupId>
-        <artifactId>betoffice-maven-parent</artifactId>
-        <version>1.15.0</version>
+        <groupId>de.betoffice</groupId>
+        <artifactId>betoffice-web</artifactId>
+        <version>1.5.2-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>de.betoffice</groupId>
     <artifactId>betoffice-rest</artifactId>
-    <version>1.5.1</version>
     <packaging>jar</packaging>
 
     <dependencyManagement>
         <dependencies>
+        <!--
             <dependency>
                 <groupId>de.betoffice</groupId>
                 <artifactId>betoffice-web</artifactId>
-                <version>1.5.1</version>
+                <version>1.5.2-SNAPSHOT</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            -->
             <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-bom -->
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-bom</artifactId>
-                <version>6.1.5</version>
+                <version>6.5.7</version>
                 <type>pom</type>
             </dependency>
         </dependencies>
@@ -48,7 +48,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>de.winkler.betoffice</groupId>
+            <groupId>de.betoffice</groupId>
             <artifactId>betoffice-storage</artifactId>
             <scope>compile</scope>
         </dependency>
@@ -198,13 +198,6 @@
             <version>2.12.3</version>
         </dependency>
 
-        <!-- Make it testable... -->
-        <dependency>
-            <groupId>net.sourceforge.htmlunit</groupId>
-            <artifactId>htmlunit</artifactId>
-            <version>2.9</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>de.betoffice</groupId>
             <artifactId>betoffice-testutils</artifactId>

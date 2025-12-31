@@ -52,7 +52,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -198,6 +200,7 @@ public class WebSecurityConfig {
         //.antMatchers(HttpMethod.PUT, "/books/**").hasRole("ADMIN")
         //.antMatchers(HttpMethod.PATCH, "/books/**").hasRole("ADMIN")
         //.antMatchers(HttpMethod.DELETE, "/books/**").hasRole("ADMIN")
+
         http.addFilter(new JWTAuthenticationFilter(authenticationManager, authService));
         http.addFilter(new JWTAuthorizationFilter(authenticationManager, authService));
 
@@ -227,11 +230,12 @@ public class WebSecurityConfig {
     public LogoutSuccessHandler logoutSuccessHandler() {
         var x = new LogoutSuccessHandler() {
             @Override
-            public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
-                    Authentication authentication) {
-                /* throws IOException, ServletException */
-                SecurityToken securityToken = null; // TODO Wo bekommen ich den denn her? Aus dem Request vermutlich!!!
-                authService.logout(null);
+            public void onLogoutSuccess(
+                    final HttpServletRequest request,
+                    final HttpServletResponse response,
+                    final Authentication authentication) {
+
+                authService.logout(SecurityConstants.getToken(request));
             }
         };
         return x;
