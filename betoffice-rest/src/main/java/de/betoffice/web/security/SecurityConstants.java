@@ -1,7 +1,7 @@
 /*
  * ============================================================================
  * Project betoffice-jweb
- * Copyright (c) 2000-2021 by Andre Winkler. All rights reserved.
+ * Copyright (c) 2000-2025 by Andre Winkler. All rights reserved.
  * ============================================================================
  *          GNU GENERAL PUBLIC LICENSE
  *  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
@@ -34,12 +34,22 @@ public class SecurityConstants {
     public static final String HEADER_AUTHORIZATION = "Authorization";
     public static final String SIGN_UP_URL = "/users/sign-up";
 
+    /**
+     * Get token from request header.
+     *
+     * @param request
+     * @return
+     */
     public static String getToken(HttpServletRequest request) {   
         final var token = request.getHeader(HEADER_AUTHORIZATION);
         if (token != null) {
             return token.replace(TOKEN_PREFIX, "");
         }        
         return null;
+    }
+
+    public static void setToken(HttpServletRequest request, String token) {
+        request.setAttribute(HEADER_AUTHORIZATION, TOKEN_PREFIX + token);
     }
 
 }

@@ -96,6 +96,7 @@ import de.betoffice.web.auth.LogoutFormData;
 import de.betoffice.web.boot.BetofficeBootApplication;
 import de.betoffice.web.json.GameResultJson;
 import de.betoffice.web.season.BetofficeService;
+import de.betoffice.web.security.SecurityConstants;
 
 /**
  * Die Spring-Security Konfiguration kann auf diese Art und Weise nicht mit getestet werden.
@@ -224,6 +225,7 @@ class TippControllerTest  {
         ResultActions submitAction = mockMvc.perform(post("/office/tipp/submit")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toString(tipp))
+                .header(SecurityConstants.HEADER_AUTHORIZATION, SecurityConstants.TOKEN_PREFIX + token)
                 .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN, token)
                 .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME, NICKNAME)
                 .accept(MediaType.APPLICATION_JSON))
@@ -250,6 +252,7 @@ class TippControllerTest  {
         mockMvc.perform(post("/office/tipp/submit")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toString(tipp))
+                .header(SecurityConstants.HEADER_AUTHORIZATION, SecurityConstants.TOKEN_PREFIX + token)
                 .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN, token)
                 .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME, NICKNAME)
                 .accept(MediaType.APPLICATION_JSON))
@@ -381,6 +384,7 @@ class TippControllerTest  {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toString(logoutFormData))
                 .header("User-Agent", USER_AGENT_TEST)
+                .header(SecurityConstants.HEADER_AUTHORIZATION, SecurityConstants.TOKEN_PREFIX + token)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
