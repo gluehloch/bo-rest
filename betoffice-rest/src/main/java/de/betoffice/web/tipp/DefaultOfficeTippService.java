@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2000-2024 by Andre Winkler. All
+ * Project betoffice-jweb-misc Copyright (c) 2000-2025 by Andre Winkler. All
  * rights reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -27,24 +27,21 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.betoffice.service.AuthService;
 import de.betoffice.service.CommunityService;
 import de.betoffice.service.SeasonManagerService;
 import de.betoffice.service.TippService;
 import de.betoffice.storage.season.entity.GameList;
-import de.betoffice.storage.session.entity.Session;
 import de.betoffice.storage.time.DateTimeProvider;
 import de.betoffice.storage.tip.GameTipp;
 import de.betoffice.storage.tip.TippDto;
 import de.betoffice.storage.tip.TippDto.GameTippDto;
 import de.betoffice.storage.user.entity.Nickname;
 import de.betoffice.storage.user.entity.User;
-import de.betoffice.web.AccessDeniedException;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.IGameJson;
 import de.betoffice.web.json.JsonAssembler;
@@ -67,18 +64,10 @@ public class DefaultOfficeTippService implements OfficeTippService {
     @Autowired
     private TippService tippService;
 
-    @Autowired
-    private AuthService authService;
-
+    @PreAuthorize("@tippAuthorisationService.isSubmissionAllowed(#token, #tippRoundJson.nickname)")
     @Override
     @Transactional
-    public RoundJson submitTipp(String token, SubmitTippRoundJson tippRoundJson) throws AccessDeniedException {
-        Session session = authService.validateSession(token).orElseThrow(() -> new AccessDeniedException());
-
-        if (!StringUtils.equals(session.getUser().getNickname().value(), tippRoundJson.getNickname())) {
-            throw new AccessDeniedException();
-        }
-
+    public RoundJson submitTipp(String token, SubmitTippRoundJson tippRoundJson) {
         TippDto tippDto = new TippDto();
         tippDto.setNickname(tippRoundJson.getNickname());
         tippDto.setRoundId(tippRoundJson.getRoundId());

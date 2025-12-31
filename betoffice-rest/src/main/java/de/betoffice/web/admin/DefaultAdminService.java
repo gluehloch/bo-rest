@@ -52,7 +52,6 @@ import de.betoffice.storage.team.entity.Team;
 import de.betoffice.storage.time.DateTimeProvider;
 import de.betoffice.storage.user.entity.Nickname;
 import de.betoffice.storage.user.entity.User;
-import de.betoffice.web.AccessDeniedException;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GroupTeamJson;
 import de.betoffice.web.json.GroupTypeJson;
@@ -105,21 +104,20 @@ public class DefaultAdminService implements AdminService {
         Optional<Session> session = authService.validateSession(token);
 
         if (!session.isPresent()) {
-            throw new AccessDeniedException();
-            // TODO Is this better? throw new WebApplicationException(Status.FORBIDDEN);
+            throw new IllegalStateException("No valid session found for given token.");
         }
 
         if (session.get().getLogout() != null) {
-            throw new AccessDeniedException();
+            throw new IllegalStateException("User is already logged out for given token.");
         }
 
         ZonedDateTime loginDate = session.get().getLogin();
         if (loginDate.isBefore(ZonedDateTime.now(dateTimeProvider.defaultZoneId()).minusDays(3))) {
-            throw new AccessDeniedException();
+            throw new IllegalStateException("Login token is older than 3 days. ");
         }
 
         if (!session.get().getUser().isAdmin()) {
-            throw new AccessDeniedException();
+            throw new IllegalStateException("This is not an admin user token.");
         }
     }
 

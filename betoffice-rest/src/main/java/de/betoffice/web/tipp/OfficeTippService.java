@@ -25,7 +25,6 @@ package de.betoffice.web.tipp;
 
 import java.util.Optional;
 
-import de.betoffice.web.AccessDeniedException;
 import de.betoffice.web.json.RoundJson;
 
 public interface OfficeTippService {
@@ -33,55 +32,54 @@ public interface OfficeTippService {
     /**
      * Find the next round to tipp
      *
-     * @param seasonId the season id
-     * @return the round
+     * @param  seasonId the season id
+     * @return          the round
      */
     Optional<RoundJson> findTippRound(Long seasonId);
 
     /**
      * Find round and tipp of a user
      *
-     * @param roundId  the round id
-     * @param nickName the nickname of the user
-     * @return the round
+     * @param  roundId  the round id
+     * @param  nickName the nickname of the user
+     * @return          the round
      */
     RoundJson findTipp(Long roundId, String nickName);
 
     /**
      * Find current tipp round for an user.
      *
-     * @param seasonId the season id
-     * @param nickName the nickname of the user
-     * @return the round
+     * @param  seasonId the season id
+     * @param  nickName the nickname of the user
+     * @return          the round
      */
     Optional<RoundJson> findCurrentTipp(Long seasonId, String nickName);
 
     /**
      * Find the next tipp round
      *
-     * @param roundId  the round id
-     * @param nickName the nickname of the user
-     * @return a round
+     * @param  roundId  the round id
+     * @param  nickName the nickname of the user
+     * @return          a round
      */
     Optional<RoundJson> findNextTipp(Long roundId, String nickName);
 
     /**
      * Find the prev tipp round
      *
-     * @param roundId  the round id
-     * @param nickName the nickname of the user
-     * @return a round
+     * @param  roundId  the round id
+     * @param  nickName the nickname of the user
+     * @return          a round
      */
     Optional<RoundJson> findPrevTipp(Long roundId, String nickName);
 
     /**
      * Submit a tipp
      *
-     * @param token         token
-     * @param tippRoundJson tipp data
-     * @return a round
-     * @throws AccessDeniedException access denied exception
+     * @param  token         token
+     * @param  tippRoundJson tipp data
+     * @return               a round
      */
-    RoundJson submitTipp(String token, SubmitTippRoundJson tippRoundJson) throws AccessDeniedException;
+    RoundJson submitTipp(String token, SubmitTippRoundJson tippRoundJson);
 
 }

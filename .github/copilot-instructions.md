@@ -1,9 +1,21 @@
-# BetOffice REST API
 
 BetOffice is a Java-based sports betting office application with REST API, web frontend, and Spring Boot deployment options. The project uses Maven for build management and MariaDB for data persistence.
 
 Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.
 
+# BetOffice AI Agent Instructions
+
+**Canonical Guide for AI Coding Agents**
+
+This file is the authoritative source for all AI coding agents working in this repository. If additional AI instructions or conventions are introduced elsewhere, they must be merged here. Always consult and update this file first for any project-specific AI guidance.
+
+---
+
+## BetOffice REST API
+
+BetOffice is a Java-based sports betting office application with REST API, web frontend, and Spring Boot deployment options. The project uses Maven for build management and MariaDB for data persistence.
+
+Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.
 ## Working Effectively
 
 ### Prerequisites and Setup
