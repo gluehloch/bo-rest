@@ -57,11 +57,7 @@ import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2Clien
 import org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -406,24 +402,6 @@ class TippControllerTest  {
         List<Session> sessions = sessionDao.findByNickname(NICKNAME);
         assertThat(sessions).hasSize(1);
         return sessions.get(0);
-    }
-
-    // Provide a no-op ClientRegistrationRepository for tests so oauth2Login() in
-    // WebSecurityConfig does not fail when no client registrations are present.
-    @TestConfiguration
-    static class OAuth2TestConfig {
-        @Bean
-        public ClientRegistrationRepository clientRegistrationRepository() {
-            // TODO Copilot alternative. But does not work here.
-            // return new InMemoryClientRegistrationRepository(Collections.emptyList());
-            
-            return new ClientRegistrationRepository() {
-                @Override
-                public ClientRegistration findByRegistrationId(String registrationId) {
-                    return null;
-                }
-            };
-        }
     }
 
 }
