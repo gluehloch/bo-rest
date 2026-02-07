@@ -24,11 +24,11 @@
 package de.betoffice.web.season;
 
 import java.util.List;
+import java.util.Optional;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +43,8 @@ import de.betoffice.web.json.RoundAndTableJson;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.UserTableJson;
+import de.betoffice.web.runtime.VersionService;
+import de.betoffice.web.runtime.VersionService.VersionInfo;
 import de.betoffice.web.tipp.OfficeTippService;
 
 @CrossOrigin
@@ -50,15 +52,17 @@ import de.betoffice.web.tipp.OfficeTippService;
 @RequestMapping("/office")
 public class SeasonController {
 
-    @Autowired
-    private BetofficeService betofficeService;
-
-    @Autowired
-    private OfficeTippService officeTippService;
-
-    public SeasonController(BetofficeService betofficeService, OfficeTippService officeTippService) {
+    private final BetofficeService betofficeService;
+    private final OfficeTippService officeTippService;
+    private final VersionService versionService;
+   
+    public SeasonController(
+            BetofficeService betofficeService,
+            OfficeTippService officeTippService,
+            VersionService versionService) {
         this.betofficeService = betofficeService;
         this.officeTippService = officeTippService;
+        this.versionService = versionService;
     }
 
     // ------------------------------------------------------------------------
@@ -68,6 +72,11 @@ public class SeasonController {
         return betofficeService.ping();
     }
 
+    @RequestMapping(value = "/version", method = RequestMethod.GET)
+    public Optional<VersionInfo> version() {
+        return versionService.versionInfo();
+    }
+      
     // ------------------------------------------------------------------------
 
     @RequestMapping(value = "/season", method = RequestMethod.GET)
@@ -96,7 +105,7 @@ public class SeasonController {
     //
 
     /**
-     * Return the current (next to play and/or to tipp) round of a season.
+     * Return the current (next to play and/or to tipp) round for a season.
      *
      * @param  seasonId Season ID
      * @return          The current round of a season
