@@ -24,6 +24,27 @@ public class VersionService {
         this.resourceLoader = resourceLoader;
     }
 
+    public Optional<GitInfo> gitInfo() {
+        final Resource res = resourceLoader.getResource("classpath:git.properties");
+        final Properties p = new Properties();
+        try (InputStream in = res.getInputStream()) {
+            p.load(in);
+            final GitInfo info = new GitInfo(
+                    p.getProperty("git.tags"),
+                    p.getProperty("git.branch"),
+                    p.getProperty("git.build.version"),
+                    p.getProperty("git.commit.id.describe"),
+                    p.getProperty("git.commit.id.abbrev"),
+                    p.getProperty("git.commit.id"),
+                    p.getProperty("git.commit.time"),
+                    p.getProperty("git.build.time"));
+            return Optional.of(info);
+        } catch (IOException ex) {
+            LOG.error("Failed to load git.properties from classpath", ex);
+            return Optional.empty();
+        }
+    }
+    
     public Optional<VersionInfo> versionInfo() {
         final Resource res = resourceLoader.getResource(POM_PROPERTIES_PATH);
         final Properties p = new Properties();
@@ -41,6 +62,9 @@ public class VersionService {
     }
     
     public static final record VersionInfo(String groupId, String artifactId, String version) {
+    }
+
+    public static final record GitInfo(String tags, String branch, String buildVersion, String commitIdDescribe, String commitIdAbbrev, String commitId, String commitTime, String buildTime) {
     }
 
 }

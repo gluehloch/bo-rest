@@ -76,6 +76,11 @@ public class SeasonController {
     public Optional<VersionInfo> version() {
         return versionService.versionInfo();
     }
+    
+    @RequestMapping(value = "/gitinfo", method = RequestMethod.GET)
+    public Optional<VersionService.GitInfo> gitInfo() {
+        return versionService.gitInfo();
+    }
       
     // ------------------------------------------------------------------------
 
