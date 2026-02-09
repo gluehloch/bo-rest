@@ -14,18 +14,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class VersionService {
 
-    private static final String POM_PROPERTIES_PATH = "classpath:META-INF/maven/de.betoffice/office-web/pom.properties";
-    
+    private static final String POM_PROPERTIES_PATH = "classpath:/pom-info.properties";
+    private static final String GIT_PROPERTIES_PATH = "classpath:/git.properties";
+
     private static final Logger LOG = LoggerFactory.getLogger(VersionService.class);
-    
+
     private final ResourceLoader resourceLoader;
-    
+
     public VersionService(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
     }
 
     public Optional<GitInfo> gitInfo() {
-        final Resource res = resourceLoader.getResource("classpath:git.properties");
+        final Resource res = resourceLoader.getResource(GIT_PROPERTIES_PATH);
         final Properties p = new Properties();
         try (InputStream in = res.getInputStream()) {
             p.load(in);
@@ -44,7 +45,7 @@ public class VersionService {
             return Optional.empty();
         }
     }
-    
+
     public Optional<VersionInfo> versionInfo() {
         final Resource res = resourceLoader.getResource(POM_PROPERTIES_PATH);
         final Properties p = new Properties();
@@ -60,11 +61,12 @@ public class VersionService {
             return Optional.empty();
         }
     }
-    
+
     public static final record VersionInfo(String groupId, String artifactId, String version) {
     }
 
-    public static final record GitInfo(String tags, String branch, String buildVersion, String commitIdDescribe, String commitIdAbbrev, String commitId, String commitTime, String buildTime) {
+    public static final record GitInfo(String tags, String branch, String buildVersion, String commitIdDescribe,
+            String commitIdAbbrev, String commitId, String commitTime, String buildTime) {
     }
 
 }

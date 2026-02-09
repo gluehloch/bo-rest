@@ -36,6 +36,25 @@
 	</dependencyManagement>
 
 	<build>
+		<!-- Ensure pom-info.properties is filtered with project coordinates at
+		build time -->
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>pom-info.properties</include>
+				</includes>
+			</resource>
+			<!-- Other resources are copied without filtering -->
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<excludes>
+					<exclude>pom-info.properties</exclude>
+				</excludes>
+			</resource>
+		</resources>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -68,7 +87,8 @@
 
 					<!-- write to output directory so it ends up in the jar -->
 					<generateGitPropertiesFile>true</generateGitPropertiesFile>
-					<gitPropertiesPath>${project.build.outputDirectory}/git.properties</gitPropertiesPath>
+					<gitPropertiesPath>
+						${project.build.outputDirectory}/git.properties</gitPropertiesPath>
 					<!-- optional: keep values you care about -->
 					<!-- by default the plugin writes many keys; you can control
 					keys if needed -->
