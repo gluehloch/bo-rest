@@ -75,8 +75,12 @@ public class AuthenticationController {
             @RequestHeader(required = false, name = BetofficeHttpConsts.HTTP_HEADER_USER_AGENT, defaultValue = BetofficeHttpConsts.HTTP_HEADER_USER_AGENT_UNKNOWN) String userAgent,
             HttpServletRequest request) {
 
-        SecurityTokenJson securityToken = betofficeAuthenticationService.login(authenticationForm.getNickname(),
-                authenticationForm.getPassword(), request.getSession().getId(), request.getRemoteAddr(), userAgent);
+        SecurityTokenJson securityToken = betofficeAuthenticationService.login(
+                authenticationForm.getNickname(),
+                authenticationForm.getPassword(),
+                request.getSession().getId(),
+                request.getRemoteAddr(),
+                userAgent);
 
         HttpSession session = request.getSession();
         session.setAttribute(SecurityToken.class.getName(), securityToken);
