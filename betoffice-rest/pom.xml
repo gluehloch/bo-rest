@@ -12,7 +12,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>betoffice-rest</artifactId>
 	<packaging>jar</packaging>
-
+	
 	<dependencyManagement>
 		<dependencies>
 			<!--
@@ -153,29 +153,28 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
-			<version>6.1.5</version>
+			<version>7.0.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
-			<version>6.1.5</version>
+			<version>7.0.3</version>
 		</dependency>
 
 		<!-- Jackson Java to JSON coder/encoder -->
+		<!-- Source: https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
 		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-annotations</artifactId>
-			<version>${com.fasterxml.jackson.core.jackson-annotations.version}</version>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-annotations</artifactId>
+		    <scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
+			<groupId>tools.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
-			<version>${com.fasterxml.jackson.core.jackson-core.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
+			<groupId>tools.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>${com.fasterxml.jackson.core.jackson-databind.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.module</groupId>
