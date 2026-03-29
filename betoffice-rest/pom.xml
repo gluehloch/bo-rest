@@ -25,13 +25,22 @@
             </dependency>
             -->
 			<!--
-			https://mvnrepository.com/artifact/org.springframework.security/spring-security-bom -->
+			https://mvnrepository.com/artifact/org.springframework.security/spring-security-bom
 			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-bom</artifactId>
 				<version>6.5.7</version>
 				<type>pom</type>
 			</dependency>
+			-->
+<!-- Source: https://mvnrepository.com/artifact/org.springframework.security/spring-security-bom -->
+<dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-bom</artifactId>
+    <version>7.0.4</version>
+    <type>pom</type>
+    <scope>import</scope>
+</dependency>
 		</dependencies>
 	</dependencyManagement>
 
