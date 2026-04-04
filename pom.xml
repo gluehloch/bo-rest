@@ -41,7 +41,7 @@
                 <groupId>de.betoffice</groupId>
                 <artifactId>betoffice-openligadb</artifactId>
                 <version>${betoffice.openligadb.version}</version>
-            </dependency>            
+            </dependency>
             <dependency>
                 <groupId>de.betoffice</groupId>
                 <artifactId>betoffice-storage</artifactId>
