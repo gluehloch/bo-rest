@@ -1,232 +1,204 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<parent>
-		<groupId>de.betoffice</groupId>
-		<artifactId>betoffice-web</artifactId>
-		<version>1.5.2-SNAPSHOT</version>
-	</parent>
+    <parent>
+        <groupId>de.betoffice</groupId>
+        <artifactId>betoffice-web</artifactId>
+        <version>1.5.2-SNAPSHOT</version>
+    </parent>
 
-	<modelVersion>4.0.0</modelVersion>
-	<artifactId>betoffice-rest</artifactId>
-	<packaging>jar</packaging>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>betoffice-rest</artifactId>
+    <packaging>jar</packaging>
 
-	<dependencyManagement>
-		<dependencies>
-			<!--
+    <dependencyManagement>
+        <dependencies>
             <dependency>
-                <groupId>de.betoffice</groupId>
-                <artifactId>betoffice-web</artifactId>
-                <version>1.5.2-SNAPSHOT</version>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-bom</artifactId>
+                <version>7.0.4</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            -->
-			<!--
-			https://mvnrepository.com/artifact/org.springframework.security/spring-security-bom -->
-			<dependency>
-				<groupId>org.springframework.security</groupId>
-				<artifactId>spring-security-bom</artifactId>
-				<version>6.5.7</version>
-				<type>pom</type>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+        </dependencies>
+    </dependencyManagement>
 
-	<build>
-		<!-- Ensure pom-info.properties is filtered with project coordinates at
+
+    <build>
+        <!-- Ensure pom-info.properties is filtered with project coordinates at
 		build time -->
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>pom-info.properties</include>
-				</includes>
-			</resource>
-			<!-- Other resources are copied without filtering -->
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>false</filtering>
-				<excludes>
-					<exclude>pom-info.properties</exclude>
-				</excludes>
-			</resource>
-		</resources>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-war-plugin</artifactId>
-					<version>3.3.1</version>
-				</plugin>
-				<plugin>
-					<groupId>pl.project13.maven</groupId>
-					<artifactId>git-commit-id-plugin</artifactId>
-					<version>4.0.0</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-		<plugins>
-			<plugin>
-				<groupId>pl.project13.maven</groupId>
-				<artifactId>git-commit-id-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>revision</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<!-- do not fail builds where .git isn't present (useful in
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>pom-info.properties</include>
+                </includes>
+            </resource>
+            <!-- Other resources are copied without filtering -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>pom-info.properties</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>3.3.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>pl.project13.maven</groupId>
+                    <artifactId>git-commit-id-plugin</artifactId>
+                    <version>4.9.10</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- do not fail builds where .git isn't present (useful in
 					some CI/packaging cases) -->
-					<failOnNoGitDirectory>false</failOnNoGitDirectory>
+                    <failOnNoGitDirectory>false</failOnNoGitDirectory>
 
-					<!-- write to output directory so it ends up in the jar -->
-					<generateGitPropertiesFile>true</generateGitPropertiesFile>
-					<gitPropertiesPath>
-						${project.build.outputDirectory}/git.properties</gitPropertiesPath>
-					<!-- optional: keep values you care about -->
-					<!-- by default the plugin writes many keys; you can control
+                    <!-- write to output directory so it ends up in the jar -->
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <gitPropertiesPath>
+                        ${project.build.outputDirectory}/git.properties</gitPropertiesPath>
+                    <!-- optional: keep values you care about -->
+                    <!-- by default the plugin writes many keys; you can control
 					keys if needed -->
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
-	<dependencies>
-		<dependency>
-			<groupId>de.betoffice</groupId>
-			<artifactId>betoffice-storage</artifactId>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>de.betoffice</groupId>
-			<artifactId>betoffice-openligadb</artifactId>
-			<scope>compile</scope>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>de.betoffice</groupId>
+            <artifactId>betoffice-storage</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.betoffice</groupId>
+            <artifactId>betoffice-openligadb</artifactId>
+            <scope>compile</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.mariadb.jdbc</groupId>
-			<artifactId>mariadb-java-client</artifactId>
-			<version>3.3.3</version>
-		</dependency>
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>3.3.3</version>
+        </dependency>
 
-		<dependency>
-			<groupId>jakarta.servlet</groupId>
-			<artifactId>jakarta.servlet-api</artifactId>
-			<version>6.0.0</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.angus</groupId>
-			<artifactId>angus-mail</artifactId>
-			<version>2.0.1</version>
-		</dependency>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.angus</groupId>
+            <artifactId>angus-mail</artifactId>
+            <version>2.0.1</version>
+        </dependency>
 
-		<!-- Spring Web Framework -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>${org.springframework.version}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-			<version>${org.springframework.version}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-			<version>${org.springframework.version}</version>
-			<scope>compile</scope>
-		</dependency>
+        <!-- Spring Web Framework -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${org.springframework.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${org.springframework.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${org.springframework.version}</version>
+            <scope>compile</scope>
+        </dependency>
 
-		<!-- Spring Security -->
-		<!--
-		https://mvnrepository.com/artifact/org.springframework.security/spring-security-web -->
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-web</artifactId>
-			<version>6.1.5</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-config</artifactId>
-			<version>6.1.5</version>
-		</dependency>
+        <!-- Spring Security -->
+        <!--
+        https://mvnrepository.com/artifact/org.springframework.security/spring-security-web -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>
 
-		<!-- Jackson Java to JSON coder/encoder -->
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-annotations</artifactId>
-			<version>${com.fasterxml.jackson.core.jackson-annotations.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-core</artifactId>
-			<version>${com.fasterxml.jackson.core.jackson-core.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>${com.fasterxml.jackson.core.jackson-databind.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.module</groupId>
-			<artifactId>jackson-module-parameter-names</artifactId>
-			<version>2.12.3</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.datatype</groupId>
-			<artifactId>jackson-datatype-jdk8</artifactId>
-			<version>2.12.3</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.datatype</groupId>
-			<artifactId>jackson-datatype-jsr310</artifactId>
-			<version>2.12.3</version>
-		</dependency>
+        <!-- Jackson Java to JSON coder/encoder -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>tools.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>tools.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>de.betoffice</groupId>
-			<artifactId>betoffice-testutils</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.jayway.jsonpath</groupId>
-			<artifactId>json-path</artifactId>
-			<version>2.5.0</version>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>de.betoffice</groupId>
+            <artifactId>betoffice-testutils</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>2.5.0</version>
+            <scope>test</scope>
+        </dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-all -->
-		<dependency>
-			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-all</artifactId>
-			<version>1.3</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.assertj</groupId>
-			<artifactId>assertj-core</artifactId>
-			<version>3.17.2</version>
-			<scope>test</scope>
-		</dependency>
+        <!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-all -->
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.17.2</version>
+            <scope>test</scope>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 
-	<repositories>
-		<repository>
-			<id>awtools</id>
-			<name>Andre Winklers AWTools Repository</name>
-			<url>http://maven.gluehloch.de/repository</url>
-		</repository>
-	</repositories>
+    <repositories>
+        <repository>
+            <id>awtools</id>
+            <name>Andre Winklers AWTools Repository</name>
+            <url>http://maven.gluehloch.de/repository</url>
+        </repository>
+    </repositories>
 
 </project>

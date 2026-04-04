@@ -17,6 +17,9 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 
+/**
+ * For local development, add this parameter to the VM options: {@code -Dspring.profiles.active=dev }
+ */
 @SpringBootApplication
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class, LiquibaseAutoConfiguration.class })
 @ComponentScan(basePackages = { "de.betoffice" })
