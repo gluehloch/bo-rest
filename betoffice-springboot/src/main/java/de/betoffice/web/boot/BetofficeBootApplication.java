@@ -18,9 +18,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 
 /**
- * For local developemnt, add this parameter to the VM options: {@code -Dspring.profiles.active=dev }
- * 
- * 
+ * For local development, add this parameter to the VM options: {@code -Dspring.profiles.active=dev }
  */
 @SpringBootApplication
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class, LiquibaseAutoConfiguration.class })
