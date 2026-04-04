@@ -6,7 +6,7 @@
     <parent>
         <groupId>de.winkler.betoffice</groupId>
         <artifactId>betoffice-maven-parent</artifactId>
-        <version>1.16.0-SNAPSHOT</version>
+        <version>1.16.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -16,9 +16,9 @@
     <packaging>pom</packaging>
 
     <properties>
-        <betoffice.openligadb.version>3.2.1-SNAPSHOT</betoffice.openligadb.version>
-        <betoffice.storage.version>3.2.1-SNAPSHOT</betoffice.storage.version>
-        <betoffice.testutils.version>1.4.2-SNAPSHOT</betoffice.testutils.version>
+        <betoffice.openligadb.version>3.2.1</betoffice.openligadb.version>
+        <betoffice.storage.version>3.2.1</betoffice.storage.version>
+        <betoffice.testutils.version>1.4.2</betoffice.testutils.version>
     </properties>
 
     <modules>
