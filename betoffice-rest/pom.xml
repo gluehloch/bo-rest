@@ -15,25 +15,16 @@
 
     <dependencyManagement>
         <dependencies>
-            <!--
-            <dependency>
-                <groupId>de.betoffice</groupId>
-                <artifactId>betoffice-web</artifactId>
-                <version>1.5.2-SNAPSHOT</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            -->
-            <!--
-            https://mvnrepository.com/artifact/org.springframework.security/spring-security-bom -->
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-bom</artifactId>
-                <version>6.5.7</version>
+                <version>7.0.4</version>
                 <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
+
 
     <build>
         <!-- Ensure pom-info.properties is filtered with project coordinates at
