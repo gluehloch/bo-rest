@@ -30,8 +30,6 @@ import java.time.ZonedDateTime;
 
 import org.junit.jupiter.api.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import de.betoffice.storage.group.entity.GroupType;
 import de.betoffice.storage.season.entity.Game;
 import de.betoffice.storage.season.entity.GameList;
@@ -50,7 +48,7 @@ import de.betoffice.web.json.IGameJson;
 public class GameJsonMapperTest {
 
     @Test
-    public void testGameJsonMapper() throws JsonProcessingException {
+    public void testGameJsonMapper() {
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Berlin"));
 
         GroupType groupType = new GroupType();

@@ -18,16 +18,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.SerializationFeature;
-
 import de.betoffice.web.auth.AuthenticationController;
 import de.betoffice.web.auth.AuthenticationForm;
 import de.betoffice.web.auth.BetofficeAuthenticationService;
 import de.betoffice.web.auth.LogoutFormData;
 import de.betoffice.web.json.SecurityTokenJson;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectWriter;
 
 public class AuthenticationControllerTest extends AbstractBetofficeSpringWebTestCase {
 
@@ -41,12 +38,14 @@ public class AuthenticationControllerTest extends AbstractBetofficeSpringWebTest
 
     @BeforeEach
     void setup() {
-        BetofficeAuthenticationService betofficeAuthenticationService = Mockito.mock(BetofficeAuthenticationService.class);
+        BetofficeAuthenticationService betofficeAuthenticationService = Mockito
+                .mock(BetofficeAuthenticationService.class);
         SecurityTokenJson token = new SecurityTokenJson();
         token.setToken(TOKEN);
         token.setNickname(NICKNAME);
         token.setRole(ROLE_TIPPER);
-        when(betofficeAuthenticationService.login(eq("Frosch"), eq("Password"), anyString(), anyString(), anyString())).thenReturn(token);
+        when(betofficeAuthenticationService.login(eq("Frosch"), eq("Password"), anyString(), anyString(), anyString()))
+                .thenReturn(token);
 
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders
@@ -88,9 +87,10 @@ public class AuthenticationControllerTest extends AbstractBetofficeSpringWebTest
                 .andExpect(status().isOk());
     }
 
-    private String toString(Object object) throws JsonProcessingException {
+    private String toString(Object object) {
         ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        // mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        mapper.deserializationConfig().useRootWrapping();
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         return ow.writeValueAsString(object);
     }

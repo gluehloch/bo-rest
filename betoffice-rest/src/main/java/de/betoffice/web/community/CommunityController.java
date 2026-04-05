@@ -44,8 +44,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import de.betoffice.service.CommunityService;
 import de.betoffice.storage.community.CommunityFilter;
 import de.betoffice.storage.community.entity.Community;
@@ -61,6 +59,7 @@ import de.betoffice.web.json.CommunityJson;
 import de.betoffice.web.json.PartyJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.builder.CommunityJsonMapper;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * Community management.
@@ -104,7 +103,7 @@ public class CommunityController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
         return ResponseEntity.ok(CommunityJsonMapper.map(communityService.find(communityId)));
-        
+
     }
 
     @PostMapping(value = "/community", headers = { "Content-type=application/json" })
