@@ -9,10 +9,8 @@ import jakarta.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
+import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
@@ -20,8 +18,7 @@ import org.springframework.core.env.Environment;
 /**
  * For local development, add this parameter to the VM options: {@code -Dspring.profiles.active=dev }
  */
-@SpringBootApplication
-@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class, LiquibaseAutoConfiguration.class })
+@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 @ComponentScan(basePackages = { "de.betoffice" })
 public class BetofficeBootApplication extends SpringBootServletInitializer {
 

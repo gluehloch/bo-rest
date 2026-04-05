@@ -43,10 +43,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
-import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration;
+import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
+import org.springframework.boot.jdbc.autoconfigure.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
@@ -58,11 +57,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.assertj.MvcTestResult;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 import de.betoffice.conf.PersistenceJPAConfiguration;
 import de.betoffice.conf.TestPropertiesConfiguration;
@@ -92,6 +86,8 @@ import de.betoffice.web.boot.BetofficeBootApplication;
 import de.betoffice.web.json.GameResultJson;
 import de.betoffice.web.season.BetofficeService;
 import de.betoffice.web.security.SecurityConstants;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectWriter;
 
 /**
  * Die Spring-Security Konfiguration kann auf diese Art und Weise nicht mit getestet werden.
@@ -102,7 +98,7 @@ import de.betoffice.web.security.SecurityConstants;
 @ActiveProfiles(profiles = "test")
 @ContextConfiguration(classes = { PersistenceJPAConfiguration.class, TestPropertiesConfiguration.class })
 @EnableAutoConfiguration(exclude = {
-        LiquibaseAutoConfiguration.class,
+        // LiquibaseAutoConfiguration.class,
         DataSourceAutoConfiguration.class,
         DataSourceTransactionManagerAutoConfiguration.class,
         HibernateJpaAutoConfiguration.class })
@@ -269,9 +265,9 @@ class TippControllerTest {
         //        assertThat(tipps.get(0).getTipp().getGuestGoals()).isEqualTo(3);
     }
 
-    private String toString(Object object) throws JsonProcessingException {
+    private String toString(Object object) {
         ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        // mapper. configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         return ow.writeValueAsString(object);
     }
@@ -354,7 +350,7 @@ class TippControllerTest {
         Game rweVsLuebeck;
     }
 
-    private MvcTestResult login() throws Exception, JsonProcessingException {
+    private MvcTestResult login() throws Exception {
         AuthenticationForm authenticationForm = new AuthenticationForm();
         authenticationForm.setNickname(NICKNAME);
         authenticationForm.setPassword(PASSWORD);
@@ -373,7 +369,7 @@ class TippControllerTest {
         return performLogin;
     }
 
-    private MvcTestResult logout(String token) throws Exception, JsonProcessingException {
+    private MvcTestResult logout(String token) throws Exception {
         LogoutFormData logoutFormData = new LogoutFormData();
         logoutFormData.setNickname(NICKNAME);
         logoutFormData.setToken(token);
