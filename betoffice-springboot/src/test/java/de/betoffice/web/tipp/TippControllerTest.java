@@ -1,7 +1,7 @@
 /*
  * ============================================================================
  * Project betoffice-jweb
- * Copyright (c) 2000-2024 by Andre Winkler. All rights reserved.
+ * Copyright (c) 2000-2026 by Andre Winkler. All rights reserved.
  * ============================================================================
  *          GNU GENERAL PUBLIC LICENSE
  *  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
@@ -24,14 +24,8 @@
 
 package de.betoffice.web.tipp;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -55,13 +49,14 @@ import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfigurati
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.assertj.MockMvcTester;
+import org.springframework.test.web.servlet.assertj.MvcTestResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -101,14 +96,17 @@ import de.betoffice.web.security.SecurityConstants;
 /**
  * Die Spring-Security Konfiguration kann auf diese Art und Weise nicht mit getestet werden.
  */
-@SpringBootTest( classes = { BetofficeBootApplication.class })
+@SpringBootTest(classes = { BetofficeBootApplication.class })
 @AutoConfigureMockMvc
 @WebAppConfiguration
 @ActiveProfiles(profiles = "test")
-@ContextConfiguration(classes = { PersistenceJPAConfiguration.class, TestPropertiesConfiguration.class})
-// @ComponentScan({ "de.betoffice" })
-@EnableAutoConfiguration(exclude = {LiquibaseAutoConfiguration.class, DataSourceAutoConfiguration.class, DataSourceTransactionManagerAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
-class TippControllerTest  {
+@ContextConfiguration(classes = { PersistenceJPAConfiguration.class, TestPropertiesConfiguration.class })
+@EnableAutoConfiguration(exclude = {
+        LiquibaseAutoConfiguration.class,
+        DataSourceAutoConfiguration.class,
+        DataSourceTransactionManagerAutoConfiguration.class,
+        HibernateJpaAutoConfiguration.class })
+class TippControllerTest {
 
     private static final String NICKNAME = "Frosch";
     private static final String PASSWORD = "Password";
@@ -118,7 +116,7 @@ class TippControllerTest  {
     private static final ZonedDateTime DATE_1971_03_24 = ZonedDateTime.of(LDT_1971_03_24, EUROPE_BERLIN);
 
     @Autowired
-    private MockMvc mockMvc;
+    private MockMvcTester mockMvcTester;
 
     @Autowired
     private OfficeTippService officeTippService;
@@ -149,15 +147,15 @@ class TippControllerTest  {
     @Test
     @Transactional
     void ping() throws Exception {
-        mockMvc.perform(get("/office/ping")
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk());
+        final MvcTestResult performOfficePing = mockMvcTester
+                .perform(get("/office/ping")
+                        .accept(MediaType.APPLICATION_JSON));
+        assertThat(performOfficePing).hasStatus(HttpStatus.OK);
 
-        mockMvc.perform(get("/authentication/ping")
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk());
+        final MvcTestResult performAuthenticationPing = mockMvcTester
+                .perform(get("/authentication/ping")
+                        .accept(MediaType.APPLICATION_JSON));
+        assertThat(performAuthenticationPing).hasStatus(HttpStatus.OK);
     }
 
     @Test
@@ -180,21 +178,21 @@ class TippControllerTest  {
         //
         SubmitTippRoundJson tippWithoutAuthentication = new SubmitTippRoundJson();
 
-        mockMvc.perform(post("/office/tipp/submit")
+        final var performTippSubmit = mockMvcTester.perform(post("/office/tipp/submit")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toString(tippWithoutAuthentication))
                 .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN, "token")
                 .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME, NICKNAME)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden())
-                .andDo(print());
+                .accept(MediaType.APPLICATION_JSON));
+
+        assertThat(performTippSubmit).hasStatus(HttpStatus.FORBIDDEN);
 
         //
         // Authentifizierung starten...
         //
-        ResultActions loginAction = login();
+        MvcTestResult loginAction = login();
 
-        MvcResult result = loginAction.andReturn();
+        MvcResult result = loginAction.getMvcResult();
         System.out.println(result.getResponse().getContentAsString());
 
         List<Session> session = sessionDao.findByNickname(NICKNAME);
@@ -222,22 +220,22 @@ class TippControllerTest  {
         submitTippGames.add(submitTippGame);
         tipp.setSubmitTippGames(submitTippGames);
 
-        ResultActions submitAction = mockMvc.perform(post("/office/tipp/submit")
+        final var performTippSubmit2 = mockMvcTester.perform(post("/office/tipp/submit")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toString(tipp))
                 .header(SecurityConstants.HEADER_AUTHORIZATION, SecurityConstants.TOKEN_PREFIX + token)
                 .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN, token)
                 .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME, NICKNAME)
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("seasonName", equalTo("Bundesliga")))
-                .andExpect(jsonPath("seasonYear", equalTo("1999/2000")))
-                .andExpect(jsonPath("games[0].homeTeam.name", equalTo("Vfb Lübeck")))
-                .andExpect(jsonPath("games[0].guestTeam.name", equalTo("RWE")))
-                .andExpect(jsonPath("games[0].tipps[0].nickname", nullValue()));
+                .accept(MediaType.APPLICATION_JSON));
 
-        System.out.println(submitAction.andReturn().getResponse().getContentAsString());
+        assertThat(performTippSubmit2).hasStatus(HttpStatus.OK);
+        assertThat(performTippSubmit2).bodyJson().extracting("seasonName").isEqualTo("Bundesliga");
+        assertThat(performTippSubmit2).bodyJson().extracting("seasonYear").isEqualTo("1999/2000");
+        assertThat(performTippSubmit2).bodyJson().extracting("games[0].homeTeam.name").isEqualTo("Vfb Lübeck");
+        assertThat(performTippSubmit2).bodyJson().extracting("games[0].guestTeam.name").isEqualTo("RWE");
+        assertThat(performTippSubmit2).bodyJson().extracting("games[0].tipps[0].nickname").isNull();
+
+        System.out.println(performTippSubmit.getResponse().getContentAsString());
 
         seasonManagerService.findTippsByMatch(data.luebeckVsRwe);
 
@@ -249,15 +247,15 @@ class TippControllerTest  {
         assertThat(logoutSession.getLogout()).isNotNull();
         assertThat(logoutSession.getToken()).isEqualTo(token);
 
-        mockMvc.perform(post("/office/tipp/submit")
+        final var performTippSubmit3 = mockMvcTester.perform(post("/office/tipp/submit")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toString(tipp))
                 .header(SecurityConstants.HEADER_AUTHORIZATION, SecurityConstants.TOKEN_PREFIX + token)
                 .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN, token)
                 .header(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME, NICKNAME)
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk()/*.isForbidden()*/); // TODO MockMvc Kontext ohne Spring-Security Filter.
+                .accept(MediaType.APPLICATION_JSON));
+
+        assertThat(performTippSubmit3).hasStatus(HttpStatus.OK);
 
         //
         // Tippabgabe zum richtigen Zeitpunkt. Einen Tag vor dem Spieltag.
@@ -292,13 +290,13 @@ class TippControllerTest  {
         conn.setAutoCommit(false);
         return conn;
     }
-    
+
     @BeforeEach
     void setup() throws Exception {
         tearDown();
 
         /*
-        mockMvc = MockMvcBuilders.standaloneSetup(
+        mockMvcTester = MockMvcBuilders.standaloneSetup(
                 new SeasonController(betofficeService, officeTippService),
                 new TippController(officeTippService),
                 new AuthenticationController(betofficeAuthenticationService))
@@ -356,40 +354,40 @@ class TippControllerTest  {
         Game rweVsLuebeck;
     }
 
-    private ResultActions login() throws Exception, JsonProcessingException {
+    private MvcTestResult login() throws Exception, JsonProcessingException {
         AuthenticationForm authenticationForm = new AuthenticationForm();
         authenticationForm.setNickname(NICKNAME);
         authenticationForm.setPassword(PASSWORD);
 
-        ResultActions loginAction = mockMvc.perform(post("/authentication/login")
+        final var performLogin = mockMvcTester.perform(post("/authentication/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toString(authenticationForm))
                 .header("User-Agent", USER_AGENT_TEST)
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("token", notNullValue()))
-                .andExpect(jsonPath("nickname", equalTo(NICKNAME)))
-                .andExpect(jsonPath("role", equalTo("TIPPER")));
+                .accept(MediaType.APPLICATION_JSON));
 
-        return loginAction;
+        assertThat(performLogin).hasStatus(HttpStatus.OK);
+        assertThat(performLogin).bodyJson().extracting("token").isNotNull();
+        assertThat(performLogin).bodyJson().extracting("nickname").isEqualTo(NICKNAME);
+        assertThat(performLogin).bodyJson().extracting("role").isEqualTo("TIPPER");
+
+        return performLogin;
     }
 
-    private ResultActions logout(String token) throws Exception, JsonProcessingException {
+    private MvcTestResult logout(String token) throws Exception, JsonProcessingException {
         LogoutFormData logoutFormData = new LogoutFormData();
         logoutFormData.setNickname(NICKNAME);
         logoutFormData.setToken(token);
 
-        ResultActions logoutAction = mockMvc.perform(post("/authentication/logout")
+        final var performLogout = mockMvcTester.perform(post("/authentication/logout")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toString(logoutFormData))
                 .header("User-Agent", USER_AGENT_TEST)
                 .header(SecurityConstants.HEADER_AUTHORIZATION, SecurityConstants.TOKEN_PREFIX + token)
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk());
+                .accept(MediaType.APPLICATION_JSON));
 
-        return logoutAction;
+        assertThat(performLogout).hasStatus(HttpStatus.OK);
+
+        return performLogout;
     }
 
     private Session findSessionToken() {
