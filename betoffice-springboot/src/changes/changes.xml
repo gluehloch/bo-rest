@@ -10,6 +10,13 @@
              *** STILL UNDER DEVELOPMENT x.x.x (SNAPSHOT) ***
         -->
         <!-- RELEASED -->
+        <release version="betoffice-boot-1.5.2" date="2026-04-06" description="Spring 7. Hibernate 7.">
+            <action dev="andrewinkler" type="update" date="2026-04-06">
+                Spring 7. Hibernate 7.
+            </action>
+        </release>
+        
+        <!-- RELEASED -->
         <release version="betoffice-boot-1.5.1" date="2025-11-08" description="JDK 25">
             <action dev="andrewinkler" type="add" date="2025-11-08">
                 JDK 25

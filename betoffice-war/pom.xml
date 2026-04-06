@@ -6,7 +6,7 @@
     <parent>
 		<groupId>de.betoffice</groupId>
         <artifactId>betoffice-web</artifactId>
-        <version>1.5.2-SNAPSHOT</version>
+        <version>1.5.2</version>
     <!--
         <groupId>de.winkler.betoffice</groupId>
         <artifactId>betoffice-maven-parent</artifactId>

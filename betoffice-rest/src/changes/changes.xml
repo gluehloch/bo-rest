@@ -20,6 +20,13 @@
         <!-- UNDER DEVELOPMENT -->
 
         <!-- RELEASED -->
+        <release version="betoffice-boot-1.5.2" date="2026-04-06" description="Spring 7. Hibernate 7.">
+            <action dev="andrewinkler" type="update" date="2026-04-06">
+                Spring 7. Hibernate 7.
+            </action>
+        </release>
+
+        <!-- RELEASED -->
         <release version="betoffice-jweb-1.5.1" date="2025-11-08" description="better tipp form">
             <action dev="andrewinkler" tpye="update" date="2025-10-31">
                 Update to JDK 25.
