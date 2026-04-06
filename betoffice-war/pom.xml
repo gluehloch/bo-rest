@@ -4,10 +4,10 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
-		<groupId>de.betoffice</groupId>
+        <groupId>de.betoffice</groupId>
         <artifactId>betoffice-web</artifactId>
         <version>1.5.2</version>
-    <!--
+        <!--
         <groupId>de.winkler.betoffice</groupId>
         <artifactId>betoffice-maven-parent</artifactId>
         <version>1.15.1</version>
@@ -75,15 +75,16 @@
             <groupId>de.betoffice</groupId>
             <artifactId>betoffice-rest</artifactId>
             <version>1.5.2-SNAPSHOT</version>
-            <scope>compile</scope>            
+            <scope>compile</scope>
         </dependency>
 
-        <!--
+        <!-- Source:
         https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client -->
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
-            <version>3.3.3</version>
+            <version>3.5.8</version>
+            <scope>compile</scope>
         </dependency>
 
         <!--
@@ -116,17 +117,17 @@
         </dependency>
 
         <!-- Spring Security -->
-        <!--
-        https://mvnrepository.com/artifact/org.springframework.security/spring-security-web -->
+      <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
-            <version>6.1.5</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
-            <version>6.1.5</version>
         </dependency>
 
         <!-- Jackson Java to JSON coder/encoder -->
