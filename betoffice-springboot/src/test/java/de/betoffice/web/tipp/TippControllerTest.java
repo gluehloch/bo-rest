@@ -84,6 +84,8 @@ import de.betoffice.web.auth.BetofficeAuthenticationService;
 import de.betoffice.web.auth.LogoutFormData;
 import de.betoffice.web.boot.BetofficeBootApplication;
 import de.betoffice.web.json.GameResultJson;
+import de.betoffice.web.json.RoundJson;
+import de.betoffice.web.json.SecurityTokenJson;
 import de.betoffice.web.season.BetofficeService;
 import de.betoffice.web.security.SecurityConstants;
 import tools.jackson.databind.ObjectMapper;
@@ -225,11 +227,16 @@ class TippControllerTest {
                 .accept(MediaType.APPLICATION_JSON));
 
         assertThat(performTippSubmit2).hasStatus(HttpStatus.OK);
-        assertThat(performTippSubmit2).bodyJson().extracting("seasonName").isEqualTo("Bundesliga");
-        assertThat(performTippSubmit2).bodyJson().extracting("seasonYear").isEqualTo("1999/2000");
-        assertThat(performTippSubmit2).bodyJson().extracting("games[0].homeTeam.name").isEqualTo("Vfb Lübeck");
-        assertThat(performTippSubmit2).bodyJson().extracting("games[0].guestTeam.name").isEqualTo("RWE");
-        assertThat(performTippSubmit2).bodyJson().extracting("games[0].tipps[0].nickname").isNull();
+        assertThat(performTippSubmit2).bodyJson().convertTo(RoundJson.class)
+                .extracting("seasonName").isEqualTo("Bundesliga");
+        assertThat(performTippSubmit2).bodyJson().convertTo(RoundJson.class).extracting("seasonYear")
+                .isEqualTo("1999/2000");
+        assertThat(performTippSubmit2).bodyJson().convertTo(RoundJson.class)
+                .extracting(rj -> rj.getGames().get(0).getHomeTeam().getName()).isEqualTo("Vfb Lübeck");
+        assertThat(performTippSubmit2).bodyJson().convertTo(RoundJson.class)
+                .extracting(rj -> rj.getGames().get(0).getGuestTeam().getName()).isEqualTo("RWE");
+        assertThat(performTippSubmit2).bodyJson().convertTo(RoundJson.class)
+                .extracting(rj -> rj.getGames().get(0).getTipps().get(0).getNickname()).isNull();
 
         System.out.println(performTippSubmit.getResponse().getContentAsString());
 
@@ -362,9 +369,12 @@ class TippControllerTest {
                 .accept(MediaType.APPLICATION_JSON));
 
         assertThat(performLogin).hasStatus(HttpStatus.OK);
-        assertThat(performLogin).bodyJson().extracting("token").isNotNull();
-        assertThat(performLogin).bodyJson().extracting("nickname").isEqualTo(NICKNAME);
-        assertThat(performLogin).bodyJson().extracting("role").isEqualTo("TIPPER");
+        assertThat(performLogin).bodyJson().convertTo(SecurityTokenJson.class)
+                .extracting("token").isNotNull();
+        assertThat(performLogin).bodyJson().convertTo(SecurityTokenJson.class)
+                .extracting("nickname").isEqualTo(NICKNAME);
+        assertThat(performLogin).bodyJson().convertTo(SecurityTokenJson.class)
+                .extracting("role").isEqualTo("TIPPER");
 
         return performLogin;
     }
