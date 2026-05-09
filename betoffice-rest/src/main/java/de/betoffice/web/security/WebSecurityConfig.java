@@ -38,6 +38,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -51,7 +52,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
+import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter.Directive;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -101,6 +105,10 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain configure(HttpSecurity http, AuthenticationManager authenticationManager)
             throws Exception {
+
+        HeaderWriterLogoutHandler clearSiteData = new HeaderWriterLogoutHandler(
+                new ClearSiteDataHeaderWriter(Directive.ALL));
+
         http
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable);
@@ -117,31 +125,31 @@ public class WebSecurityConfig {
                 .requestMatchers(HttpMethod.POST,
                         BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_LOGOUT)
                 .authenticated()
+
                 // Send tipp form
-                .requestMatchers(HttpMethod.POST, BetofficeUrlPath.URL_OFFICE + "/tipp/submit")
-                .hasRole("TIPPER")
+                .requestMatchers(HttpMethod.POST, BetofficeUrlPath.URL_OFFICE + "/tipp/submit").hasRole("TIPPER")
                 // user profile update
-                .requestMatchers(HttpMethod.GET, BetofficeUrlPath.URL_OFFICE + "/profile/**")
-                .hasRole("TIPPER")
-                .requestMatchers(HttpMethod.PUT, BetofficeUrlPath.URL_OFFICE + "/profile/**")
-                .hasRole("TIPPER")
-                .requestMatchers(HttpMethod.POST, BetofficeUrlPath.URL_OFFICE + "/profile/**")
-                .hasRole("TIPPER")
+
+                .requestMatchers(HttpMethod.GET, BetofficeUrlPath.URL_OFFICE + "/profile/**").hasRole("TIPPER")
+                .requestMatchers(HttpMethod.PUT, BetofficeUrlPath.URL_OFFICE + "/profile/**").hasRole("TIPPER")
+                .requestMatchers(HttpMethod.POST, BetofficeUrlPath.URL_OFFICE + "/profile/**").hasRole("TIPPER")
 
                 // Community Administration
-                .requestMatchers(HttpMethod.GET, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**")
-                .hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**")
-                .hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**")
-                .hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**")
-                .hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**").hasRole("ADMIN")
+
                 // Administration
                 .requestMatchers(HttpMethod.GET, BetofficeUrlPath.URL_ADMIM + "/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, BetofficeUrlPath.URL_ADMIM + "/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, BetofficeUrlPath.URL_ADMIM + "/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, BetofficeUrlPath.URL_ADMIM + "/**").hasRole("ADMIN"));
+
+        // Enable OAuth2 login
+        http.logout(l -> l.logoutUrl("/logout").logoutSuccessUrl("/").permitAll().addLogoutHandler(clearSiteData))
+                .oauth2Client(Customizer.withDefaults())
+                .oauth2Login(login -> login.defaultSuccessUrl("/", true));
 
         http.addFilter(new JWTAuthenticationFilter(authenticationManager, authService));
         http.addFilter(new JWTAuthorizationFilter(authenticationManager, authService));
