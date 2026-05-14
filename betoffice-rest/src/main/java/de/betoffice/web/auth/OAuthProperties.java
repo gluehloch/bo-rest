@@ -7,7 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 /**
  * TODO
  */
-@Profile(value = "dev")
+@Profile({ "dev", "test" })
 @Configuration
 @PropertySource(ignoreResourceNotFound = false, value = { "classpath:/oauth.properties" })
 public class OAuthProperties {
