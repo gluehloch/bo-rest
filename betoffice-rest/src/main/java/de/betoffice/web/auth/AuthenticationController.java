@@ -118,12 +118,12 @@ public class AuthenticationController {
      * AWI: Ist das korrekt?
      * 
      */
-    @GetMapping(value = "/google/login-url")
-    public ResponseEntity<String> getGoogleLoginUrl(HttpServletRequest request) {
-        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-        String googleLoginUrl = baseUrl + "/oauth2/authorization/google";
-        System.out.println(String.format("baseUrl: %s, googleLoginUrl: ", baseUrl, googleLoginUrl));
-        return ResponseEntity.ok("{\"url\":\"" + googleLoginUrl + "\"}");
-    }
+//    @GetMapping(value = "/google/login-url")
+//    public ResponseEntity<String> getGoogleLoginUrl(HttpServletRequest request) {
+//        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+//        String googleLoginUrl = baseUrl + "/oauth2/authorization/google";
+//        System.out.println(String.format("baseUrl: %s, googleLoginUrl: ", baseUrl, googleLoginUrl));
+//        return ResponseEntity.ok("{\"url\":\"" + googleLoginUrl + "\"}");
+//    }
 
 }

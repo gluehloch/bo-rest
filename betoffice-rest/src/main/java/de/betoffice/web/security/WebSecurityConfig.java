@@ -149,7 +149,14 @@ public class WebSecurityConfig {
         // Enable OAuth2 login
         http.logout(l -> l.logoutUrl("/logout").logoutSuccessUrl("/").permitAll().addLogoutHandler(clearSiteData))
                 .oauth2Client(Customizer.withDefaults())
-                .oauth2Login(login -> login.defaultSuccessUrl("/", true));
+                .oauth2Login(login -> login.defaultSuccessUrl("http://localhost:9999/login", true)
+                        .failureHandler((request, response, exception) -> {
+                            // Log the exception so we can see the real cause in the server logs
+                            System.out.println("OAuth2 login failed" + exception);
+                            exception.printStackTrace();
+                            // Redirect to the application login path with the error flag so the UI can show an error
+                            response.sendRedirect(request.getContextPath() + "/authentication/login?error");
+                        }));
 
         http.addFilter(new JWTAuthenticationFilter(authenticationManager, authService));
         http.addFilter(new JWTAuthorizationFilter(authenticationManager, authService));
