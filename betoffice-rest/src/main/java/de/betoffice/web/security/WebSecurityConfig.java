@@ -54,6 +54,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
 import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter.Directive;
 import org.springframework.web.cors.CorsConfiguration;
@@ -114,6 +115,7 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable);
 
         http.authorizeHttpRequests(authz -> authz
+                .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
                 .requestMatchers(HttpMethod.GET, BetofficeUrlPath.URL_OFFICE + "/**").permitAll()
                 // Authentication
                 .requestMatchers(HttpMethod.GET,
@@ -147,9 +149,18 @@ public class WebSecurityConfig {
                 .requestMatchers(HttpMethod.DELETE, BetofficeUrlPath.URL_ADMIM + "/**").hasRole("ADMIN"));
 
         // Enable OAuth2 login
-        http.logout(l -> l.logoutUrl("/logout").logoutSuccessUrl("/").permitAll().addLogoutHandler(clearSiteData))
+        http
+                .csrf(c -> c.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).spa())
+                .logout(l -> l.logoutUrl("/logout").logoutSuccessUrl("/").permitAll().addLogoutHandler(clearSiteData))
                 .oauth2Client(Customizer.withDefaults())
-                .oauth2Login(login -> login.defaultSuccessUrl("http://localhost:9999/login", true)
+                .oauth2Login(login -> login
+                        // TODO Copilot recommandation: Instead of HttpSessionOAuth2AuthorizationRequestRepository, but it does not work with the current frontend implementation. We need to switch to a cookie-based approach to make it work.
+                        .authorizationEndpoint(auth -> auth
+                                .authorizationRequestRepository(new HttpCookieOAuth2AuthorizationRequestRepository()))
+                        // TODO
+                        // .authorizationEndpoint(auth -> auth
+                        //      .authorizationRequestRepository(new HttpSessionOAuth2AuthorizationRequestRepository()))
+                        .defaultSuccessUrl("http://localhost:9999/login", true)
                         .failureHandler((request, response, exception) -> {
                             // Log the exception so we can see the real cause in the server logs
                             System.out.println("OAuth2 login failed" + exception);
