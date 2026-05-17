@@ -172,7 +172,7 @@ public class WebSecurityConfig {
 
         http.addFilter(new JWTAuthenticationFilter(authenticationManager, authService));
         http.addFilter(new JWTAuthorizationFilter(authenticationManager, authService));
-        // http.addFilterAfter(new CsrfCookieFilter(), CsrfFilter.class);
+        http.addFilterAfter(new CsrfCookieFilter(), CsrfFilter.class);
 
         return http.build();
     }
