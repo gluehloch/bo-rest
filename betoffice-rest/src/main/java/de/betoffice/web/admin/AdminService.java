@@ -30,6 +30,7 @@ import de.betoffice.storage.team.TeamType;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.PartyJson;
+import de.betoffice.web.json.RoundCreationJson;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonGroupTeamJson;
 import de.betoffice.web.json.SeasonJson;
@@ -190,6 +191,15 @@ public interface AdminService {
      * @param round the round to update
      */
     void updateRound(RoundJson round);
+
+    /**
+     * Create a round with games.
+     * 
+     * @param  seasonId  season id
+     * @param  roundData round and game data
+     * @return           created round with games
+     */
+    RoundJson createRound(long seasonId, RoundCreationJson roundData);
 
     /**
      * Update a game

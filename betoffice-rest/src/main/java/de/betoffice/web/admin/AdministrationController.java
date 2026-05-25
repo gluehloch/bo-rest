@@ -48,6 +48,7 @@ import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.IGameJson;
 import de.betoffice.web.json.PartyJson;
 import de.betoffice.web.json.RoundAndTableJson;
+import de.betoffice.web.json.RoundCreationJson;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonGroupTeamJson;
 import de.betoffice.web.json.SeasonJson;
@@ -130,6 +131,17 @@ public class AdministrationController {
         betofficeAdminService.validateAdminSession(token);
         betofficeAdminService.updateGame(gameJson);
         return betofficeService.findGame(gameJson.getId());
+    }
+
+    @PreAuthorize("@authService.isAdminSession(#token)")
+    @PostMapping(value = "/season/{seasonId}/round", headers = { "Content-type=application/json" })
+    public RoundJson createRound(@PathVariable("seasonId") Long seasonId,
+            @RequestBody RoundCreationJson roundCreationJson,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
+
+        betofficeAdminService.validateAdminSession(token);
+        return betofficeAdminService.createRound(seasonId, roundCreationJson);
     }
 
     // -- season administration -----------------------------------------------
