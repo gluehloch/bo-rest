@@ -43,6 +43,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -112,6 +113,7 @@ public class WebSecurityConfig {
                 new ClearSiteDataHeaderWriter(Directive.ALL));
 
         http
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable);
 
@@ -161,18 +163,18 @@ public class WebSecurityConfig {
                         // TODO
                         // .authorizationEndpoint(auth -> auth
                         //      .authorizationRequestRepository(new HttpSessionOAuth2AuthorizationRequestRepository()))
-                        .defaultSuccessUrl("http://localhost:9999/login", true)
+                        // .defaultSuccessUrl("http://localhost:9999/login", true)
                         .failureHandler((request, response, exception) -> {
                             // Log the exception so we can see the real cause in the server logs
                             System.out.println("OAuth2 login failed. " + exception);
                             exception.printStackTrace();
                             // Redirect to the application login path with the error flag so the UI can show an error
-                            response.sendRedirect("http://localhost:9999/authentication/login?error");
+                            //response.sendRedirect("http://localhost:9999/authentication/login?error");
                         }));
 
         http.addFilter(new JWTAuthenticationFilter(authenticationManager, authService));
         http.addFilter(new JWTAuthorizationFilter(authenticationManager, authService));
-        http.addFilterAfter(new CsrfCookieFilter(), CsrfFilter.class);
+        // http.addFilterAfter(new CsrfCookieFilter(), CsrfFilter.class);
 
         return http.build();
     }
