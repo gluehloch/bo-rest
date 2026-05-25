@@ -304,6 +304,9 @@ public class DefaultAdminService implements AdminService {
         if (roundData.getGroupType() == null || roundData.getGroupType().getId() == null) {
             throw new IllegalArgumentException("Round groupType is missing.");
         }
+        if (roundData.getGames() == null) {
+            throw new IllegalArgumentException("Games list is missing.");
+        }
     }
 
     private void validateGameData(Season season, GameJson gameJson) {
@@ -335,7 +338,8 @@ public class DefaultAdminService implements AdminService {
         Team homeTeam = masterDataManagerService.findTeamById(gameJson.getHomeTeam().getId());
         Team guestTeam = masterDataManagerService.findTeamById(gameJson.getGuestTeam().getId());
 
-        if (!season.getTeamType().equals(homeTeam.getTeamType()) || !season.getTeamType().equals(guestTeam.getTeamType())) {
+        if (!season.getTeamType().equals(homeTeam.getTeamType())
+                || !season.getTeamType().equals(guestTeam.getTeamType())) {
             throw new IllegalArgumentException("Game teams do not match season team type.");
         }
 
