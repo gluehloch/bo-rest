@@ -9,15 +9,12 @@
         <!--
              *** STILL UNDER DEVELOPMENT x.x.x (SNAPSHOT) ***
         -->
-        
-        <!-- 
-            <action dev="andrewinkler" type="add" date="2024-03-??">
-                Better tipp form. Like showing next ten games. The relationship to a round should should not be the focus.
-                More compact information.
-            </action>
-         -->
-
         <!-- UNDER DEVELOPMENT -->
+        <release version="betoffice-boot-1.5.3" date="2026-05-31" description="Openligadb group management">
+            <action dev="andrewinkler" type="update" date="2026-05-31">
+                Openligadb groupd management.
+            </action>
+        </release>
 
         <!-- RELEASED -->
         <release version="betoffice-boot-1.5.2" date="2026-04-06" description="Spring 7. Hibernate 7.">
