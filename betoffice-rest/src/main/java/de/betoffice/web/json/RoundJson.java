@@ -46,7 +46,7 @@ public class RoundJson extends AbstractIdentifier {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JsonDateTimeFormat.DATETIME_PATTERN, timezone = JsonDateTimeFormat.TIMZONE)
     private ZonedDateTime dateTime;
 
-    /** This index has a range from 1..N (number of rounds) */
+    /** The index has a range from 1..N (number of rounds) */
     private int index;
     private boolean lastRound;
     private boolean tippable;
