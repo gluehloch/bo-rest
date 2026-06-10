@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import de.betoffice.storage.season.SeasonType;
 
@@ -36,6 +38,7 @@ import de.betoffice.storage.season.SeasonType;
  * 
  * @author Andre Winkler
  */
+@JsonInclude(Include.NON_NULL)
 public class RoundJson extends AbstractIdentifier {
 
     private Long seasonId;
@@ -48,8 +51,8 @@ public class RoundJson extends AbstractIdentifier {
 
     /** The index has a range from 1..N (number of rounds) */
     private int index;
-    private boolean lastRound;
-    private boolean tippable;
+    private Boolean lastRound;
+    private Boolean tippable;
 
     private List<GameJson> games = new ArrayList<>();
 
@@ -101,19 +104,19 @@ public class RoundJson extends AbstractIdentifier {
         this.index = index;
     }
 
-    public final boolean isLastRound() {
+    public final Boolean isLastRound() {
         return lastRound;
     }
 
-    public final void setLastRound(boolean lastRound) {
+    public final void setLastRound(Boolean lastRound) {
         this.lastRound = lastRound;
     }
 
-    public final boolean isTippable() {
+    public final Boolean isTippable() {
         return tippable;
     }
 
-    public final void setTippable(boolean tippable) {
+    public final void setTippable(Boolean tippable) {
         this.tippable = tippable;
     }
 

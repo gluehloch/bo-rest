@@ -27,6 +27,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import de.betoffice.storage.season.SeasonType;
 
 /**
@@ -34,6 +37,7 @@ import de.betoffice.storage.season.SeasonType;
  *
  * @author Andre Winkler
  */
+@JsonInclude(Include.NON_NULL)
 public class SeasonJson extends AbstractIdentifier implements Serializable {
 
     private static final long serialVersionUID = 1243022582656671229L;
