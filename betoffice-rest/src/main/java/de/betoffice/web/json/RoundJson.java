@@ -31,6 +31,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import de.betoffice.storage.group.entity.GroupType;
 import de.betoffice.storage.season.SeasonType;
 
 /**
@@ -53,6 +54,8 @@ public class RoundJson extends AbstractIdentifier {
     private int index;
     private Boolean lastRound;
     private Boolean tippable;
+    
+    private GroupType groupType;
 
     private List<GameJson> games = new ArrayList<>();
 
@@ -128,6 +131,14 @@ public class RoundJson extends AbstractIdentifier {
         games = _games;
     }
 
+    public final GroupType getGroupType() {
+        return groupType;
+    }
+    
+    public void setGroupTyoe(GroupType groupType) {
+        this.groupType = groupType;
+    }
+    
     @Override
     public String toString() {
         return "RoundJson [games=" + games + "]";

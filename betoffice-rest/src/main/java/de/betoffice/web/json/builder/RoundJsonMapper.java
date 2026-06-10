@@ -43,6 +43,7 @@ public class RoundJsonMapper {
         roundJson.setSeasonName(round.getSeason().getReference().getName());
         roundJson.setSeasonYear(round.getSeason().getReference().getYear());
         roundJson.setSeasonType(round.getSeason().getMode());
+        roundJson.setGroupTyoe(round.getGroup().getGroupType());
         return roundJson;
     }
 
