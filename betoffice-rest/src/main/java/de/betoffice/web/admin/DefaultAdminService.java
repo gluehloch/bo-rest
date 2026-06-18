@@ -52,6 +52,8 @@ import de.betoffice.storage.team.entity.Team;
 import de.betoffice.storage.time.DateTimeProvider;
 import de.betoffice.storage.user.entity.Nickname;
 import de.betoffice.storage.user.entity.User;
+import de.betoffice.validation.ValidationMessage;
+import de.betoffice.validation.ValidationMessages;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GroupTeamJson;
 import de.betoffice.web.json.GroupTypeJson;
@@ -63,6 +65,7 @@ import de.betoffice.web.json.SeasonGroupTeamJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SeasonMemberJson;
 import de.betoffice.web.json.TeamJson;
+import de.betoffice.web.json.UpdateRoundJson;
 import de.betoffice.web.json.builder.GroupTypeJsonMapper;
 import de.betoffice.web.json.builder.PartyJsonMapper;
 import de.betoffice.web.json.builder.SeasonJsonMapper;
@@ -209,8 +212,6 @@ public class DefaultAdminService implements AdminService {
 
     @Override
     public PartyJson updateUser(PartyJson partyJson) {
-        User storedUser = communityService.findUser(partyJson.getId());
-        User user = PartyJsonMapper.reverse(partyJson, storedUser);
         communityService.updateUser(
                 true,
                 Nickname.of(partyJson.getNickname()),
@@ -241,21 +242,73 @@ public class DefaultAdminService implements AdminService {
     }
 
     @Override
-    public void updateRound(RoundJson roundJson) {
-        Optional<GameList> round = seasonManagerService.findRoundGames(roundJson.getId());
-        if (round.isEmpty()) {
-            LOG.error("Can´t find round with id={}.", roundJson.getId());
-            return;
-        } else {
-            List<Game> games = new ArrayList<>();
-            for (GameJson match : roundJson.getGames()) {
-                Game game = round.get().getById(match.getId());
-                updateGame(match, game);
-                games.add(game);
-            }
-
-            seasonManagerService.updateMatch(games);
+    public ValidationMessages updateRoundAndGames(long seasonId, long roundId, RoundJson round) {
+        if (roundId != round.getId()) {
+            LOG.error("Round id from path variable {} does not match round id from request body {}.", roundId,
+                    round.getId());
+            return ValidationMessages.of(
+                    List.of(ValidationMessage.error(ValidationMessage.MessageType.ROUND_ID_MISMATCH, roundId,
+                            round.getId())));
         }
+
+        final Optional<GameList> roundEntity = seasonManagerService.findRoundGames(round.getId());
+        if (roundEntity.isEmpty()) {
+            LOG.error("Can´t find round with id={}.", round.getId());
+            return ValidationMessages.of(
+                    List.of(ValidationMessage.error(ValidationMessage.MessageType.ROUND_ID_NOT_FOUND,
+                            round.getId())));
+        }
+
+        final List<Game> games = new ArrayList<>();
+        for (GameJson match : round.getGames()) {
+            Game game = roundEntity.get().getById(match.getId());
+            updateGame(match, game);
+            games.add(game);
+        }
+
+        seasonManagerService.updateMatch(games);
+        return ValidationMessages.ok();
+    }
+
+    @Override
+    public ValidationMessages updateRound(long seasonId, long roundId, UpdateRoundJson round) {
+        if (roundId != round.getId()) {
+            LOG.error("Round id from path variable {} does not match round id from request body {}.", roundId,
+                    round.getId());
+            return ValidationMessages.of(
+                    List.of(ValidationMessage.error(ValidationMessage.MessageType.ROUND_ID_MISMATCH, roundId,
+                            round.getId())));
+        }
+
+        final Optional<GameList> roundEntity = seasonManagerService.findRoundGames(round.getId());
+
+        if (roundEntity.isEmpty()) {
+            LOG.error("Can´t find round with id={}.", round.getId());
+            return ValidationMessages.of(
+                    List.of(ValidationMessage.error(ValidationMessage.MessageType.ROUND_ID_NOT_FOUND,
+                            round.getId())));
+        }
+
+        final Season season = seasonManagerService.findSeasonById(seasonId);
+        final List<Group> groups = seasonManagerService.findGroups(season);
+        final Optional<Group> selectedGroup = groups.stream()
+                .filter(group -> group.getGroupType().getType().equals(round.getGroupType()))
+                .findFirst();
+
+        if (selectedGroup.isEmpty()) {
+            LOG.error("Can´t find group with type {} for season with id={}.", round.getGroupType(), seasonId);
+            return ValidationMessages.of(
+                    List.of(ValidationMessage.error(ValidationMessage.MessageType.GROUP_TYPE_NOT_FOUND,
+                            season.getReference().getName(),
+                            season.getReference().getYear(),
+                            round.getGroupType())));
+        }
+
+        final GameList roundEntity2 = roundEntity.get();
+        roundEntity2.setDateTime(round.getDateTime());
+        roundEntity2.setGroup(selectedGroup.get());
+
+        return ValidationMessages.ok();
     }
 
     @Override

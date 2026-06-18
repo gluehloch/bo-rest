@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,6 +43,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.storage.team.TeamType;
+import de.betoffice.validation.ValidationMessages;
 import de.betoffice.web.BetofficeHttpConsts;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GroupTypeJson;
@@ -53,6 +55,7 @@ import de.betoffice.web.json.SeasonGroupTeamJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SeasonMemberJson;
 import de.betoffice.web.json.TeamJson;
+import de.betoffice.web.json.UpdateRoundJson;
 import de.betoffice.web.season.BetofficeService;
 
 /**
@@ -108,7 +111,7 @@ public class AdministrationController {
     @PreAuthorize("@authService.isAdminSession(#token)")
     @PostMapping(value = "/season/{seasonId}/round/{roundId}/group/{groupId}/update", headers = {
             "Content-type=application/json" })
-    public RoundAndTableJson updateRound(
+    public RoundAndTableJson updateRoundAndGames(
             @PathVariable("seasonId") Long seasonId,
             @PathVariable("roundId") Long roundId,
             @PathVariable("groupId") Long groupId,
@@ -117,8 +120,25 @@ public class AdministrationController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
         betofficeAdminService.validateAdminSession(token);
-        betofficeAdminService.updateRound(roundJson);
+        betofficeAdminService.updateRoundAndGames(seasonId, roundId, roundJson);
         return betofficeService.findRoundTable(seasonId, roundId, groupId);
+    }
+
+    @PreAuthorize("@authService.isAdminSession(#token)")
+    @PutMapping(value = "/season/{seasonId}/round/{roundId}", headers = { "Content-type=application/json" })
+    public ResponseEntity<Void> updateRound(
+            @PathVariable("seasonId") Long seasonId,
+            @PathVariable("roundId") Long roundId,
+            @RequestBody UpdateRoundJson updateRoundJson,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
+
+        betofficeAdminService.validateAdminSession(token);
+        ValidationMessages updateRound = betofficeAdminService.updateRound(seasonId, roundId, updateRoundJson);
+
+        // ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatus.NO_CONTENT, "Round updated successfully"));
+
+        return ResponseEntity.ok().build();
     }
 
     @PreAuthorize("@authService.isAdminSession(#token)")

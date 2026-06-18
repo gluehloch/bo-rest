@@ -46,7 +46,7 @@ public class RoundJson extends AbstractIdentifier {
     private String seasonName;
     private String seasonYear;
     private String seasonType;
-    
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JsonDateTimeFormat.DATETIME_PATTERN, timezone = JsonDateTimeFormat.TIMZONE)
     private ZonedDateTime dateTime;
 
@@ -54,7 +54,7 @@ public class RoundJson extends AbstractIdentifier {
     private int index;
     private Boolean lastRound;
     private Boolean tippable;
-    
+
     private GroupType groupType;
 
     private List<GameJson> games = new ArrayList<>();
@@ -134,11 +134,11 @@ public class RoundJson extends AbstractIdentifier {
     public final GroupType getGroupType() {
         return groupType;
     }
-    
+
     public void setGroupTyoe(GroupType groupType) {
         this.groupType = groupType;
     }
-    
+
     @Override
     public String toString() {
         return "RoundJson [games=" + games + "]";

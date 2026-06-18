@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 import de.betoffice.storage.team.TeamType;
+import de.betoffice.validation.ValidationMessages;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.PartyJson;
@@ -35,6 +36,7 @@ import de.betoffice.web.json.SeasonGroupTeamJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SeasonMemberJson;
 import de.betoffice.web.json.TeamJson;
+import de.betoffice.web.json.UpdateRoundJson;
 
 /**
  * Betoffice administration JSON service interface
@@ -185,11 +187,21 @@ public interface AdminService {
     SeasonJson updateSeason(SeasonJson season);
 
     /**
-     * Update a round
+     * Update a round and its games with the data from the given round.
      * 
-     * @param round the round to update
+     * @param  round the round to update
+     * @return       operation feedback
      */
-    void updateRound(RoundJson round);
+    ValidationMessages updateRoundAndGames(long seasonId, long roundId, RoundJson round);
+
+    /**
+     * Aktualisiert eine Runde mit den Daten aus dem übergebenen UpdateRoundJson Objekt. Es werden nur die Daten
+     * aktualisiert, die im UpdateRoundJson Objekt gesetzt sind. Alle anderen Daten der Runde bleiben unverändert.
+     * 
+     * @param  round
+     * @return       operation feedback
+     */
+    ValidationMessages updateRound(long seasonId, long roundId, UpdateRoundJson round);
 
     /**
      * Update a game
