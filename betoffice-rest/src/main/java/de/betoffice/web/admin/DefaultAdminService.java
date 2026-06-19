@@ -60,6 +60,7 @@ import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.IGameJson;
 import de.betoffice.web.json.JsonBuilder;
 import de.betoffice.web.json.PartyJson;
+import de.betoffice.web.json.RoundCreationJson;
 import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonGroupTeamJson;
 import de.betoffice.web.json.SeasonJson;
@@ -312,11 +313,93 @@ public class DefaultAdminService implements AdminService {
     }
 
     @Override
+    public RoundJson createRound(long seasonId, RoundCreationJson roundData) {
+        validateRoundData(roundData);
+
+        Season season = seasonManagerService.findSeasonById(seasonId);
+        GroupType roundGroupType = masterDataManagerService.findGroupType(roundData.getGroupType().getId());
+        Group roundGroup = seasonManagerService.findGroup(season, roundGroupType);
+        if (roundGroup == null) {
+            throw new IllegalArgumentException("Round GroupType does not belong to season.");
+        }
+
+        GameList round = seasonManagerService.addRound(season, roundData.getDateTime(), roundGroupType);
+        for (GameJson gameJson : roundData.getGames()) {
+            validateGameData(season, gameJson);
+
+            GroupType gameGroupType = masterDataManagerService.findGroupType(gameJson.getGroupType().getId());
+            Group gameGroup = seasonManagerService.findGroup(season, gameGroupType);
+            Team homeTeam = masterDataManagerService.findTeamById(gameJson.getHomeTeam().getId());
+            Team guestTeam = masterDataManagerService.findTeamById(gameJson.getGuestTeam().getId());
+
+            seasonManagerService.addMatch(round, gameJson.getDateTime(), gameGroup, homeTeam, guestTeam);
+        }
+
+        GameList createdRound = seasonManagerService.findRoundGames(round.getId()).orElseThrow();
+        return JsonBuilder.toJsonWithGames(createdRound);
+    }
+
+    @Override
     public void updateGame(GameJson gameJson) {
         Game game = seasonManagerService.findMatch(gameJson.getId());
         game.setDateTime(gameJson.getDateTime());
         updateGame(gameJson, game);
         seasonManagerService.updateMatch(game);
+    }
+
+    private void validateRoundData(RoundCreationJson roundData) {
+        if (roundData == null) {
+            throw new IllegalArgumentException("Round data is missing.");
+        }
+        if (roundData.getDateTime() == null) {
+            throw new IllegalArgumentException("Round date is missing.");
+        }
+        if (roundData.getGroupType() == null || roundData.getGroupType().getId() == null) {
+            throw new IllegalArgumentException("Round groupType is missing.");
+        }
+        if (roundData.getGames() == null) {
+            throw new IllegalArgumentException("Games list is missing.");
+        }
+    }
+
+    private void validateGameData(Season season, GameJson gameJson) {
+        if (gameJson == null) {
+            throw new IllegalArgumentException("Game data is missing.");
+        }
+        if (gameJson.getDateTime() == null) {
+            throw new IllegalArgumentException("Game date is missing.");
+        }
+        if (gameJson.getGroupType() == null || gameJson.getGroupType().getId() == null) {
+            throw new IllegalArgumentException("Game groupType is missing.");
+        }
+        if (gameJson.getHomeTeam() == null || gameJson.getHomeTeam().getId() == null) {
+            throw new IllegalArgumentException("Home team is missing.");
+        }
+        if (gameJson.getGuestTeam() == null || gameJson.getGuestTeam().getId() == null) {
+            throw new IllegalArgumentException("Guest team is missing.");
+        }
+        if (gameJson.getHomeTeam().getId().equals(gameJson.getGuestTeam().getId())) {
+            throw new IllegalArgumentException("Home and guest team must be different.");
+        }
+
+        GroupType gameGroupType = masterDataManagerService.findGroupType(gameJson.getGroupType().getId());
+        Group gameGroup = seasonManagerService.findGroup(season, gameGroupType);
+        if (gameGroup == null) {
+            throw new IllegalArgumentException("Game GroupType does not belong to season.");
+        }
+
+        Team homeTeam = masterDataManagerService.findTeamById(gameJson.getHomeTeam().getId());
+        Team guestTeam = masterDataManagerService.findTeamById(gameJson.getGuestTeam().getId());
+
+        if (!season.getTeamType().equals(homeTeam.getTeamType())
+                || !season.getTeamType().equals(guestTeam.getTeamType())) {
+            throw new IllegalArgumentException("Game teams do not match season team type.");
+        }
+
+        List<Team> groupTeams = seasonManagerService.findTeams(season, gameGroupType);
+        if (!groupTeams.contains(homeTeam) || !groupTeams.contains(guestTeam)) {
+            throw new IllegalArgumentException("Game teams are not assigned to requested group.");
+        }
     }
 
     // TODO Gehoert sowas eher in einen JSON-Mapper? JsonAssembler | JsonBuilder?
