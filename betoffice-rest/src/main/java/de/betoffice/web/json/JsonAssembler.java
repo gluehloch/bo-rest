@@ -31,6 +31,7 @@ import de.betoffice.storage.season.entity.Game;
 import de.betoffice.storage.season.entity.GameList;
 import de.betoffice.storage.season.entity.Season;
 import de.betoffice.storage.tip.GameTipp;
+import de.betoffice.web.json.round.RoundJson;
 
 /**
  * Assembles JSON objects with other JSON objects.

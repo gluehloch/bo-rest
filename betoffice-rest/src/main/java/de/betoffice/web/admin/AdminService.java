@@ -31,12 +31,13 @@ import de.betoffice.validation.ValidationMessages;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.PartyJson;
-import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonGroupTeamJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SeasonMemberJson;
 import de.betoffice.web.json.TeamJson;
-import de.betoffice.web.json.UpdateRoundJson;
+import de.betoffice.web.json.round.AddRoundJson;
+import de.betoffice.web.json.round.RoundJson;
+import de.betoffice.web.json.round.UpdateRoundJson;
 
 /**
  * Betoffice administration JSON service interface
@@ -193,6 +194,14 @@ public interface AdminService {
      * @return       operation feedback
      */
     ValidationMessages updateRoundAndGames(long seasonId, long roundId, RoundJson round);
+
+    /**
+     * Erstellt einen neuen Spieltag.
+     * 
+     * @param seasonId die ID der Meisterschaft aka Saison, zu der der Spieltag hinzugefügt werden soll
+     * @param round    die Daten des neuen Spieltags
+     */
+    ValidationMessages addRound(long seasonId, AddRoundJson round);
 
     /**
      * Aktualisiert eine Runde mit den Daten aus dem übergebenen UpdateRoundJson Objekt. Es werden nur die Daten

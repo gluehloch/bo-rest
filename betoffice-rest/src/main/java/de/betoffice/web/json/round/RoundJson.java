@@ -21,7 +21,7 @@
  * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package de.betoffice.web.json;
+package de.betoffice.web.json.round;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -33,6 +33,9 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import de.betoffice.storage.group.entity.GroupType;
 import de.betoffice.storage.season.SeasonType;
+import de.betoffice.web.json.AbstractIdentifier;
+import de.betoffice.web.json.GameJson;
+import de.betoffice.web.json.JsonDateTimeFormat;
 
 /**
  * JSON data for a round.

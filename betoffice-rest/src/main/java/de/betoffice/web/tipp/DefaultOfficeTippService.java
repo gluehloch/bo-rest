@@ -46,7 +46,7 @@ import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.IGameJson;
 import de.betoffice.web.json.JsonAssembler;
 import de.betoffice.web.json.JsonBuilder;
-import de.betoffice.web.json.RoundJson;
+import de.betoffice.web.json.round.RoundJson;
 
 @Service
 @Transactional(readOnly = true)

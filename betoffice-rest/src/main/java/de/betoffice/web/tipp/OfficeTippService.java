@@ -25,7 +25,7 @@ package de.betoffice.web.tipp;
 
 import java.util.Optional;
 
-import de.betoffice.web.json.RoundJson;
+import de.betoffice.web.json.round.RoundJson;
 
 public interface OfficeTippService {
 

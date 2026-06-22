@@ -31,6 +31,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import de.betoffice.storage.season.SeasonType;
+import de.betoffice.web.json.round.RoundJson;
 
 /**
  * Season for JSON serialization.

@@ -26,6 +26,8 @@ package de.betoffice.web.json;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.betoffice.web.json.round.RoundJson;
+
 /**
  * User ranking
  * 

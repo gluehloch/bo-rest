@@ -32,10 +32,10 @@ import de.betoffice.web.json.GameWithGoalsJson;
 import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.PingJson;
 import de.betoffice.web.json.RoundAndTableJson;
-import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.TeamJson;
 import de.betoffice.web.json.UserTableJson;
+import de.betoffice.web.json.round.RoundJson;
 
 /**
  * Betoffice JSON service interface

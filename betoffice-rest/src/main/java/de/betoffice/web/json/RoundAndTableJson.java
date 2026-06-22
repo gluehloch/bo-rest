@@ -23,6 +23,8 @@
 
 package de.betoffice.web.json;
 
+import de.betoffice.web.json.round.RoundJson;
+
 /**
  * Round and table data.
  *

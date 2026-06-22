@@ -50,12 +50,13 @@ import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.IGameJson;
 import de.betoffice.web.json.PartyJson;
 import de.betoffice.web.json.RoundAndTableJson;
-import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonGroupTeamJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SeasonMemberJson;
 import de.betoffice.web.json.TeamJson;
-import de.betoffice.web.json.UpdateRoundJson;
+import de.betoffice.web.json.round.AddRoundJson;
+import de.betoffice.web.json.round.RoundJson;
+import de.betoffice.web.json.round.UpdateRoundJson;
 import de.betoffice.web.season.BetofficeService;
 
 /**
@@ -136,6 +137,24 @@ public class AdministrationController {
         betofficeAdminService.validateAdminSession(token);
         ValidationMessages updateRound = betofficeAdminService.updateRound(seasonId, roundId, updateRoundJson);
 
+        // TODO 
+        // ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatus.NO_CONTENT, "Round updated successfully"));
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize("@authService.isAdminSession(#token)")
+    @PostMapping(value = "/season/{seasonId}/round", headers = { "Content-type=application/json" })
+    public ResponseEntity<Void> addRound(
+            @PathVariable("seasonId") Long seasonId,
+            @RequestBody AddRoundJson addRoundJson,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
+
+        betofficeAdminService.validateAdminSession(token);
+        ValidationMessages updateRound = betofficeAdminService.addRound(seasonId, addRoundJson);
+
+        // TODO 
         // ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatus.NO_CONTENT, "Round updated successfully"));
 
         return ResponseEntity.ok().build();

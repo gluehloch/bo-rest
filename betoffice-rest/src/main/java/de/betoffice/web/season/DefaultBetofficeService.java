@@ -59,7 +59,6 @@ import de.betoffice.web.json.JsonAssembler;
 import de.betoffice.web.json.JsonBuilder;
 import de.betoffice.web.json.PingJson;
 import de.betoffice.web.json.RoundAndTableJson;
-import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.TeamJson;
 import de.betoffice.web.json.TeamResultJson;
@@ -67,6 +66,7 @@ import de.betoffice.web.json.UserJson;
 import de.betoffice.web.json.UserTableJson;
 import de.betoffice.web.json.builder.GoalJsonMapper;
 import de.betoffice.web.json.builder.TeamJsonMapper;
+import de.betoffice.web.json.round.RoundJson;
 
 /**
  * Basic rest service features for betoffice.
@@ -118,7 +118,7 @@ public class DefaultBetofficeService implements BetofficeService {
     @Override
     public List<GroupTypeJson> findAllGroups(Long seasonId) {
         Season season = seasonManagerService.findSeasonById(seasonId);
-        List<GroupType> groupTypes = seasonManagerService.findGroupTypesBySeason(season);
+        List<GroupType> groupTypes = seasonManagerService.findGroupTypes(season);
 
         return JsonBuilder.toJsonWithGroupTypes(groupTypes);
     }

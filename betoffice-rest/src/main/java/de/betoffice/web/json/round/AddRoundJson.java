@@ -1,26 +1,18 @@
-package de.betoffice.web.json;
+package de.betoffice.web.json.round;
 
 import java.time.ZonedDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import de.betoffice.storage.group.GroupTypeEnum;
+import de.betoffice.web.json.JsonDateTimeFormat;
 
-public class UpdateRoundJson extends AbstractIdentifier {
+public class AddRoundJson {
 
-    private Long roundId;
     private GroupTypeEnum groupType;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JsonDateTimeFormat.DATETIME_PATTERN, timezone = JsonDateTimeFormat.TIMZONE)
     private ZonedDateTime dateTime;
-
-    public final Long getRoundId() {
-        return roundId;
-    }
-
-    public final void setRoundId(Long roundId) {
-        this.roundId = roundId;
-    }
 
     public final GroupTypeEnum getGroupType() {
         return groupType;

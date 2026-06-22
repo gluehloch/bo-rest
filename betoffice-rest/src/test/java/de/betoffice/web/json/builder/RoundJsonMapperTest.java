@@ -36,7 +36,7 @@ import de.betoffice.storage.season.entity.GameList;
 import de.betoffice.storage.season.entity.Group;
 import de.betoffice.storage.season.entity.Season;
 import de.betoffice.storage.season.entity.SeasonReference;
-import de.betoffice.web.json.RoundJson;
+import de.betoffice.web.json.round.RoundJson;
 
 /**
  * Test for {@link RoundJsonMapper}.

@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.web.BetofficeHttpConsts;
-import de.betoffice.web.json.RoundJson;
+import de.betoffice.web.json.round.RoundJson;
 
 @CrossOrigin
 @RestController

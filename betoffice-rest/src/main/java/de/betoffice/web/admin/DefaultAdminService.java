@@ -60,17 +60,18 @@ import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.IGameJson;
 import de.betoffice.web.json.JsonBuilder;
 import de.betoffice.web.json.PartyJson;
-import de.betoffice.web.json.RoundJson;
 import de.betoffice.web.json.SeasonGroupTeamJson;
 import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SeasonMemberJson;
 import de.betoffice.web.json.TeamJson;
-import de.betoffice.web.json.UpdateRoundJson;
 import de.betoffice.web.json.builder.GroupTypeJsonMapper;
 import de.betoffice.web.json.builder.PartyJsonMapper;
 import de.betoffice.web.json.builder.SeasonJsonMapper;
 import de.betoffice.web.json.builder.SeasonMemberJsonMapper;
 import de.betoffice.web.json.builder.TeamJsonMapper;
+import de.betoffice.web.json.round.AddRoundJson;
+import de.betoffice.web.json.round.RoundJson;
+import de.betoffice.web.json.round.UpdateRoundJson;
 
 /**
  * Betoffice administration JSON service interface.
@@ -267,6 +268,27 @@ public class DefaultAdminService implements AdminService {
         }
 
         seasonManagerService.updateMatch(games);
+        return ValidationMessages.ok();
+    }
+
+    @Override
+    public ValidationMessages addRound(long seasonId, AddRoundJson round) {
+        final Season season = seasonManagerService.findSeasonById(seasonId);
+        final List<Group> groups = seasonManagerService.findGroups(season);
+        final Optional<Group> selectedGroup = groups.stream()
+                .filter(group -> group.getGroupType().getType().equals(round.getGroupType()))
+                .findFirst();
+
+        if (selectedGroup.isEmpty()) {
+            LOG.error("Can´t find group with type {} for season with id={}.", round.getGroupType(), seasonId);
+            return ValidationMessages.of(
+                    List.of(ValidationMessage.error(ValidationMessage.MessageType.GROUP_TYPE_NOT_FOUND,
+                            season.getReference().getName(),
+                            season.getReference().getYear(),
+                            round.getGroupType())));
+        }
+
+        seasonManagerService.addRound(season, round.getDateTime(), selectedGroup.get().getGroupType());
         return ValidationMessages.ok();
     }
 
