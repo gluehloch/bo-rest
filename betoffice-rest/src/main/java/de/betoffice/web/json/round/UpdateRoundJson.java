@@ -5,38 +5,46 @@ import java.time.ZonedDateTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import de.betoffice.storage.group.GroupTypeEnum;
-import de.betoffice.web.json.AbstractIdentifier;
 import de.betoffice.web.json.JsonDateTimeFormat;
 
-public class UpdateRoundJson extends AbstractIdentifier {
+public class UpdateRoundJson {
 
+    private Long seasonId;
     private Long roundId;
     private GroupTypeEnum groupType;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JsonDateTimeFormat.DATETIME_PATTERN, timezone = JsonDateTimeFormat.TIMZONE)
     private ZonedDateTime dateTime;
 
-    public final Long getRoundId() {
+    public Long getSeasonId() {
+        return seasonId;
+    }
+
+    public void setSeasonId(Long seasonId) {
+        this.seasonId = seasonId;
+    }
+
+    public Long getRoundId() {
         return roundId;
     }
 
-    public final void setRoundId(Long roundId) {
+    public void setRoundId(Long roundId) {
         this.roundId = roundId;
     }
 
-    public final GroupTypeEnum getGroupType() {
+    public GroupTypeEnum getGroupType() {
         return groupType;
     }
 
-    public final void setGroupType(GroupTypeEnum groupType) {
+    public void setGroupType(GroupTypeEnum groupType) {
         this.groupType = groupType;
     }
 
-    public final ZonedDateTime getDateTime() {
+    public ZonedDateTime getDateTime() {
         return dateTime;
     }
 
-    public final void setDateTime(ZonedDateTime dateTime) {
+    public void setDateTime(ZonedDateTime dateTime) {
         this.dateTime = dateTime;
     }
 

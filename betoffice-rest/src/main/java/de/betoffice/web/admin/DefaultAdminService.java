@@ -273,6 +273,14 @@ public class DefaultAdminService implements AdminService {
 
     @Override
     public ValidationMessages addRound(long seasonId, AddRoundJson round) {
+        if (seasonId != round.getSeasonId()) {
+            LOG.error("Seaosn id from path variable {} does not match season id from request body {}.", seasonId,
+                    round.getSeasonId());
+            return ValidationMessages.of(
+                    List.of(ValidationMessage.error(ValidationMessage.MessageType.SEASON_ID_MISMATCH, seasonId,
+                            round.getSeasonId())));
+        }
+
         final Season season = seasonManagerService.findSeasonById(seasonId);
         final List<Group> groups = seasonManagerService.findGroups(season);
         final Optional<Group> selectedGroup = groups.stream()
@@ -294,21 +302,31 @@ public class DefaultAdminService implements AdminService {
 
     @Override
     public ValidationMessages updateRound(long seasonId, long roundId, UpdateRoundJson round) {
-        if (roundId != round.getId()) {
-            LOG.error("Round id from path variable {} does not match round id from request body {}.", roundId,
-                    round.getId());
-            return ValidationMessages.of(
-                    List.of(ValidationMessage.error(ValidationMessage.MessageType.ROUND_ID_MISMATCH, roundId,
-                            round.getId())));
+        final var vmb = ValidationMessages.builder();
+        if (seasonId != round.getSeasonId()) {
+            LOG.error("Seaosn id from path variable {} does not match season id from request body {}.", seasonId,
+                    round.getSeasonId());
+            vmb.add(ValidationMessage.error(ValidationMessage.MessageType.SEASON_ID_MISMATCH, seasonId,
+                    round.getSeasonId()));
         }
 
-        final Optional<GameList> roundEntity = seasonManagerService.findRoundGames(round.getId());
+        if (roundId != round.getRoundId()) {
+            LOG.error("Round id from path variable {} does not match round id from request body {}.", roundId,
+                    round.getRoundId());
+            vmb.add(ValidationMessage.error(ValidationMessage.MessageType.ROUND_ID_MISMATCH, roundId,
+                    round.getRoundId()));
+        }
 
+        if (vmb.containsAnError()) {
+            return vmb.build();
+        }
+
+        final Optional<GameList> roundEntity = seasonManagerService.findRoundGames(round.getRoundId());
         if (roundEntity.isEmpty()) {
-            LOG.error("Can´t find round with id={}.", round.getId());
+            LOG.error("Can´t find round with id={}.", round.getRoundId());
             return ValidationMessages.of(
                     List.of(ValidationMessage.error(ValidationMessage.MessageType.ROUND_ID_NOT_FOUND,
-                            round.getId())));
+                            round.getRoundId())));
         }
 
         final Season season = seasonManagerService.findSeasonById(seasonId);
@@ -319,18 +337,17 @@ public class DefaultAdminService implements AdminService {
 
         if (selectedGroup.isEmpty()) {
             LOG.error("Can´t find group with type {} for season with id={}.", round.getGroupType(), seasonId);
-            return ValidationMessages.of(
-                    List.of(ValidationMessage.error(ValidationMessage.MessageType.GROUP_TYPE_NOT_FOUND,
-                            season.getReference().getName(),
-                            season.getReference().getYear(),
-                            round.getGroupType())));
+            return vmb.add(ValidationMessage.error(ValidationMessage.MessageType.GROUP_TYPE_NOT_FOUND,
+                    season.getReference().getName(),
+                    season.getReference().getYear(),
+                    round.getGroupType())).build();
         }
 
         final GameList roundEntity2 = roundEntity.get();
         roundEntity2.setDateTime(round.getDateTime());
         roundEntity2.setGroup(selectedGroup.get());
 
-        return ValidationMessages.ok();
+        return vmb.build();
     }
 
     @Override
