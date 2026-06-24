@@ -343,9 +343,8 @@ public class DefaultAdminService implements AdminService {
                     round.getGroupType())).build();
         }
 
-        final GameList roundEntity2 = roundEntity.get();
-        roundEntity2.setDateTime(round.getDateTime());
-        roundEntity2.setGroup(selectedGroup.get());
+        seasonManagerService.updateRound(season, roundEntity.get().getIndex(), round.getDateTime(),
+                selectedGroup.get().getGroupType());
 
         return vmb.build();
     }
