@@ -38,10 +38,12 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -51,7 +53,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
+import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter.Directive;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -101,11 +108,17 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain configure(HttpSecurity http, AuthenticationManager authenticationManager)
             throws Exception {
+
+        HeaderWriterLogoutHandler clearSiteData = new HeaderWriterLogoutHandler(
+                new ClearSiteDataHeaderWriter(Directive.ALL));
+
         http
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable);
 
         http.authorizeHttpRequests(authz -> authz
+                .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
                 .requestMatchers(HttpMethod.GET, BetofficeUrlPath.URL_OFFICE + "/**").permitAll()
                 // Authentication
                 .requestMatchers(HttpMethod.GET,
@@ -117,34 +130,51 @@ public class WebSecurityConfig {
                 .requestMatchers(HttpMethod.POST,
                         BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_LOGOUT)
                 .authenticated()
+
                 // Send tipp form
-                .requestMatchers(HttpMethod.POST, BetofficeUrlPath.URL_OFFICE + "/tipp/submit")
-                .hasRole("TIPPER")
+                .requestMatchers(HttpMethod.POST, BetofficeUrlPath.URL_OFFICE + "/tipp/submit").hasRole("TIPPER")
                 // user profile update
-                .requestMatchers(HttpMethod.GET, BetofficeUrlPath.URL_OFFICE + "/profile/**")
-                .hasRole("TIPPER")
-                .requestMatchers(HttpMethod.PUT, BetofficeUrlPath.URL_OFFICE + "/profile/**")
-                .hasRole("TIPPER")
-                .requestMatchers(HttpMethod.POST, BetofficeUrlPath.URL_OFFICE + "/profile/**")
-                .hasRole("TIPPER")
+
+                .requestMatchers(HttpMethod.GET, BetofficeUrlPath.URL_OFFICE + "/profile/**").hasRole("TIPPER")
+                .requestMatchers(HttpMethod.PUT, BetofficeUrlPath.URL_OFFICE + "/profile/**").hasRole("TIPPER")
+                .requestMatchers(HttpMethod.POST, BetofficeUrlPath.URL_OFFICE + "/profile/**").hasRole("TIPPER")
 
                 // Community Administration
-                .requestMatchers(HttpMethod.GET, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**")
-                .hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**")
-                .hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**")
-                .hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**")
-                .hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**").hasRole("ADMIN")
+
                 // Administration
                 .requestMatchers(HttpMethod.GET, BetofficeUrlPath.URL_ADMIM + "/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, BetofficeUrlPath.URL_ADMIM + "/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, BetofficeUrlPath.URL_ADMIM + "/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, BetofficeUrlPath.URL_ADMIM + "/**").hasRole("ADMIN"));
 
+        // Enable OAuth2 login
+        http
+                .csrf(c -> c.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).spa())
+                .logout(l -> l.logoutUrl("/logout").logoutSuccessUrl("/").permitAll().addLogoutHandler(clearSiteData))
+                .oauth2Client(Customizer.withDefaults())
+                .oauth2Login(login -> login
+                        // TODO Copilot recommandation: Instead of HttpSessionOAuth2AuthorizationRequestRepository, but it does not work with the current frontend implementation. We need to switch to a cookie-based approach to make it work.
+                        //.authorizationEndpoint(auth -> auth
+                        //        .authorizationRequestRepository(new HttpCookieOAuth2AuthorizationRequestRepository()))
+                        // TODO
+                        // .authorizationEndpoint(auth -> auth
+                        //      .authorizationRequestRepository(new HttpSessionOAuth2AuthorizationRequestRepository()))
+                        // .defaultSuccessUrl("http://localhost:9999/login", true)
+                        .failureHandler((request, response, exception) -> {
+                            // Log the exception so we can see the real cause in the server logs
+                            System.out.println("OAuth2 login failed. " + exception);
+                            exception.printStackTrace();
+                            // Redirect to the application login path with the error flag so the UI can show an error
+                            //response.sendRedirect("http://localhost:9999/authentication/login?error");
+                        }));
+
         http.addFilter(new JWTAuthenticationFilter(authenticationManager, authService));
         http.addFilter(new JWTAuthorizationFilter(authenticationManager, authService));
+        // http.addFilterAfter(new CsrfCookieFilter(), CsrfFilter.class);
 
         return http.build();
     }
