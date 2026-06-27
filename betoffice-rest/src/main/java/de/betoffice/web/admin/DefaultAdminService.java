@@ -32,8 +32,8 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import de.betoffice.openligadb.OpenligadbUpdateService;
 import de.betoffice.service.AuthService;
@@ -79,27 +79,35 @@ import de.betoffice.web.json.round.UpdateRoundJson;
  * @author Andre Winkler
  */
 @Component
+@Transactional(readOnly = true)
 public class DefaultAdminService implements AdminService {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultAdminService.class);
 
-    @Autowired
-    private DateTimeProvider dateTimeProvider;
+    private final DateTimeProvider dateTimeProvider;
+    private final OpenligadbUpdateService openligadbUpdateService;
+    private final MasterDataManagerService masterDataManagerService;
+    private final SeasonManagerService seasonManagerService;
+    private final CommunityService communityService;
+    private final AuthService authService;
+    private final RoundHandler roundHandler;
 
-    @Autowired
-    private OpenligadbUpdateService openligadbUpdateService;
-
-    @Autowired
-    private MasterDataManagerService masterDataManagerService;
-
-    @Autowired
-    private SeasonManagerService seasonManagerService;
-
-    @Autowired
-    private CommunityService communityService;
-
-    @Autowired
-    private AuthService authService;
+    public DefaultAdminService(
+            DateTimeProvider dateTimeProvider,
+            OpenligadbUpdateService openligadbUpdateService,
+            MasterDataManagerService masterDataManagerService,
+            SeasonManagerService seasonManagerService,
+            CommunityService communityService,
+            AuthService authService,
+            RoundHandler roundHandler) {
+        this.authService = authService;
+        this.dateTimeProvider = dateTimeProvider;
+        this.openligadbUpdateService = openligadbUpdateService;
+        this.masterDataManagerService = masterDataManagerService;
+        this.seasonManagerService = seasonManagerService;
+        this.communityService = communityService;
+        this.roundHandler = roundHandler;
+    }
 
     // ------------------------------------------------------------------------
 
@@ -272,84 +280,6 @@ public class DefaultAdminService implements AdminService {
     }
 
     @Override
-    public ValidationMessages addRound(long seasonId, AddRoundJson round) {
-        if (seasonId != round.getSeasonId()) {
-            LOG.error("Seaosn id from path variable {} does not match season id from request body {}.", seasonId,
-                    round.getSeasonId());
-            return ValidationMessages.of(
-                    List.of(ValidationMessage.error(ValidationMessage.MessageType.SEASON_ID_MISMATCH, seasonId,
-                            round.getSeasonId())));
-        }
-
-        final Season season = seasonManagerService.findSeasonById(seasonId);
-        final List<Group> groups = seasonManagerService.findGroups(season);
-        final Optional<Group> selectedGroup = groups.stream()
-                .filter(group -> group.getGroupType().getType().equals(round.getGroupType()))
-                .findFirst();
-
-        if (selectedGroup.isEmpty()) {
-            LOG.error("Can´t find group with type {} for season with id={}.", round.getGroupType(), seasonId);
-            return ValidationMessages.of(
-                    List.of(ValidationMessage.error(ValidationMessage.MessageType.GROUP_TYPE_NOT_FOUND,
-                            season.getReference().getName(),
-                            season.getReference().getYear(),
-                            round.getGroupType())));
-        }
-
-        seasonManagerService.addRound(season, round.getDateTime(), selectedGroup.get().getGroupType());
-        return ValidationMessages.ok();
-    }
-
-    @Override
-    public ValidationMessages updateRound(long seasonId, long roundId, UpdateRoundJson round) {
-        final var vmb = ValidationMessages.builder();
-        if (seasonId != round.getSeasonId()) {
-            LOG.error("Seaosn id from path variable {} does not match season id from request body {}.", seasonId,
-                    round.getSeasonId());
-            vmb.add(ValidationMessage.error(ValidationMessage.MessageType.SEASON_ID_MISMATCH, seasonId,
-                    round.getSeasonId()));
-        }
-
-        if (roundId != round.getRoundId()) {
-            LOG.error("Round id from path variable {} does not match round id from request body {}.", roundId,
-                    round.getRoundId());
-            vmb.add(ValidationMessage.error(ValidationMessage.MessageType.ROUND_ID_MISMATCH, roundId,
-                    round.getRoundId()));
-        }
-
-        if (vmb.containsAnError()) {
-            return vmb.build();
-        }
-
-        final Optional<GameList> roundEntity = seasonManagerService.findRoundGames(round.getRoundId());
-        if (roundEntity.isEmpty()) {
-            LOG.error("Can´t find round with id={}.", round.getRoundId());
-            return ValidationMessages.of(
-                    List.of(ValidationMessage.error(ValidationMessage.MessageType.ROUND_ID_NOT_FOUND,
-                            round.getRoundId())));
-        }
-
-        final Season season = seasonManagerService.findSeasonById(seasonId);
-        final List<Group> groups = seasonManagerService.findGroups(season);
-        final Optional<Group> selectedGroup = groups.stream()
-                .filter(group -> group.getGroupType().getType().equals(round.getGroupType()))
-                .findFirst();
-
-        if (selectedGroup.isEmpty()) {
-            LOG.error("Can´t find group with type {} for season with id={}.", round.getGroupType(), seasonId);
-            return vmb.add(ValidationMessage.error(ValidationMessage.MessageType.GROUP_TYPE_NOT_FOUND,
-                    season.getReference().getName(),
-                    season.getReference().getYear(),
-                    round.getGroupType())).build();
-        }
-
-        seasonManagerService.updateRound(season, roundEntity.get().getIndex(), round.getDateTime(),
-                selectedGroup.get().getGroupType());
-
-        return vmb.build();
-    }
-
-    @Override
     public void updateGame(GameJson gameJson) {
         Game game = seasonManagerService.findMatch(gameJson.getId());
         game.setDateTime(gameJson.getDateTime());
@@ -491,6 +421,18 @@ public class DefaultAdminService implements AdminService {
         GroupType groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
         Team team = masterDataManagerService.findTeamById(teamJson.getId());
         seasonManagerService.removeTeam(season, groupType, team);
+    }
+
+    @Override
+    @Transactional
+    public ValidationMessages addRound(long seasonId, AddRoundJson round) {
+        return roundHandler.addRound(seasonId, round);
+    }
+
+    @Override
+    @Transactional
+    public ValidationMessages updateRound(long seasonId, long roundId, UpdateRoundJson round) {
+        return roundHandler.updateRound(seasonId, roundId, round);
     }
 
 }

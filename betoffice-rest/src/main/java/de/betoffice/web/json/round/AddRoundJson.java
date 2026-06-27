@@ -4,13 +4,12 @@ import java.time.ZonedDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import de.betoffice.storage.group.GroupTypeEnum;
 import de.betoffice.web.json.JsonDateTimeFormat;
 
 public class AddRoundJson {
 
     private Long seasonId;
-    private GroupTypeEnum groupType;
+    private Long groupTypeId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JsonDateTimeFormat.DATETIME_PATTERN, timezone = JsonDateTimeFormat.TIMZONE)
     private ZonedDateTime dateTime;
@@ -23,12 +22,12 @@ public class AddRoundJson {
         this.seasonId = seasonId;
     }
 
-    public final GroupTypeEnum getGroupType() {
-        return groupType;
+    public final Long getGroupTypeId() {
+        return groupTypeId;
     }
 
-    public final void setGroupType(GroupTypeEnum groupType) {
-        this.groupType = groupType;
+    public final void setGroupTypeId(Long groupTypeId) {
+        this.groupTypeId = groupTypeId;
     }
 
     public final ZonedDateTime getDateTime() {
