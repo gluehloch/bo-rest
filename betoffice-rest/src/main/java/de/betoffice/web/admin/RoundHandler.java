@@ -26,7 +26,7 @@ public class RoundHandler {
 
     private final MasterDataManagerService masterDataManagerService;
     private final SeasonManagerService seasonManagerService;
-    
+
     public RoundHandler(MasterDataManagerService masterDataManagerService, SeasonManagerService seasonManagerService) {
         this.masterDataManagerService = masterDataManagerService;
         this.seasonManagerService = seasonManagerService;
@@ -34,79 +34,73 @@ public class RoundHandler {
 
     public ValidationMessages addRound(long seasonId, AddRoundJson round) {
         if (seasonId != round.getSeasonId()) {
-            LOG.error("Seaosn id from path variable {} does not match season id from request body {}.", seasonId,
+            LOG.error("Seaosn id from path variable {} does not match season id from request body {}.",
+                    seasonId,
                     round.getSeasonId());
-            return ValidationMessages.of(
-                    List.of(ValidationMessage.error(ValidationMessage.MessageType.SEASON_ID_MISMATCH, seasonId,
-                            round.getSeasonId())));
+            return ValidationMessages.of(ValidationMessage.error(ValidationMessage.MessageType.SEASON_ID_MISMATCH,
+                    seasonId,
+                    round.getSeasonId()));
         }
 
         final Season season = seasonManagerService.findSeasonById(seasonId);
-        final GroupType groupeType = masterDataManagerService.findGroupType(round.getGroupTypeId());
-        final List<Group> groups = seasonManagerService.findGroup(season, groupType);
-        final Optional<Group> selectedGroup = groups.stream()
-                .filter(group -> group.getGroupType().getType().equals(round.getGroupType()))
-                .findFirst();
+        final GroupType groupType = masterDataManagerService.findGroupType(round.getGroupTypeId());
+        final Group group = seasonManagerService.findGroup(season, groupType);
 
-        if (selectedGroup.isEmpty()) {
-            LOG.error("Can´t find group with type {} for season with id={}.", round.getGroupType(), seasonId);
+        if (group == null) {
+            LOG.error("Can´t find group with groupType={} for season with id={}.", groupType, seasonId);
             return ValidationMessages.of(
-                    List.of(ValidationMessage.error(ValidationMessage.MessageType.GROUP_TYPE_NOT_FOUND,
+                    ValidationMessage.error(ValidationMessage.MessageType.GROUP_TYPE_NOT_FOUND,
                             season.getReference().getName(),
                             season.getReference().getYear(),
-                            round.getGroupType())));
+                            groupType));
         }
 
-        seasonManagerService.addRound(season, round.getDateTime(), selectedGroup.get().getGroupType());
+        seasonManagerService.addRound(season, round.getDateTime(), group.getGroupType());
         return ValidationMessages.ok();
     }
 
     public ValidationMessages updateRound(long seasonId, long roundId, UpdateRoundJson round) {
-        final var vmb = ValidationMessages.builder();
         if (seasonId != round.getSeasonId()) {
-            LOG.error("Seaosn id from path variable {} does not match season id from request body {}.", seasonId,
+            LOG.error("Seaosn id from path variable {} does not match season id from request body {}.",
+                    seasonId,
                     round.getSeasonId());
-            vmb.add(ValidationMessage.error(ValidationMessage.MessageType.SEASON_ID_MISMATCH, seasonId,
+            return ValidationMessages.of(ValidationMessage.error(ValidationMessage.MessageType.SEASON_ID_MISMATCH,
+                    seasonId,
                     round.getSeasonId()));
         }
 
         if (roundId != round.getRoundId()) {
-            LOG.error("Round id from path variable {} does not match round id from request body {}.", roundId,
+            LOG.error("Round id from path variable {} does not match round id from request body {}.",
+                    roundId,
                     round.getRoundId());
-            vmb.add(ValidationMessage.error(ValidationMessage.MessageType.ROUND_ID_MISMATCH, roundId,
+            return ValidationMessages.of(ValidationMessage.error(ValidationMessage.MessageType.ROUND_ID_MISMATCH,
+                    roundId,
                     round.getRoundId()));
-        }
-
-        if (vmb.containsAnError()) {
-            return vmb.build();
         }
 
         final Optional<GameList> roundEntity = seasonManagerService.findRoundGames(round.getRoundId());
         if (roundEntity.isEmpty()) {
             LOG.error("Can´t find round with id={}.", round.getRoundId());
             return ValidationMessages.of(
-                    List.of(ValidationMessage.error(ValidationMessage.MessageType.ROUND_ID_NOT_FOUND,
-                            round.getRoundId())));
+                    ValidationMessage.error(ValidationMessage.MessageType.ROUND_ID_NOT_FOUND,
+                            round.getRoundId()));
         }
 
         final Season season = seasonManagerService.findSeasonById(seasonId);
-        final List<Group> groups = seasonManagerService.findGroups(season);
-        final Optional<Group> selectedGroup = groups.stream()
-                .filter(group -> group.getGroupType().getType().equals(round.getGroupType()))
-                .findFirst();
+        final GroupType groupType = masterDataManagerService.findGroupType(round.getGroupTypeId());
+        final Group group = seasonManagerService.findGroup(season, groupType);
 
-        if (selectedGroup.isEmpty()) {
-            LOG.error("Can´t find group with type {} for season with id={}.", round.getGroupType(), seasonId);
-            return vmb.add(ValidationMessage.error(ValidationMessage.MessageType.GROUP_TYPE_NOT_FOUND,
-                    season.getReference().getName(),
-                    season.getReference().getYear(),
-                    round.getGroupType())).build();
+        if (group == null) {
+            LOG.error("Can´t find group with groupType={} for season with id={}.", groupType, seasonId);
+            return ValidationMessages.of(
+                    ValidationMessage.error(ValidationMessage.MessageType.GROUP_TYPE_NOT_FOUND,
+                            season.getReference().getName(),
+                            season.getReference().getYear(),
+                            groupType));
         }
 
-        seasonManagerService.updateRound(season, roundEntity.get().getIndex(), round.getDateTime(),
-                selectedGroup.get().getGroupType());
-
-        return vmb.build();
+        seasonManagerService.updateRound(season, roundEntity.get().getIndex(), round.getDateTime(), groupType);
+        return ValidationMessages.ok();
     }
 
 }
