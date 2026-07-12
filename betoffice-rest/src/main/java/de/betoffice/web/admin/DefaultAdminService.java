@@ -136,6 +136,7 @@ public class DefaultAdminService implements AdminService {
     // ------------------------------------------------------------------------
 
     @Override
+    @Transactional
     public RoundJson reconcileRoundWithOpenligadb(String token, Long seasonId, Long roundId) {
         Season season = seasonManagerService.findSeasonById(seasonId);
         GameList round = seasonManagerService.findRound(roundId);
@@ -152,6 +153,7 @@ public class DefaultAdminService implements AdminService {
     }
 
     @Override
+    @Transactional
     public RoundJson mountRoundWithOpenligadb(String token, Long seasonId, Long roundId) {
         Season season = seasonManagerService.findSeasonById(seasonId);
         GameList round = seasonManagerService.findRound(roundId);
@@ -186,6 +188,7 @@ public class DefaultAdminService implements AdminService {
     }
 
     @Override
+    @Transactional
     public TeamJson addTeam(TeamJson teamJson) {
         Team team = TeamJsonMapper.reverse(teamJson, new Team());
         masterDataManagerService.createTeam(team);
@@ -193,6 +196,7 @@ public class DefaultAdminService implements AdminService {
     }
 
     @Override
+    @Transactional
     public TeamJson updateTeam(TeamJson teamJson) {
         Team storedTeam = masterDataManagerService.findTeamById(teamJson.getId());
         Team team = TeamJsonMapper.reverse(teamJson, storedTeam);
@@ -213,6 +217,7 @@ public class DefaultAdminService implements AdminService {
     }
 
     @Override
+    @Transactional
     public PartyJson addUser(PartyJson partyJson) {
         User user = PartyJsonMapper.reverse(partyJson, new User());
         user = communityService.createUser(user);
@@ -220,6 +225,7 @@ public class DefaultAdminService implements AdminService {
     }
 
     @Override
+    @Transactional
     public PartyJson updateUser(PartyJson partyJson) {
         communityService.updateUser(
                 true,
@@ -235,6 +241,7 @@ public class DefaultAdminService implements AdminService {
     // -- season administration -----------------------------------------------
 
     @Override
+    @Transactional
     public SeasonJson addSeason(SeasonJson seasonJson) {
         Season season = SeasonJsonMapper.reverse(seasonJson, new Season());
         masterDataManagerService.createSeason(season);
@@ -242,6 +249,7 @@ public class DefaultAdminService implements AdminService {
     }
 
     @Override
+    @Transactional
     public SeasonJson updateSeason(SeasonJson seasonJson) {
         Season season = seasonManagerService.findSeasonById(seasonJson.getId());
         season = SeasonJsonMapper.reverse(seasonJson, season);
@@ -251,6 +259,7 @@ public class DefaultAdminService implements AdminService {
     }
 
     @Override
+    @Transactional
     public ValidationMessages updateRoundAndGames(long seasonId, long roundId, RoundJson round) {
         if (roundId != round.getId()) {
             LOG.error("Round id from path variable {} does not match round id from request body {}.", roundId,
@@ -280,6 +289,7 @@ public class DefaultAdminService implements AdminService {
     }
 
     @Override
+    @Transactional
     public void updateGame(GameJson gameJson) {
         Game game = seasonManagerService.findMatch(gameJson.getId());
         game.setDateTime(gameJson.getDateTime());
@@ -365,6 +375,7 @@ public class DefaultAdminService implements AdminService {
     }
 
     @Override
+    @Transactional
     public SeasonJson addGroupToSeason(SeasonJson seasonJson, GroupTypeJson groupTypeJson) {
         Season season = seasonManagerService.findSeasonById(seasonJson.getId());
         GroupType groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
@@ -373,6 +384,7 @@ public class DefaultAdminService implements AdminService {
     }
 
     @Override
+    @Transactional
     public void removeGroupFromSeason(SeasonJson seasonJson, GroupTypeJson groupTypeJson) {
         Season season = seasonManagerService.findSeasonById(seasonJson.getId());
         GroupType groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
@@ -408,6 +420,7 @@ public class DefaultAdminService implements AdminService {
     }
 
     @Override
+    @Transactional
     public void addTeamToGroup(SeasonJson seasonJson, GroupTypeJson groupTypeJson, TeamJson teamJson) {
         Season season = seasonManagerService.findSeasonById(seasonJson.getId());
         GroupType groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
@@ -416,6 +429,7 @@ public class DefaultAdminService implements AdminService {
     }
 
     @Override
+    @Transactional
     public void removeTeamFromGroup(SeasonJson seasonJson, GroupTypeJson groupTypeJson, TeamJson teamJson) {
         Season season = seasonManagerService.findSeasonById(seasonJson.getId());
         GroupType groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
