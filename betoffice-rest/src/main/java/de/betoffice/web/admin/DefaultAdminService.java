@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2000-2022 by Andre Winkler. All
+ * Project betoffice-jweb-misc Copyright (c) 2000-2026 by Andre Winkler. All
  * rights reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -288,6 +288,7 @@ public class DefaultAdminService implements AdminService {
         return ValidationMessages.ok();
     }
 
+
     @Override
     @Transactional
     public void updateGame(GameJson gameJson) {
@@ -332,6 +333,7 @@ public class DefaultAdminService implements AdminService {
     }
 
     @Override
+    @Transactional
     public List<SeasonMemberJson> addSeasonMembers(long seasonId, List<SeasonMemberJson> seasonMembers) {
         List<User> users = findUsers(seasonMembers);
         Season season = seasonManagerService.findSeasonById(seasonId);
@@ -344,6 +346,7 @@ public class DefaultAdminService implements AdminService {
     }
 
     @Override
+    @Transactional
     public List<SeasonMemberJson> removeSeasonMembers(long seasonId, List<SeasonMemberJson> seasonMembers) {
         Season season = seasonManagerService.findSeasonById(seasonId);
         CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(season.getReference());
