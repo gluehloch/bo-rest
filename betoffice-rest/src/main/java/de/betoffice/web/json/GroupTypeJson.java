@@ -23,6 +23,8 @@
 
 package de.betoffice.web.json;
 
+import de.betoffice.storage.group.GroupTypeEnum;
+
 /**
  * A GroupType as JSON object.
  * 
@@ -31,7 +33,7 @@ package de.betoffice.web.json;
 public class GroupTypeJson extends AbstractOpenligaid {
 
     private String name;
-    private String type;
+    private GroupTypeEnum groupTypeEnum;
 
     public String getName() {
         return name;
@@ -41,12 +43,12 @@ public class GroupTypeJson extends AbstractOpenligaid {
         this.name = name;
     }
 
-    public String getType() {
-        return type;
+    public GroupTypeEnum getGroupTypeEnum() {
+        return groupTypeEnum;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setGroupTypeEnum(GroupTypeEnum groupTypeEnum) {
+        this.groupTypeEnum = groupTypeEnum;
     }
     
     @Override
