@@ -41,13 +41,26 @@ public class RoundHandler {
         }
 
         final Season season = seasonManagerService.findSeasonById(seasonId);
-        final GroupType groupType = masterDataManagerService.findGroupType(round.getGroupTypeId());
-        final Group group = seasonManagerService.findGroup(season, groupType);
+        if (season == null) {
+            LOG.error("Can´t find season with id={}.", seasonId);
+            return ValidationMessages.of(
+                    ValidationMessage.error(ValidationMessage.MessageType.SEASON_ID_NOT_FOUND,
+                            seasonId));
+        }
 
+        final GroupType groupType = masterDataManagerService.findGroupType(round.getGroupTypeId());
+        if (groupType == null) {
+            LOG.error("Can´t find group type with id={}.", round.getGroupTypeId());
+            return ValidationMessages.of(
+                    ValidationMessage.error(ValidationMessage.MessageType.GROUPTYPE_ID_NOT_FOUND,
+                            round.getGroupTypeId()));
+        }
+
+        final Group group = seasonManagerService.findGroup(season, groupType);
         if (group == null) {
             LOG.error("Can´t find group with groupType={} for season with id={}.", groupType, seasonId);
             return ValidationMessages.of(
-                    ValidationMessage.error(ValidationMessage.MessageType.GROUP_TYPE_NOT_FOUND,
+                    ValidationMessage.error(ValidationMessage.MessageType.SEASON_GROUP_NOT_FOUND,
                             season.getReference().getName(),
                             season.getReference().getYear(),
                             groupType));
@@ -91,13 +104,34 @@ public class RoundHandler {
         if (group == null) {
             LOG.error("Can´t find group with groupType={} for season with id={}.", groupType, seasonId);
             return ValidationMessages.of(
-                    ValidationMessage.error(ValidationMessage.MessageType.GROUP_TYPE_NOT_FOUND,
+                    ValidationMessage.error(ValidationMessage.MessageType.SEASON_GROUP_NOT_FOUND,
                             season.getReference().getName(),
                             season.getReference().getYear(),
                             groupType));
         }
 
         seasonManagerService.updateRound(season, roundEntity.get().getIndex(), round.getDateTime(), groupType);
+        return ValidationMessages.ok();
+    }
+
+    public ValidationMessages deleteRound(long seasonId, long roundId) {
+        final Season season = seasonManagerService.findSeasonById(seasonId);
+        if (season == null) {
+            LOG.error("Can´t find season with id={}.", seasonId);
+            return ValidationMessages.of(
+                    ValidationMessage.error(ValidationMessage.MessageType.SEASON_ID_NOT_FOUND,
+                            seasonId));
+        }
+
+        final Optional<GameList> roundEntity = seasonManagerService.findRoundGames(roundId);
+        if (roundEntity.isEmpty()) {
+            LOG.error("Can´t find round with id={}.", roundId);
+            return ValidationMessages.of(
+                    ValidationMessage.error(ValidationMessage.MessageType.ROUND_ID_NOT_FOUND,
+                            roundId));
+        }
+
+        seasonManagerService.removeRound(season, roundEntity.get());
         return ValidationMessages.ok();
     }
 
