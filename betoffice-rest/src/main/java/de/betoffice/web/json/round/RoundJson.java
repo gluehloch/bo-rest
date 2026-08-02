@@ -35,6 +35,7 @@ import de.betoffice.storage.group.entity.GroupType;
 import de.betoffice.storage.season.SeasonType;
 import de.betoffice.web.json.AbstractIdentifier;
 import de.betoffice.web.json.GameJson;
+import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.JsonDateTimeFormat;
 
 /**
@@ -58,7 +59,7 @@ public class RoundJson extends AbstractIdentifier {
     private Boolean lastRound;
     private Boolean tippable;
 
-    private GroupType groupType;
+    private GroupTypeJson groupType;
 
     private List<GameJson> games = new ArrayList<>();
 
@@ -134,11 +135,11 @@ public class RoundJson extends AbstractIdentifier {
         games = _games;
     }
 
-    public final GroupType getGroupType() {
+    public final GroupTypeJson getGroupType() {
         return groupType;
     }
 
-    public void setGroupTyoe(GroupType groupType) {
+    public void setGroupType(GroupTypeJson groupType) {
         this.groupType = groupType;
     }
 

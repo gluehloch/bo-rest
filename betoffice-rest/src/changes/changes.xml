@@ -10,9 +10,11 @@
              *** STILL UNDER DEVELOPMENT x.x.x (SNAPSHOT) ***
         -->
         <!-- UNDER DEVELOPMENT -->
+
+        <!-- RELEASED -->
         <release version="betoffice-boot-1.5.3" date="2026-05-31" description="Openligadb group management">
             <action dev="andrewinkler" type="update" date="2026-05-31">
-                Openligadb groupd management.
+                Openligadb group management.
             </action>
         </release>
 

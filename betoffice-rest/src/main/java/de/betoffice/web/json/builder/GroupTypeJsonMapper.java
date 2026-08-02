@@ -38,7 +38,7 @@ public class GroupTypeJsonMapper {
     public static GroupTypeJson map(GroupType groupType, GroupTypeJson groupTypeJson) {
         groupTypeJson.setId(groupType.getId());
         groupTypeJson.setName(groupType.getName());
-        groupTypeJson.setType(groupType.getType().name());
+        groupTypeJson.setGroupTypeEnum(groupType.getType());
         return groupTypeJson;
     }
 
@@ -46,7 +46,7 @@ public class GroupTypeJsonMapper {
         return groupTypes.stream().map(GroupTypeJsonMapper::map).toList();
     }
     
-    private static GroupTypeJson map(GroupType groupType) {
+    public static GroupTypeJson map(GroupType groupType) {
     	return map(groupType, new GroupTypeJson());
     }
 
