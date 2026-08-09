@@ -1,5 +1,6 @@
 # Maven
 /target
+*/target/
 
 # Visual Code
 /.vscode
@@ -13,6 +14,9 @@
 
 # Misc
 /bin
+
+# Java compilation artifacts
+*.class
 
 betoffice-test.log
 betoffice-jweb.iml

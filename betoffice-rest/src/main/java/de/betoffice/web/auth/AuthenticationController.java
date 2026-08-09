@@ -33,6 +33,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -107,5 +108,22 @@ public class AuthenticationController {
 
         return securityTokenJson;
     }
+
+    /**
+     * Get Google OAuth2 login URL.
+     * 
+     * TODO Copilot: Redirect to Google login URL instead of returning it as JSON. This is needed for mobile apps that
+     * cannot handle redirects.
+     * 
+     * AWI: Ist das korrekt?
+     * 
+     */
+//    @GetMapping(value = "/google/login-url")
+//    public ResponseEntity<String> getGoogleLoginUrl(HttpServletRequest request) {
+//        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+//        String googleLoginUrl = baseUrl + "/oauth2/authorization/google";
+//        System.out.println(String.format("baseUrl: %s, googleLoginUrl: ", baseUrl, googleLoginUrl));
+//        return ResponseEntity.ok("{\"url\":\"" + googleLoginUrl + "\"}");
+//    }
 
 }

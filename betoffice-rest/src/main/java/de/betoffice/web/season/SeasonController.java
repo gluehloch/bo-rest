@@ -196,7 +196,6 @@ public class SeasonController {
 
     @RequestMapping(value = "/ranking/round/{roundId}", method = RequestMethod.GET)
     public UserTableJson findUserTableByRound(@PathVariable("roundId") Long roundId) {
-
         return betofficeService.calcUserRankingByRound(roundId);
     }
 

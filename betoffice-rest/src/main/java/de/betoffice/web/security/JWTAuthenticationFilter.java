@@ -34,12 +34,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import de.betoffice.service.AuthService;
 import de.betoffice.service.SecurityToken;
 import de.betoffice.storage.user.entity.Nickname;
 import de.betoffice.web.BetofficeHttpConsts;
+import de.betoffice.web.BetofficeUrlPath;
 
 /**
  * This filter tries to authenticate the user. So there has to be an instance the {@link de.winkler.betoffice.storage.User} as JSON
@@ -55,6 +57,14 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager, AuthService authService) {
         this.authenticationManager = authenticationManager;
         this.authService = authService;
+
+        // Make the filter listen on the application's authentication login path
+        // instead of the framework default "/login" which causes redirects to "/login?error".
+        this.setFilterProcessesUrl(de.betoffice.web.BetofficeUrlPath.URL_AUTHENTICATION + de.betoffice.web.BetofficeUrlPath.URL_AUTHENTICATION_LOGIN);
+
+        // Redirect failures to the application's login path with the error flag
+        this.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler(
+                de.betoffice.web.BetofficeUrlPath.URL_AUTHENTICATION + de.betoffice.web.BetofficeUrlPath.URL_AUTHENTICATION_LOGIN + "?error"));
     }
 
     @Override
