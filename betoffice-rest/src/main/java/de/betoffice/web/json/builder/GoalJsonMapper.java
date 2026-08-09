@@ -25,28 +25,27 @@ package de.betoffice.web.json.builder;
 
 import java.util.List;
 
-import de.betoffice.storage.season.entity.Goal;
+import de.betoffice.storage.season.entity.GoalEntity;
 import de.betoffice.web.json.GameResultJson;
 import de.betoffice.web.json.GoalJson;
 
 public class GoalJsonMapper {
-	
-	public static GoalJson map(Goal goal, GoalJson json) {
-		json.setGameResult(GameResultJsonMapper.map(goal.getResult(), new GameResultJson()));
-		json.setPlayerName(goal.getPlayer().getName());
-		json.setMinute(goal.getMinute());
-		json.setOpenligaid(goal.getOpenligaid());
-		json.setGoalType(goal.getGoalType());
-		return json;
-	}
 
-	public static List<GoalJson> map(List<Goal> goals) {
-		return goals.stream().map(GoalJsonMapper::map).toList();
-	}
+    public static GoalJson map(GoalEntity goal, GoalJson json) {
+        json.setGameResult(GameResultJsonMapper.map(goal.getResult(), new GameResultJson()));
+        json.setPlayerName(goal.getPlayer().getName());
+        json.setMinute(goal.getMinute());
+        json.setOpenligaid(goal.getOpenligaid());
+        json.setGoalType(goal.getGoalType());
+        return json;
+    }
 
-	private static GoalJson map(Goal goal) {
-		return map(goal, new GoalJson());
-	}
+    public static List<GoalJson> map(List<GoalEntity> goals) {
+        return goals.stream().map(GoalJsonMapper::map).toList();
+    }
+
+    private static GoalJson map(GoalEntity goal) {
+        return map(goal, new GoalJson());
+    }
 
 }
-

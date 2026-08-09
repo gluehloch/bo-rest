@@ -35,7 +35,7 @@ import de.betoffice.service.CommunityService;
 import de.betoffice.service.SecurityToken;
 import de.betoffice.storage.time.DateTimeProvider;
 import de.betoffice.storage.user.entity.Nickname;
-import de.betoffice.storage.user.entity.User;
+import de.betoffice.storage.user.entity.UserEntity;
 import de.betoffice.web.json.JsonBuilder;
 import de.betoffice.web.json.SecurityTokenJson;
 
@@ -81,7 +81,7 @@ public class DefaultBetofficeAuthenticationService implements BetofficeAuthentic
 
     @Override
     public SecurityTokenJson logout(String nickname, String token) {
-        Optional<User> user = communityService.findUser(Nickname.of(nickname));
+        Optional<UserEntity> user = communityService.findUser(Nickname.of(nickname));
         SecurityToken securityToken = new SecurityToken(
                 token, user.get(), user.get().getRoleTypes(),
                 dateTimeProvider.currentDateTime());

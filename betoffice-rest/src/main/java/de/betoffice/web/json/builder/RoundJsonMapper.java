@@ -25,7 +25,7 @@ package de.betoffice.web.json.builder;
 
 import java.util.List;
 
-import de.betoffice.storage.season.entity.GameList;
+import de.betoffice.storage.season.entity.GameListEntity;
 import de.betoffice.web.json.round.RoundJson;
 
 /**
@@ -35,7 +35,7 @@ import de.betoffice.web.json.round.RoundJson;
  */
 public class RoundJsonMapper {
 
-    public static RoundJson map(GameList round, RoundJson roundJson) {
+    public static RoundJson map(GameListEntity round, RoundJson roundJson) {
         roundJson.setId(round.getId());
         roundJson.setDateTime(round.getDateTime());
         roundJson.setIndex(round.getIndex() + 1);
@@ -43,16 +43,16 @@ public class RoundJsonMapper {
         roundJson.setSeasonName(round.getSeason().getReference().getName());
         roundJson.setSeasonYear(round.getSeason().getReference().getYear());
         roundJson.setSeasonType(round.getSeason().getMode());
-        roundJson.setGroupType( GroupTypeJsonMapper.map( round.getGroup().getGroupType() ) );
+        roundJson.setGroupType(GroupTypeJsonMapper.map(round.getGroup().getGroupType()));
         return roundJson;
     }
 
-    public static List<RoundJson> map(List<GameList> rounds) {
+    public static List<RoundJson> map(List<GameListEntity> rounds) {
         return rounds.stream().map(RoundJsonMapper::map).toList();
     }
 
-    private static RoundJson map(GameList round) {
-    	return map(round, new RoundJson());
+    private static RoundJson map(GameListEntity round) {
+        return map(round, new RoundJson());
     }
 
 }

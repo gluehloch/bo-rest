@@ -26,7 +26,7 @@ package de.betoffice.web.json.builder;
 import java.util.List;
 
 import de.betoffice.storage.season.SeasonType;
-import de.betoffice.storage.season.entity.Season;
+import de.betoffice.storage.season.entity.SeasonEntity;
 import de.betoffice.storage.season.entity.SeasonReference;
 import de.betoffice.storage.team.TeamType;
 import de.betoffice.web.json.SeasonJson;
@@ -38,7 +38,7 @@ import de.betoffice.web.json.SeasonJson;
  */
 public class SeasonJsonMapper {
 
-    public static SeasonJson map(Season season, SeasonJson seasonJson) {
+    public static SeasonJson map(SeasonEntity season, SeasonJson seasonJson) {
         seasonJson.setId(season.getId());
         seasonJson.setName(season.getReference().getName());
         seasonJson.setYear(season.getReference().getYear());
@@ -56,15 +56,15 @@ public class SeasonJsonMapper {
         return seasonJson;
     }
 
-    public static List<SeasonJson> map(List<Season> seasons) {
+    public static List<SeasonJson> map(List<SeasonEntity> seasons) {
         return seasons.stream().map(SeasonJsonMapper::map).toList();
     }
     
-    private static SeasonJson map(Season season) {
+    private static SeasonJson map(SeasonEntity season) {
     	return map(season, new SeasonJson());
     }
 
-    public static Season reverse(SeasonJson seasonJson, Season season) {
+    public static SeasonEntity reverse(SeasonJson seasonJson, SeasonEntity season) {
         season.setMode(SeasonType.valueOf(seasonJson.getSeasonType()));
         season.setTeamType(TeamType.valueOf(seasonJson.getTeamType()));
         season.setReference(SeasonReference.of(seasonJson.getYear(), seasonJson.getName()));

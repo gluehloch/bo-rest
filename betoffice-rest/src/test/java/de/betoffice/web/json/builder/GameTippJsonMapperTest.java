@@ -27,13 +27,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-import de.betoffice.storage.season.entity.Game;
+import de.betoffice.storage.season.entity.GameEntity;
 import de.betoffice.storage.season.entity.GameResult;
-import de.betoffice.storage.team.entity.Team;
-import de.betoffice.storage.tip.GameTipp;
+import de.betoffice.storage.team.entity.TeamEntity;
+import de.betoffice.storage.tip.GameTippEntity;
 import de.betoffice.storage.tip.TippStatusType;
 import de.betoffice.storage.user.entity.Nickname;
-import de.betoffice.storage.user.entity.User;
+import de.betoffice.storage.user.entity.UserEntity;
 import de.betoffice.web.json.GameTippJson;
 
 /**
@@ -45,16 +45,16 @@ class GameTippJsonMapperTest {
 
     @Test
     void testGameTippJsonMapperFullPoints() {
-        User user = new User();
+        UserEntity user = new UserEntity();
         user.setNickname(Nickname.of("Frosch"));
 
-        Game game = new Game();
-        game.setHomeTeam(new Team());
-        game.setGuestTeam(new Team());
+        GameEntity game = new GameEntity();
+        game.setHomeTeam(new TeamEntity());
+        game.setGuestTeam(new TeamEntity());
         game.setResult(new GameResult(2, 1));
         game.setPlayed(true);
 
-        GameTipp tipp = new GameTipp();
+        GameTippEntity tipp = new GameTippEntity();
         tipp.setToken("Token");
         tipp.setUser(user);
         tipp.setGame(game);
@@ -72,16 +72,16 @@ class GameTippJsonMapperTest {
 
     @Test
     void testGameTippJsonMapperWinPoints() {
-        User user = new User();
+        UserEntity user = new UserEntity();
         user.setNickname(Nickname.of("Frosch"));
 
-        Game game = new Game();
-        game.setHomeTeam(new Team());
-        game.setGuestTeam(new Team());
+        GameEntity game = new GameEntity();
+        game.setHomeTeam(new TeamEntity());
+        game.setGuestTeam(new TeamEntity());
         game.setResult(new GameResult(2, 1));
         game.setPlayed(true);
 
-        GameTipp tipp = new GameTipp();
+        GameTippEntity tipp = new GameTippEntity();
         tipp.setToken("Token");
         tipp.setUser(user);
         tipp.setGame(game);
@@ -99,16 +99,16 @@ class GameTippJsonMapperTest {
 
     @Test
     void testGameTippJsonMapperLostPoints() {
-        User user = new User();
+        UserEntity user = new UserEntity();
         user.setNickname(Nickname.of("Frosch"));
 
-        Game game = new Game();
-        game.setHomeTeam(new Team());
-        game.setGuestTeam(new Team());
+        GameEntity game = new GameEntity();
+        game.setHomeTeam(new TeamEntity());
+        game.setGuestTeam(new TeamEntity());
         game.setResult(new GameResult(2, 1));
         game.setPlayed(true);
 
-        GameTipp tipp = new GameTipp();
+        GameTippEntity tipp = new GameTippEntity();
         tipp.setToken("Token");
         tipp.setUser(user);
         tipp.setGame(game);

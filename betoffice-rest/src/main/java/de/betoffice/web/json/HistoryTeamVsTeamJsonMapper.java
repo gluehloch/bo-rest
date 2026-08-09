@@ -26,7 +26,7 @@ package de.betoffice.web.json;
 
 import java.util.List;
 
-import de.betoffice.storage.season.entity.Game;
+import de.betoffice.storage.season.entity.GameEntity;
 
 /**
  * Mapping
@@ -35,9 +35,9 @@ import de.betoffice.storage.season.entity.Game;
  */
 public class HistoryTeamVsTeamJsonMapper {
 
-    public static HistoryTeamVsTeamJson map(List<Game> games) {
+    public static HistoryTeamVsTeamJson map(List<GameEntity> games) {
         HistoryTeamVsTeamJson history = new HistoryTeamVsTeamJson();
-        for (Game game : games) {
+        for (GameEntity game : games) {
             TeamVsTeamJson json = new TeamVsTeamJson();
             json.setHomeTeamName(game.getHomeTeam().getName());
             json.setGuestTeamName(game.getGuestTeam().getName());

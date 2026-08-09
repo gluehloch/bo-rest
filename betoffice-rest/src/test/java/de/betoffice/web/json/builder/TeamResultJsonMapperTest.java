@@ -27,10 +27,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-import de.betoffice.storage.group.entity.GroupType;
-import de.betoffice.storage.season.entity.Season;
+import de.betoffice.storage.group.entity.GroupTypeEntity;
+import de.betoffice.storage.season.entity.SeasonEntity;
 import de.betoffice.storage.team.TeamResult;
-import de.betoffice.storage.team.entity.Team;
+import de.betoffice.storage.team.entity.TeamEntity;
 import de.betoffice.web.json.TeamResultJson;
 
 /**
@@ -42,9 +42,9 @@ public class TeamResultJsonMapperTest {
 
     @Test
     public void testTeamResultJsonMapper() {
-        Season season = new Season();
-        GroupType groupType = new GroupType();
-        Team team = new Team("RWE");
+        SeasonEntity season = new SeasonEntity();
+        GroupTypeEntity groupType = new GroupTypeEntity();
+        TeamEntity team = new TeamEntity("RWE");
 
         TeamResult teamResult = new TeamResult(season, groupType, team);
         teamResult.setLost(1);

@@ -46,7 +46,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.service.CommunityService;
 import de.betoffice.storage.community.CommunityFilter;
-import de.betoffice.storage.community.entity.Community;
+import de.betoffice.storage.community.entity.CommunityEntity;
 import de.betoffice.storage.community.entity.CommunityReference;
 import de.betoffice.storage.season.entity.SeasonReference;
 import de.betoffice.storage.user.entity.Nickname;
@@ -122,7 +122,7 @@ public class CommunityController {
         SeasonReference seasonReference = SeasonReference.of(season.getYear(), season.getName());
         Nickname nickname = Nickname.of(communityManager.getNickname());
 
-        ServiceResult<Community> betofficeServiceResult = communityService.create(
+        ServiceResult<CommunityEntity> betofficeServiceResult = communityService.create(
                 communityReference,
                 seasonReference,
                 name,

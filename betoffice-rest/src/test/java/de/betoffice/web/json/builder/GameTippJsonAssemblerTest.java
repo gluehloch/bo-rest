@@ -32,16 +32,16 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import de.betoffice.storage.group.entity.GroupType;
-import de.betoffice.storage.season.entity.Game;
-import de.betoffice.storage.season.entity.GameList;
+import de.betoffice.storage.group.entity.GroupTypeEntity;
+import de.betoffice.storage.season.entity.GameEntity;
+import de.betoffice.storage.season.entity.GameListEntity;
 import de.betoffice.storage.season.entity.GameResult;
-import de.betoffice.storage.season.entity.Group;
-import de.betoffice.storage.team.entity.Team;
-import de.betoffice.storage.tip.GameTipp;
+import de.betoffice.storage.season.entity.GroupEntity;
+import de.betoffice.storage.team.entity.TeamEntity;
+import de.betoffice.storage.tip.GameTippEntity;
 import de.betoffice.storage.tip.TippStatusType;
 import de.betoffice.storage.user.entity.Nickname;
-import de.betoffice.storage.user.entity.User;
+import de.betoffice.storage.user.entity.UserEntity;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GameTippJson;
 import de.betoffice.web.json.JsonBuilder;
@@ -55,8 +55,8 @@ class GameTippJsonAssemblerTest {
 
     @Test
     void testGameTippJsonAssembler() {
-        List<Game> games = new ArrayList<>();
-        Game game = new Game() {
+        List<GameEntity> games = new ArrayList<>();
+        GameEntity game = new GameEntity() {
             private static final long serialVersionUID = 2794058674675291216L;
             {
                 setId(1L);
@@ -65,31 +65,31 @@ class GameTippJsonAssemblerTest {
 
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Berlin"));
 
-        GroupType groupType = new GroupType() {
+        GroupTypeEntity groupType = new GroupTypeEntity() {
             private static final long serialVersionUID = 1L;
             {
                 setId(1L);
                 setName("1. Bundesliga");
             }
         };
-        Group group = new Group();
+        GroupEntity group = new GroupEntity();
         group.setGroupType(groupType);
         game.setGroup(group);
         game.setDateTime(now);
-        game.setHomeTeam(new Team("Heim"));
-        game.setGuestTeam(new Team("Gast"));
+        game.setHomeTeam(new TeamEntity("Heim"));
+        game.setGuestTeam(new TeamEntity("Gast"));
         game.setHalfTimeGoals(new GameResult(1, 1));
         game.setResult(new GameResult(2, 1));
         game.setPlayed(true);
         games.add(game);
 
-        GameList round = new GameList();
+        GameListEntity round = new GameListEntity();
         round.addGame(game);
 
-        List<GameTipp> gameTipps = new ArrayList<>();
-        GameTipp tipp = new GameTipp();
+        List<GameTippEntity> gameTipps = new ArrayList<>();
+        GameTippEntity tipp = new GameTippEntity();
         tipp.setToken("Token");
-        tipp.setUser(new User(Nickname.of("Frosch")));
+        tipp.setUser(new UserEntity(Nickname.of("Frosch")));
         tipp.setGame(game);
         tipp.setTipp(GameResult.of(2, 1), TippStatusType.USER);
         gameTipps.add(tipp);

@@ -30,13 +30,13 @@ import java.time.ZonedDateTime;
 
 import org.junit.jupiter.api.Test;
 
-import de.betoffice.storage.group.entity.GroupType;
-import de.betoffice.storage.season.entity.Game;
-import de.betoffice.storage.season.entity.GameList;
+import de.betoffice.storage.group.entity.GroupTypeEntity;
+import de.betoffice.storage.season.entity.GameEntity;
+import de.betoffice.storage.season.entity.GameListEntity;
 import de.betoffice.storage.season.entity.GameResult;
-import de.betoffice.storage.season.entity.Group;
-import de.betoffice.storage.season.entity.Location;
-import de.betoffice.storage.team.entity.Team;
+import de.betoffice.storage.season.entity.GroupEntity;
+import de.betoffice.storage.season.entity.LocationEntity;
+import de.betoffice.storage.team.entity.TeamEntity;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.IGameJson;
 
@@ -51,22 +51,22 @@ public class GameJsonMapperTest {
     public void testGameJsonMapper() {
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Berlin"));
 
-        GroupType groupType = new GroupType();
+        GroupTypeEntity groupType = new GroupTypeEntity();
         groupType.setName("1. Bundesliga");
-        Group group = new Group();
+        GroupEntity group = new GroupEntity();
         group.setGroupType(groupType);
-        Game game = new Game();
+        GameEntity game = new GameEntity();
         game.setDateTime(now);
         game.setGroup(group);
-        game.setGuestTeam(new Team("RWE"));
-        game.setHomeTeam(new Team("S04"));
+        game.setGuestTeam(new TeamEntity("RWE"));
+        game.setHomeTeam(new TeamEntity("S04"));
         game.setHalfTimeGoals(new GameResult(1, 0));
         // game.setIndex(1);
         game.setResult(1, 2);
         game.setPlayed(true);
-        GameList gameList = new GameList();
+        GameListEntity gameList = new GameListEntity();
         gameList.addGame(game);
-        Location gelsenkirchen = new Location();
+        LocationEntity gelsenkirchen = new LocationEntity();
         gelsenkirchen.setCity("Gelsenkirchen");
         gelsenkirchen.setName("Parkstadion");
         game.setLocation(gelsenkirchen);

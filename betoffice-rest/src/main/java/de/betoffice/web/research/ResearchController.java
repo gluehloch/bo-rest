@@ -36,9 +36,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.service.MasterDataManagerService;
 import de.betoffice.service.SeasonManagerService;
-import de.betoffice.storage.season.entity.Game;
+import de.betoffice.storage.season.entity.GameEntity;
 import de.betoffice.storage.team.TeamType;
-import de.betoffice.storage.team.entity.Team;
+import de.betoffice.storage.team.entity.TeamEntity;
 import de.betoffice.web.json.HistoryTeamVsTeamJson;
 import de.betoffice.web.json.HistoryTeamVsTeamJsonMapper;
 import de.betoffice.web.json.JsonBuilder;
@@ -69,13 +69,13 @@ public class ResearchController {
 
     @RequestMapping(value = "/team/dfb", method = RequestMethod.GET)
     public @ResponseBody List<TeamJson> findDfbTeams() {
-        List<Team> dfbTeams = masterDataManagerService.findTeams(TeamType.DFB);
+        List<TeamEntity> dfbTeams = masterDataManagerService.findTeams(TeamType.DFB);
         return JsonBuilder.toJsonWithTeams(dfbTeams);
     }
 
     @RequestMapping(value = "/team/fifa", method = RequestMethod.GET)
     public @ResponseBody List<TeamJson> findFifaTeams() {
-        List<Team> fifaTeams = masterDataManagerService.findTeams(TeamType.FIFA);
+        List<TeamEntity> fifaTeams = masterDataManagerService.findTeams(TeamType.FIFA);
         return JsonBuilder.toJsonWithTeams(fifaTeams);
     }
 
@@ -93,10 +93,10 @@ public class ResearchController {
             @RequestParam(value = "spin", required = false) Boolean spin,
             @RequestParam(value = "limit", required = false, defaultValue = "100") int limit) {
 
-        Team homeTeam = masterDataManagerService.findTeamById(homeTeamId);
-        Team guestTeam = masterDataManagerService.findTeamById(guestTeamId);
+        TeamEntity homeTeam = masterDataManagerService.findTeamById(homeTeamId);
+        TeamEntity guestTeam = masterDataManagerService.findTeamById(guestTeamId);
 
-        List<Game> findMatches = null;
+        List<GameEntity> findMatches = null;
         if (spin == null) {
             findMatches = seasonManagerService.findMatches(homeTeam, guestTeam, limit);
         } else {
@@ -110,7 +110,7 @@ public class ResearchController {
     public @ResponseBody HistoryTeamVsTeamJson researchByTeam(
             @RequestParam(value = "team", required = true) long teamId,
             @RequestParam(value = "limit", required = false, defaultValue = "100") int limit) {
-        Team team = masterDataManagerService.findTeamById(teamId);
+        TeamEntity team = masterDataManagerService.findTeamById(teamId);
         final var matches = seasonManagerService.findMatches(team, limit);
         return HistoryTeamVsTeamJsonMapper.map(matches);
     }
@@ -119,7 +119,7 @@ public class ResearchController {
     public @ResponseBody HistoryTeamVsTeamJson researchByHomeTeam(
             @RequestParam(value = "team", required = true) long teamId,
             @RequestParam(value = "limit", required = false, defaultValue = "100") int limit) {
-        Team team = masterDataManagerService.findTeamById(teamId);
+        TeamEntity team = masterDataManagerService.findTeamById(teamId);
         final var matches = seasonManagerService.findMatchesWithHomeTeam(team, limit);
         return HistoryTeamVsTeamJsonMapper.map(matches);
     }
@@ -128,7 +128,7 @@ public class ResearchController {
     public @ResponseBody HistoryTeamVsTeamJson researchByGuestTeam(
             @RequestParam(value = "team", required = true) long teamId,
             @RequestParam(value = "limit", required = false, defaultValue = "100") int limit) {
-        Team team = masterDataManagerService.findTeamById(teamId);
+        TeamEntity team = masterDataManagerService.findTeamById(teamId);
         final var matches = seasonManagerService.findMatchesWithGuestTeam(team, limit);
         return HistoryTeamVsTeamJsonMapper.map(matches);
     }

@@ -23,18 +23,18 @@
 
 package de.betoffice.web.json.builder;
 
-import de.betoffice.storage.community.entity.Community;
+import de.betoffice.storage.community.entity.CommunityEntity;
 import de.betoffice.web.json.CommunityJson;
 import de.betoffice.web.json.PartyJson;
 import de.betoffice.web.json.SeasonJson;
 
 public class CommunityJsonMapper {
 
-    public static CommunityJson map(Community community) {
+    public static CommunityJson map(CommunityEntity community) {
         return map(community, new CommunityJson());
     }
 
-    public static CommunityJson map(Community community, CommunityJson json) {
+    public static CommunityJson map(CommunityEntity community, CommunityJson json) {
         json.setId(community.getId());
         json.setName(community.getName());
         json.setYear(community.getYear());

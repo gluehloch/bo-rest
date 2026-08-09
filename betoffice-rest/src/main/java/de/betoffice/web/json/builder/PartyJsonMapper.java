@@ -25,9 +25,11 @@ package de.betoffice.web.json.builder;
 
 import java.util.List;
 
+import org.springframework.security.core.userdetails.User;
+
 import de.betoffice.mail.NotificationType;
 import de.betoffice.storage.user.entity.Nickname;
-import de.betoffice.storage.user.entity.User;
+import de.betoffice.storage.user.entity.UserEntity;
 import de.betoffice.web.json.PartyJson;
 
 /**
@@ -37,7 +39,7 @@ import de.betoffice.web.json.PartyJson;
  */
 public class PartyJsonMapper {
 
-    public static PartyJson mapSmall(User user, PartyJson partyJson) {
+    public static PartyJson mapSmall(UserEntity user, PartyJson partyJson) {
         partyJson.setId(user.getId());
         partyJson.setName(user.getName());
         partyJson.setSurname(user.getSurname());
@@ -46,7 +48,7 @@ public class PartyJsonMapper {
         return partyJson;
     }
 
-    public static PartyJson map(User user, PartyJson partyJson) {
+    public static PartyJson map(UserEntity user, PartyJson partyJson) {
         partyJson.setId(user.getId());
         partyJson.setName(user.getName());
         partyJson.setSurname(user.getSurname());
@@ -59,15 +61,15 @@ public class PartyJsonMapper {
         return partyJson;
     }
 
-    public static List<PartyJson> map(List<User> users) {
+    public static List<PartyJson> map(List<UserEntity> users) {
         return users.stream().map(PartyJsonMapper::map).toList();
     }
 
-    private static PartyJson map(User user) {
+    private static PartyJson map(UserEntity user) {
         return map(user, new PartyJson());
     }
 
-    public static User reverse(PartyJson partyJson, User user) {
+    public static UserEntity reverse(PartyJson partyJson, UserEntity user) {
         user.setName(partyJson.getName());
         user.setSurname(partyJson.getSurname());
         user.setEmail(partyJson.getMail());

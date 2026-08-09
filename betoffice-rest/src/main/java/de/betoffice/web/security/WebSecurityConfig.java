@@ -45,6 +45,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -60,7 +61,7 @@ import de.betoffice.service.AuthService;
 import de.betoffice.storage.user.RoleType;
 import de.betoffice.storage.user.UserDao;
 import de.betoffice.storage.user.entity.Nickname;
-import de.betoffice.storage.user.entity.User;
+import de.betoffice.storage.user.entity.UserEntity;
 import de.betoffice.web.BetofficeUrlPath;
 
 /**
@@ -190,7 +191,7 @@ class BetofficeUserAccountDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userDao.findByNickname(Nickname.of(username))
+        UserEntity user = userDao.findByNickname(Nickname.of(username))
                 .orElseThrow(() -> new UsernameNotFoundException("Unknown nickname: " + username));
 
         return new BetofficeUserDetails(user, user.getRoleTypes());
@@ -202,10 +203,10 @@ class BetofficeUserDetails implements UserDetails {
 
     private static final long serialVersionUID = 1L;
 
-    private final User user;
+    private final UserEntity user;
     private final List<SimpleGrantedAuthority> authorities;
 
-    BetofficeUserDetails(User user, List<RoleType> roleTypes) {
+    BetofficeUserDetails(UserEntity user, List<RoleType> roleTypes) {
         this.user = user;
         this.authorities = roleTypes.stream().map(RoleType::name).map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());

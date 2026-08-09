@@ -31,9 +31,9 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import de.betoffice.storage.season.entity.Location;
+import de.betoffice.storage.season.entity.LocationEntity;
 import de.betoffice.storage.team.TeamType;
-import de.betoffice.storage.team.entity.Team;
+import de.betoffice.storage.team.entity.TeamEntity;
 import de.betoffice.web.json.TeamJson;
 
 /**
@@ -45,7 +45,7 @@ public class TeamJsonMapperTest {
 
     @Test
     public void testTeamJsonMapper() {
-        Team team = createTeam();
+        TeamEntity team = createTeam();
 
         TeamJsonMapper mapper = new TeamJsonMapper();
         TeamJson teamJson = new TeamJson();
@@ -61,10 +61,10 @@ public class TeamJsonMapperTest {
 
     @Test
     public void testTeamJsonMapperForLists() {
-        Team t1 = createTeam();
-        Team t2 = createTeam();
-        Team t3 = createTeam();
-        List<Team> teams = new ArrayList<>();
+        TeamEntity t1 = createTeam();
+        TeamEntity t2 = createTeam();
+        TeamEntity t3 = createTeam();
+        List<TeamEntity> teams = new ArrayList<>();
         teams.add(t1);
         teams.add(t2);
         teams.add(t3);
@@ -96,15 +96,15 @@ public class TeamJsonMapperTest {
         assertThat(teamJsons.get(2).getType()).isEqualTo(t2.getTeamType().toString());
     }
 
-    private Team createTeam() {
-        Team team = new Team();
+    private TeamEntity createTeam() {
+        TeamEntity team = new TeamEntity();
         team.setOpenligaid(1L);
         team.setName("RWE");
         team.setLongName("Rot-Weiss-Essen");
         team.setOpenligaid(4711L);
         team.setTeamType(TeamType.DFB);
         team.setLogo("logo.gif");
-        Location location = new Location();
+        LocationEntity location = new LocationEntity();
         location.setCity("Essen");
         location.setId(4712L);
         location.setName("Essen");

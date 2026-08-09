@@ -27,7 +27,7 @@ package de.betoffice.web.json.builder;
 import java.util.List;
 
 import de.betoffice.storage.team.TeamType;
-import de.betoffice.storage.team.entity.Team;
+import de.betoffice.storage.team.entity.TeamEntity;
 import de.betoffice.web.json.TeamJson;
 
 /**
@@ -37,7 +37,7 @@ import de.betoffice.web.json.TeamJson;
  */
 public class TeamJsonMapper {
 
-    public static TeamJson map(Team team, TeamJson teamJson) {
+    public static TeamJson map(TeamEntity team, TeamJson teamJson) {
         teamJson.setId(team.getId());
         teamJson.setOpenligaid(team.getOpenligaid());
         teamJson.setLogo(team.getLogo());
@@ -49,15 +49,15 @@ public class TeamJsonMapper {
         return teamJson;
     }
 
-    public static List<TeamJson> map(List<Team> teams) {
+    public static List<TeamJson> map(List<TeamEntity> teams) {
         return teams.stream().map(TeamJsonMapper::map).toList();
     }
     
-    private static TeamJson map(Team team) {
+    private static TeamJson map(TeamEntity team) {
     	return map(team, new TeamJson());
     }
 
-    public static Team reverse(TeamJson teamJson, Team team) {
+    public static TeamEntity reverse(TeamJson teamJson, TeamEntity team) {
         team.setOpenligaid(teamJson.getOpenligaid());
         team.setLogo(teamJson.getLogo());
         team.setLongName(teamJson.getLongName());

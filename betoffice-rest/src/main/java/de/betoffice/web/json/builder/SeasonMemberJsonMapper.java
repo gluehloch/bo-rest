@@ -26,7 +26,9 @@ package de.betoffice.web.json.builder;
 import java.util.Collection;
 import java.util.List;
 
-import de.betoffice.storage.user.entity.User;
+import org.springframework.security.core.userdetails.User;
+
+import de.betoffice.storage.user.entity.UserEntity;
 import de.betoffice.web.json.SeasonMemberJson;
 
 /**
@@ -36,17 +38,17 @@ import de.betoffice.web.json.SeasonMemberJson;
  */
 public class SeasonMemberJsonMapper {
 
-    public static SeasonMemberJson map(User user, SeasonMemberJson seasonMemberJson) {
+    public static SeasonMemberJson map(UserEntity user, SeasonMemberJson seasonMemberJson) {
         seasonMemberJson.setId(user.getId());
         seasonMemberJson.setNickname(user.getNickname().value());
         return seasonMemberJson;
     }
 
-    public static List<SeasonMemberJson> map(Collection<User> users) {
+    public static List<SeasonMemberJson> map(Collection<UserEntity> users) {
         return users.stream().map(SeasonMemberJsonMapper::map).toList();
     }
 
-    private static SeasonMemberJson map(User user) {
+    private static SeasonMemberJson map(UserEntity user) {
         return map(user, new SeasonMemberJson());
     }
 

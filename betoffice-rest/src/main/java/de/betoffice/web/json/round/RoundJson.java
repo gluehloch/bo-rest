@@ -31,7 +31,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import de.betoffice.storage.group.entity.GroupType;
 import de.betoffice.storage.season.SeasonType;
 import de.betoffice.web.json.AbstractIdentifier;
 import de.betoffice.web.json.GameJson;

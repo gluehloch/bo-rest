@@ -26,7 +26,7 @@ package de.betoffice.web.json.builder;
 import java.util.List;
 import java.util.function.Supplier;
 
-import de.betoffice.storage.season.entity.Game;
+import de.betoffice.storage.season.entity.GameEntity;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GameResultJson;
 import de.betoffice.web.json.IGameJson;
@@ -39,7 +39,7 @@ import de.betoffice.web.json.JsonBuilder;
  */
 public class GameJsonMapper {
 
-    public static <T extends IGameJson> T map(Game game, T gameJson) {
+    public static <T extends IGameJson> T map(GameEntity game, T gameJson) {
         gameJson.setId(game.getId());
         gameJson.setRoundId(game.getGameList().getId());
         gameJson.setOpenligaid(game.getOpenligaid());
@@ -68,7 +68,7 @@ public class GameJsonMapper {
         return gameJson;
     }
 
-    public static <T extends IGameJson> List<T> map(List<Game> games, Supplier<T> supplier) {
+    public static <T extends IGameJson> List<T> map(List<GameEntity> games, Supplier<T> supplier) {
         return games.stream().map(game -> {
             T json = supplier.get();
             json = map(game, json);

@@ -28,7 +28,7 @@ import java.util.Optional;
 
 import de.betoffice.mail.NotificationType;
 import de.betoffice.storage.user.entity.Nickname;
-import de.betoffice.storage.user.entity.User;
+import de.betoffice.storage.user.entity.UserEntity;
 import de.betoffice.web.json.PartyJson;
 import de.betoffice.web.json.UserProfileJson;
 
@@ -39,15 +39,15 @@ import de.betoffice.web.json.UserProfileJson;
  */
 public class UserProfileJsonMapper {
 
-    public static Optional<UserProfileJson> map(Optional<User> user) {
+    public static Optional<UserProfileJson> map(Optional<UserEntity> user) {
         return user.map(UserProfileJsonMapper::map);
     }
 
-    public static UserProfileJson map(User user) {
+    public static UserProfileJson map(UserEntity user) {
         return map(user, new UserProfileJson());
     }
 
-    public static UserProfileJson map(User user, UserProfileJson partyJson) {
+    public static UserProfileJson map(UserEntity user, UserProfileJson partyJson) {
         partyJson.setName(user.getName());
         partyJson.setSurname(user.getSurname());
         partyJson.setMail(user.getEmail());
@@ -58,11 +58,11 @@ public class UserProfileJsonMapper {
         return partyJson;
     }
 
-    public static List<UserProfileJson> map(List<User> users) {
+    public static List<UserProfileJson> map(List<UserEntity> users) {
         return users.stream().map(UserProfileJsonMapper::map).toList();
     }
 
-    public static User reverse(UserProfileJson partyJson, User user) {
+    public static UserEntity reverse(UserProfileJson partyJson, UserEntity user) {
         user.setName(partyJson.getName());
         user.setSurname(partyJson.getSurname());
         user.setEmail(partyJson.getMail());

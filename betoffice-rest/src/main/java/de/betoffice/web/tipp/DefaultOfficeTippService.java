@@ -35,13 +35,13 @@ import org.springframework.transaction.annotation.Transactional;
 import de.betoffice.service.CommunityService;
 import de.betoffice.service.SeasonManagerService;
 import de.betoffice.service.TippService;
-import de.betoffice.storage.season.entity.GameList;
+import de.betoffice.storage.season.entity.GameListEntity;
 import de.betoffice.storage.time.DateTimeProvider;
-import de.betoffice.storage.tip.GameTipp;
+import de.betoffice.storage.tip.GameTippEntity;
 import de.betoffice.storage.tip.TippDto;
 import de.betoffice.storage.tip.TippDto.GameTippDto;
 import de.betoffice.storage.user.entity.Nickname;
-import de.betoffice.storage.user.entity.User;
+import de.betoffice.storage.user.entity.UserEntity;
 import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.IGameJson;
 import de.betoffice.web.json.JsonAssembler;
@@ -87,14 +87,14 @@ public class DefaultOfficeTippService implements OfficeTippService {
         // Falls nach Spielbeginn abgegeben, kommt hier nur eine Teilmenge der Tipps
         // zurueck.
         //
-        List<GameTipp> tipps = tippService.validateKickOffTimeAndAddTipp(tippDto);
+        List<GameTippEntity> tipps = tippService.validateKickOffTimeAndAddTipp(tippDto);
 
         return findTipp(tippRoundJson.getRoundId(), tippRoundJson.getNickname());
     }
 
     @Override
     public RoundJson findTipp(Long roundId, String nickName) {
-        Optional<User> user = communityService.findUser(Nickname.of(nickName));
+        Optional<UserEntity> user = communityService.findUser(Nickname.of(nickName));
 
         if (!user.isPresent()) {
             return null;
@@ -109,10 +109,10 @@ public class DefaultOfficeTippService implements OfficeTippService {
         // user.get().getId().longValue());
         //
         RoundJson roundJson = null;
-        Optional<GameList> round = seasonManagerService.findRoundGames(roundId);
+        Optional<GameListEntity> round = seasonManagerService.findRoundGames(roundId);
         if (round.isPresent()) {
-            List<GameTipp> roundTipps = tippService.findTipps(round.get(), user.get());
-            Optional<GameList> nextNextRound = seasonManagerService.findNextRound(roundId);
+            List<GameTippEntity> roundTipps = tippService.findTipps(round.get(), user.get());
+            Optional<GameListEntity> nextNextRound = seasonManagerService.findNextRound(roundId);
 
             JsonAssembler jsonAssembler = new JsonAssembler();
 

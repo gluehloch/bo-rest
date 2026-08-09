@@ -25,7 +25,7 @@ package de.betoffice.web.json.builder;
 
 import java.util.List;
 
-import de.betoffice.storage.group.entity.GroupType;
+import de.betoffice.storage.group.entity.GroupTypeEntity;
 import de.betoffice.web.json.GroupTypeJson;
 
 /**
@@ -35,19 +35,19 @@ import de.betoffice.web.json.GroupTypeJson;
  */
 public class GroupTypeJsonMapper {
 
-    public static GroupTypeJson map(GroupType groupType, GroupTypeJson groupTypeJson) {
+    public static GroupTypeJson map(GroupTypeEntity groupType, GroupTypeJson groupTypeJson) {
         groupTypeJson.setId(groupType.getId());
         groupTypeJson.setName(groupType.getName());
         groupTypeJson.setGroupTypeEnum(groupType.getType());
         return groupTypeJson;
     }
 
-    public static List<GroupTypeJson> map(List<GroupType> groupTypes) {
+    public static List<GroupTypeJson> map(List<GroupTypeEntity> groupTypes) {
         return groupTypes.stream().map(GroupTypeJsonMapper::map).toList();
     }
-    
-    public static GroupTypeJson map(GroupType groupType) {
-    	return map(groupType, new GroupTypeJson());
+
+    public static GroupTypeJson map(GroupTypeEntity groupType) {
+        return map(groupType, new GroupTypeJson());
     }
 
 }

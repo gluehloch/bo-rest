@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.service.CommunityService;
 import de.betoffice.storage.user.entity.Nickname;
-import de.betoffice.storage.user.entity.User;
+import de.betoffice.storage.user.entity.UserEntity;
 import de.betoffice.validation.ServiceResult;
 import de.betoffice.validation.ValidationMessages;
 import de.betoffice.web.BetofficeHttpConsts;
@@ -107,12 +107,12 @@ public class UserProfileController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
 
-        final Optional<User> optionalUser = communityService.findUserByChangeToken(changeToken);
+        final Optional<UserEntity> optionalUser = communityService.findUserByChangeToken(changeToken);
         if (optionalUser.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        final User user = optionalUser.get();
-        final ServiceResult<User> confirmMailAddressChangeServiceResult = communityService
+        final UserEntity user = optionalUser.get();
+        final ServiceResult<UserEntity> confirmMailAddressChangeServiceResult = communityService
                 .confirmMailAddressChange(user.getNickname(), changeToken);
 
         return ResponseEntity.ofNullable(RestResult.of(

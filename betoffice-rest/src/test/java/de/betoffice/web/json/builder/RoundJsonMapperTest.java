@@ -30,11 +30,11 @@ import java.time.ZonedDateTime;
 
 import org.junit.jupiter.api.Test;
 
-import de.betoffice.storage.group.entity.GroupType;
+import de.betoffice.storage.group.entity.GroupTypeEntity;
 import de.betoffice.storage.season.SeasonType;
-import de.betoffice.storage.season.entity.GameList;
-import de.betoffice.storage.season.entity.Group;
-import de.betoffice.storage.season.entity.Season;
+import de.betoffice.storage.season.entity.GameListEntity;
+import de.betoffice.storage.season.entity.GroupEntity;
+import de.betoffice.storage.season.entity.SeasonEntity;
 import de.betoffice.storage.season.entity.SeasonReference;
 import de.betoffice.web.json.round.RoundJson;
 
@@ -47,16 +47,16 @@ class RoundJsonMapperTest {
 
     @Test
     void testRoundJsonMapper() {
-        GroupType groupType = new GroupType();
+        GroupTypeEntity groupType = new GroupTypeEntity();
         groupType.setName("1. Bundesliga");
-        Season season = new Season();
+        SeasonEntity season = new SeasonEntity();
         season.setMode(SeasonType.LEAGUE);
         season.setReference(SeasonReference.of("1987/1988", "Bundesliga"));
-        Group group = new Group();
+        GroupEntity group = new GroupEntity();
         group.setGroupType(groupType);
 
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Berlin"));
-        GameList round = new GameList();
+        GameListEntity round = new GameListEntity();
         round.setDateTime(now);
         round.setGroup(group);
         round.setIndex(0);

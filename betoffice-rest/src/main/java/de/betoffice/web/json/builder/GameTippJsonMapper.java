@@ -26,7 +26,7 @@ package de.betoffice.web.json.builder;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import de.betoffice.storage.tip.GameTipp;
+import de.betoffice.storage.tip.GameTippEntity;
 import de.betoffice.web.json.GameResultJson;
 import de.betoffice.web.json.GameTippJson;
 
@@ -37,14 +37,14 @@ import de.betoffice.web.json.GameTippJson;
  */
 public class GameTippJsonMapper {
 
-    public static GameTippJson map(GameTipp tipp, GameTippJson gameTippJson) {
+    public static GameTippJson map(GameTippEntity tipp, GameTippJson gameTippJson) {
         gameTippJson.setNickname(tipp.getUser().getNickname().value());
         gameTippJson.setTipp(GameResultJsonMapper.map(tipp.getTipp(), new GameResultJson()));
         gameTippJson.setPoints(tipp.getPoints());
         return gameTippJson;
     }
 
-    public static List<GameTippJson> map(List<GameTipp> gameTipp) {
+    public static List<GameTippJson> map(List<GameTippEntity> gameTipp) {
         return gameTipp.stream().map((tipp) -> {
             GameTippJson json = new GameTippJson();
             json = map(tipp, json);

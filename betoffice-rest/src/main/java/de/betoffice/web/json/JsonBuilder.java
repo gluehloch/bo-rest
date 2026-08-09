@@ -29,14 +29,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.betoffice.service.SecurityToken;
-import de.betoffice.storage.group.entity.GroupType;
-import de.betoffice.storage.season.entity.Game;
-import de.betoffice.storage.season.entity.GameList;
+import de.betoffice.storage.group.entity.GroupTypeEntity;
+import de.betoffice.storage.season.entity.GameEntity;
+import de.betoffice.storage.season.entity.GameListEntity;
 import de.betoffice.storage.season.entity.GameResult;
-import de.betoffice.storage.season.entity.Season;
+import de.betoffice.storage.season.entity.SeasonEntity;
 import de.betoffice.storage.team.TeamResult;
-import de.betoffice.storage.team.entity.Team;
-import de.betoffice.storage.tip.GameTipp;
+import de.betoffice.storage.team.entity.TeamEntity;
+import de.betoffice.storage.tip.GameTippEntity;
 import de.betoffice.storage.user.UserResult;
 import de.betoffice.web.json.builder.GameJsonMapper;
 import de.betoffice.web.json.builder.GameResultJsonMapper;
@@ -61,34 +61,34 @@ public class JsonBuilder {
         return SecurityTokenJsonMapper.map(securityToken, new SecurityTokenJson());
     }
 
-    public static SeasonJson toJson(Season season) {
+    public static SeasonJson toJson(SeasonEntity  season) {
         return SeasonJsonMapper.map(season, new SeasonJson());
     }
 
-    public static List<SeasonJson> toJsonWithSeasons(List<Season> seasons) {
+    public static List<SeasonJson> toJsonWithSeasons(List<SeasonEntity> seasons) {
         return SeasonJsonMapper.map(seasons);
     }
 
-    public static RoundJson toJson(GameList gameList) {
+    public static RoundJson toJson(GameListEntity gameList) {
         return RoundJsonMapper.map(gameList, new RoundJson());
     }
 
-    public static List<RoundJson> toJsonWithGameList(List<GameList> rounds) {
+    public static List<RoundJson> toJsonWithGameList(List<GameListEntity> rounds) {
         return RoundJsonMapper.map(rounds);
     }
 
-    public static RoundJson toJsonWithGames(GameList gameList) {
+    public static RoundJson toJsonWithGames(GameListEntity gameList) {
         RoundJson roundJson = JsonBuilder.toJson(gameList);
         List<GameJson> gameJson = JsonBuilder.toJsonWithGames(gameList.unmodifiableList());
         roundJson.getGames().addAll(gameJson);
         return roundJson;
     }
 
-    public static GroupTypeJson toJson(GroupType groupType) {
+    public static GroupTypeJson toJson(GroupTypeEntity groupType) {
         return GroupTypeJsonMapper.map(groupType, new GroupTypeJson());
     }
 
-    public static List<GroupTypeJson> toJsonWithGroupTypes(List<GroupType> groupTypes) {
+    public static List<GroupTypeJson> toJsonWithGroupTypes(List<GroupTypeEntity> groupTypes) {
         return GroupTypeJsonMapper.map(groupTypes);
     }
 
@@ -96,11 +96,11 @@ public class JsonBuilder {
         return TeamResultJsonMapper.map(teamResult, new TeamResultJson());
     }
 
-    public static TeamJson toJson(Team team) {
+    public static TeamJson toJson(TeamEntity team) {
         return TeamJsonMapper.map(team, new TeamJson());
     }
 
-    public static List<TeamJson> toJsonWithTeams(List<Team> teams) {
+    public static List<TeamJson> toJsonWithTeams(List<TeamEntity> teams) {
         return TeamJsonMapper.map(teams);
     }
 
@@ -112,29 +112,29 @@ public class JsonBuilder {
         return GameResultJsonMapper.map(gameResult, new GameResultJson());
     }
 
-    public static GameTippJson toJson(GameTipp tipp) {
+    public static GameTippJson toJson(GameTippEntity tipp) {
         return GameTippJsonMapper.map(tipp, new GameTippJson());
     }
 
-    public static GameJson toJson(Game game) {
+    public static GameJson toJson(GameEntity game) {
         GameJson gameJson = GameJsonMapper.map(game, new GameJson());
         return gameJson;
     }
 
-    public static GameWithGoalsJson toGameWithGoalsJson(Game game) {
+    public static GameWithGoalsJson toGameWithGoalsJson(GameEntity game) {
         GameWithGoalsJson gameJson = GameJsonMapper.map(game, new GameWithGoalsJson());
         return gameJson;
     }
 
-    public static List<GameJson> toJsonWithGames(List<Game> games) {
+    public static List<GameJson> toJsonWithGames(List<GameEntity> games) {
         List<GameJson> gameJsons = new ArrayList<>();
-        for (Game game : games) {
+        for (GameEntity game : games) {
             gameJsons.add(JsonBuilder.toJson(game));
         }
         return gameJsons;
     }
 
-    public static List<GameJson> toJsonWithGamesAndTipps(List<Game> games, List<GameTipp> tipps) {
+    public static List<GameJson> toJsonWithGamesAndTipps(List<GameEntity> games, List<GameTippEntity> tipps) {
         List<GameJson> gameJsons = games.stream().map(game -> JsonBuilder.toJson(game)).collect(Collectors.toList());
 
         gameJsons.stream().forEach(gameJson -> {
@@ -153,12 +153,12 @@ public class JsonBuilder {
         return gameJsons;
     }
 
-    public static List<GameJson> toJsonWithGamesAndTipps(List<Game> games, Set<GameTipp> tipps) {
+    public static List<GameJson> toJsonWithGamesAndTipps(List<GameEntity> games, Set<GameTippEntity> tipps) {
         List<GameJson> gameJsons = new ArrayList<>();
-        for (Game game : games) {
+        for (GameEntity game : games) {
             GameJson gameJson = JsonBuilder.toJson(game);
             gameJsons.add(gameJson);
-            for (GameTipp tipp : tipps) {
+            for (GameTippEntity tipp : tipps) {
                 GameTippJson tippJson = toJson(tipp);
                 gameJson.addTipp(tippJson);
             }
@@ -166,9 +166,9 @@ public class JsonBuilder {
         return gameJsons;
     }
 
-    public static List<GameTippJson> toJsonWithGameTipp(List<GameTipp> tipps) {
+    public static List<GameTippJson> toJsonWithGameTipp(List<GameTippEntity> tipps) {
         List<GameTippJson> gameJsons = new ArrayList<>();
-        for (GameTipp tipp : tipps) {
+        for (GameTippEntity tipp : tipps) {
             GameTippJson gameTippJson = toJson(tipp);
             gameJsons.add(gameTippJson);
         }

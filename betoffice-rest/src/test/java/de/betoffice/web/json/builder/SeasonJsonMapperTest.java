@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
 import de.betoffice.storage.season.SeasonType;
-import de.betoffice.storage.season.entity.Season;
+import de.betoffice.storage.season.entity.SeasonEntity;
 import de.betoffice.storage.season.entity.SeasonReference;
 import de.betoffice.storage.team.TeamType;
 import de.betoffice.web.json.SeasonJson;
@@ -42,7 +42,7 @@ class SeasonJsonMapperTest {
 
     @Test
     void testSeasonJsonMapper() {
-        Season season = new Season();
+        SeasonEntity season = new SeasonEntity();
         season.setMode(SeasonType.LEAGUE);
         season.setReference(SeasonReference.of("2017/2018", "Bundesliga 2017/2018"));
         season.setTeamType(TeamType.DFB);

@@ -27,10 +27,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import de.betoffice.storage.season.entity.Game;
-import de.betoffice.storage.season.entity.GameList;
-import de.betoffice.storage.season.entity.Season;
-import de.betoffice.storage.tip.GameTipp;
+import de.betoffice.storage.season.entity.GameEntity;
+import de.betoffice.storage.season.entity.GameListEntity;
+import de.betoffice.storage.season.entity.SeasonEntity;
+import de.betoffice.storage.tip.GameTippEntity;
 import de.betoffice.web.json.round.RoundJson;
 
 /**
@@ -41,11 +41,11 @@ import de.betoffice.web.json.round.RoundJson;
 public class JsonAssembler {
 
     public static class SeasonAssembler {
-        private Season season;
-        private List<GameList> rounds;
-        private GameList currentRound;
+        private SeasonEntity season;
+        private List<GameListEntity> rounds;
+        private GameListEntity currentRound;
 
-        private SeasonAssembler(Season _season) {
+        private SeasonAssembler(SeasonEntity _season) {
             season = _season;
         }
 
@@ -54,22 +54,22 @@ public class JsonAssembler {
             return this;
         }
 
-        public SeasonAssembler rounds(List<GameList> _rounds) {
+        public SeasonAssembler rounds(List<GameListEntity> _rounds) {
             rounds = _rounds;
             return this;
         }
 
-        public SeasonAssembler rounds(Predicate<GameList> filter) {
+        public SeasonAssembler rounds(Predicate<GameListEntity> filter) {
             rounds = season.toGameList(filter);
             return this;
         }
-        
-        public SeasonAssembler currentRound(GameList _currentRound) {
+
+        public SeasonAssembler currentRound(GameListEntity _currentRound) {
             currentRound = _currentRound;
             return this;
         }
-        
-        public SeasonAssembler currentRound(Optional<GameList> _currentRound) {
+
+        public SeasonAssembler currentRound(Optional<GameListEntity> _currentRound) {
             return currentRound(_currentRound.orElse(null));
         }
 
@@ -83,7 +83,7 @@ public class JsonAssembler {
                 seasonJson.getRounds().clear();
                 seasonJson.getRounds().addAll(gameListJson);
             }
-            
+
             if (currentRound != null) {
                 seasonJson.setCurrentRoundId(currentRound.getId());
             }
@@ -93,24 +93,24 @@ public class JsonAssembler {
     }
 
     public static class RoundAssembler {
-        private GameList round;
-        private List<Game> games;
-        private List<GameTipp> tipps;
+        private GameListEntity round;
+        private List<GameEntity> games;
+        private List<GameTippEntity> tipps;
         private boolean lastRound = false;
 
         private boolean hasToAddTipp = false;
         private boolean hasToAddEmptyTipp = false;
 
-        private RoundAssembler(GameList _round) {
+        private RoundAssembler(GameListEntity _round) {
             round = _round;
         }
 
-        public RoundAssembler games(Predicate<Game> filter) {
+        public RoundAssembler games(Predicate<GameEntity> filter) {
             games = round.toList(filter);
             return this;
         }
 
-        public RoundAssembler games(List<Game> _games) {
+        public RoundAssembler games(List<GameEntity> _games) {
             games = _games;
             return this;
         }
@@ -125,7 +125,7 @@ public class JsonAssembler {
             return this;
         }
 
-        public RoundAssembler tipps(List<GameTipp> _tipps) {
+        public RoundAssembler tipps(List<GameTippEntity> _tipps) {
             tipps = _tipps;
             return this;
         }
@@ -185,11 +185,11 @@ public class JsonAssembler {
         }
     }
 
-    public SeasonAssembler build(Season season) {
+    public SeasonAssembler build(SeasonEntity season) {
         return new SeasonAssembler(season);
     }
 
-    public RoundAssembler build(GameList round) {
+    public RoundAssembler build(GameListEntity round) {
         return new RoundAssembler(round);
     }
 

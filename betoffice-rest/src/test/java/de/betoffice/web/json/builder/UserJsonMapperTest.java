@@ -27,11 +27,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-import de.betoffice.storage.season.entity.Season;
+import de.betoffice.storage.season.entity.SeasonEntity;
 import de.betoffice.storage.season.entity.SeasonReference;
 import de.betoffice.storage.user.UserResult;
 import de.betoffice.storage.user.entity.Nickname;
-import de.betoffice.storage.user.entity.User;
+import de.betoffice.storage.user.entity.UserEntity;
 import de.betoffice.web.json.UserJson;
 
 /**
@@ -43,8 +43,8 @@ class UserJsonMapperTest {
 
     @Test
     void testUserJsonMapping() {
-        User user = new User(Nickname.of("Frosch"));
-        Season season = new Season();
+        UserEntity user = new UserEntity(Nickname.of("Frosch"));
+        SeasonEntity season = new SeasonEntity();
         season.setReference(SeasonReference.of("2017/2018", "Bundesliga"));
 
         UserResult userResult = new UserResult(user);
