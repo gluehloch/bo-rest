@@ -23,17 +23,17 @@
 
 package de.betoffice.web.json.builder;
 
+import de.betoffice.storage.season.GameResultDto;
 import de.betoffice.storage.season.entity.GameResult;
-import de.betoffice.web.json.GameResultJson;
 
 /**
- * Maps {@link GameResult} to {@link GameResultJson}.
+ * Maps {@link GameResult} to {@link GameResultDto}.
  * 
  * @author Andre Winkler
  */
 public class GameResultJsonMapper {
 
-    public static GameResultJson map(GameResult gameResult, GameResultJson gameResultJson) {
+    public static GameResultDto map(GameResult gameResult, GameResultDto gameResultJson) {
         gameResultJson.setHomeGoals(gameResult.getHomeGoals());
         gameResultJson.setGuestGoals(gameResult.getGuestGoals());
         return gameResultJson;

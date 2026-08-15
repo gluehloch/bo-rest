@@ -25,14 +25,14 @@ package de.betoffice.web.json.builder;
 
 import java.util.List;
 
+import de.betoffice.storage.season.GameResultDto;
+import de.betoffice.storage.season.GoalDto;
 import de.betoffice.storage.season.entity.GoalEntity;
-import de.betoffice.web.json.GameResultJson;
-import de.betoffice.web.json.GoalJson;
 
 public class GoalJsonMapper {
 
-    public static GoalJson map(GoalEntity goal, GoalJson json) {
-        json.setGameResult(GameResultJsonMapper.map(goal.getResult(), new GameResultJson()));
+    public static GoalDto map(GoalEntity goal, GoalDto json) {
+        json.setGameResult(GameResultJsonMapper.map(goal.getResult(), new GameResultDto()));
         json.setPlayerName(goal.getPlayer().getName());
         json.setMinute(goal.getMinute());
         json.setOpenligaid(goal.getOpenligaid());
@@ -40,12 +40,12 @@ public class GoalJsonMapper {
         return json;
     }
 
-    public static List<GoalJson> map(List<GoalEntity> goals) {
+    public static List<GoalDto> map(List<GoalEntity> goals) {
         return goals.stream().map(GoalJsonMapper::map).toList();
     }
 
-    private static GoalJson map(GoalEntity goal) {
-        return map(goal, new GoalJson());
+    private static GoalDto map(GoalEntity goal) {
+        return map(goal, new GoalDto());
     }
 
 }

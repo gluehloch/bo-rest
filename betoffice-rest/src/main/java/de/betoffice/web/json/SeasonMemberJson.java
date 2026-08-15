@@ -23,6 +23,8 @@
 
 package de.betoffice.web.json;
 
+import de.betoffice.storage.AbstractIdentifier;
+
 /**
  * A tipp member of a season.
  * 

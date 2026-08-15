@@ -32,12 +32,13 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import de.betoffice.storage.season.entity.LocationEntity;
+import de.betoffice.storage.team.TeamDto;
 import de.betoffice.storage.team.TeamType;
 import de.betoffice.storage.team.entity.TeamEntity;
-import de.betoffice.web.json.TeamJson;
+import de.betoffice.storage.team.entity.TeamDtoMapper;
 
 /**
- * Test for {@link TeamJsonMapper}.
+ * Test for {@link TeamDtoMapper}.
  * 
  * @author Andre Winkler
  */
@@ -47,8 +48,8 @@ public class TeamJsonMapperTest {
     public void testTeamJsonMapper() {
         TeamEntity team = createTeam();
 
-        TeamJsonMapper mapper = new TeamJsonMapper();
-        TeamJson teamJson = new TeamJson();
+        TeamDtoMapper mapper = new TeamDtoMapper();
+        TeamDto teamJson = new TeamDto();
 
         teamJson = mapper.map(team, teamJson);
 
@@ -69,8 +70,8 @@ public class TeamJsonMapperTest {
         teams.add(t2);
         teams.add(t3);
 
-        TeamJsonMapper mapper = new TeamJsonMapper();
-        List<TeamJson> teamJsons = new ArrayList<TeamJson>();
+        TeamDtoMapper mapper = new TeamDtoMapper();
+        List<TeamDto> teamJsons = new ArrayList<TeamDto>();
 
         teamJsons = mapper.map(teams);
 

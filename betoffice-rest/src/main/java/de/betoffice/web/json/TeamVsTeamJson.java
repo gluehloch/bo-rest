@@ -28,6 +28,8 @@ import java.time.ZonedDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import de.betoffice.storage.JsonDateTimeFormat;
+
 /**
  * Team versus team info.
  * 

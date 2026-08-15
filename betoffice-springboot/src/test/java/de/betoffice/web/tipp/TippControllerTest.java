@@ -66,6 +66,8 @@ import de.betoffice.service.MasterDataManagerService;
 import de.betoffice.service.SeasonManagerService;
 import de.betoffice.storage.community.entity.CommunityReference;
 import de.betoffice.storage.group.entity.GroupTypeEntity;
+import de.betoffice.storage.season.GameResultDto;
+import de.betoffice.storage.season.RoundDto;
 import de.betoffice.storage.season.SeasonType;
 import de.betoffice.storage.season.entity.GameEntity;
 import de.betoffice.storage.season.entity.GameListEntity;
@@ -83,9 +85,7 @@ import de.betoffice.web.auth.AuthenticationForm;
 import de.betoffice.web.auth.BetofficeAuthenticationService;
 import de.betoffice.web.auth.LogoutFormData;
 import de.betoffice.web.boot.BetofficeBootApplication;
-import de.betoffice.web.json.GameResultJson;
 import de.betoffice.web.json.SecurityTokenJson;
-import de.betoffice.web.json.round.RoundJson;
 import de.betoffice.web.season.BetofficeService;
 import de.betoffice.web.security.SecurityConstants;
 import tools.jackson.databind.ObjectMapper;
@@ -211,7 +211,7 @@ class TippControllerTest {
         List<SubmitTippGameJson> submitTippGames = new ArrayList<>();
         SubmitTippGameJson submitTippGame = new SubmitTippGameJson();
         submitTippGame.setGameId(data.round.get(0).getId());
-        GameResultJson gameResultJson = new GameResultJson();
+        GameResultDto gameResultJson = new GameResultDto();
         gameResultJson.setHomeGoals(2);
         gameResultJson.setGuestGoals(3);
         submitTippGame.setTippResult(gameResultJson);
@@ -227,15 +227,15 @@ class TippControllerTest {
                 .accept(MediaType.APPLICATION_JSON));
 
         assertThat(performTippSubmit2).hasStatus(HttpStatus.OK);
-        assertThat(performTippSubmit2).bodyJson().convertTo(RoundJson.class)
+        assertThat(performTippSubmit2).bodyJson().convertTo(RoundDto.class)
                 .extracting("seasonName").isEqualTo("Bundesliga");
-        assertThat(performTippSubmit2).bodyJson().convertTo(RoundJson.class).extracting("seasonYear")
+        assertThat(performTippSubmit2).bodyJson().convertTo(RoundDto.class).extracting("seasonYear")
                 .isEqualTo("1999/2000");
-        assertThat(performTippSubmit2).bodyJson().convertTo(RoundJson.class)
+        assertThat(performTippSubmit2).bodyJson().convertTo(RoundDto.class)
                 .extracting(rj -> rj.getGames().get(0).getHomeTeam().getName()).isEqualTo("Vfb Lübeck");
-        assertThat(performTippSubmit2).bodyJson().convertTo(RoundJson.class)
+        assertThat(performTippSubmit2).bodyJson().convertTo(RoundDto.class)
                 .extracting(rj -> rj.getGames().get(0).getGuestTeam().getName()).isEqualTo("RWE");
-        assertThat(performTippSubmit2).bodyJson().convertTo(RoundJson.class)
+        assertThat(performTippSubmit2).bodyJson().convertTo(RoundDto.class)
                 .extracting(rj -> rj.getGames().get(0).getTipps().get(0).getNickname()).isNull();
 
         System.out.println(performTippSubmit.getResponse().getContentAsString());

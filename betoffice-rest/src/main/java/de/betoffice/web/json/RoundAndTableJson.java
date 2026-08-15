@@ -23,7 +23,7 @@
 
 package de.betoffice.web.json;
 
-import de.betoffice.web.json.round.RoundJson;
+import de.betoffice.storage.season.RoundDto;
 
 /**
  * Round and table data.
@@ -32,13 +32,13 @@ import de.betoffice.web.json.round.RoundJson;
  */
 public class RoundAndTableJson {
 
-    private RoundJson roundJson;
+    private RoundDto roundJson;
     private GroupTeamTableJson groupTeamTableJsons;
 
     /**
      * @return the roundJson
      */
-    public RoundJson getRoundJson() {
+    public RoundDto getRoundJson() {
         return roundJson;
     }
 
@@ -46,7 +46,7 @@ public class RoundAndTableJson {
      * @param roundJson
      *            the roundJson to set
      */
-    public void setRoundJson(RoundJson roundJson) {
+    public void setRoundJson(RoundDto roundJson) {
         this.roundJson = roundJson;
     }
 

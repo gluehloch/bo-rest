@@ -26,15 +26,18 @@ package de.betoffice.web.json;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameWithGoalsJson extends GameJson implements IGameJson {
+import de.betoffice.storage.season.GameDto;
+import de.betoffice.storage.season.GoalDto;
 
-    private List<GoalJson> goals = new ArrayList<>();
+public class GameWithGoalsJson extends GameDto implements IGameJson {
 
-    public List<GoalJson> getGoals() {
+    private List<GoalDto> goals = new ArrayList<>();
+
+    public List<GoalDto> getGoals() {
         return goals;
     }
 
-    public void setGoals(List<GoalJson> goals) {
+    public void setGoals(List<GoalDto> goals) {
         this.goals = goals;
     }
 

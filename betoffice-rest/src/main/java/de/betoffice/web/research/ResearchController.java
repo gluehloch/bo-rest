@@ -37,13 +37,13 @@ import org.springframework.web.bind.annotation.RestController;
 import de.betoffice.service.MasterDataManagerService;
 import de.betoffice.service.SeasonManagerService;
 import de.betoffice.storage.season.entity.GameEntity;
+import de.betoffice.storage.team.TeamDto;
 import de.betoffice.storage.team.TeamType;
 import de.betoffice.storage.team.entity.TeamEntity;
+import de.betoffice.storage.team.entity.TeamDtoMapper;
 import de.betoffice.web.json.HistoryTeamVsTeamJson;
 import de.betoffice.web.json.HistoryTeamVsTeamJsonMapper;
 import de.betoffice.web.json.JsonBuilder;
-import de.betoffice.web.json.TeamJson;
-import de.betoffice.web.json.builder.TeamJsonMapper;
 
 /**
  * Researching data...
@@ -68,22 +68,22 @@ public class ResearchController {
     // ------------------------------------------------------------------------
 
     @RequestMapping(value = "/team/dfb", method = RequestMethod.GET)
-    public @ResponseBody List<TeamJson> findDfbTeams() {
+    public @ResponseBody List<TeamDto> findDfbTeams() {
         List<TeamEntity> dfbTeams = masterDataManagerService.findTeams(TeamType.DFB);
         return JsonBuilder.toJsonWithTeams(dfbTeams);
     }
 
     @RequestMapping(value = "/team/fifa", method = RequestMethod.GET)
-    public @ResponseBody List<TeamJson> findFifaTeams() {
+    public @ResponseBody List<TeamDto> findFifaTeams() {
         List<TeamEntity> fifaTeams = masterDataManagerService.findTeams(TeamType.FIFA);
         return JsonBuilder.toJsonWithTeams(fifaTeams);
     }
 
     @RequestMapping(value = "/team-search", method = RequestMethod.GET, headers = { "Content-type=application/json" })
-    public List<TeamJson> findTeams(
+    public List<TeamDto> findTeams(
             @RequestParam(name = "filter", required = false) String teamFilter,
             @RequestParam(name = "type", required = false) TeamType teamType) {
-        return TeamJsonMapper.map(masterDataManagerService.findTeams(Optional.ofNullable(teamType), teamFilter));
+        return TeamDtoMapper.map(masterDataManagerService.findTeams(Optional.ofNullable(teamType), teamFilter));
     }
 
     @RequestMapping(value = "/game/team-vs-team", method = RequestMethod.GET)

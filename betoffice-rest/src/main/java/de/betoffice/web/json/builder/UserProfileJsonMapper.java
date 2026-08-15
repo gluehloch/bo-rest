@@ -27,13 +27,13 @@ import java.util.List;
 import java.util.Optional;
 
 import de.betoffice.mail.NotificationType;
+import de.betoffice.storage.user.PartyDto;
 import de.betoffice.storage.user.entity.Nickname;
 import de.betoffice.storage.user.entity.UserEntity;
-import de.betoffice.web.json.PartyJson;
 import de.betoffice.web.json.UserProfileJson;
 
 /**
- * Map {@link User} to {@link PartyJson}.
+ * Map {@link User} to {@link PartyDto}.
  * 
  * @author Andre Winkler
  */

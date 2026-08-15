@@ -24,14 +24,16 @@
 package de.betoffice.web.json;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 
+import de.betoffice.storage.season.GameDto;
+import de.betoffice.storage.season.GameResultDto;
+import de.betoffice.storage.season.RoundDto;
+import de.betoffice.storage.season.DtoAssembler.SeasonAssembler;
 import de.betoffice.storage.season.entity.GameEntity;
 import de.betoffice.storage.season.entity.GameListEntity;
 import de.betoffice.storage.season.entity.SeasonEntity;
 import de.betoffice.storage.tip.GameTippEntity;
-import de.betoffice.web.json.round.RoundJson;
 
 /**
  * Assembles JSON objects with other JSON objects.
@@ -39,58 +41,6 @@ import de.betoffice.web.json.round.RoundJson;
  * @author Andre Winkler
  */
 public class JsonAssembler {
-
-    public static class SeasonAssembler {
-        private SeasonEntity season;
-        private List<GameListEntity> rounds;
-        private GameListEntity currentRound;
-
-        private SeasonAssembler(SeasonEntity _season) {
-            season = _season;
-        }
-
-        public SeasonAssembler rounds() {
-            rounds = season.toGameList();
-            return this;
-        }
-
-        public SeasonAssembler rounds(List<GameListEntity> _rounds) {
-            rounds = _rounds;
-            return this;
-        }
-
-        public SeasonAssembler rounds(Predicate<GameListEntity> filter) {
-            rounds = season.toGameList(filter);
-            return this;
-        }
-
-        public SeasonAssembler currentRound(GameListEntity _currentRound) {
-            currentRound = _currentRound;
-            return this;
-        }
-
-        public SeasonAssembler currentRound(Optional<GameListEntity> _currentRound) {
-            return currentRound(_currentRound.orElse(null));
-        }
-
-        public SeasonJson assemble() {
-            SeasonJson seasonJson = JsonBuilder.toJson(season);
-            if (rounds == null || rounds.isEmpty()) {
-                seasonJson.getRounds().clear();
-            } else {
-                List<RoundJson> gameListJson = JsonBuilder
-                        .toJsonWithGameList(rounds);
-                seasonJson.getRounds().clear();
-                seasonJson.getRounds().addAll(gameListJson);
-            }
-
-            if (currentRound != null) {
-                seasonJson.setCurrentRoundId(currentRound.getId());
-            }
-
-            return seasonJson;
-        }
-    }
 
     public static class RoundAssembler {
         private GameListEntity round;
@@ -140,17 +90,17 @@ public class JsonAssembler {
             return this;
         }
 
-        public RoundJson assemble() {
-            RoundJson roundJson = JsonBuilder.toJson(round);
+        public RoundDto assemble() {
+            RoundDto roundJson = JsonBuilder.toJson(round);
             if (games == null || games.isEmpty()) {
                 roundJson.getGames().clear();
             } else {
-                List<GameJson> gameJsons = null;
+                List<GameDto> gameJsons = null;
                 if (hasToAddEmptyTipp) {
                     gameJsons = JsonBuilder.toJsonWithGames(games);
-                    for (GameJson gj : gameJsons) {
+                    for (GameDto gj : gameJsons) {
                         GameTippJson gameTippJson = new GameTippJson();
-                        gameTippJson.setTipp(new GameResultJson());
+                        gameTippJson.setTipp(new GameResultDto());
                         gj.addTipp(gameTippJson);
                     }
                 } else if (tipps != null && !tipps.isEmpty()) {
@@ -171,7 +121,7 @@ public class JsonAssembler {
             return roundJson;
         }
 
-        private boolean isFinished(RoundJson round) {
+        private boolean isFinished(RoundDto round) {
             boolean finished = true;
             if (games == null || games.isEmpty()) {
                 // No games? Finished or what? I guess, it is finished.

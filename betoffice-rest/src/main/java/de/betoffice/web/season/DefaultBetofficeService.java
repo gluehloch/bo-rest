@@ -37,36 +37,36 @@ import de.betoffice.service.CommunityService;
 import de.betoffice.service.MasterDataManagerService;
 import de.betoffice.service.SeasonManagerService;
 import de.betoffice.service.TippService;
+import de.betoffice.storage.group.GroupTypeDto;
 import de.betoffice.storage.group.entity.GroupTypeEntity;
+import de.betoffice.storage.season.GameDto;
+import de.betoffice.storage.season.RoundDto;
+import de.betoffice.storage.season.SeasonDto;
 import de.betoffice.storage.season.SeasonRange;
 import de.betoffice.storage.season.entity.GameEntity;
 import de.betoffice.storage.season.entity.GameListEntity;
 import de.betoffice.storage.season.entity.GoalEntity;
 import de.betoffice.storage.season.entity.GroupEntity;
 import de.betoffice.storage.season.entity.SeasonEntity;
+import de.betoffice.storage.team.TeamDto;
 import de.betoffice.storage.team.TeamResult;
 import de.betoffice.storage.team.TeamType;
 import de.betoffice.storage.team.entity.TeamEntity;
+import de.betoffice.storage.team.entity.TeamDtoMapper;
 import de.betoffice.storage.time.DateTimeProvider;
 import de.betoffice.storage.tip.GameTippEntity;
 import de.betoffice.storage.user.UserResult;
-import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GameWithGoalsJson;
 import de.betoffice.web.json.GroupTeamTableJson;
-import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.IGameJson;
 import de.betoffice.web.json.JsonAssembler;
 import de.betoffice.web.json.JsonBuilder;
 import de.betoffice.web.json.PingJson;
 import de.betoffice.web.json.RoundAndTableJson;
-import de.betoffice.web.json.SeasonJson;
-import de.betoffice.web.json.TeamJson;
 import de.betoffice.web.json.TeamResultJson;
 import de.betoffice.web.json.UserJson;
 import de.betoffice.web.json.UserTableJson;
 import de.betoffice.web.json.builder.GoalJsonMapper;
-import de.betoffice.web.json.builder.TeamJsonMapper;
-import de.betoffice.web.json.round.RoundJson;
 
 /**
  * Basic rest service features for betoffice.
@@ -99,7 +99,7 @@ public class DefaultBetofficeService implements BetofficeService {
     // ------------------------------------------------------------------------
 
     @Override
-    public SeasonJson findSeasonById(Long seasonId) {
+    public SeasonDto findSeasonById(Long seasonId) {
         SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
         List<GameListEntity> rounds = seasonManagerService.findRounds(season);
 
@@ -107,7 +107,7 @@ public class DefaultBetofficeService implements BetofficeService {
                 dateTimeProvider.currentDateTime());
 
         JsonAssembler jsonAssembler = new JsonAssembler();
-        SeasonJson seasonJson = jsonAssembler
+        SeasonDto seasonJson = jsonAssembler
                 .build(season)
                 .rounds(rounds)
                 .currentRound(nextTippRound)
@@ -117,7 +117,7 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
-    public List<GroupTypeJson> findAllGroups(Long seasonId) {
+    public List<GroupTypeDto> findAllGroups(Long seasonId) {
         SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
         List<GroupTypeEntity> groupTypes = seasonManagerService.findGroupTypes(season);
 
@@ -125,14 +125,14 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
-    public List<RoundJson> findAllRounds(Long seasonId) {
+    public List<RoundDto> findAllRounds(Long seasonId) {
         SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
         List<GameListEntity> rounds = seasonManagerService.findRounds(season);
         return JsonBuilder.toJsonWithGameList(rounds);
     }
 
     @Override
-    public SeasonJson findAllRounds(Long seasonId, Long groupTypeId) {
+    public SeasonDto findAllRounds(Long seasonId, Long groupTypeId) {
         SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
         GroupTypeEntity groupType = masterDataManagerService.findGroupType(groupTypeId);
         GroupEntity group = seasonManagerService.findGroup(season, groupType);
@@ -142,7 +142,7 @@ public class DefaultBetofficeService implements BetofficeService {
                 dateTimeProvider.currentDateTime());
 
         JsonAssembler jsonAssembler = new JsonAssembler();
-        SeasonJson seasonJson = jsonAssembler
+        SeasonDto seasonJson = jsonAssembler
                 .build(season)
                 .rounds(rounds)
                 .currentRound(nextTippRound)
@@ -152,10 +152,10 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
-    public RoundJson findRound(Long seasonId, Long roundId) {
+    public RoundDto findRound(Long seasonId, Long roundId) {
         SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
         GameListEntity gameList = seasonManagerService.findRound(roundId);
-        RoundJson roundJson = null;
+        RoundDto roundJson = null;
 
         if (gameList == null) {
             Optional<GameListEntity> firstRound = seasonManagerService.findFirstRound(season);
@@ -173,14 +173,14 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
-    public RoundJson findRoundByGroup(Long seasonId, Long roundId, Long groupTypeId) {
+    public RoundDto findRoundByGroup(Long seasonId, Long roundId, Long groupTypeId) {
         SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
         GameListEntity gameList = seasonManagerService.findRoundGames(roundId)
                 .orElseGet(() -> seasonManagerService.findFirstRound(season).orElseThrow());
         GroupTypeEntity groupType = masterDataManagerService.findGroupType(groupTypeId);
         GroupEntity group = seasonManagerService.findGroup(season, groupType);
 
-        RoundJson roundJson = null;
+        RoundDto roundJson = null;
 
         if (gameList != null) {
             Optional<GameListEntity> nextRound = seasonManagerService.findNextRound(roundId);
@@ -196,9 +196,9 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
-    public RoundJson findNextRound(Long seasonId, Long roundId) {
+    public RoundDto findNextRound(Long seasonId, Long roundId) {
         Optional<GameListEntity> nextRound = seasonManagerService.findNextRound(roundId);
-        RoundJson roundJson = null;
+        RoundDto roundJson = null;
 
         if (nextRound.isPresent()) {
             Optional<GameListEntity> nextNextRound = seasonManagerService.findNextRound(nextRound.get().getId());
@@ -211,9 +211,9 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
-    public RoundJson findPrevRound(Long seasonId, Long roundId) {
+    public RoundDto findPrevRound(Long seasonId, Long roundId) {
         Optional<GameListEntity> prevRound = seasonManagerService.findPrevRound(roundId);
-        RoundJson roundJson = null;
+        RoundDto roundJson = null;
 
         if (prevRound.isPresent()) {
             JsonAssembler jsonAssembler = new JsonAssembler();
@@ -225,7 +225,7 @@ public class DefaultBetofficeService implements BetofficeService {
 
     @Override
     public RoundAndTableJson findRoundTable(Long seasonId, Long roundId, Long groupTypeId) {
-        RoundJson roundJson = findRoundByGroup(seasonId, roundId, groupTypeId);
+        RoundDto roundJson = findRoundByGroup(seasonId, roundId, groupTypeId);
         SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
         GroupTypeEntity groupType = masterDataManagerService.findGroupType(groupTypeId);
 
@@ -263,7 +263,7 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
-    public GameJson findGame(Long gameId) {
+    public GameDto findGame(Long gameId) {
         GameEntity game = seasonManagerService.findMatch(gameId);
         return JsonBuilder.toJson(game);
     }
@@ -278,7 +278,7 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
-    public Optional<RoundJson> findCurrent(Long seasonId) {
+    public Optional<RoundDto> findCurrent(Long seasonId) {
         return tippService
                 .findNextTippRound(seasonId, dateTimeProvider.currentDateTime())
                 .map(i -> JsonBuilder.toJson(i));
@@ -341,7 +341,7 @@ public class DefaultBetofficeService implements BetofficeService {
             userTableJson.setRound(JsonBuilder.toJson(round.get()));
 
             // userTableJson.setRound(JsonBuilder.toJsonWithGames(round));
-            List<GameJson> jsonWithGamesAndTipps = JsonBuilder.toJsonWithGamesAndTipps(round.get().unmodifiableList(),
+            List<GameDto> jsonWithGamesAndTipps = JsonBuilder.toJsonWithGamesAndTipps(round.get().unmodifiableList(),
                     tipps);
             userTableJson.getRound().setGames(jsonWithGamesAndTipps);
 
@@ -361,7 +361,7 @@ public class DefaultBetofficeService implements BetofficeService {
         List<GameTippEntity> tipps = tippService.findTipps(roundId);
 
         // userTableJson.setRound(JsonBuilder.toJsonWithGames(round));
-        List<GameJson> jsonWithGamesAndTipps = JsonBuilder.toJsonWithGamesAndTipps(round.get().unmodifiableList(),
+        List<GameDto> jsonWithGamesAndTipps = JsonBuilder.toJsonWithGamesAndTipps(round.get().unmodifiableList(),
                 tipps);
         userTableJson.getRound().setGames(jsonWithGamesAndTipps);
 
@@ -379,7 +379,7 @@ public class DefaultBetofficeService implements BetofficeService {
             userTableJson.addUser(userJson);
         }
 
-        SeasonJson seasonJson = JsonBuilder.toJson(round.getSeason());
+        SeasonDto seasonJson = JsonBuilder.toJson(round.getSeason());
         userTableJson.setSeason(seasonJson);
 
         findNextAndPrevRound(round, userTableJson);
@@ -413,23 +413,23 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
-    public List<TeamJson> findAllTeams() {
+    public List<TeamDto> findAllTeams() {
         List<TeamEntity> teams = masterDataManagerService.findAllTeams();
         return JsonBuilder.toJsonWithTeams(teams);
     }
 
     @Override
-    public List<TeamJson> findTeams(Optional<TeamType> teamType, String filter) {
-        return TeamJsonMapper.map(masterDataManagerService.findTeams(teamType, filter));
+    public List<TeamDto> findTeams(Optional<TeamType> teamType, String filter) {
+        return TeamDtoMapper.map(masterDataManagerService.findTeams(teamType, filter));
     }
 
     @Override
-    public List<SeasonJson> findAllSeason() {
+    public List<SeasonDto> findAllSeason() {
         List<SeasonEntity> seasons = seasonManagerService.findAllSeasons();
         return JsonBuilder.toJsonWithSeasons(seasons);
     }
 
-    private boolean isFinished(RoundJson round) {
+    private boolean isFinished(RoundDto round) {
         boolean finished = false;
         for (IGameJson game : round.getGames()) {
             if (!game.isFinished()) {

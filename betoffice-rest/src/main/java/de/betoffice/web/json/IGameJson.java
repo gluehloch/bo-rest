@@ -2,6 +2,11 @@ package de.betoffice.web.json;
 
 import java.time.ZonedDateTime;
 
+import de.betoffice.storage.OpenligaObject;
+import de.betoffice.storage.group.GroupTypeDto;
+import de.betoffice.storage.season.GameResultDto;
+import de.betoffice.storage.team.TeamDto;
+
 public interface IGameJson extends OpenligaObject {
     void setId(Long id);
 
@@ -19,33 +24,33 @@ public interface IGameJson extends OpenligaObject {
 
     void setDateTime(ZonedDateTime dateTime);
 
-    TeamJson getHomeTeam();
+    TeamDto getHomeTeam();
 
-    void setHomeTeam(TeamJson homeTeam);
+    void setHomeTeam(TeamDto homeTeam);
 
-    TeamJson getGuestTeam();
+    TeamDto getGuestTeam();
 
-    void setGroupType(GroupTypeJson groupType);
+    void setGroupType(GroupTypeDto groupType);
 
-    GroupTypeJson getGroupType();
+    GroupTypeDto getGroupType();
 
-    void setGuestTeam(TeamJson guestTeam);
+    void setGuestTeam(TeamDto guestTeam);
 
-    GameResultJson getHalfTimeResult();
+    GameResultDto getHalfTimeResult();
 
-    void setHalfTimeResult(GameResultJson halfTimeResult);
+    void setHalfTimeResult(GameResultDto halfTimeResult);
 
-    GameResultJson getResult();
+    GameResultDto getResult();
 
-    void setResult(GameResultJson result);
+    void setResult(GameResultDto result);
 
-    GameResultJson getOvertimeResult();
+    GameResultDto getOvertimeResult();
 
-    void setOvertimeResult(GameResultJson overtimeResult);
+    void setOvertimeResult(GameResultDto overtimeResult);
 
-    GameResultJson getPenaltyResult();
+    GameResultDto getPenaltyResult();
 
-    void setPenaltyResult(GameResultJson penaltyResult);
+    void setPenaltyResult(GameResultDto penaltyResult);
 
     boolean isFinished();
 

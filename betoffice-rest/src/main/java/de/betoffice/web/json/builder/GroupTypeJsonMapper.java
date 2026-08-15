@@ -25,29 +25,29 @@ package de.betoffice.web.json.builder;
 
 import java.util.List;
 
+import de.betoffice.storage.group.GroupTypeDto;
 import de.betoffice.storage.group.entity.GroupTypeEntity;
-import de.betoffice.web.json.GroupTypeJson;
 
 /**
- * Map a {@link GroupType} to {@link GroupTypeJson}.
+ * Map a {@link GroupType} to {@link GroupTypeDto}.
  * 
  * @author Andre Winkler
  */
 public class GroupTypeJsonMapper {
 
-    public static GroupTypeJson map(GroupTypeEntity groupType, GroupTypeJson groupTypeJson) {
+    public static GroupTypeDto map(GroupTypeEntity groupType, GroupTypeDto groupTypeJson) {
         groupTypeJson.setId(groupType.getId());
         groupTypeJson.setName(groupType.getName());
         groupTypeJson.setGroupTypeEnum(groupType.getType());
         return groupTypeJson;
     }
 
-    public static List<GroupTypeJson> map(List<GroupTypeEntity> groupTypes) {
+    public static List<GroupTypeDto> map(List<GroupTypeEntity> groupTypes) {
         return groupTypes.stream().map(GroupTypeJsonMapper::map).toList();
     }
 
-    public static GroupTypeJson map(GroupTypeEntity groupType) {
-        return map(groupType, new GroupTypeJson());
+    public static GroupTypeDto map(GroupTypeEntity groupType) {
+        return map(groupType, new GroupTypeDto());
     }
 
 }

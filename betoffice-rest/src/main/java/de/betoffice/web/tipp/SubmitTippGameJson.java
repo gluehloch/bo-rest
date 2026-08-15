@@ -25,7 +25,7 @@ package de.betoffice.web.tipp;
 
 import java.io.Serializable;
 
-import de.betoffice.web.json.GameResultJson;
+import de.betoffice.storage.season.GameResultDto;
 
 /**
  * Holds the submit tipp for a game for one user.
@@ -37,7 +37,7 @@ public class SubmitTippGameJson implements Serializable {
     private static final long serialVersionUID = -1535458861691048504L;
 
     private long gameId;
-    private GameResultJson tippResult;
+    private GameResultDto tippResult;
 
     /**
      * @return the gameId
@@ -56,14 +56,14 @@ public class SubmitTippGameJson implements Serializable {
     /**
      * @return the tippResult
      */
-    public GameResultJson getTippResult() {
+    public GameResultDto getTippResult() {
         return tippResult;
     }
 
     /**
      * @param tippResult the tippResult to set
      */
-    public void setTippResult(GameResultJson tippResult) {
+    public void setTippResult(GameResultDto tippResult) {
         this.tippResult = tippResult;
     }
 

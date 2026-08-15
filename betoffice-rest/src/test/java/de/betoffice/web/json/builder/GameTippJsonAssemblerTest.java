@@ -33,6 +33,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import de.betoffice.storage.group.entity.GroupTypeEntity;
+import de.betoffice.storage.season.GameDto;
 import de.betoffice.storage.season.entity.GameEntity;
 import de.betoffice.storage.season.entity.GameListEntity;
 import de.betoffice.storage.season.entity.GameResult;
@@ -42,7 +43,6 @@ import de.betoffice.storage.tip.GameTippEntity;
 import de.betoffice.storage.tip.TippStatusType;
 import de.betoffice.storage.user.entity.Nickname;
 import de.betoffice.storage.user.entity.UserEntity;
-import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.GameTippJson;
 import de.betoffice.web.json.JsonBuilder;
 
@@ -94,10 +94,10 @@ class GameTippJsonAssemblerTest {
         tipp.setTipp(GameResult.of(2, 1), TippStatusType.USER);
         gameTipps.add(tipp);
 
-        List<GameJson> gamesAndTipps = JsonBuilder.toJsonWithGamesAndTipps(games, gameTipps);
+        List<GameDto> gamesAndTipps = JsonBuilder.toJsonWithGamesAndTipps(games, gameTipps);
 
         assertThat(gamesAndTipps).hasSize(1);
-        GameJson gameJson = gamesAndTipps.get(0);
+        GameDto gameJson = gamesAndTipps.get(0);
         assertThat(gameJson.getResult().getHomeGoals()).isEqualTo(2);
         assertThat(gameJson.getResult().getGuestGoals()).isEqualTo(1);
         assertThat(gameJson.getHomeTeam().getName()).isEqualTo("Heim");

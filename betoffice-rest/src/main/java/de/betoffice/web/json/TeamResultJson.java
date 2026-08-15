@@ -25,6 +25,7 @@ package de.betoffice.web.json;
 
 import java.io.Serializable;
 
+import de.betoffice.storage.team.TeamDto;
 import de.betoffice.storage.team.TeamResult;
 
 /**
@@ -36,7 +37,7 @@ public class TeamResultJson implements Serializable {
 
     private static final long serialVersionUID = 398170755718207864L;
 
-    private TeamJson team;
+    private TeamDto team;
     private int posGoals;
     private int negGoals;
     private int win;
@@ -44,11 +45,11 @@ public class TeamResultJson implements Serializable {
     private int remis;
     private int tablePosition;
 
-    public TeamJson getTeam() {
+    public TeamDto getTeam() {
         return team;
     }
     
-    public void setTeam(TeamJson team) {
+    public void setTeam(TeamDto team) {
         this.team = team;
     }
     

@@ -23,6 +23,8 @@
 
 package de.betoffice.web.json;
 
+import de.betoffice.storage.AbstractIdentifier;
+
 /**
  * Holds user ranking informations
  * 

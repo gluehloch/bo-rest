@@ -26,7 +26,8 @@ package de.betoffice.web.json;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.betoffice.web.json.round.RoundJson;
+import de.betoffice.storage.season.RoundDto;
+import de.betoffice.storage.season.SeasonDto;
 
 /**
  * User ranking
@@ -35,8 +36,8 @@ import de.betoffice.web.json.round.RoundJson;
  */
 public class UserTableJson {
 
-    private SeasonJson season;
-    private RoundJson round;
+    private SeasonDto season;
+    private RoundDto round;
 
     private final List<UserJson> users = new ArrayList<>();
 
@@ -47,7 +48,7 @@ public class UserTableJson {
     /**
      * @return the seasonJson
      */
-    public SeasonJson getSeason() {
+    public SeasonDto getSeason() {
         return season;
     }
 
@@ -55,7 +56,7 @@ public class UserTableJson {
      * @param season
      *            the seasonJson to set
      */
-    public void setSeason(SeasonJson season) {
+    public void setSeason(SeasonDto season) {
         this.season = season;
     }
 
@@ -66,7 +67,7 @@ public class UserTableJson {
     /**
      * @return the roundJson
      */
-    public RoundJson getRound() {
+    public RoundDto getRound() {
         return round;
     }
 
@@ -74,7 +75,7 @@ public class UserTableJson {
      * @param round
      *            the roundJson to set
      */
-    public void setRound(RoundJson round) {
+    public void setRound(RoundDto round) {
         this.round = round;
     }
 

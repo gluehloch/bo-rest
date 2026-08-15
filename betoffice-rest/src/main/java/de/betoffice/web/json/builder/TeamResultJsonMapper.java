@@ -23,8 +23,9 @@
 
 package de.betoffice.web.json.builder;
 
+import de.betoffice.storage.team.TeamDto;
 import de.betoffice.storage.team.TeamResult;
-import de.betoffice.web.json.TeamJson;
+import de.betoffice.storage.team.entity.TeamDtoMapper;
 import de.betoffice.web.json.TeamResultJson;
 
 /**
@@ -40,7 +41,7 @@ public class TeamResultJsonMapper {
         teamResultJson.setPosGoals(teamResult.getPosGoals());
         teamResultJson.setRemis(teamResult.getRemis());
         teamResultJson.setTablePosition(teamResult.getTabPos());
-        teamResultJson.setTeam(TeamJsonMapper.map(teamResult.getTeam(), new TeamJson()));
+        teamResultJson.setTeam(TeamDtoMapper.map(teamResult.getTeam(), new TeamDto()));
         teamResultJson.setWin(teamResult.getWin());
         return teamResultJson;
     }

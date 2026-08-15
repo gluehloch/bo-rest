@@ -26,14 +26,14 @@ package de.betoffice.web.json.builder;
 import java.util.List;
 import java.util.function.Supplier;
 
+import de.betoffice.storage.season.GameDto;
+import de.betoffice.storage.season.GameResultDto;
 import de.betoffice.storage.season.entity.GameEntity;
-import de.betoffice.web.json.GameJson;
-import de.betoffice.web.json.GameResultJson;
 import de.betoffice.web.json.IGameJson;
 import de.betoffice.web.json.JsonBuilder;
 
 /**
- * Mapping of {@link Game} to {@link GameJson}.
+ * Mapping of {@link Game} to {@link GameDto}.
  * 
  * @author Andre Winkler
  */
@@ -48,16 +48,16 @@ public class GameJsonMapper {
         gameJson.setKo(game.isKo());
         gameJson.setDateTime(game.getDateTime());
 
-        GameResultJson halfTimeGoals = JsonBuilder.toJson(game.getHalfTimeGoals());
+        GameResultDto halfTimeGoals = JsonBuilder.toJson(game.getHalfTimeGoals());
         gameJson.setHalfTimeResult(halfTimeGoals);
 
-        GameResultJson gameResult = JsonBuilder.toJson(game.getResult());
+        GameResultDto gameResult = JsonBuilder.toJson(game.getResult());
         gameJson.setResult(gameResult);
 
-        GameResultJson penaltyGoals = JsonBuilder.toJson(game.getPenaltyGoals());
+        GameResultDto penaltyGoals = JsonBuilder.toJson(game.getPenaltyGoals());
         gameJson.setPenaltyResult(penaltyGoals);
 
-        GameResultJson overtimeGoals = JsonBuilder.toJson(game.getOverTimeGoals());
+        GameResultDto overtimeGoals = JsonBuilder.toJson(game.getOverTimeGoals());
         gameJson.setOvertimeResult(overtimeGoals);
 
         gameJson.setHomeTeam(JsonBuilder.toJson(game.getHomeTeam()));

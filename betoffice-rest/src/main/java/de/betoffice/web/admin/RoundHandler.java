@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 import de.betoffice.service.MasterDataManagerService;
 import de.betoffice.service.SeasonManagerService;
 import de.betoffice.storage.group.entity.GroupTypeEntity;
+import de.betoffice.storage.season.AddRoundJson;
+import de.betoffice.storage.season.UpdateRoundJson;
 import de.betoffice.storage.season.entity.GameListEntity;
 import de.betoffice.storage.season.entity.GroupEntity;
 import de.betoffice.storage.season.entity.SeasonEntity;
 import de.betoffice.validation.ValidationMessage;
 import de.betoffice.validation.ValidationMessages;
-import de.betoffice.web.json.round.AddRoundJson;
-import de.betoffice.web.json.round.UpdateRoundJson;
 
 @Component
 public class RoundHandler {

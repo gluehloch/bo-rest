@@ -45,20 +45,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.service.CommunityService;
+import de.betoffice.storage.community.CommunityDto;
 import de.betoffice.storage.community.CommunityFilter;
 import de.betoffice.storage.community.entity.CommunityEntity;
+import de.betoffice.storage.community.entity.CommunityDtoMapper;
 import de.betoffice.storage.community.entity.CommunityReference;
+import de.betoffice.storage.season.SeasonDto;
 import de.betoffice.storage.season.entity.SeasonReference;
+import de.betoffice.storage.user.PartyDto;
 import de.betoffice.storage.user.entity.Nickname;
 import de.betoffice.validation.ServiceResult;
 import de.betoffice.web.BetofficeHttpConsts;
 import de.betoffice.web.PageParam;
 import de.betoffice.web.PageParamObjectMapper;
 import de.betoffice.web.SortParam;
-import de.betoffice.web.json.CommunityJson;
-import de.betoffice.web.json.PartyJson;
-import de.betoffice.web.json.SeasonJson;
-import de.betoffice.web.json.builder.CommunityJsonMapper;
 import tools.jackson.databind.ObjectMapper;
 
 /**
@@ -81,7 +81,7 @@ public class CommunityController {
     }
 
     @GetMapping(value = "/communities", headers = { "Content-type=application/json" })
-    public ResponseEntity<Page<CommunityJson>> findCommunities(
+    public ResponseEntity<Page<CommunityDto>> findCommunities(
             @RequestParam(required = true, name = "pageParam") PageParam pageParam,
             @RequestParam(required = false, name = "sortParam") SortParam sortParam,
             // @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
@@ -91,29 +91,29 @@ public class CommunityController {
         CommunityFilter communityFilter = new CommunityFilter();
         PageRequest pageRequest = pageParam.toPageRequest(sort);
 
-        Page<CommunityJson> communities = communityService.findCommunities(communityFilter, pageRequest)
-                .map(CommunityJsonMapper::map);
+        Page<CommunityDto> communities = communityService.findCommunities(communityFilter, pageRequest)
+                .map(CommunityDtoMapper::map);
         return ResponseEntity.ok(communities);
     }
 
     @GetMapping(value = "/community/{communityId}", headers = { "Content-type=application/json" })
-    public ResponseEntity<CommunityJson> findCommunity(
+    public ResponseEntity<CommunityDto> findCommunity(
             @PathVariable("communityId") Long communityId,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        return ResponseEntity.ok(CommunityJsonMapper.map(communityService.find(communityId)));
+        return ResponseEntity.ok(CommunityDtoMapper.map(communityService.find(communityId)));
 
     }
 
     @PostMapping(value = "/community", headers = { "Content-type=application/json" })
-    public ResponseEntity<CommunityJson> createCommunity(
-            @RequestBody CommunityJson communityJson,
+    public ResponseEntity<CommunityDto> createCommunity(
+            @RequestBody CommunityDto communityJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        PartyJson communityManager = communityJson.getCommunityManager();
-        SeasonJson season = communityJson.getSeason();
+        PartyDto communityManager = communityJson.getCommunityManager();
+        SeasonDto season = communityJson.getSeason();
         String name = communityJson.getName();
         String shortName = communityJson.getShortName();
         String year = communityJson.getYear();
@@ -129,14 +129,14 @@ public class CommunityController {
                 year,
                 nickname);
 
-        Optional<CommunityJson> community = betofficeServiceResult.result().map(CommunityJsonMapper::map);
+        Optional<CommunityDto> community = betofficeServiceResult.result().map(CommunityDtoMapper::map);
 
         return community.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @PutMapping(value = "/community", headers = { "Content-type=application/json" })
-    public ResponseEntity<CommunityJson> updateCommunity(
-            @RequestBody CommunityJson communityJson,
+    public ResponseEntity<CommunityDto> updateCommunity(
+            @RequestBody CommunityDto communityJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
@@ -144,8 +144,8 @@ public class CommunityController {
     }
 
     @DeleteMapping(value = "/community", headers = { "Content-type=application/json" })
-    public ResponseEntity<CommunityJson> deleteCommunity(
-            @RequestBody CommunityJson communityJson,
+    public ResponseEntity<CommunityDto> deleteCommunity(
+            @RequestBody CommunityDto communityJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 

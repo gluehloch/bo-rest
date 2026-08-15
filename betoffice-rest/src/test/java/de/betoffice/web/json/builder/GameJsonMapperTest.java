@@ -31,13 +31,13 @@ import java.time.ZonedDateTime;
 import org.junit.jupiter.api.Test;
 
 import de.betoffice.storage.group.entity.GroupTypeEntity;
+import de.betoffice.storage.season.GameDto;
 import de.betoffice.storage.season.entity.GameEntity;
 import de.betoffice.storage.season.entity.GameListEntity;
 import de.betoffice.storage.season.entity.GameResult;
 import de.betoffice.storage.season.entity.GroupEntity;
 import de.betoffice.storage.season.entity.LocationEntity;
 import de.betoffice.storage.team.entity.TeamEntity;
-import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.IGameJson;
 
 /**
@@ -71,7 +71,7 @@ public class GameJsonMapperTest {
         gelsenkirchen.setName("Parkstadion");
         game.setLocation(gelsenkirchen);
 
-        IGameJson gameJson = GameJsonMapper.map(game, new GameJson());
+        IGameJson gameJson = GameJsonMapper.map(game, new GameDto());
 
         assertThat(gameJson.isFinished()).isTrue();
         assertThat(gameJson.getDateTime()).isEqualTo(now);

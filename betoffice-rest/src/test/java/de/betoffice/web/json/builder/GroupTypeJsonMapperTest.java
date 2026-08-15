@@ -27,8 +27,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
+import de.betoffice.storage.group.GroupTypeDto;
 import de.betoffice.storage.group.entity.GroupTypeEntity;
-import de.betoffice.web.json.GroupTypeJson;
 
 /**
  * Test for {@link GroupTypeJsonMapper}.
@@ -43,7 +43,7 @@ public class GroupTypeJsonMapperTest {
         groupType.setName("1. Bundesliga");
 
         GroupTypeJsonMapper groupTypeJsonMapper = new GroupTypeJsonMapper();
-        GroupTypeJson groupTypeJson = groupTypeJsonMapper.map(groupType, new GroupTypeJson());
+        GroupTypeDto groupTypeJson = groupTypeJsonMapper.map(groupType, new GroupTypeDto());
 
         assertThat(groupTypeJson.getName()).isEqualTo("1. Bundesliga");
     }

@@ -26,18 +26,18 @@ package de.betoffice.web.admin;
 import java.util.List;
 import java.util.Optional;
 
+import de.betoffice.storage.group.GroupTypeDto;
+import de.betoffice.storage.season.AddRoundJson;
+import de.betoffice.storage.season.GameDto;
+import de.betoffice.storage.season.RoundDto;
+import de.betoffice.storage.season.SeasonDto;
+import de.betoffice.storage.season.UpdateRoundJson;
+import de.betoffice.storage.team.TeamDto;
 import de.betoffice.storage.team.TeamType;
+import de.betoffice.storage.user.PartyDto;
 import de.betoffice.validation.ValidationMessages;
-import de.betoffice.web.json.GameJson;
-import de.betoffice.web.json.GroupTypeJson;
-import de.betoffice.web.json.PartyJson;
 import de.betoffice.web.json.SeasonGroupTeamJson;
-import de.betoffice.web.json.SeasonJson;
 import de.betoffice.web.json.SeasonMemberJson;
-import de.betoffice.web.json.TeamJson;
-import de.betoffice.web.json.round.AddRoundJson;
-import de.betoffice.web.json.round.RoundJson;
-import de.betoffice.web.json.round.UpdateRoundJson;
 
 /**
  * Betoffice administration JSON service interface
@@ -64,7 +64,7 @@ public interface AdminService {
      * @param  roundId  The round to update
      * @return          The updated round and games
      */
-    RoundJson reconcileRoundWithOpenligadb(String token, Long seasonId, Long roundId);
+    RoundDto reconcileRoundWithOpenligadb(String token, Long seasonId, Long roundId);
 
     /**
      * Append round and game informations
@@ -74,7 +74,7 @@ public interface AdminService {
      * @param  roundId  create or update the round after roundId
      * @return          The mounted round and games.
      */
-    RoundJson mountRoundWithOpenligadb(String token, Long seasonId, Long roundId);
+    RoundDto mountRoundWithOpenligadb(String token, Long seasonId, Long roundId);
 
     // -- team administration -------------------------------------------------
 
@@ -84,14 +84,14 @@ public interface AdminService {
      * @param  teamId
      * @return        the team
      */
-    TeamJson findTeam(long teamId);
+    TeamDto findTeam(long teamId);
 
     /**
      * Find all teams
      * 
      * @return all teams
      */
-    List<TeamJson> findTeams();
+    List<TeamDto> findTeams();
 
     /**
      * Find all teams
@@ -100,7 +100,7 @@ public interface AdminService {
      * @param  nameFilter a filter for the team name
      * @return            all teams matching the request
      */
-    List<TeamJson> findTeams(Optional<TeamType> teamType, String nameFilter);
+    List<TeamDto> findTeams(Optional<TeamType> teamType, String nameFilter);
 
     /**
      * Add a new team.
@@ -108,7 +108,7 @@ public interface AdminService {
      * @param  teamJson the new team
      * @return          the team
      */
-    TeamJson addTeam(TeamJson teamJson);
+    TeamDto addTeam(TeamDto teamJson);
 
     /**
      * Upadate a new team.
@@ -116,7 +116,7 @@ public interface AdminService {
      * @param  teamJson the team to update
      * @return          the team
      */
-    TeamJson updateTeam(TeamJson teamJson);
+    TeamDto updateTeam(TeamDto teamJson);
 
     // -- user administration -------------------------------------------------
 
@@ -126,14 +126,14 @@ public interface AdminService {
      * @param  userId the user id
      * @return        the user
      */
-    PartyJson findUser(long userId);
+    PartyDto findUser(long userId);
 
     /**
      * Returns all known users.
      * 
      * @return a list of all known users.
      */
-    List<PartyJson> findUsers();
+    List<PartyDto> findUsers();
 
     /**
      * Create a new party.
@@ -141,7 +141,7 @@ public interface AdminService {
      * @param  user the new user/party
      * @return      the created party
      */
-    PartyJson addUser(PartyJson user);
+    PartyDto addUser(PartyDto user);
 
     /**
      * Update a party
@@ -149,25 +149,25 @@ public interface AdminService {
      * @param  user the updated user/party
      * @return      the updated party
      */
-    PartyJson updateUser(PartyJson user);
+    PartyDto updateUser(PartyDto user);
 
     // -- group administration -----------------------------------------------
 
-    List<GroupTypeJson> findGroupTypes();
+    List<GroupTypeDto> findGroupTypes();
 
-    GroupTypeJson findGroupType(long groupTypeId);
+    GroupTypeDto findGroupType(long groupTypeId);
 
-    SeasonJson addGroupToSeason(SeasonJson season, GroupTypeJson groupType);
+    SeasonDto addGroupToSeason(SeasonDto season, GroupTypeDto groupType);
 
-    void removeGroupFromSeason(SeasonJson seasonJson, GroupTypeJson groupTypeJson);
+    void removeGroupFromSeason(SeasonDto seasonJson, GroupTypeDto groupTypeJson);
 
     SeasonGroupTeamJson findSeasonGroupsAndTeams(long seasonId);
 
-    List<TeamJson> findSeasonGroupAndTeamCandidates(SeasonJson seasonJson, GroupTypeJson groupTypeJson);
+    List<TeamDto> findSeasonGroupAndTeamCandidates(SeasonDto seasonJson, GroupTypeDto groupTypeJson);
 
-    void addTeamToGroup(SeasonJson seasonJson, GroupTypeJson groupTypeJson, TeamJson team);
+    void addTeamToGroup(SeasonDto seasonJson, GroupTypeDto groupTypeJson, TeamDto team);
 
-    void removeTeamFromGroup(SeasonJson seasonJson, GroupTypeJson groupTypeJson, TeamJson teamJson);
+    void removeTeamFromGroup(SeasonDto seasonJson, GroupTypeDto groupTypeJson, TeamDto teamJson);
 
     // -- season administration -----------------------------------------------
 
@@ -177,7 +177,7 @@ public interface AdminService {
      * @param  season the new season
      * @return        a new season
      */
-    SeasonJson addSeason(SeasonJson season);
+    SeasonDto addSeason(SeasonDto season);
 
     /**
      * Update a season
@@ -185,7 +185,7 @@ public interface AdminService {
      * @param  season the season to update
      * @return        the updated season
      */
-    SeasonJson updateSeason(SeasonJson season);
+    SeasonDto updateSeason(SeasonDto season);
 
     /**
      * Update a round and its games with the data from the given round.
@@ -193,7 +193,7 @@ public interface AdminService {
      * @param  round the round to update
      * @return       operation feedback
      */
-    ValidationMessages updateRoundAndGames(long seasonId, long roundId, RoundJson round);
+    ValidationMessages updateRoundAndGames(long seasonId, long roundId, RoundDto round);
 
     /**
      * Erstellt einen neuen Spieltag.
@@ -217,7 +217,7 @@ public interface AdminService {
      * 
      * @param game the game to update
      */
-    void updateGame(GameJson game);
+    void updateGame(GameDto game);
 
     // -- season member administration ----------------------------------------
 

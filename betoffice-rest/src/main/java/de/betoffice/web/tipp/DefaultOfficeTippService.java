@@ -35,6 +35,8 @@ import org.springframework.transaction.annotation.Transactional;
 import de.betoffice.service.CommunityService;
 import de.betoffice.service.SeasonManagerService;
 import de.betoffice.service.TippService;
+import de.betoffice.storage.season.GameDto;
+import de.betoffice.storage.season.RoundDto;
 import de.betoffice.storage.season.entity.GameListEntity;
 import de.betoffice.storage.time.DateTimeProvider;
 import de.betoffice.storage.tip.GameTippEntity;
@@ -42,11 +44,9 @@ import de.betoffice.storage.tip.TippDto;
 import de.betoffice.storage.tip.TippDto.GameTippDto;
 import de.betoffice.storage.user.entity.Nickname;
 import de.betoffice.storage.user.entity.UserEntity;
-import de.betoffice.web.json.GameJson;
 import de.betoffice.web.json.IGameJson;
 import de.betoffice.web.json.JsonAssembler;
 import de.betoffice.web.json.JsonBuilder;
-import de.betoffice.web.json.round.RoundJson;
 
 @Service
 @Transactional(readOnly = true)
@@ -67,7 +67,7 @@ public class DefaultOfficeTippService implements OfficeTippService {
     @PreAuthorize("@tippAuthorisationService.isSubmissionAllowed(#token, #tippRoundJson.nickname)")
     @Override
     @Transactional
-    public RoundJson submitTipp(String token, SubmitTippRoundJson tippRoundJson) {
+    public RoundDto submitTipp(String token, SubmitTippRoundJson tippRoundJson) {
         TippDto tippDto = new TippDto();
         tippDto.setNickname(tippRoundJson.getNickname());
         tippDto.setRoundId(tippRoundJson.getRoundId());
@@ -93,7 +93,7 @@ public class DefaultOfficeTippService implements OfficeTippService {
     }
 
     @Override
-    public RoundJson findTipp(Long roundId, String nickName) {
+    public RoundDto findTipp(Long roundId, String nickName) {
         Optional<UserEntity> user = communityService.findUser(Nickname.of(nickName));
 
         if (!user.isPresent()) {
@@ -108,7 +108,7 @@ public class DefaultOfficeTippService implements OfficeTippService {
         // GameList tippRound = tippService.findTipp(roundId.longValue(),
         // user.get().getId().longValue());
         //
-        RoundJson roundJson = null;
+        RoundDto roundJson = null;
         Optional<GameListEntity> round = seasonManagerService.findRoundGames(roundId);
         if (round.isPresent()) {
             List<GameTippEntity> roundTipps = tippService.findTipps(round.get(), user.get());
@@ -135,7 +135,7 @@ public class DefaultOfficeTippService implements OfficeTippService {
     }
 
     @Override
-    public Optional<RoundJson> findCurrentTipp(Long seasonId, String nickName) {
+    public Optional<RoundDto> findCurrentTipp(Long seasonId, String nickName) {
         ZonedDateTime currentDateTime = dateTimeProvider.currentDateTime();
         return tippService
                 .findNextTippRound(seasonId, currentDateTime)
@@ -143,32 +143,32 @@ public class DefaultOfficeTippService implements OfficeTippService {
     }
 
     @Override
-    public Optional<RoundJson> findNextTipp(Long roundId, String nickName) {
+    public Optional<RoundDto> findNextTipp(Long roundId, String nickName) {
         return seasonManagerService
                 .findNextRound(roundId)
                 .map(i -> findTipp(i.getId(), nickName));
     }
 
     @Override
-    public Optional<RoundJson> findPrevTipp(Long roundId, String nickName) {
+    public Optional<RoundDto> findPrevTipp(Long roundId, String nickName) {
         return seasonManagerService
                 .findPrevRound(roundId)
                 .map(i -> findTipp(i.getId(), nickName));
     }
 
     @Override
-    public Optional<RoundJson> findTippRound(Long seasonId) {
+    public Optional<RoundDto> findTippRound(Long seasonId) {
         return tippService.findNextTippRound(seasonId, dateTimeProvider.currentDateTime())
                 .map(gameList -> {
-                    RoundJson roundJson = JsonBuilder.toJson(gameList);
-                    List<GameJson> gameJson = JsonBuilder.toJsonWithGames(gameList.unmodifiableList());
+                    RoundDto roundJson = JsonBuilder.toJson(gameList);
+                    List<GameDto> gameJson = JsonBuilder.toJsonWithGames(gameList.unmodifiableList());
                     roundJson.getGames().addAll(gameJson);
                     roundJson.setTippable(isFinished(roundJson));
                     return roundJson;
                 });
     }
 
-    private boolean isFinished(RoundJson round) {
+    private boolean isFinished(RoundDto round) {
         boolean finished = false;
         for (IGameJson game : round.getGames()) {
             if (!game.isFinished()) {

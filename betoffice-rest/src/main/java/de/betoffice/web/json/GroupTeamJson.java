@@ -3,26 +3,29 @@ package de.betoffice.web.json;
 import java.io.Serializable;
 import java.util.List;
 
+import de.betoffice.storage.group.GroupTypeDto;
+import de.betoffice.storage.team.TeamDto;
+
 public class GroupTeamJson implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private GroupTypeJson groupType;
-	private List<TeamJson> teams;
+	private GroupTypeDto groupType;
+	private List<TeamDto> teams;
 
-	public GroupTypeJson getGroupType() {
+	public GroupTypeDto getGroupType() {
 		return groupType;
 	}
 
-	public void setGroupType(GroupTypeJson groupType) {
+	public void setGroupType(GroupTypeDto groupType) {
 		this.groupType = groupType;
 	}
 
-	public List<TeamJson> getTeams() {
+	public List<TeamDto> getTeams() {
 		return teams;
 	}
 
-	public void setTeams(List<TeamJson> teams) {
+	public void setTeams(List<TeamDto> teams) {
 		this.teams = teams;
 	}
 

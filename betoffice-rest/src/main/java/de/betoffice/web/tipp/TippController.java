@@ -34,8 +34,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.betoffice.storage.season.RoundDto;
 import de.betoffice.web.BetofficeHttpConsts;
-import de.betoffice.web.json.round.RoundJson;
 
 @CrossOrigin
 @RestController
@@ -57,7 +57,7 @@ public class TippController {
      * @return          The tipp of a user for a round
      */
     @GetMapping(value = "/tipp/{roundId}/{nickName}")
-    public RoundJson findTipp(
+    public RoundDto findTipp(
             @PathVariable("roundId") Long roundId,
             @PathVariable("nickName") String nickName) {
         return officeTippService.findTipp(roundId, nickName);
@@ -71,7 +71,7 @@ public class TippController {
      * @return          The current tipp
      */
     @GetMapping(value = "/tipp/{seasonId}/{nickname}/current")
-    public RoundJson findCurrentTipp(
+    public RoundDto findCurrentTipp(
             @PathVariable("seasonId") Long seasonId,
             @PathVariable("nickname") String nickName) {
         return officeTippService.findCurrentTipp(seasonId, nickName).orElse(null);
@@ -85,7 +85,7 @@ public class TippController {
      * @return          The next tipp ahead of <code>roundId</code>
      */
     @GetMapping(value = "/tipp/{roundId}/{nickName}/next")
-    public RoundJson findNextTipp(
+    public RoundDto findNextTipp(
             @PathVariable("roundId") Long roundId,
             @PathVariable("nickName") String nickName) {
         return officeTippService.findNextTipp(roundId, nickName).orElse(null);
@@ -99,14 +99,14 @@ public class TippController {
      * @return          The previous tipp behind of <code>roundId</code>
      */
     @GetMapping(value = "/tipp/{roundId}/{nickName}/prev")
-    public RoundJson findPrevTipp(
+    public RoundDto findPrevTipp(
             @PathVariable("roundId") Long roundId,
             @PathVariable("nickName") String nickName) {
         return officeTippService.findPrevTipp(roundId, nickName).orElse(null);
     }
 
     @RequestMapping(value = "/tipp/submit", method = RequestMethod.POST, headers = { "Content-type=application/json" })
-    public ResponseEntity<RoundJson> submitTipp(
+    public ResponseEntity<RoundDto> submitTipp(
             @RequestBody SubmitTippRoundJson tippRoundJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {

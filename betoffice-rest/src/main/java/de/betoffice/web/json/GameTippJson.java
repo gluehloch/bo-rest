@@ -23,22 +23,25 @@
 
 package de.betoffice.web.json;
 
+import de.betoffice.storage.season.GameDto;
+import de.betoffice.storage.season.GameResultDto;
+
 /**
- * Tipp for a game and an extension of {@link GameJson}.
+ * Tipp for a game and an extension of {@link GameDto}.
  * 
  * @author Andre Winkler
  */
 public class GameTippJson {
 
     private String nickname;
-    private GameResultJson tipp;
+    private GameResultDto tipp;
     private long points;
 
-    public GameResultJson getTipp() {
+    public GameResultDto getTipp() {
         return tipp;
     }
 
-    public void setTipp(GameResultJson tipp) {
+    public void setTipp(GameResultDto tipp) {
         this.tipp = tipp;
     }
 

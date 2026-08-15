@@ -26,6 +26,8 @@ package de.betoffice.web.json;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.betoffice.storage.group.GroupTypeDto;
+
 /**
  * A group with all teams ordered by ranking.
  * 
@@ -33,14 +35,14 @@ import java.util.List;
  */
 public class GroupTeamTableJson {
 
-    private GroupTypeJson groupTypeJson;
+    private GroupTypeDto groupTypeJson;
 
     private List<TeamResultJson> teamResultJsons = new ArrayList<>();
 
     /**
      * @return the groupJson
      */
-    public GroupTypeJson getGroupTypeJson() {
+    public GroupTypeDto getGroupTypeJson() {
         return groupTypeJson;
     }
 
@@ -48,7 +50,7 @@ public class GroupTeamTableJson {
      * @param groupJson
      *            the groupJson to set
      */
-    public void setGroupTypeJson(GroupTypeJson groupJson) {
+    public void setGroupTypeJson(GroupTypeDto groupJson) {
         this.groupTypeJson = groupJson;
     }
 

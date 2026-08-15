@@ -31,12 +31,12 @@ import java.time.ZonedDateTime;
 import org.junit.jupiter.api.Test;
 
 import de.betoffice.storage.group.entity.GroupTypeEntity;
+import de.betoffice.storage.season.RoundDto;
 import de.betoffice.storage.season.SeasonType;
 import de.betoffice.storage.season.entity.GameListEntity;
 import de.betoffice.storage.season.entity.GroupEntity;
 import de.betoffice.storage.season.entity.SeasonEntity;
 import de.betoffice.storage.season.entity.SeasonReference;
-import de.betoffice.web.json.round.RoundJson;
 
 /**
  * Test for {@link RoundJsonMapper}.
@@ -64,7 +64,7 @@ class RoundJsonMapperTest {
         round.setSeason(season);
 
         RoundJsonMapper mapper = new RoundJsonMapper();
-        RoundJson roundJson = mapper.map(round, new RoundJson());
+        RoundDto roundJson = mapper.map(round, new RoundDto());
 
         assertThat(roundJson.getDateTime()).isEqualTo(now);
         assertThat(roundJson.getIndex()).isEqualTo(1);

@@ -27,14 +27,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
+import de.betoffice.storage.season.SeasonDto;
 import de.betoffice.storage.season.SeasonType;
 import de.betoffice.storage.season.entity.SeasonEntity;
+import de.betoffice.storage.season.entity.SeasonDtoMapper;
 import de.betoffice.storage.season.entity.SeasonReference;
 import de.betoffice.storage.team.TeamType;
-import de.betoffice.web.json.SeasonJson;
 
 /**
- * Test for {@link SeasonJsonMapper}.
+ * Test for {@link SeasonDtoMapper}.
  * 
  * @author Andre Winkler
  */
@@ -47,8 +48,8 @@ class SeasonJsonMapperTest {
         season.setReference(SeasonReference.of("2017/2018", "Bundesliga 2017/2018"));
         season.setTeamType(TeamType.DFB);
 
-        SeasonJsonMapper seasonJsonMapper = new SeasonJsonMapper();
-        SeasonJson seasonJson = seasonJsonMapper.map(season, new SeasonJson());
+        SeasonDtoMapper seasonJsonMapper = new SeasonDtoMapper();
+        SeasonDto seasonJson = seasonJsonMapper.map(season, new SeasonDto());
 
         assertThat(seasonJson.getName()).isEqualTo("Bundesliga 2017/2018");
         assertThat(seasonJson.getSeasonType()).isEqualTo(SeasonType.LEAGUE.toString());
