@@ -47,16 +47,15 @@ import de.betoffice.storage.season.AddRoundJson;
 import de.betoffice.storage.season.GameDto;
 import de.betoffice.storage.season.RoundDto;
 import de.betoffice.storage.season.SeasonDto;
-import de.betoffice.storage.season.UpdateRoundJson;
+import de.betoffice.storage.season.UpdateRoundDto;
+import de.betoffice.storage.season.entity.RoundAndTableJson;
+import de.betoffice.storage.season.entity.SeasonGroupTeamJson;
+import de.betoffice.storage.season.entity.SeasonMemberJson;
 import de.betoffice.storage.team.TeamDto;
 import de.betoffice.storage.team.TeamType;
 import de.betoffice.storage.user.PartyDto;
 import de.betoffice.validation.ValidationMessages;
 import de.betoffice.web.BetofficeHttpConsts;
-import de.betoffice.web.json.IGameJson;
-import de.betoffice.web.json.RoundAndTableJson;
-import de.betoffice.web.json.SeasonGroupTeamJson;
-import de.betoffice.web.json.SeasonMemberJson;
 import de.betoffice.web.season.BetofficeService;
 
 /**
@@ -130,7 +129,7 @@ public class AdministrationController {
     public ResponseEntity<Void> updateRound(
             @PathVariable("seasonId") Long seasonId,
             @PathVariable("roundId") Long roundId,
-            @RequestBody UpdateRoundJson updateRoundJson,
+            @RequestBody UpdateRoundDto updateRoundJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
@@ -162,7 +161,7 @@ public class AdministrationController {
 
     @PreAuthorize("@authService.isAdminSession(#token)")
     @PostMapping(value = "/game/update", headers = { "Content-type=application/json" })
-    public IGameJson updateGame(@RequestBody GameDto gameJson,
+    public GameDto updateGame(@RequestBody GameDto gameJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 

@@ -28,13 +28,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
 import de.betoffice.storage.group.entity.GroupTypeEntity;
+import de.betoffice.storage.season.TeamResultDto;
 import de.betoffice.storage.season.entity.SeasonEntity;
+import de.betoffice.storage.season.entity.TeamResultDtoMapper;
 import de.betoffice.storage.team.TeamResult;
 import de.betoffice.storage.team.entity.TeamEntity;
-import de.betoffice.web.json.TeamResultJson;
 
 /**
- * Mapping test for {@link TeamResult} to {@link TeamResultJson}.
+ * Mapping test for {@link TeamResult} to {@link TeamResultDto}.
  * 
  * @author Andre Winkler
  */
@@ -54,8 +55,8 @@ public class TeamResultJsonMapperTest {
         teamResult.setTabPos(5);
         teamResult.setWin(6);
 
-        TeamResultJsonMapper teamResultJsonMapper = new TeamResultJsonMapper();
-        TeamResultJson teamResultJson = teamResultJsonMapper.map(teamResult, new TeamResultJson());
+        TeamResultDtoMapper teamResultJsonMapper = new TeamResultDtoMapper();
+        TeamResultDto teamResultJson = teamResultJsonMapper.map(teamResult, new TeamResultDto());
 
         assertThat(teamResultJson.getLost()).isEqualTo(1);
         assertThat(teamResultJson.getNegGoals()).isEqualTo(2);

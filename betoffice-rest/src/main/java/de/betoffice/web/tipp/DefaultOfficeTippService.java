@@ -38,6 +38,8 @@ import de.betoffice.service.TippService;
 import de.betoffice.storage.season.GameDto;
 import de.betoffice.storage.season.RoundDto;
 import de.betoffice.storage.season.entity.GameListEntity;
+import de.betoffice.storage.season.entity.JsonAssembler;
+import de.betoffice.storage.season.entity.JsonBuilder;
 import de.betoffice.storage.time.DateTimeProvider;
 import de.betoffice.storage.tip.GameTippEntity;
 import de.betoffice.storage.tip.TippDto;
@@ -45,8 +47,6 @@ import de.betoffice.storage.tip.TippDto.GameTippDto;
 import de.betoffice.storage.user.entity.Nickname;
 import de.betoffice.storage.user.entity.UserEntity;
 import de.betoffice.web.json.IGameJson;
-import de.betoffice.web.json.JsonAssembler;
-import de.betoffice.web.json.JsonBuilder;
 
 @Service
 @Transactional(readOnly = true)

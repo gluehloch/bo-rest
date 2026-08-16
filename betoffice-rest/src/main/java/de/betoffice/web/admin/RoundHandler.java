@@ -10,7 +10,7 @@ import de.betoffice.service.MasterDataManagerService;
 import de.betoffice.service.SeasonManagerService;
 import de.betoffice.storage.group.entity.GroupTypeEntity;
 import de.betoffice.storage.season.AddRoundJson;
-import de.betoffice.storage.season.UpdateRoundJson;
+import de.betoffice.storage.season.UpdateRoundDto;
 import de.betoffice.storage.season.entity.GameListEntity;
 import de.betoffice.storage.season.entity.GroupEntity;
 import de.betoffice.storage.season.entity.SeasonEntity;
@@ -70,7 +70,7 @@ public class RoundHandler {
         return ValidationMessages.ok();
     }
 
-    public ValidationMessages updateRound(long seasonId, long roundId, UpdateRoundJson round) {
+    public ValidationMessages updateRound(long seasonId, long roundId, UpdateRoundDto round) {
         if (seasonId != round.getSeasonId()) {
             LOG.error("Seaosn id from path variable {} does not match season id from request body {}.",
                     seasonId,

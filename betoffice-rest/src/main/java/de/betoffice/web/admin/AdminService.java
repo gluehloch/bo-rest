@@ -31,13 +31,13 @@ import de.betoffice.storage.season.AddRoundJson;
 import de.betoffice.storage.season.GameDto;
 import de.betoffice.storage.season.RoundDto;
 import de.betoffice.storage.season.SeasonDto;
-import de.betoffice.storage.season.UpdateRoundJson;
+import de.betoffice.storage.season.UpdateRoundDto;
+import de.betoffice.storage.season.entity.SeasonGroupTeamJson;
+import de.betoffice.storage.season.entity.SeasonMemberJson;
 import de.betoffice.storage.team.TeamDto;
 import de.betoffice.storage.team.TeamType;
 import de.betoffice.storage.user.PartyDto;
 import de.betoffice.validation.ValidationMessages;
-import de.betoffice.web.json.SeasonGroupTeamJson;
-import de.betoffice.web.json.SeasonMemberJson;
 
 /**
  * Betoffice administration JSON service interface
@@ -210,7 +210,7 @@ public interface AdminService {
      * @param  round
      * @return       operation feedback
      */
-    ValidationMessages updateRound(long seasonId, long roundId, UpdateRoundJson round);
+    ValidationMessages updateRound(long seasonId, long roundId, UpdateRoundDto round);
 
     /**
      * Update a game

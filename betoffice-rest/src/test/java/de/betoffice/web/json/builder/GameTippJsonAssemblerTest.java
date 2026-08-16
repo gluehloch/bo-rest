@@ -34,17 +34,17 @@ import org.junit.jupiter.api.Test;
 
 import de.betoffice.storage.group.entity.GroupTypeEntity;
 import de.betoffice.storage.season.GameDto;
+import de.betoffice.storage.season.GameTippDto;
 import de.betoffice.storage.season.entity.GameEntity;
 import de.betoffice.storage.season.entity.GameListEntity;
 import de.betoffice.storage.season.entity.GameResult;
 import de.betoffice.storage.season.entity.GroupEntity;
+import de.betoffice.storage.season.entity.JsonBuilder;
 import de.betoffice.storage.team.entity.TeamEntity;
 import de.betoffice.storage.tip.GameTippEntity;
 import de.betoffice.storage.tip.TippStatusType;
 import de.betoffice.storage.user.entity.Nickname;
 import de.betoffice.storage.user.entity.UserEntity;
-import de.betoffice.web.json.GameTippJson;
-import de.betoffice.web.json.JsonBuilder;
 
 /**
  * Test for game and gametipp mapping.
@@ -103,7 +103,7 @@ class GameTippJsonAssemblerTest {
         assertThat(gameJson.getHomeTeam().getName()).isEqualTo("Heim");
         assertThat(gameJson.getGuestTeam().getName()).isEqualTo("Gast");
         assertThat(gameJson.getTipps()).hasSize(1);
-        GameTippJson gameTippJson = gameJson.getTipps().get(0);
+        GameTippDto gameTippJson = gameJson.getTipps().get(0);
         assertThat(gameTippJson.getNickname()).isEqualTo("Frosch");
         assertThat(gameTippJson.getTipp().getHomeGoals()).isEqualTo(2);
         assertThat(gameTippJson.getTipp().getGuestGoals()).isEqualTo(1);

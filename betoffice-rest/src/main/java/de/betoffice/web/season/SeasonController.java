@@ -39,10 +39,10 @@ import de.betoffice.storage.group.GroupTypeDto;
 import de.betoffice.storage.season.GameDto;
 import de.betoffice.storage.season.RoundDto;
 import de.betoffice.storage.season.SeasonDto;
+import de.betoffice.storage.season.UserRankingTableDto;
+import de.betoffice.storage.season.entity.RoundAndTableJson;
 import de.betoffice.web.json.GameWithGoalsJson;
 import de.betoffice.web.json.PingJson;
-import de.betoffice.web.json.RoundAndTableJson;
-import de.betoffice.web.json.UserTableJson;
 import de.betoffice.web.runtime.VersionService;
 import de.betoffice.web.runtime.VersionService.VersionInfo;
 import de.betoffice.web.tipp.OfficeTippService;
@@ -183,31 +183,31 @@ public class SeasonController {
     //
 
     @RequestMapping(value = "/ranking/season/{seasonId}", method = RequestMethod.GET)
-    public UserTableJson findUserTableBySeason(@PathVariable("seasonId") Long seasonId) {
+    public UserRankingTableDto findUserTableBySeason(@PathVariable("seasonId") Long seasonId) {
 
         return betofficeService.calcUserRanking(seasonId);
     }
 
     @RequestMapping(value = "/ranking/roundonly/{roundId}", method = RequestMethod.GET)
-    public UserTableJson findUserTableByRoundOnly(@PathVariable("roundId") Long roundId) {
+    public UserRankingTableDto findUserTableByRoundOnly(@PathVariable("roundId") Long roundId) {
 
         return betofficeService.calcUserRankingByRoundOnly(roundId);
     }
 
     @RequestMapping(value = "/ranking/round/{roundId}", method = RequestMethod.GET)
-    public UserTableJson findUserTableByRound(@PathVariable("roundId") Long roundId) {
+    public UserRankingTableDto findUserTableByRound(@PathVariable("roundId") Long roundId) {
 
         return betofficeService.calcUserRankingByRound(roundId);
     }
 
     @RequestMapping(value = "/ranking/round/{roundId}/next", method = RequestMethod.GET)
-    public UserTableJson findUserTableByNextRound(@PathVariable("roundId") Long roundId) {
+    public UserRankingTableDto findUserTableByNextRound(@PathVariable("roundId") Long roundId) {
 
         return betofficeService.calcUserRankingByNextRound(roundId);
     }
 
     @RequestMapping(value = "/ranking/round/{roundId}/prev", method = RequestMethod.GET)
-    public UserTableJson findUserTableByPrevRound(@PathVariable("roundId") Long roundId) {
+    public UserRankingTableDto findUserTableByPrevRound(@PathVariable("roundId") Long roundId) {
 
         return betofficeService.calcUserRankingByPrevRound(roundId);
     }

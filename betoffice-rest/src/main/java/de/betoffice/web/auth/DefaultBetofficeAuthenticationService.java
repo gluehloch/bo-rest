@@ -36,8 +36,8 @@ import de.betoffice.service.SecurityToken;
 import de.betoffice.storage.time.DateTimeProvider;
 import de.betoffice.storage.user.entity.Nickname;
 import de.betoffice.storage.user.entity.UserEntity;
-import de.betoffice.web.json.JsonBuilder;
 import de.betoffice.web.json.SecurityTokenJson;
+import de.betoffice.web.json.SecurityTokenJsonMapper;
 
 @Component
 public class DefaultBetofficeAuthenticationService implements BetofficeAuthenticationService {
@@ -71,7 +71,7 @@ public class DefaultBetofficeAuthenticationService implements BetofficeAuthentic
             stj.setRole("no_authorization");
             stj.setToken("no_authorization");
         } else {
-            stj = JsonBuilder.toJson(securityToken);
+            stj = toJson(securityToken);
             if (LOG.isInfoEnabled()) {
                 LOG.info("Login successful: user=[{}], token=[{}]", user, stj);
             }
@@ -87,7 +87,11 @@ public class DefaultBetofficeAuthenticationService implements BetofficeAuthentic
                 dateTimeProvider.currentDateTime());
         authService.logout(token);
 
-        return JsonBuilder.toJson(securityToken);
+        return toJson(securityToken);
+    }
+
+    public static SecurityTokenJson toJson(SecurityToken securityToken) {
+        return SecurityTokenJsonMapper.map(securityToken, new SecurityTokenJson());
     }
 
 }

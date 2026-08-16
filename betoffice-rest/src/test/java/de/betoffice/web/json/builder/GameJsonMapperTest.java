@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Test;
 import de.betoffice.storage.group.entity.GroupTypeEntity;
 import de.betoffice.storage.season.GameDto;
 import de.betoffice.storage.season.entity.GameEntity;
+import de.betoffice.storage.season.entity.GameJsonMapper;
 import de.betoffice.storage.season.entity.GameListEntity;
 import de.betoffice.storage.season.entity.GameResult;
 import de.betoffice.storage.season.entity.GroupEntity;

@@ -43,15 +43,21 @@ import de.betoffice.service.SeasonManagerService;
 import de.betoffice.storage.community.entity.CommunityReference;
 import de.betoffice.storage.group.GroupTypeDto;
 import de.betoffice.storage.group.entity.GroupTypeEntity;
+import de.betoffice.storage.group.entity.GroupTeamDto;
+import de.betoffice.storage.group.entity.GroupTypeDtoMapper;
 import de.betoffice.storage.season.AddRoundJson;
 import de.betoffice.storage.season.GameDto;
 import de.betoffice.storage.season.RoundDto;
 import de.betoffice.storage.season.SeasonDto;
-import de.betoffice.storage.season.UpdateRoundJson;
+import de.betoffice.storage.season.UpdateRoundDto;
 import de.betoffice.storage.season.entity.GameEntity;
 import de.betoffice.storage.season.entity.GameListEntity;
 import de.betoffice.storage.season.entity.GroupEntity;
+import de.betoffice.storage.season.entity.JsonBuilder;
 import de.betoffice.storage.season.entity.SeasonEntity;
+import de.betoffice.storage.season.entity.SeasonGroupTeamJson;
+import de.betoffice.storage.season.entity.SeasonMemberJson;
+import de.betoffice.storage.season.entity.SeasonMemberJsonMapper;
 import de.betoffice.storage.season.entity.SeasonDtoMapper;
 import de.betoffice.storage.session.entity.SessionEntity;
 import de.betoffice.storage.team.TeamDto;
@@ -65,13 +71,6 @@ import de.betoffice.storage.user.entity.PartyJsonMapper;
 import de.betoffice.storage.user.entity.UserEntity;
 import de.betoffice.validation.ValidationMessage;
 import de.betoffice.validation.ValidationMessages;
-import de.betoffice.web.json.GroupTeamJson;
-import de.betoffice.web.json.IGameJson;
-import de.betoffice.web.json.JsonBuilder;
-import de.betoffice.web.json.SeasonGroupTeamJson;
-import de.betoffice.web.json.SeasonMemberJson;
-import de.betoffice.web.json.builder.GroupTypeJsonMapper;
-import de.betoffice.web.json.builder.SeasonMemberJsonMapper;
 
 /**
  * Betoffice administration JSON service interface.
@@ -298,7 +297,7 @@ public class DefaultAdminService implements AdminService {
     }
 
     // TODO Gehoert sowas eher in einen JSON-Mapper? JsonAssembler | JsonBuilder?
-    private void updateGame(IGameJson match, GameEntity game) {
+    private void updateGame(GameDto match, GameEntity game) {
         game.setPlayed(match.isFinished());
         game.setKo(match.isKo());
         game.setResult(match.getResult().getHomeGoals(),
@@ -368,12 +367,12 @@ public class DefaultAdminService implements AdminService {
 
     @Override
     public List<GroupTypeDto> findGroupTypes() {
-        return GroupTypeJsonMapper.map(masterDataManagerService.findAllGroupTypes());
+        return GroupTypeDtoMapper.map(masterDataManagerService.findAllGroupTypes());
     }
 
     @Override
     public GroupTypeDto findGroupType(long groupTypeId) {
-        return GroupTypeJsonMapper.map(masterDataManagerService.findGroupType(groupTypeId), new GroupTypeDto());
+        return GroupTypeDtoMapper.map(masterDataManagerService.findGroupType(groupTypeId), new GroupTypeDto());
     }
 
     @Override
@@ -401,8 +400,8 @@ public class DefaultAdminService implements AdminService {
 
         for (GroupEntity group : groups) {
             List<TeamEntity> teams = seasonManagerService.findTeams(group);
-            GroupTeamJson groupTeamJson = new GroupTeamJson();
-            groupTeamJson.setGroupType(GroupTypeJsonMapper.map(group.getGroupType(), new GroupTypeDto()));
+            GroupTeamDto groupTeamJson = new GroupTeamDto();
+            groupTeamJson.setGroupType(GroupTypeDtoMapper.map(group.getGroupType(), new GroupTypeDto()));
             groupTeamJson.setTeams(TeamDtoMapper.map(teams));
             seasonGroupTeamJson.getGroupTeams().add(groupTeamJson);
         }
@@ -447,7 +446,7 @@ public class DefaultAdminService implements AdminService {
 
     @Override
     @Transactional
-    public ValidationMessages updateRound(long seasonId, long roundId, UpdateRoundJson round) {
+    public ValidationMessages updateRound(long seasonId, long roundId, UpdateRoundDto round) {
         return roundHandler.updateRound(seasonId, roundId, round);
     }
 

@@ -29,9 +29,10 @@ import org.junit.jupiter.api.Test;
 
 import de.betoffice.storage.group.GroupTypeDto;
 import de.betoffice.storage.group.entity.GroupTypeEntity;
+import de.betoffice.storage.group.entity.GroupTypeDtoMapper;
 
 /**
- * Test for {@link GroupTypeJsonMapper}.
+ * Test for {@link GroupTypeDtoMapper}.
  *
  * @author Andre Winkler
  */
@@ -42,7 +43,7 @@ public class GroupTypeJsonMapperTest {
         GroupTypeEntity groupType = new GroupTypeEntity();
         groupType.setName("1. Bundesliga");
 
-        GroupTypeJsonMapper groupTypeJsonMapper = new GroupTypeJsonMapper();
+        GroupTypeDtoMapper groupTypeJsonMapper = new GroupTypeDtoMapper();
         GroupTypeDto groupTypeJson = groupTypeJsonMapper.map(groupType, new GroupTypeDto());
 
         assertThat(groupTypeJson.getName()).isEqualTo("1. Bundesliga");

@@ -27,14 +27,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
+import de.betoffice.storage.season.GameTippDto;
 import de.betoffice.storage.season.entity.GameEntity;
 import de.betoffice.storage.season.entity.GameResult;
+import de.betoffice.storage.season.entity.GameTippJsonMapper;
 import de.betoffice.storage.team.entity.TeamEntity;
 import de.betoffice.storage.tip.GameTippEntity;
 import de.betoffice.storage.tip.TippStatusType;
 import de.betoffice.storage.user.entity.Nickname;
 import de.betoffice.storage.user.entity.UserEntity;
-import de.betoffice.web.json.GameTippJson;
 
 /**
  * Test for class {@link GameTippJsonMapper}.
@@ -61,7 +62,7 @@ class GameTippJsonMapperTest {
         tipp.setTipp(GameResult.of(2, 1), TippStatusType.USER);
 
         GameTippJsonMapper gameTippJsonMapper = new GameTippJsonMapper();
-        GameTippJson gameTippJson = gameTippJsonMapper.map(tipp, new GameTippJson());
+        GameTippDto gameTippJson = gameTippJsonMapper.map(tipp, new GameTippDto());
 
         assertThat(gameTippJson.getNickname()).isEqualTo("Frosch");
         assertThat(gameTippJson.getTipp().getHomeGoals()).isEqualTo(2);
@@ -88,7 +89,7 @@ class GameTippJsonMapperTest {
         tipp.setTipp(GameResult.of(2, 0), TippStatusType.USER);
 
         GameTippJsonMapper gameTippJsonMapper = new GameTippJsonMapper();
-        GameTippJson gameTippJson = gameTippJsonMapper.map(tipp, new GameTippJson());
+        GameTippDto gameTippJson = gameTippJsonMapper.map(tipp, new GameTippDto());
 
         assertThat(gameTippJson.getNickname()).isEqualTo("Frosch");
         assertThat(gameTippJson.getTipp().getHomeGoals()).isEqualTo(2);
@@ -115,7 +116,7 @@ class GameTippJsonMapperTest {
         tipp.setTipp(GameResult.of(1, 2), TippStatusType.USER);
 
         GameTippJsonMapper gameTippJsonMapper = new GameTippJsonMapper();
-        GameTippJson gameTippJson = gameTippJsonMapper.map(tipp, new GameTippJson());
+        GameTippDto gameTippJson = gameTippJsonMapper.map(tipp, new GameTippDto());
 
         assertThat(gameTippJson.getNickname()).isEqualTo("Frosch");
         assertThat(gameTippJson.getTipp().getHomeGoals()).isEqualTo(1);

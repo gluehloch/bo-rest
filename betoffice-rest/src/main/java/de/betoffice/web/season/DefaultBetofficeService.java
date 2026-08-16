@@ -38,15 +38,23 @@ import de.betoffice.service.MasterDataManagerService;
 import de.betoffice.service.SeasonManagerService;
 import de.betoffice.service.TippService;
 import de.betoffice.storage.group.GroupTypeDto;
+import de.betoffice.storage.group.entity.GroupTeamTableJson;
 import de.betoffice.storage.group.entity.GroupTypeEntity;
 import de.betoffice.storage.season.GameDto;
 import de.betoffice.storage.season.RoundDto;
 import de.betoffice.storage.season.SeasonDto;
 import de.betoffice.storage.season.SeasonRange;
+import de.betoffice.storage.season.TeamResultDto;
+import de.betoffice.storage.season.UserRankingDto;
+import de.betoffice.storage.season.UserRankingTableDto;
 import de.betoffice.storage.season.entity.GameEntity;
 import de.betoffice.storage.season.entity.GameListEntity;
 import de.betoffice.storage.season.entity.GoalEntity;
+import de.betoffice.storage.season.entity.GoalDtoMapper;
 import de.betoffice.storage.season.entity.GroupEntity;
+import de.betoffice.storage.season.entity.JsonAssembler;
+import de.betoffice.storage.season.entity.JsonBuilder;
+import de.betoffice.storage.season.entity.RoundAndTableJson;
 import de.betoffice.storage.season.entity.SeasonEntity;
 import de.betoffice.storage.team.TeamDto;
 import de.betoffice.storage.team.TeamResult;
@@ -57,16 +65,8 @@ import de.betoffice.storage.time.DateTimeProvider;
 import de.betoffice.storage.tip.GameTippEntity;
 import de.betoffice.storage.user.UserResult;
 import de.betoffice.web.json.GameWithGoalsJson;
-import de.betoffice.web.json.GroupTeamTableJson;
 import de.betoffice.web.json.IGameJson;
-import de.betoffice.web.json.JsonAssembler;
-import de.betoffice.web.json.JsonBuilder;
 import de.betoffice.web.json.PingJson;
-import de.betoffice.web.json.RoundAndTableJson;
-import de.betoffice.web.json.TeamResultJson;
-import de.betoffice.web.json.UserJson;
-import de.betoffice.web.json.UserTableJson;
-import de.betoffice.web.json.builder.GoalJsonMapper;
 
 /**
  * Basic rest service features for betoffice.
@@ -239,7 +239,7 @@ public class DefaultBetofficeService implements BetofficeService {
         groupTeamTableJson.setGroupTypeJson(JsonBuilder.toJson(groupType));
 
         for (TeamResult teamResult : teamRanking) {
-            TeamResultJson teamResultJson = JsonBuilder.toJson(teamResult);
+            TeamResultDto teamResultJson = JsonBuilder.toJson(teamResult);
             groupTeamTableJson.add(teamResultJson);
         }
 
@@ -273,7 +273,7 @@ public class DefaultBetofficeService implements BetofficeService {
         GameEntity game = seasonManagerService.findMatch(gameId);
         List<GoalEntity> goals = seasonManagerService.findGoalsOfMatch(game);
         GameWithGoalsJson json = JsonBuilder.toGameWithGoalsJson(game);
-        json.setGoals(GoalJsonMapper.map(goals));
+        json.setGoals(GoalDtoMapper.map(goals));
         return json;
     }
 
@@ -285,7 +285,7 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
-    public UserTableJson calcUserRanking(Long seasonId) {
+    public UserRankingTableDto calcUserRanking(Long seasonId) {
         SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
         Optional<GameListEntity> round = tippService.findPreviousTippRound(seasonId,
                 dateTimeProvider.currentDateTime());
@@ -294,7 +294,7 @@ public class DefaultBetofficeService implements BetofficeService {
         // #findPreviousTippRound
         // liefert dann null, wenn die Meisterschaft noch nicht gestartet ist.
 
-        UserTableJson userTableJson = new UserTableJson();
+        UserRankingTableDto userTableJson = new UserRankingTableDto();
         if (round.isEmpty()) {
             // Dann gibt es keine Tipprunde und es kann der letzte Spieltag
             // angenommen werden.
@@ -316,7 +316,7 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
-    public UserTableJson calcUserRankingByRoundOnly(Long roundId) {
+    public UserRankingTableDto calcUserRankingByRoundOnly(Long roundId) {
         // GameList round = seasonManagerService.findRound(roundId);
         // return calcUserRanking(round, round.getIndex());
 
@@ -337,7 +337,7 @@ public class DefaultBetofficeService implements BetofficeService {
                 }
             }
 
-            UserTableJson userTableJson = new UserTableJson();
+            UserRankingTableDto userTableJson = new UserRankingTableDto();
             userTableJson.setRound(JsonBuilder.toJson(round.get()));
 
             // userTableJson.setRound(JsonBuilder.toJsonWithGames(round));
@@ -352,10 +352,10 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
-    public UserTableJson calcUserRankingByRound(Long roundId) {
+    public UserRankingTableDto calcUserRankingByRound(Long roundId) {
         Optional<GameListEntity> round = seasonManagerService.findRoundGames(roundId);
 
-        UserTableJson userTableJson = new UserTableJson();
+        UserRankingTableDto userTableJson = new UserRankingTableDto();
         userTableJson.setRound(JsonBuilder.toJson(round.get()));
 
         List<GameTippEntity> tipps = tippService.findTipps(roundId);
@@ -368,14 +368,14 @@ public class DefaultBetofficeService implements BetofficeService {
         return calcUserRanking(userTableJson, round.get(), 0);
     }
 
-    private UserTableJson calcUserRanking(UserTableJson userTableJson, GameListEntity round, int startIndex) {
+    private UserRankingTableDto calcUserRanking(UserRankingTableDto userTableJson, GameListEntity round, int startIndex) {
         SeasonEntity season = seasonManagerService.findSeasonById(round.getSeason().getId());
         List<UserResult> calculatedRanking = communityCalculatorService.calculateRanking(
                 CommunityService.defaultPlayerGroup(season.getReference()),
                 SeasonRange.of(startIndex, round.getIndex()));
 
         for (UserResult ur : calculatedRanking) {
-            UserJson userJson = JsonBuilder.toJson(ur);
+            UserRankingDto userJson = JsonBuilder.toJson(ur);
             userTableJson.addUser(userJson);
         }
 
@@ -387,7 +387,7 @@ public class DefaultBetofficeService implements BetofficeService {
         return userTableJson;
     }
 
-    private void findNextAndPrevRound(GameListEntity round, UserTableJson userTableJson) {
+    private void findNextAndPrevRound(GameListEntity round, UserRankingTableDto userTableJson) {
 
         Optional<GameListEntity> nextNextRound = seasonManagerService.findNextRound(round.getId());
         userTableJson.getRound().setLastRound(!nextNextRound.isPresent());
@@ -395,7 +395,7 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
-    public UserTableJson calcUserRankingByNextRound(Long roundId) {
+    public UserRankingTableDto calcUserRankingByNextRound(Long roundId) {
         Optional<GameListEntity> nextRound = seasonManagerService.findNextRound(roundId);
         if (nextRound.isPresent()) {
             return calcUserRankingByRound(nextRound.get().getId());
@@ -404,7 +404,7 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
-    public UserTableJson calcUserRankingByPrevRound(Long roundId) {
+    public UserRankingTableDto calcUserRankingByPrevRound(Long roundId) {
         Optional<GameListEntity> prevRound = seasonManagerService.findPrevRound(roundId);
         if (prevRound.isPresent()) {
             return calcUserRankingByRound(prevRound.get().getId());

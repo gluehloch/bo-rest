@@ -35,11 +35,12 @@ import de.betoffice.storage.season.RoundDto;
 import de.betoffice.storage.season.SeasonType;
 import de.betoffice.storage.season.entity.GameListEntity;
 import de.betoffice.storage.season.entity.GroupEntity;
+import de.betoffice.storage.season.entity.RoundDtoMapper;
 import de.betoffice.storage.season.entity.SeasonEntity;
 import de.betoffice.storage.season.entity.SeasonReference;
 
 /**
- * Test for {@link RoundJsonMapper}.
+ * Test for {@link RoundDtoMapper}.
  * 
  * @author Andre Winkler
  */
@@ -63,7 +64,7 @@ class RoundJsonMapperTest {
         round.setOpenligaid(4711L);
         round.setSeason(season);
 
-        RoundJsonMapper mapper = new RoundJsonMapper();
+        RoundDtoMapper mapper = new RoundDtoMapper();
         RoundDto roundJson = mapper.map(round, new RoundDto());
 
         assertThat(roundJson.getDateTime()).isEqualTo(now);

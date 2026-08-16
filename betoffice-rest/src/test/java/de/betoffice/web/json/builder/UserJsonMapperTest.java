@@ -27,15 +27,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
+import de.betoffice.storage.season.UserRankingDto;
 import de.betoffice.storage.season.entity.SeasonEntity;
 import de.betoffice.storage.season.entity.SeasonReference;
 import de.betoffice.storage.user.UserResult;
 import de.betoffice.storage.user.entity.Nickname;
 import de.betoffice.storage.user.entity.UserEntity;
-import de.betoffice.web.json.UserJson;
+import de.betoffice.storage.user.entity.UserDtoMapper;
 
 /**
- * Test for {@link UserJsonMapper}.
+ * Test for {@link UserDtoMapper}.
  * 
  * @author Andre Winkler
  */
@@ -53,8 +54,8 @@ class UserJsonMapperTest {
         userResult.setUserTotoWin(3);
         userResult.setUserWin(4);
 
-        UserJsonMapper userJsonMapper = new UserJsonMapper();
-        UserJson userJson = userJsonMapper.map(userResult, new UserJson());
+        UserDtoMapper userJsonMapper = new UserDtoMapper();
+        UserRankingDto userJson = userJsonMapper.map(userResult, new UserRankingDto());
 
         assertThat(userJson.getNickname()).isEqualTo("Frosch");
         // (13 * win) + (10 * totoWin)

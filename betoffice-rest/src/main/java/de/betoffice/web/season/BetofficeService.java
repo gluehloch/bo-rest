@@ -30,12 +30,12 @@ import de.betoffice.storage.group.GroupTypeDto;
 import de.betoffice.storage.season.GameDto;
 import de.betoffice.storage.season.RoundDto;
 import de.betoffice.storage.season.SeasonDto;
+import de.betoffice.storage.season.UserRankingTableDto;
+import de.betoffice.storage.season.entity.RoundAndTableJson;
 import de.betoffice.storage.team.TeamDto;
 import de.betoffice.storage.team.TeamType;
 import de.betoffice.web.json.GameWithGoalsJson;
 import de.betoffice.web.json.PingJson;
-import de.betoffice.web.json.RoundAndTableJson;
-import de.betoffice.web.json.UserTableJson;
 
 /**
  * Betoffice JSON service interface
@@ -100,7 +100,7 @@ public interface BetofficeService {
      * @param  gameId the game id
      * @return        the game
      */
-    GameWithGoalsJson findDetailGame(Long gameId);
+    GameWithGoalsDto findDetailGame(Long gameId);
 
     /**
      * Find a round by id. Returns only the games of a round with defined groupType.
@@ -172,7 +172,7 @@ public interface BetofficeService {
      * @param  seasonId the season ud
      * @return          user ranking
      */
-    UserTableJson calcUserRanking(Long seasonId);
+    UserRankingTableDto calcUserRanking(Long seasonId);
 
     /**
      * Calculate the user ranking for a specific round.
@@ -180,7 +180,7 @@ public interface BetofficeService {
      * @param  roundId the round id
      * @return         user ranking for a specific round
      */
-    UserTableJson calcUserRankingByRoundOnly(Long roundId);
+    UserRankingTableDto calcUserRankingByRoundOnly(Long roundId);
 
     /**
      * Calculate the user ranking till specified round.
@@ -188,7 +188,7 @@ public interface BetofficeService {
      * @param  roundId the round id
      * @return         user ranking
      */
-    UserTableJson calcUserRankingByRound(Long roundId);
+    UserRankingTableDto calcUserRankingByRound(Long roundId);
 
     /**
      * Calculate the user ranking till next specified round
@@ -196,7 +196,7 @@ public interface BetofficeService {
      * @param  roundId the round id
      * @return         user ranking
      */
-    UserTableJson calcUserRankingByNextRound(Long roundId);
+    UserRankingTableDto calcUserRankingByNextRound(Long roundId);
 
     /**
      * Calculate the user ranking till prev specified round
@@ -204,7 +204,7 @@ public interface BetofficeService {
      * @param  roundId the round id
      * @return         user ranking
      */
-    UserTableJson calcUserRankingByPrevRound(Long roundId);
+    UserRankingTableDto calcUserRankingByPrevRound(Long roundId);
 
     /**
      * Find all teams
