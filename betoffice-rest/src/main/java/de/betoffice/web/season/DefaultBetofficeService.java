@@ -64,8 +64,6 @@ import de.betoffice.storage.team.entity.TeamDtoMapper;
 import de.betoffice.storage.time.DateTimeProvider;
 import de.betoffice.storage.tip.GameTippEntity;
 import de.betoffice.storage.user.UserResult;
-import de.betoffice.web.json.GameWithGoalsJson;
-import de.betoffice.web.json.IGameJson;
 import de.betoffice.web.json.PingJson;
 
 /**
@@ -269,10 +267,10 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     @Override
-    public GameWithGoalsJson findDetailGame(Long gameId) {
+    public GameDto findDetailGame(Long gameId) {
         GameEntity game = seasonManagerService.findMatch(gameId);
         List<GoalEntity> goals = seasonManagerService.findGoalsOfMatch(game);
-        GameWithGoalsJson json = JsonBuilder.toGameWithGoalsJson(game);
+        GameDto json = JsonBuilder.toJson(game);
         json.setGoals(GoalDtoMapper.map(goals));
         return json;
     }
@@ -388,7 +386,6 @@ public class DefaultBetofficeService implements BetofficeService {
     }
 
     private void findNextAndPrevRound(GameListEntity round, UserRankingTableDto userTableJson) {
-
         Optional<GameListEntity> nextNextRound = seasonManagerService.findNextRound(round.getId());
         userTableJson.getRound().setLastRound(!nextNextRound.isPresent());
         userTableJson.getRound().setTippable(isFinished(userTableJson.getRound()));
@@ -431,7 +428,7 @@ public class DefaultBetofficeService implements BetofficeService {
 
     private boolean isFinished(RoundDto round) {
         boolean finished = false;
-        for (IGameJson game : round.getGames()) {
+        for (GameDto game : round.getGames()) {
             if (!game.isFinished()) {
                 finished = true;
             }

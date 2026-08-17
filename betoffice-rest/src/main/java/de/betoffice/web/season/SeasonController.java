@@ -41,7 +41,6 @@ import de.betoffice.storage.season.RoundDto;
 import de.betoffice.storage.season.SeasonDto;
 import de.betoffice.storage.season.UserRankingTableDto;
 import de.betoffice.storage.season.entity.RoundAndTableJson;
-import de.betoffice.web.json.GameWithGoalsJson;
 import de.betoffice.web.json.PingJson;
 import de.betoffice.web.runtime.VersionService;
 import de.betoffice.web.runtime.VersionService.VersionInfo;
@@ -150,7 +149,7 @@ public class SeasonController {
     }
 
     @RequestMapping(value = "/game-details/{gameId}", method = RequestMethod.GET)
-    public GameWithGoalsJson findGameDetails(@PathVariable("gameId") Long gameId) {
+    public GameDto findGameDetails(@PathVariable("gameId") Long gameId) {
         return betofficeService.findDetailGame(gameId);
     }
 

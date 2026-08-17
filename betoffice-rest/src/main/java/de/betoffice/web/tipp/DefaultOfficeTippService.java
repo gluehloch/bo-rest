@@ -46,7 +46,6 @@ import de.betoffice.storage.tip.TippDto;
 import de.betoffice.storage.tip.TippDto.GameTippDto;
 import de.betoffice.storage.user.entity.Nickname;
 import de.betoffice.storage.user.entity.UserEntity;
-import de.betoffice.web.json.IGameJson;
 
 @Service
 @Transactional(readOnly = true)
@@ -170,7 +169,7 @@ public class DefaultOfficeTippService implements OfficeTippService {
 
     private boolean isFinished(RoundDto round) {
         boolean finished = false;
-        for (IGameJson game : round.getGames()) {
+        for (GameDto game : round.getGames()) {
             if (!game.isFinished()) {
                 finished = true;
             }

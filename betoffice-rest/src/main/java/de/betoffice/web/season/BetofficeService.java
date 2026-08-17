@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2000-2021 by Andre Winkler. All
+ * Project betoffice-jweb-misc Copyright (c) 2000-2026 by Andre Winkler. All
  * rights reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -34,7 +34,6 @@ import de.betoffice.storage.season.UserRankingTableDto;
 import de.betoffice.storage.season.entity.RoundAndTableJson;
 import de.betoffice.storage.team.TeamDto;
 import de.betoffice.storage.team.TeamType;
-import de.betoffice.web.json.GameWithGoalsJson;
 import de.betoffice.web.json.PingJson;
 
 /**
@@ -100,7 +99,7 @@ public interface BetofficeService {
      * @param  gameId the game id
      * @return        the game
      */
-    GameWithGoalsDto findDetailGame(Long gameId);
+    GameDto findDetailGame(Long gameId);
 
     /**
      * Find a round by id. Returns only the games of a round with defined groupType.
