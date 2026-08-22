@@ -28,10 +28,10 @@ import java.util.Optional;
 
 import de.betoffice.storage.group.GroupTypeDto;
 import de.betoffice.storage.season.GameDto;
+import de.betoffice.storage.season.RoundAndTableDto;
 import de.betoffice.storage.season.RoundDto;
 import de.betoffice.storage.season.SeasonDto;
 import de.betoffice.storage.season.UserRankingTableDto;
-import de.betoffice.storage.season.entity.RoundAndTableJson;
 import de.betoffice.storage.team.TeamDto;
 import de.betoffice.storage.team.TeamType;
 import de.betoffice.web.json.PingJson;
@@ -137,7 +137,7 @@ public interface BetofficeService {
      * @param  groupTypeId the group type id
      * @return             the round
      */
-    RoundAndTableJson findRoundTable(Long seasonId, Long roundId, Long groupTypeId);
+    RoundAndTableDto findRoundTable(Long seasonId, Long roundId, Long groupTypeId);
 
     /**
      * Find the next round
@@ -146,7 +146,7 @@ public interface BetofficeService {
      * @param  roundId the round id
      * @return         the next round from id
      */
-    RoundAndTableJson findNextRoundTable(Long seasonId, Long roundId);
+    RoundAndTableDto findNextRoundTable(Long seasonId, Long roundId);
 
     /**
      * Find the prev round
@@ -155,7 +155,7 @@ public interface BetofficeService {
      * @param  roundId the round id
      * @return         the prev round from id
      */
-    RoundAndTableJson findPrevRoundTable(Long seasonId, Long roundId);
+    RoundAndTableDto findPrevRoundTable(Long seasonId, Long roundId);
 
     /**
      * Find current match round for a season

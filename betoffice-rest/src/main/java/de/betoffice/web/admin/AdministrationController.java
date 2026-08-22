@@ -45,11 +45,11 @@ import org.springframework.web.bind.annotation.RestController;
 import de.betoffice.storage.group.GroupTypeDto;
 import de.betoffice.storage.season.AddRoundJson;
 import de.betoffice.storage.season.GameDto;
+import de.betoffice.storage.season.RoundAndTableDto;
 import de.betoffice.storage.season.RoundDto;
 import de.betoffice.storage.season.SeasonDto;
+import de.betoffice.storage.season.SeasonGroupTeamDto;
 import de.betoffice.storage.season.UpdateRoundDto;
-import de.betoffice.storage.season.entity.RoundAndTableJson;
-import de.betoffice.storage.season.entity.SeasonGroupTeamJson;
 import de.betoffice.storage.season.entity.SeasonMemberJson;
 import de.betoffice.storage.team.TeamDto;
 import de.betoffice.storage.team.TeamType;
@@ -79,7 +79,7 @@ public class AdministrationController {
     @PreAuthorize("@authService.isAdminSession(#token)")
     @PostMapping(value = "/season/{seasonId}/round/{roundId}/group/{groupId}/ligadbupdate", headers = {
             "Content-type=application/json" })
-    public RoundAndTableJson updateRoundByOpenligaDb(
+    public RoundAndTableDto updateRoundByOpenligaDb(
             @PathVariable("seasonId") Long seasonId,
             @PathVariable("roundId") Long roundId,
             @PathVariable("groupId") Long groupId,
@@ -94,7 +94,7 @@ public class AdministrationController {
     @PreAuthorize("@authService.isAdminSession(#token)")
     @PostMapping(value = "/season/{seasonId}/round/{roundId}/group/{groupId}/ligadbcreate", headers = {
             "Content-type=application/json" })
-    public RoundAndTableJson createOrUpdateRoundByOpenligaDb(
+    public RoundAndTableDto createOrUpdateRoundByOpenligaDb(
             @PathVariable("seasonId") Long seasonId,
             @PathVariable("roundId") Long roundId,
             @PathVariable("groupId") Long groupId,
@@ -111,7 +111,7 @@ public class AdministrationController {
     @PreAuthorize("@authService.isAdminSession(#token)")
     @PostMapping(value = "/season/{seasonId}/round/{roundId}/group/{groupId}/update", headers = {
             "Content-type=application/json" })
-    public RoundAndTableJson updateRoundAndGames(
+    public RoundAndTableDto updateRoundAndGames(
             @PathVariable("seasonId") Long seasonId,
             @PathVariable("roundId") Long roundId,
             @PathVariable("groupId") Long groupId,
@@ -241,7 +241,7 @@ public class AdministrationController {
 
     @CrossOrigin
     @GetMapping(value = "/season/{seasonId}/groupteam")
-    public SeasonGroupTeamJson findGroupWithTeams(@PathVariable("seasonId") Long seasonId) {
+    public SeasonGroupTeamDto findGroupWithTeams(@PathVariable("seasonId") Long seasonId) {
         return betofficeAdminService.findSeasonGroupsAndTeams(seasonId);
     }
 

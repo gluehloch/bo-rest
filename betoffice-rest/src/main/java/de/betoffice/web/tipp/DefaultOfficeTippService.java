@@ -38,8 +38,8 @@ import de.betoffice.service.TippService;
 import de.betoffice.storage.season.GameDto;
 import de.betoffice.storage.season.RoundDto;
 import de.betoffice.storage.season.entity.GameListEntity;
-import de.betoffice.storage.season.entity.JsonAssembler;
-import de.betoffice.storage.season.entity.JsonBuilder;
+import de.betoffice.storage.season.entity.DtoAssembler;
+import de.betoffice.storage.season.entity.DtoBuilder;
 import de.betoffice.storage.time.DateTimeProvider;
 import de.betoffice.storage.tip.GameTippEntity;
 import de.betoffice.storage.tip.TippDto;
@@ -113,7 +113,7 @@ public class DefaultOfficeTippService implements OfficeTippService {
             List<GameTippEntity> roundTipps = tippService.findTipps(round.get(), user.get());
             Optional<GameListEntity> nextNextRound = seasonManagerService.findNextRound(roundId);
 
-            JsonAssembler jsonAssembler = new JsonAssembler();
+            DtoAssembler jsonAssembler = new DtoAssembler();
 
             if (roundTipps.isEmpty()) {
                 roundJson = jsonAssembler.build(round.get())
@@ -159,8 +159,8 @@ public class DefaultOfficeTippService implements OfficeTippService {
     public Optional<RoundDto> findTippRound(Long seasonId) {
         return tippService.findNextTippRound(seasonId, dateTimeProvider.currentDateTime())
                 .map(gameList -> {
-                    RoundDto roundJson = JsonBuilder.toJson(gameList);
-                    List<GameDto> gameJson = JsonBuilder.toJsonWithGames(gameList.unmodifiableList());
+                    RoundDto roundJson = DtoBuilder.toJson(gameList);
+                    List<GameDto> gameJson = DtoBuilder.toJsonWithGames(gameList.unmodifiableList());
                     roundJson.getGames().addAll(gameJson);
                     roundJson.setTippable(isFinished(roundJson));
                     return roundJson;

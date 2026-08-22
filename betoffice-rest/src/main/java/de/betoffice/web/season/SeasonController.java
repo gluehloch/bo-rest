@@ -37,10 +37,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.storage.group.GroupTypeDto;
 import de.betoffice.storage.season.GameDto;
+import de.betoffice.storage.season.RoundAndTableDto;
 import de.betoffice.storage.season.RoundDto;
 import de.betoffice.storage.season.SeasonDto;
 import de.betoffice.storage.season.UserRankingTableDto;
-import de.betoffice.storage.season.entity.RoundAndTableJson;
 import de.betoffice.web.json.PingJson;
 import de.betoffice.web.runtime.VersionService;
 import de.betoffice.web.runtime.VersionService.VersionInfo;
@@ -158,7 +158,7 @@ public class SeasonController {
     //
 
     @RequestMapping(value = "/season/{seasonId}/roundtable/{roundId}/group/{groupTypeId}", method = RequestMethod.GET)
-    public RoundAndTableJson findRoundTable(
+    public RoundAndTableDto findRoundTable(
             @PathVariable("seasonId") Long seasonId,
             @PathVariable("roundId") Long roundId,
             @PathVariable("groupTypeId") Long groupTypeId) {
@@ -166,13 +166,13 @@ public class SeasonController {
     }
 
     @RequestMapping(value = "/season/{seasonId}/roundtable/{roundId}/next", method = RequestMethod.GET)
-    public RoundAndTableJson findNextRoundTable(@PathVariable("seasonId") Long seasonId,
+    public RoundAndTableDto findNextRoundTable(@PathVariable("seasonId") Long seasonId,
             @PathVariable("roundId") Long roundId) {
         return betofficeService.findNextRoundTable(seasonId, roundId);
     }
 
     @RequestMapping(value = "/season/{seasonId}/roundtable/{roundId}/prev", method = RequestMethod.GET)
-    public RoundAndTableJson findPrevRoundTable(@PathVariable("seasonId") Long seasonId,
+    public RoundAndTableDto findPrevRoundTable(@PathVariable("seasonId") Long seasonId,
             @PathVariable("roundId") Long roundId) {
         return betofficeService.findPrevRoundTable(seasonId, roundId);
     }

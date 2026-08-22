@@ -49,13 +49,13 @@ import de.betoffice.storage.season.AddRoundJson;
 import de.betoffice.storage.season.GameDto;
 import de.betoffice.storage.season.RoundDto;
 import de.betoffice.storage.season.SeasonDto;
+import de.betoffice.storage.season.SeasonGroupTeamDto;
 import de.betoffice.storage.season.UpdateRoundDto;
 import de.betoffice.storage.season.entity.GameEntity;
 import de.betoffice.storage.season.entity.GameListEntity;
 import de.betoffice.storage.season.entity.GroupEntity;
-import de.betoffice.storage.season.entity.JsonBuilder;
+import de.betoffice.storage.season.entity.DtoBuilder;
 import de.betoffice.storage.season.entity.SeasonEntity;
-import de.betoffice.storage.season.entity.SeasonGroupTeamJson;
 import de.betoffice.storage.season.entity.SeasonMemberJson;
 import de.betoffice.storage.season.entity.SeasonMemberJsonMapper;
 import de.betoffice.storage.season.entity.SeasonDtoMapper;
@@ -148,7 +148,7 @@ public class DefaultAdminService implements AdminService {
 
         GameListEntity updatedGameList = seasonManagerService.findNextRound(roundId)
                 .orElseGet(() -> seasonManagerService.findFirstRound(season).orElseThrow());
-        return JsonBuilder.toJsonWithGames(seasonManagerService.findRoundGames(updatedGameList.getId()).get());
+        return DtoBuilder.toJsonWithGames(seasonManagerService.findRoundGames(updatedGameList.getId()).get());
     }
 
     @Override
@@ -165,7 +165,7 @@ public class DefaultAdminService implements AdminService {
 
         GameListEntity updatedGameList = seasonManagerService.findNextRound(roundId)
                 .orElseGet(() -> seasonManagerService.findFirstRound(season).orElseThrow());
-        return JsonBuilder.toJsonWithGames(seasonManagerService.findRoundGames(updatedGameList.getId()).get());
+        return DtoBuilder.toJsonWithGames(seasonManagerService.findRoundGames(updatedGameList.getId()).get());
     }
 
     // -- team administration -------------------------------------------------
@@ -393,10 +393,10 @@ public class DefaultAdminService implements AdminService {
     }
 
     @Override
-    public SeasonGroupTeamJson findSeasonGroupsAndTeams(long seasonId) {
+    public SeasonGroupTeamDto findSeasonGroupsAndTeams(long seasonId) {
         SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
         List<GroupEntity> groups = seasonManagerService.findGroups(season);
-        SeasonGroupTeamJson seasonGroupTeamJson = new SeasonGroupTeamJson();
+        SeasonGroupTeamDto seasonGroupTeamJson = new SeasonGroupTeamDto();
 
         for (GroupEntity group : groups) {
             List<TeamEntity> teams = seasonManagerService.findTeams(group);

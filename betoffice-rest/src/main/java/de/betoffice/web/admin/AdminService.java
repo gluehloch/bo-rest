@@ -31,8 +31,8 @@ import de.betoffice.storage.season.AddRoundJson;
 import de.betoffice.storage.season.GameDto;
 import de.betoffice.storage.season.RoundDto;
 import de.betoffice.storage.season.SeasonDto;
+import de.betoffice.storage.season.SeasonGroupTeamDto;
 import de.betoffice.storage.season.UpdateRoundDto;
-import de.betoffice.storage.season.entity.SeasonGroupTeamJson;
 import de.betoffice.storage.season.entity.SeasonMemberJson;
 import de.betoffice.storage.team.TeamDto;
 import de.betoffice.storage.team.TeamType;
@@ -161,7 +161,7 @@ public interface AdminService {
 
     void removeGroupFromSeason(SeasonDto seasonJson, GroupTypeDto groupTypeJson);
 
-    SeasonGroupTeamJson findSeasonGroupsAndTeams(long seasonId);
+    SeasonGroupTeamDto findSeasonGroupsAndTeams(long seasonId);
 
     List<TeamDto> findSeasonGroupAndTeamCandidates(SeasonDto seasonJson, GroupTypeDto groupTypeJson);
 
