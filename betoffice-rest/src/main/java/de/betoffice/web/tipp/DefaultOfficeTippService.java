@@ -66,14 +66,14 @@ public class DefaultOfficeTippService implements OfficeTippService {
     @PreAuthorize("@tippAuthorisationService.isSubmissionAllowed(#token, #tippRoundJson.nickname)")
     @Override
     @Transactional
-    public RoundDto submitTipp(String token, SubmitTippRoundJson tippRoundJson) {
+    public RoundDto submitTipp(String token, SubmitTippRoundRequest tippRoundJson) {
         TippDto tippDto = new TippDto();
         tippDto.setNickname(tippRoundJson.getNickname());
         tippDto.setRoundId(tippRoundJson.getRoundId());
         tippDto.setToken(token);
         tippDto.setSubmitTime(dateTimeProvider.currentDateTime());
 
-        for (SubmitTippGameJson submitTippJson : tippRoundJson.getSubmitTippGames()) {
+        for (SubmitTippGameRequest submitTippJson : tippRoundJson.getSubmitTippGames()) {
             GameTippDto gameTippDto = new GameTippDto();
             gameTippDto.setGameId(submitTippJson.getGameId());
             gameTippDto.setHomeGoals(submitTippJson.getTippResult().getHomeGoals());

@@ -107,7 +107,7 @@ public class TippController {
 
     @RequestMapping(value = "/tipp/submit", method = RequestMethod.POST, headers = { "Content-type=application/json" })
     public ResponseEntity<RoundDto> submitTipp(
-            @RequestBody SubmitTippRoundJson tippRoundJson,
+            @RequestBody SubmitTippRoundRequest tippRoundJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 

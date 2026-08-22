@@ -32,7 +32,7 @@ import de.betoffice.storage.season.GameResultDto;
  * 
  * @author Andre Winkler
  */
-public class SubmitTippGameJson implements Serializable {
+public class SubmitTippGameRequest implements Serializable {
 
     private static final long serialVersionUID = -1535458861691048504L;
 

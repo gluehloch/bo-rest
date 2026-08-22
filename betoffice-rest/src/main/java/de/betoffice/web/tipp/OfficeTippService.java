@@ -80,6 +80,6 @@ public interface OfficeTippService {
      * @param  tippRoundJson tipp data
      * @return               a round
      */
-    RoundDto submitTipp(String token, SubmitTippRoundJson tippRoundJson);
+    RoundDto submitTipp(String token, SubmitTippRoundRequest tippRoundJson);
 
 }

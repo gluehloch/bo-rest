@@ -174,7 +174,7 @@ class TippControllerTest {
         //
         // Versuch der Tippabgabe ohne Authentifizierung.
         //
-        SubmitTippRoundJson tippWithoutAuthentication = new SubmitTippRoundJson();
+        SubmitTippRoundRequest tippWithoutAuthentication = new SubmitTippRoundRequest();
 
         final var performTippSubmit = mockMvcTester.perform(post("/office/tipp/submit")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -205,11 +205,11 @@ class TippControllerTest {
         List<GameTippEntity> expectedTipps = seasonManagerService.findTipps(data.round, data.user);
         assertThat(expectedTipps).hasSize(0);
 
-        SubmitTippRoundJson tipp = new SubmitTippRoundJson();
+        SubmitTippRoundRequest tipp = new SubmitTippRoundRequest();
         tipp.setNickname(NICKNAME);
         tipp.setRoundId(data.round.getId());
-        List<SubmitTippGameJson> submitTippGames = new ArrayList<>();
-        SubmitTippGameJson submitTippGame = new SubmitTippGameJson();
+        List<SubmitTippGameRequest> submitTippGames = new ArrayList<>();
+        SubmitTippGameRequest submitTippGame = new SubmitTippGameRequest();
         submitTippGame.setGameId(data.round.get(0).getId());
         GameResultDto gameResultJson = new GameResultDto();
         gameResultJson.setHomeGoals(2);
