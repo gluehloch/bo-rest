@@ -107,6 +107,7 @@ public class DefaultOfficeTippService implements OfficeTippService {
         // GameList tippRound = tippService.findTipp(roundId.longValue(),
         // user.get().getId().longValue());
         //
+
         RoundDto roundJson = null;
         Optional<GameListEntity> round = seasonManagerService.findRoundGames(roundId);
         if (round.isPresent()) {
