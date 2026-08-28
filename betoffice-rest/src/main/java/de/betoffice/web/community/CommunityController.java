@@ -45,6 +45,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.service.CommunityService;
+import de.betoffice.service.request.CommunityCreateCommand;
 import de.betoffice.storage.community.CommunityDto;
 import de.betoffice.storage.community.CommunityFilter;
 import de.betoffice.storage.community.entity.CommunityEntity;
@@ -108,26 +109,20 @@ public class CommunityController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        String nickname = createCommunityRequest.communityManagerNickname();
-        SeasonDto season = communityJson.getSeason();
-        String name = communityJson.getName();
-        String shortName = communityJson.getShortName();
-        String year = communityJson.getYear();
-
-        CommunityReference communityReference = CommunityReference.of(shortName);
-        SeasonReference seasonReference = SeasonReference.of(season.getYear(), season.getName());
-        Nickname nickname = Nickname.of(communityManager.getNickname());
-
-        ServiceResult<CommunityEntity> betofficeServiceResult = communityService.create(
+        final CommunityReference communityReference = CommunityReference
+                .of(createCommunityRequest.communityShortName());
+        final SeasonReference seasonReference = SeasonReference.of(createCommunityRequest.seasonReferenceYear(),
+                createCommunityRequest.seasonReferenceName());
+        final Nickname nickname = Nickname.of(createCommunityRequest.communityManagerNickname());
+        final CommunityCreateCommand createCommand = new CommunityCreateCommand(
                 communityReference,
                 seasonReference,
-                name,
-                year,
+                createCommunityRequest.communityName(),
+                createCommunityRequest.communityYear(),
                 nickname);
 
-        Optional<CommunityDto> community = betofficeServiceResult.result().map(CommunityDtoMapper::map);
-
-        return community.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
+        final ServiceResult<CommunityDto> serviceResult = communityService.create(createCommand);
+        return serviceResult.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @PutMapping(value = "/community", headers = { "Content-type=application/json" })
