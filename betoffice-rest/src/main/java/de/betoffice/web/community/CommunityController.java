@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb Copyright (c) 2015-2024 by Andre Winkler. All rights
+ * Project betoffice-web Copyright (c) 2015-2026 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -22,8 +22,6 @@
  */
 
 package de.betoffice.web.community;
-
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -48,12 +46,8 @@ import de.betoffice.service.CommunityService;
 import de.betoffice.service.request.CommunityCreateCommand;
 import de.betoffice.storage.community.CommunityDto;
 import de.betoffice.storage.community.CommunityFilter;
-import de.betoffice.storage.community.entity.CommunityEntity;
-import de.betoffice.storage.community.entity.CommunityDtoMapper;
 import de.betoffice.storage.community.entity.CommunityReference;
-import de.betoffice.storage.season.SeasonDto;
 import de.betoffice.storage.season.entity.SeasonReference;
-import de.betoffice.storage.user.PartyDto;
 import de.betoffice.storage.user.entity.Nickname;
 import de.betoffice.validation.ServiceResult;
 import de.betoffice.web.BetofficeHttpConsts;
@@ -111,9 +105,10 @@ public class CommunityController {
 
         final CommunityReference communityReference = CommunityReference
                 .of(createCommunityRequest.communityShortName());
-        final SeasonReference seasonReference = SeasonReference.of(createCommunityRequest.seasonReferenceYear(),
-                createCommunityRequest.seasonReferenceName());
-        final Nickname nickname = Nickname.of(createCommunityRequest.communityManagerNickname());
+        final SeasonReference seasonReference = SeasonReference
+                .of(createCommunityRequest.seasonReferenceYear(), createCommunityRequest.seasonReferenceName());
+        final Nickname nickname = Nickname
+                .of(createCommunityRequest.communityManagerNickname());
         final CommunityCreateCommand createCommand = new CommunityCreateCommand(
                 communityReference,
                 seasonReference,
