@@ -33,7 +33,7 @@ import de.betoffice.storage.season.RoundDto;
 import de.betoffice.storage.season.SeasonDto;
 import de.betoffice.storage.season.SeasonGroupTeamDto;
 import de.betoffice.storage.season.UpdateRoundDto;
-import de.betoffice.storage.season.entity.SeasonMemberJson;
+import de.betoffice.storage.season.entity.SeasonMemberDto;
 import de.betoffice.storage.team.TeamDto;
 import de.betoffice.storage.team.TeamType;
 import de.betoffice.storage.user.PartyDto;
@@ -227,7 +227,7 @@ public interface AdminService {
      * @param  seasonId the season id
      * @return          a list of potential season members
      */
-    List<SeasonMemberJson> findPotentialSeasonMembers(long seasonId);
+    List<SeasonMemberDto> findPotentialSeasonMembers(long seasonId);
 
     /**
      * Find all season members.
@@ -235,7 +235,7 @@ public interface AdminService {
      * @param  seasonId the season id
      * @return          a list of season members
      */
-    List<SeasonMemberJson> findAllSeasonMembers(long seasonId);
+    List<SeasonMemberDto> findAllSeasonMembers(long seasonId);
 
     /**
      * Add some members to a season.
@@ -244,8 +244,8 @@ public interface AdminService {
      * @param  seasonMembers the new season members
      * @return               a list of current season members
      */
-    List<SeasonMemberJson> addSeasonMembers(long seasonId,
-            List<SeasonMemberJson> seasonMembers);
+    List<SeasonMemberDto> addSeasonMembers(long seasonId,
+            List<SeasonMemberDto> seasonMembers);
 
     /**
      * Remove some members from a season.
@@ -254,7 +254,7 @@ public interface AdminService {
      * @param  seasonMembers the new season members
      * @return               a list of current season members
      */
-    List<SeasonMemberJson> removeSeasonMembers(long seasonId,
-            List<SeasonMemberJson> seasonMembers);
+    List<SeasonMemberDto> removeSeasonMembers(long seasonId,
+            List<SeasonMemberDto> seasonMembers);
 
 }

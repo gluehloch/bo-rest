@@ -87,13 +87,10 @@ public class CommunityController {
             // @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        Sort sort = Sort.by(Sort.Order.asc("name"), Sort.Order.desc("shortName"));
-        CommunityFilter communityFilter = new CommunityFilter();
-        PageRequest pageRequest = pageParam.toPageRequest(sort);
-
-        Page<CommunityDto> communities = communityService.findCommunities(communityFilter, pageRequest)
-                .map(CommunityDtoMapper::map);
-        return ResponseEntity.ok(communities);
+        final Sort sort = Sort.by(Sort.Order.asc("name"), Sort.Order.desc("shortName"));
+        final CommunityFilter communityFilter = new CommunityFilter();
+        final PageRequest pageRequest = pageParam.toPageRequest(sort);
+        return ResponseEntity.ok(communityService.findCommunities(communityFilter, pageRequest));
     }
 
     @GetMapping(value = "/community/{communityId}", headers = { "Content-type=application/json" })
@@ -102,17 +99,16 @@ public class CommunityController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        return ResponseEntity.ok(CommunityDtoMapper.map(communityService.find(communityId)));
-
+        return ResponseEntity.ok(communityService.find(communityId));
     }
 
     @PostMapping(value = "/community", headers = { "Content-type=application/json" })
     public ResponseEntity<CommunityDto> createCommunity(
-            @RequestBody CommunityDto communityJson,
+            @RequestBody CreateCommunityRequest createCommunityRequest,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        PartyDto communityManager = communityJson.getCommunityManager();
+        String nickname = createCommunityRequest.communityManagerNickname();
         SeasonDto season = communityJson.getSeason();
         String name = communityJson.getName();
         String shortName = communityJson.getShortName();

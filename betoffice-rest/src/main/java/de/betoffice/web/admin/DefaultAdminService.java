@@ -56,8 +56,8 @@ import de.betoffice.storage.season.entity.GameListEntity;
 import de.betoffice.storage.season.entity.GroupEntity;
 import de.betoffice.storage.season.entity.DtoBuilder;
 import de.betoffice.storage.season.entity.SeasonEntity;
-import de.betoffice.storage.season.entity.SeasonMemberJson;
-import de.betoffice.storage.season.entity.SeasonMemberJsonMapper;
+import de.betoffice.storage.season.entity.SeasonMemberDto;
+import de.betoffice.storage.season.entity.SeasonMemberDtoMapper;
 import de.betoffice.storage.season.entity.SeasonDtoMapper;
 import de.betoffice.storage.session.entity.SessionEntity;
 import de.betoffice.storage.team.TeamDto;
@@ -67,7 +67,7 @@ import de.betoffice.storage.team.entity.TeamDtoMapper;
 import de.betoffice.storage.time.DateTimeProvider;
 import de.betoffice.storage.user.PartyDto;
 import de.betoffice.storage.user.entity.Nickname;
-import de.betoffice.storage.user.entity.PartyJsonMapper;
+import de.betoffice.storage.user.entity.PartyDtoMapper;
 import de.betoffice.storage.user.entity.UserEntity;
 import de.betoffice.validation.ValidationMessage;
 import de.betoffice.validation.ValidationMessages;
@@ -207,20 +207,20 @@ public class DefaultAdminService implements AdminService {
 
     public PartyDto findUser(long userId) {
         UserEntity user = communityService.findUser(userId);
-        return PartyJsonMapper.map(user, new PartyDto());
+        return PartyDtoMapper.map(user, new PartyDto());
     }
 
     @Override
     public List<PartyDto> findUsers() {
-        return PartyJsonMapper.map(communityService.findAllUsers());
+        return PartyDtoMapper.map(communityService.findAllUsers());
     }
 
     @Override
     @Transactional
     public PartyDto addUser(PartyDto partyJson) {
-        UserEntity user = PartyJsonMapper.reverse(partyJson, new UserEntity());
+        UserEntity user = PartyDtoMapper.reverse(partyJson, new UserEntity());
         user = communityService.createUser(user);
-        return PartyJsonMapper.map(user, partyJson);
+        return PartyDtoMapper.map(user, partyJson);
     }
 
     @Override
@@ -313,26 +313,26 @@ public class DefaultAdminService implements AdminService {
     // -- user / season member administration ---------------------------------
 
     @Override
-    public List<SeasonMemberJson> findPotentialSeasonMembers(long seasonId) {
+    public List<SeasonMemberDto> findPotentialSeasonMembers(long seasonId) {
         SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
         CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(season.getReference());
         Set<UserEntity> activatedUsers = communityService.findMembers(defaultPlayerGroup);
         List<UserEntity> users = communityService.findAllUsers();
         users.removeAll(activatedUsers);
-        return SeasonMemberJsonMapper.map(users);
+        return SeasonMemberDtoMapper.map(users);
     }
 
     @Override
-    public List<SeasonMemberJson> findAllSeasonMembers(long seasonId) {
+    public List<SeasonMemberDto> findAllSeasonMembers(long seasonId) {
         SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
         CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(season.getReference());
         Set<UserEntity> activatedUsers = communityService.findMembers(defaultPlayerGroup);
-        return SeasonMemberJsonMapper.map(activatedUsers);
+        return SeasonMemberDtoMapper.map(activatedUsers);
     }
 
     @Override
     @Transactional
-    public List<SeasonMemberJson> addSeasonMembers(long seasonId, List<SeasonMemberJson> seasonMembers) {
+    public List<SeasonMemberDto> addSeasonMembers(long seasonId, List<SeasonMemberDto> seasonMembers) {
         List<UserEntity> users = findUsers(seasonMembers);
         SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
         CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(season.getReference());
@@ -345,7 +345,7 @@ public class DefaultAdminService implements AdminService {
 
     @Override
     @Transactional
-    public List<SeasonMemberJson> removeSeasonMembers(long seasonId, List<SeasonMemberJson> seasonMembers) {
+    public List<SeasonMemberDto> removeSeasonMembers(long seasonId, List<SeasonMemberDto> seasonMembers) {
         SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
         CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(season.getReference());
 
@@ -356,9 +356,9 @@ public class DefaultAdminService implements AdminService {
         return findAllSeasonMembers(seasonId);
     }
 
-    private List<UserEntity> findUsers(List<SeasonMemberJson> seasonMembers) {
+    private List<UserEntity> findUsers(List<SeasonMemberDto> seasonMembers) {
         List<UserEntity> users = new ArrayList<>();
-        for (SeasonMemberJson member : seasonMembers) {
+        for (SeasonMemberDto member : seasonMembers) {
             UserEntity user = communityService.findUser(member.getId());
             users.add(user);
         }

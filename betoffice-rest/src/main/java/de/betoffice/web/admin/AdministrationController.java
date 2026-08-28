@@ -50,7 +50,7 @@ import de.betoffice.storage.season.RoundDto;
 import de.betoffice.storage.season.SeasonDto;
 import de.betoffice.storage.season.SeasonGroupTeamDto;
 import de.betoffice.storage.season.UpdateRoundDto;
-import de.betoffice.storage.season.entity.SeasonMemberJson;
+import de.betoffice.storage.season.entity.SeasonMemberDto;
 import de.betoffice.storage.team.TeamDto;
 import de.betoffice.storage.team.TeamType;
 import de.betoffice.storage.user.PartyDto;
@@ -367,19 +367,19 @@ public class AdministrationController {
     // -- user/season administration ------------------------------------------
 
     @GetMapping(value = "/season/{seasonId}/potentialuser", headers = { "Content-type=application/json" })
-    public List<SeasonMemberJson> listPotentialUsers(@PathVariable("seasonId") Long seasonId) {
+    public List<SeasonMemberDto> listPotentialUsers(@PathVariable("seasonId") Long seasonId) {
         return betofficeAdminService.findPotentialSeasonMembers(seasonId);
     }
 
     @GetMapping(value = "/season/{seasonId}/user", headers = { "Content-type=application/json" })
-    public List<SeasonMemberJson> listUsers(@PathVariable("seasonId") Long seasonId) {
+    public List<SeasonMemberDto> listUsers(@PathVariable("seasonId") Long seasonId) {
         return betofficeAdminService.findAllSeasonMembers(seasonId);
     }
 
     @PreAuthorize("@authService.isAdminSession(#token)")
     @PostMapping(value = "/season/{seasonId}/user/add", headers = { "Content-type=application/json" })
-    public List<SeasonMemberJson> addUsers(@PathVariable("seasonId") Long seasonId,
-            @RequestBody List<SeasonMemberJson> members,
+    public List<SeasonMemberDto> addUsers(@PathVariable("seasonId") Long seasonId,
+            @RequestBody List<SeasonMemberDto> members,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
@@ -389,8 +389,8 @@ public class AdministrationController {
 
     @PreAuthorize("@authService.isAdminSession(#token)")
     @PostMapping(value = "/season/{seasonId}/user/remove", headers = { "Content-type=application/json" })
-    public List<SeasonMemberJson> removeUsers(@PathVariable("seasonId") Long seasonId,
-            @RequestBody List<SeasonMemberJson> members,
+    public List<SeasonMemberDto> removeUsers(@PathVariable("seasonId") Long seasonId,
+            @RequestBody List<SeasonMemberDto> members,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
