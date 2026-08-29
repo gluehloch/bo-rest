@@ -42,21 +42,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.betoffice.storage.group.GroupTypeDto;
+import de.betoffice.storage.season.AddRoundJson;
+import de.betoffice.storage.season.GameDto;
+import de.betoffice.storage.season.RoundAndTableDto;
+import de.betoffice.storage.season.RoundDto;
+import de.betoffice.storage.season.SeasonDto;
+import de.betoffice.storage.season.SeasonGroupTeamDto;
+import de.betoffice.storage.season.UpdateRoundDto;
+import de.betoffice.storage.season.entity.SeasonMemberDto;
+import de.betoffice.storage.team.TeamDto;
 import de.betoffice.storage.team.TeamType;
+import de.betoffice.storage.user.PartyDto;
 import de.betoffice.validation.ValidationMessages;
 import de.betoffice.web.BetofficeHttpConsts;
-import de.betoffice.web.json.GameJson;
-import de.betoffice.web.json.GroupTypeJson;
-import de.betoffice.web.json.IGameJson;
-import de.betoffice.web.json.PartyJson;
-import de.betoffice.web.json.RoundAndTableJson;
-import de.betoffice.web.json.SeasonGroupTeamJson;
-import de.betoffice.web.json.SeasonJson;
-import de.betoffice.web.json.SeasonMemberJson;
-import de.betoffice.web.json.TeamJson;
-import de.betoffice.web.json.round.AddRoundJson;
-import de.betoffice.web.json.round.RoundJson;
-import de.betoffice.web.json.round.UpdateRoundJson;
 import de.betoffice.web.season.BetofficeService;
 
 /**
@@ -80,7 +79,7 @@ public class AdministrationController {
     @PreAuthorize("@authService.isAdminSession(#token)")
     @PostMapping(value = "/season/{seasonId}/round/{roundId}/group/{groupId}/ligadbupdate", headers = {
             "Content-type=application/json" })
-    public RoundAndTableJson updateRoundByOpenligaDb(
+    public RoundAndTableDto updateRoundByOpenligaDb(
             @PathVariable("seasonId") Long seasonId,
             @PathVariable("roundId") Long roundId,
             @PathVariable("groupId") Long groupId,
@@ -95,7 +94,7 @@ public class AdministrationController {
     @PreAuthorize("@authService.isAdminSession(#token)")
     @PostMapping(value = "/season/{seasonId}/round/{roundId}/group/{groupId}/ligadbcreate", headers = {
             "Content-type=application/json" })
-    public RoundAndTableJson createOrUpdateRoundByOpenligaDb(
+    public RoundAndTableDto createOrUpdateRoundByOpenligaDb(
             @PathVariable("seasonId") Long seasonId,
             @PathVariable("roundId") Long roundId,
             @PathVariable("groupId") Long groupId,
@@ -112,11 +111,11 @@ public class AdministrationController {
     @PreAuthorize("@authService.isAdminSession(#token)")
     @PostMapping(value = "/season/{seasonId}/round/{roundId}/group/{groupId}/update", headers = {
             "Content-type=application/json" })
-    public RoundAndTableJson updateRoundAndGames(
+    public RoundAndTableDto updateRoundAndGames(
             @PathVariable("seasonId") Long seasonId,
             @PathVariable("roundId") Long roundId,
             @PathVariable("groupId") Long groupId,
-            @RequestBody RoundJson roundJson,
+            @RequestBody RoundDto roundJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
@@ -130,7 +129,7 @@ public class AdministrationController {
     public ResponseEntity<Void> updateRound(
             @PathVariable("seasonId") Long seasonId,
             @PathVariable("roundId") Long roundId,
-            @RequestBody UpdateRoundJson updateRoundJson,
+            @RequestBody UpdateRoundDto updateRoundJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
@@ -162,7 +161,7 @@ public class AdministrationController {
 
     @PreAuthorize("@authService.isAdminSession(#token)")
     @PostMapping(value = "/game/update", headers = { "Content-type=application/json" })
-    public IGameJson updateGame(@RequestBody GameJson gameJson,
+    public GameDto updateGame(@RequestBody GameDto gameJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
@@ -175,20 +174,20 @@ public class AdministrationController {
 
     @CrossOrigin
     @GetMapping(value = "/season/{seasonId}", headers = { "Content-type=application/json" })
-    public SeasonJson findSeason(@PathVariable("seasonId") Long seasonId) {
+    public SeasonDto findSeason(@PathVariable("seasonId") Long seasonId) {
         return betofficeService.findSeasonById(seasonId);
     }
 
     @CrossOrigin
     @GetMapping(value = "/season", headers = { "Content-type=application/json" })
-    public List<SeasonJson> findSeasons() {
+    public List<SeasonDto> findSeasons() {
         return betofficeService.findAllSeason();
     }
 
     @PreAuthorize("@authService.isAdminSession(#token)")
     @CrossOrigin
     @RequestMapping(value = "/season", method = RequestMethod.POST, headers = { "Content-type=application/json" })
-    public SeasonJson addSeason(@RequestBody SeasonJson season,
+    public SeasonDto addSeason(@RequestBody SeasonDto season,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
@@ -199,7 +198,7 @@ public class AdministrationController {
     @PreAuthorize("@authService.isAdminSession(#token)")
     @CrossOrigin
     @PutMapping(value = "/season", headers = { "Content-type=application/json" })
-    public SeasonJson updateSeason(@RequestBody SeasonJson season,
+    public SeasonDto updateSeason(@RequestBody SeasonDto season,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
@@ -212,13 +211,13 @@ public class AdministrationController {
     @PreAuthorize("@authService.isAdminSession(#token)")
     @CrossOrigin
     @PostMapping(value = "/season/{seasonId}/group")
-    public SeasonJson addGroupToSeason(@PathVariable("seasonId") Long seasonId,
-            @RequestBody GroupTypeJson groupTypeJson,
+    public SeasonDto addGroupToSeason(@PathVariable("seasonId") Long seasonId,
+            @RequestBody GroupTypeDto groupTypeJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
         betofficeAdminService.validateAdminSession(token);
-        SeasonJson seasonJson = betofficeService.findSeasonById(seasonId);
+        SeasonDto seasonJson = betofficeService.findSeasonById(seasonId);
         betofficeAdminService.addGroupToSeason(seasonJson, groupTypeJson);
 
         return seasonJson;
@@ -227,14 +226,14 @@ public class AdministrationController {
     @PreAuthorize("@authService.isAdminSession(#token)")
     @CrossOrigin
     @DeleteMapping(value = "/season/{seasonId}/group/{groupTypeId}")
-    public SeasonJson removeGroupFromSeason(@PathVariable("seasonId") Long seasonId,
+    public SeasonDto removeGroupFromSeason(@PathVariable("seasonId") Long seasonId,
             @PathVariable("groupTypeId") Long groupTypeId,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
         betofficeAdminService.validateAdminSession(token);
-        SeasonJson seasonJson = betofficeService.findSeasonById(seasonId);
-        GroupTypeJson groupTypeJson = betofficeAdminService.findGroupType(groupTypeId);
+        SeasonDto seasonJson = betofficeService.findSeasonById(seasonId);
+        GroupTypeDto groupTypeJson = betofficeAdminService.findGroupType(groupTypeId);
         betofficeAdminService.removeGroupFromSeason(seasonJson, groupTypeJson);
 
         return seasonJson;
@@ -242,31 +241,31 @@ public class AdministrationController {
 
     @CrossOrigin
     @GetMapping(value = "/season/{seasonId}/groupteam")
-    public SeasonGroupTeamJson findGroupWithTeams(@PathVariable("seasonId") Long seasonId) {
+    public SeasonGroupTeamDto findGroupWithTeams(@PathVariable("seasonId") Long seasonId) {
         return betofficeAdminService.findSeasonGroupsAndTeams(seasonId);
     }
 
     @CrossOrigin
     @GetMapping(value = "/season/{seasonId}/groupteam/{groupTypeId}/candidates")
-    public List<TeamJson> findTeamsForAdding(@PathVariable("seasonId") Long seasonId,
+    public List<TeamDto> findTeamsForAdding(@PathVariable("seasonId") Long seasonId,
             @PathVariable("groupTypeId") Long groupTypeId) {
-        SeasonJson seasonJson = betofficeService.findSeasonById(seasonId);
-        GroupTypeJson groupTypeJson = betofficeAdminService.findGroupType(groupTypeId);
+        SeasonDto seasonJson = betofficeService.findSeasonById(seasonId);
+        GroupTypeDto groupTypeJson = betofficeAdminService.findGroupType(groupTypeId);
         return betofficeAdminService.findSeasonGroupAndTeamCandidates(seasonJson, groupTypeJson);
     }
 
     @PreAuthorize("@authService.isAdminSession(#token)")
     @CrossOrigin
     @PostMapping(value = "/season/{seasonId}/groupteam/{groupTypeId}")
-    public SeasonJson addTeamToGroup(@PathVariable("seasonId") Long seasonId,
+    public SeasonDto addTeamToGroup(@PathVariable("seasonId") Long seasonId,
             @PathVariable("groupTypeId") Long groupTypeId,
-            @RequestBody TeamJson teamJson,
+            @RequestBody TeamDto teamJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
         betofficeAdminService.validateAdminSession(token);
-        SeasonJson seasonJson = betofficeService.findSeasonById(seasonId);
-        GroupTypeJson groupTypeJson = betofficeAdminService.findGroupType(groupTypeId);
+        SeasonDto seasonJson = betofficeService.findSeasonById(seasonId);
+        GroupTypeDto groupTypeJson = betofficeAdminService.findGroupType(groupTypeId);
         betofficeAdminService.addTeamToGroup(seasonJson, groupTypeJson, teamJson);
         return seasonJson;
     }
@@ -274,16 +273,16 @@ public class AdministrationController {
     @PreAuthorize("@authService.isAdminSession(#token)")
     @CrossOrigin
     @DeleteMapping(value = "/season/{seasonId}/groupteam/{groupTypeId}/team/{teamId}")
-    public SeasonJson removeTeamFromGroup(@PathVariable("seasonId") Long seasonId,
+    public SeasonDto removeTeamFromGroup(@PathVariable("seasonId") Long seasonId,
             @PathVariable("groupTypeId") Long groupTypeId,
             @PathVariable("teamId") Long teamId,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
         betofficeAdminService.validateAdminSession(token);
-        SeasonJson seasonJson = betofficeService.findSeasonById(seasonId);
-        GroupTypeJson groupTypeJson = betofficeAdminService.findGroupType(groupTypeId);
-        TeamJson teamJson = betofficeAdminService.findTeam(teamId);
+        SeasonDto seasonJson = betofficeService.findSeasonById(seasonId);
+        GroupTypeDto groupTypeJson = betofficeAdminService.findGroupType(groupTypeId);
+        TeamDto teamJson = betofficeAdminService.findTeam(teamId);
         betofficeAdminService.removeTeamFromGroup(seasonJson, groupTypeJson, teamJson);
         return seasonJson;
     }
@@ -291,18 +290,18 @@ public class AdministrationController {
     // -- user administration -------------------------------------------------
 
     @GetMapping(value = "/user/{userId}", headers = { "Content-type=application/json" })
-    public PartyJson findUser(@PathVariable("userId") Long userId) {
+    public PartyDto findUser(@PathVariable("userId") Long userId) {
         return betofficeAdminService.findUser(userId);
     }
 
     @GetMapping(value = "/user", headers = { "Content-type=application/json" })
-    public List<PartyJson> findUsers() {
+    public List<PartyDto> findUsers() {
         return betofficeAdminService.findUsers();
     }
 
     @PreAuthorize("@authService.isAdminSession(#token)")
     @PostMapping(value = "/user/add", headers = { "Content-type=application/json" })
-    public PartyJson addUser(@RequestBody PartyJson partyJson,
+    public PartyDto addUser(@RequestBody PartyDto partyJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
@@ -311,7 +310,7 @@ public class AdministrationController {
     }
 
     @PostMapping(value = "/user/update", headers = { "Content-type=application/json" })
-    public PartyJson updateUser(@RequestBody PartyJson partyJson,
+    public PartyDto updateUser(@RequestBody PartyDto partyJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
@@ -322,25 +321,25 @@ public class AdministrationController {
     // -- team administration -------------------------------------------------
 
     @GetMapping(value = "/team/{teamId}", headers = { "Content-type=application/json" })
-    public TeamJson findTeam(@PathVariable("teamId") Long teamId) {
+    public TeamDto findTeam(@PathVariable("teamId") Long teamId) {
         return betofficeAdminService.findTeam(teamId);
     }
 
     @GetMapping(value = "/team-search", headers = { "Content-type=application/json" })
-    public List<TeamJson> findTeams(
+    public List<TeamDto> findTeams(
             @RequestParam(name = "filter", required = false) String teamFilter,
             @RequestParam(name = "type", required = false) TeamType teamType) {
         return betofficeAdminService.findTeams(Optional.ofNullable(teamType), teamFilter);
     }
 
     @GetMapping(value = "/team", headers = { "Content-type=application/json" })
-    public List<TeamJson> findTeams() {
+    public List<TeamDto> findTeams() {
         return betofficeAdminService.findTeams();
     }
 
     @PreAuthorize("@authService.isAdminSession(#token)")
     @PostMapping(value = "/team", headers = { "Content-type=application/json" })
-    public TeamJson addTeam(@RequestBody TeamJson teamJson,
+    public TeamDto addTeam(@RequestBody TeamDto teamJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
@@ -350,7 +349,7 @@ public class AdministrationController {
 
     @PreAuthorize("@authService.isAdminSession(#token)")
     @PutMapping(value = "/team", headers = { "Content-type=application/json" })
-    public TeamJson updateTeam(@RequestBody TeamJson teamJson,
+    public TeamDto updateTeam(@RequestBody TeamDto teamJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
@@ -361,26 +360,26 @@ public class AdministrationController {
     // -- group type administration ------------------------------------------
 
     @GetMapping(value = "/groupType", headers = { "Content-type=application/json" })
-    public List<GroupTypeJson> listGroupTypes() {
+    public List<GroupTypeDto> listGroupTypes() {
         return betofficeAdminService.findGroupTypes();
     }
 
     // -- user/season administration ------------------------------------------
 
     @GetMapping(value = "/season/{seasonId}/potentialuser", headers = { "Content-type=application/json" })
-    public List<SeasonMemberJson> listPotentialUsers(@PathVariable("seasonId") Long seasonId) {
+    public List<SeasonMemberDto> listPotentialUsers(@PathVariable("seasonId") Long seasonId) {
         return betofficeAdminService.findPotentialSeasonMembers(seasonId);
     }
 
     @GetMapping(value = "/season/{seasonId}/user", headers = { "Content-type=application/json" })
-    public List<SeasonMemberJson> listUsers(@PathVariable("seasonId") Long seasonId) {
+    public List<SeasonMemberDto> listUsers(@PathVariable("seasonId") Long seasonId) {
         return betofficeAdminService.findAllSeasonMembers(seasonId);
     }
 
     @PreAuthorize("@authService.isAdminSession(#token)")
     @PostMapping(value = "/season/{seasonId}/user/add", headers = { "Content-type=application/json" })
-    public List<SeasonMemberJson> addUsers(@PathVariable("seasonId") Long seasonId,
-            @RequestBody List<SeasonMemberJson> members,
+    public List<SeasonMemberDto> addUsers(@PathVariable("seasonId") Long seasonId,
+            @RequestBody List<SeasonMemberDto> members,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
@@ -390,8 +389,8 @@ public class AdministrationController {
 
     @PreAuthorize("@authService.isAdminSession(#token)")
     @PostMapping(value = "/season/{seasonId}/user/remove", headers = { "Content-type=application/json" })
-    public List<SeasonMemberJson> removeUsers(@PathVariable("seasonId") Long seasonId,
-            @RequestBody List<SeasonMemberJson> members,
+    public List<SeasonMemberDto> removeUsers(@PathVariable("seasonId") Long seasonId,
+            @RequestBody List<SeasonMemberDto> members,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 

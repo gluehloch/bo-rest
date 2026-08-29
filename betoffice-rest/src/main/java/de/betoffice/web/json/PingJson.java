@@ -8,6 +8,8 @@ import java.util.TimeZone;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import de.betoffice.storage.JsonDateTimeFormat;
+
 /**
  * Returns a server timestamp.
  * 

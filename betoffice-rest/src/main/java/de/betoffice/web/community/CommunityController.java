@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb Copyright (c) 2015-2024 by Andre Winkler. All rights
+ * Project betoffice-web Copyright (c) 2015-2026 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -23,8 +23,6 @@
 
 package de.betoffice.web.community;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,8 +43,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.service.CommunityService;
+import de.betoffice.service.request.CommunityCreateCommand;
+import de.betoffice.storage.community.CommunityDto;
 import de.betoffice.storage.community.CommunityFilter;
-import de.betoffice.storage.community.entity.Community;
 import de.betoffice.storage.community.entity.CommunityReference;
 import de.betoffice.storage.season.entity.SeasonReference;
 import de.betoffice.storage.user.entity.Nickname;
@@ -55,10 +54,6 @@ import de.betoffice.web.BetofficeHttpConsts;
 import de.betoffice.web.PageParam;
 import de.betoffice.web.PageParamObjectMapper;
 import de.betoffice.web.SortParam;
-import de.betoffice.web.json.CommunityJson;
-import de.betoffice.web.json.PartyJson;
-import de.betoffice.web.json.SeasonJson;
-import de.betoffice.web.json.builder.CommunityJsonMapper;
 import tools.jackson.databind.ObjectMapper;
 
 /**
@@ -81,62 +76,53 @@ public class CommunityController {
     }
 
     @GetMapping(value = "/communities", headers = { "Content-type=application/json" })
-    public ResponseEntity<Page<CommunityJson>> findCommunities(
+    public ResponseEntity<Page<CommunityDto>> findCommunities(
             @RequestParam(required = true, name = "pageParam") PageParam pageParam,
             @RequestParam(required = false, name = "sortParam") SortParam sortParam,
             // @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        Sort sort = Sort.by(Sort.Order.asc("name"), Sort.Order.desc("shortName"));
-        CommunityFilter communityFilter = new CommunityFilter();
-        PageRequest pageRequest = pageParam.toPageRequest(sort);
-
-        Page<CommunityJson> communities = communityService.findCommunities(communityFilter, pageRequest)
-                .map(CommunityJsonMapper::map);
-        return ResponseEntity.ok(communities);
+        final Sort sort = Sort.by(Sort.Order.asc("name"), Sort.Order.desc("shortName"));
+        final CommunityFilter communityFilter = new CommunityFilter();
+        final PageRequest pageRequest = pageParam.toPageRequest(sort);
+        return ResponseEntity.ok(communityService.findCommunities(communityFilter, pageRequest));
     }
 
     @GetMapping(value = "/community/{communityId}", headers = { "Content-type=application/json" })
-    public ResponseEntity<CommunityJson> findCommunity(
+    public ResponseEntity<CommunityDto> findCommunity(
             @PathVariable("communityId") Long communityId,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        return ResponseEntity.ok(CommunityJsonMapper.map(communityService.find(communityId)));
-
+        return ResponseEntity.ok(communityService.find(communityId));
     }
 
     @PostMapping(value = "/community", headers = { "Content-type=application/json" })
-    public ResponseEntity<CommunityJson> createCommunity(
-            @RequestBody CommunityJson communityJson,
+    public ResponseEntity<CommunityDto> createCommunity(
+            @RequestBody CreateCommunityRequest createCommunityRequest,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        PartyJson communityManager = communityJson.getCommunityManager();
-        SeasonJson season = communityJson.getSeason();
-        String name = communityJson.getName();
-        String shortName = communityJson.getShortName();
-        String year = communityJson.getYear();
-
-        CommunityReference communityReference = CommunityReference.of(shortName);
-        SeasonReference seasonReference = SeasonReference.of(season.getYear(), season.getName());
-        Nickname nickname = Nickname.of(communityManager.getNickname());
-
-        ServiceResult<Community> betofficeServiceResult = communityService.create(
+        final CommunityReference communityReference = CommunityReference
+                .of(createCommunityRequest.communityShortName());
+        final SeasonReference seasonReference = SeasonReference
+                .of(createCommunityRequest.seasonReferenceYear(), createCommunityRequest.seasonReferenceName());
+        final Nickname nickname = Nickname
+                .of(createCommunityRequest.communityManagerNickname());
+        final CommunityCreateCommand createCommand = new CommunityCreateCommand(
                 communityReference,
                 seasonReference,
-                name,
-                year,
+                createCommunityRequest.communityName(),
+                createCommunityRequest.communityYear(),
                 nickname);
 
-        Optional<CommunityJson> community = betofficeServiceResult.result().map(CommunityJsonMapper::map);
-
-        return community.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
+        final ServiceResult<CommunityDto> serviceResult = communityService.create(createCommand);
+        return serviceResult.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @PutMapping(value = "/community", headers = { "Content-type=application/json" })
-    public ResponseEntity<CommunityJson> updateCommunity(
-            @RequestBody CommunityJson communityJson,
+    public ResponseEntity<CommunityDto> updateCommunity(
+            @RequestBody CommunityDto communityJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
@@ -144,8 +130,8 @@ public class CommunityController {
     }
 
     @DeleteMapping(value = "/community", headers = { "Content-type=application/json" })
-    public ResponseEntity<CommunityJson> deleteCommunity(
-            @RequestBody CommunityJson communityJson,
+    public ResponseEntity<CommunityDto> deleteCommunity(
+            @RequestBody CommunityDto communityJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 

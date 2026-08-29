@@ -64,28 +64,29 @@ import de.betoffice.database.data.DeleteDatabase;
 import de.betoffice.service.CommunityService;
 import de.betoffice.service.MasterDataManagerService;
 import de.betoffice.service.SeasonManagerService;
+import de.betoffice.service.request.CommunityCreateCommand;
 import de.betoffice.storage.community.entity.CommunityReference;
-import de.betoffice.storage.group.entity.GroupType;
+import de.betoffice.storage.group.entity.GroupTypeEntity;
+import de.betoffice.storage.season.GameResultDto;
+import de.betoffice.storage.season.RoundDto;
 import de.betoffice.storage.season.SeasonType;
-import de.betoffice.storage.season.entity.Game;
-import de.betoffice.storage.season.entity.GameList;
-import de.betoffice.storage.season.entity.Group;
-import de.betoffice.storage.season.entity.Season;
+import de.betoffice.storage.season.entity.GameEntity;
+import de.betoffice.storage.season.entity.GameListEntity;
+import de.betoffice.storage.season.entity.GroupEntity;
+import de.betoffice.storage.season.entity.SeasonEntity;
 import de.betoffice.storage.season.entity.SeasonReference;
 import de.betoffice.storage.session.SessionDao;
-import de.betoffice.storage.session.entity.Session;
-import de.betoffice.storage.team.entity.Team;
-import de.betoffice.storage.tip.GameTipp;
+import de.betoffice.storage.session.entity.SessionEntity;
+import de.betoffice.storage.team.entity.TeamEntity;
+import de.betoffice.storage.tip.GameTippEntity;
 import de.betoffice.storage.user.entity.Nickname;
-import de.betoffice.storage.user.entity.User;
+import de.betoffice.storage.user.entity.UserEntity;
 import de.betoffice.web.BetofficeHttpConsts;
 import de.betoffice.web.auth.AuthenticationForm;
 import de.betoffice.web.auth.BetofficeAuthenticationService;
 import de.betoffice.web.auth.LogoutFormData;
 import de.betoffice.web.boot.BetofficeBootApplication;
-import de.betoffice.web.json.GameResultJson;
 import de.betoffice.web.json.SecurityTokenJson;
-import de.betoffice.web.json.round.RoundJson;
 import de.betoffice.web.season.BetofficeService;
 import de.betoffice.web.security.SecurityConstants;
 import tools.jackson.databind.ObjectMapper;
@@ -162,7 +163,7 @@ class TippControllerTest {
         login();
         logout(findSessionToken().getToken());
 
-        List<Session> sessions2 = sessionDao.findByNickname(NICKNAME);
+        List<SessionEntity> sessions2 = sessionDao.findByNickname(NICKNAME);
         assertThat(sessions2).hasSize(1);
         ZonedDateTime logout = sessions2.get(0).getLogout();
         assertThat(logout).isNotNull();
@@ -174,7 +175,7 @@ class TippControllerTest {
         //
         // Versuch der Tippabgabe ohne Authentifizierung.
         //
-        SubmitTippRoundJson tippWithoutAuthentication = new SubmitTippRoundJson();
+        SubmitTippRoundRequest tippWithoutAuthentication = new SubmitTippRoundRequest();
 
         final var performTippSubmit = mockMvcTester.perform(post("/office/tipp/submit")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -193,7 +194,7 @@ class TippControllerTest {
         MvcResult result = loginAction.getMvcResult();
         System.out.println(result.getResponse().getContentAsString());
 
-        List<Session> session = sessionDao.findByNickname(NICKNAME);
+        List<SessionEntity> session = sessionDao.findByNickname(NICKNAME);
         assertThat(session).hasSize(1);
         assertThat(session.get(0).getBrowser()).isEqualTo(USER_AGENT_TEST);
         String token = session.get(0).getToken();
@@ -202,16 +203,16 @@ class TippControllerTest {
         // Tippabgabe erfolgt (weit) nach Spielstart (also heute). Es wird ein leerer
         // Tipp mit zurueck gegeben (Der Nickname wird vom Server NICHT gesetzt!).
         //
-        List<GameTipp> expectedTipps = seasonManagerService.findTipps(data.round, data.user);
+        List<GameTippEntity> expectedTipps = seasonManagerService.findTipps(data.round, data.user);
         assertThat(expectedTipps).hasSize(0);
 
-        SubmitTippRoundJson tipp = new SubmitTippRoundJson();
+        SubmitTippRoundRequest tipp = new SubmitTippRoundRequest();
         tipp.setNickname(NICKNAME);
         tipp.setRoundId(data.round.getId());
-        List<SubmitTippGameJson> submitTippGames = new ArrayList<>();
-        SubmitTippGameJson submitTippGame = new SubmitTippGameJson();
+        List<SubmitTippGameRequest> submitTippGames = new ArrayList<>();
+        SubmitTippGameRequest submitTippGame = new SubmitTippGameRequest();
         submitTippGame.setGameId(data.round.get(0).getId());
-        GameResultJson gameResultJson = new GameResultJson();
+        GameResultDto gameResultJson = new GameResultDto();
         gameResultJson.setHomeGoals(2);
         gameResultJson.setGuestGoals(3);
         submitTippGame.setTippResult(gameResultJson);
@@ -227,26 +228,26 @@ class TippControllerTest {
                 .accept(MediaType.APPLICATION_JSON));
 
         assertThat(performTippSubmit2).hasStatus(HttpStatus.OK);
-        assertThat(performTippSubmit2).bodyJson().convertTo(RoundJson.class)
+        assertThat(performTippSubmit2).bodyJson().convertTo(RoundDto.class)
                 .extracting("seasonName").isEqualTo("Bundesliga");
-        assertThat(performTippSubmit2).bodyJson().convertTo(RoundJson.class).extracting("seasonYear")
+        assertThat(performTippSubmit2).bodyJson().convertTo(RoundDto.class).extracting("seasonYear")
                 .isEqualTo("1999/2000");
-        assertThat(performTippSubmit2).bodyJson().convertTo(RoundJson.class)
+        assertThat(performTippSubmit2).bodyJson().convertTo(RoundDto.class)
                 .extracting(rj -> rj.getGames().get(0).getHomeTeam().getName()).isEqualTo("Vfb Lübeck");
-        assertThat(performTippSubmit2).bodyJson().convertTo(RoundJson.class)
+        assertThat(performTippSubmit2).bodyJson().convertTo(RoundDto.class)
                 .extracting(rj -> rj.getGames().get(0).getGuestTeam().getName()).isEqualTo("RWE");
-        assertThat(performTippSubmit2).bodyJson().convertTo(RoundJson.class)
+        assertThat(performTippSubmit2).bodyJson().convertTo(RoundDto.class)
                 .extracting(rj -> rj.getGames().get(0).getTipps().get(0).getNickname()).isNull();
 
         System.out.println(performTippSubmit.getResponse().getContentAsString());
 
         seasonManagerService.findTippsByMatch(data.luebeckVsRwe);
 
-        List<GameTipp> tipps = seasonManagerService.findTipps(data.round, data.user);
+        List<GameTippEntity> tipps = seasonManagerService.findTipps(data.round, data.user);
         assertThat(tipps).hasSize(0);
 
         logout(findSessionToken().getToken());
-        Session logoutSession = findSessionToken();
+        SessionEntity logoutSession = findSessionToken();
         assertThat(logoutSession.getLogout()).isNotNull();
         assertThat(logoutSession.getToken()).isEqualTo(token);
 
@@ -308,17 +309,17 @@ class TippControllerTest {
 
         data = new T();
 
-        data.luebeck = new Team("Vfb Lübeck", "Vfb Lübeck", "luebeck.gif");
+        data.luebeck = new TeamEntity("Vfb Lübeck", "Vfb Lübeck", "luebeck.gif");
         masterDataManagerService.createTeam(data.luebeck);
-        data.rwe = new Team("RWE", "Rot-Weiss-Essen", "rwe.gif");
+        data.rwe = new TeamEntity("RWE", "Rot-Weiss-Essen", "rwe.gif");
         masterDataManagerService.createTeam(data.rwe);
 
-        data.season = new Season();
+        data.season = new SeasonEntity();
         data.season.setMode(SeasonType.LEAGUE);
         data.season.setReference(SeasonReference.of("1999/2000", "Bundesliga"));
         seasonManagerService.createSeason(data.season);
 
-        data.bundesliga = new GroupType();
+        data.bundesliga = new GroupTypeEntity();
         data.bundesliga.setName("1. Bundesliga");
         masterDataManagerService.createGroupType(data.bundesliga);
 
@@ -333,28 +334,29 @@ class TippControllerTest {
         data.rweVsLuebeck = seasonManagerService.addMatch(data.round, DATE_1971_03_24, data.group, data.rwe,
                 data.luebeck);
 
-        data.user = new User();
+        data.user = new UserEntity();
         data.user.setNickname(Nickname.of(NICKNAME));
         data.user.setPassword(PASSWORD);
         communityService.createUser(data.user);
 
         CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(data.season.getReference());
-        communityService.create(defaultPlayerGroup, data.season.getReference(), defaultPlayerGroup.getShortName(),
-                "2024", Nickname.of(NICKNAME));
+        communityService.create(new CommunityCreateCommand(defaultPlayerGroup, data.season.getReference(),
+                defaultPlayerGroup.getShortName(),
+                "2024", Nickname.of(NICKNAME)));
         communityService.addMember(CommunityService.defaultPlayerGroup(data.season.getReference()),
                 data.user.getNickname());
     }
 
     private static class T {
-        Season season;
-        User user;
-        Team luebeck;
-        Team rwe;
-        GroupType bundesliga;
-        Group group;
-        GameList round;
-        Game luebeckVsRwe;
-        Game rweVsLuebeck;
+        SeasonEntity season;
+        UserEntity user;
+        TeamEntity luebeck;
+        TeamEntity rwe;
+        GroupTypeEntity bundesliga;
+        GroupEntity group;
+        GameListEntity round;
+        GameEntity luebeckVsRwe;
+        GameEntity rweVsLuebeck;
     }
 
     private MvcTestResult login() throws Exception {
@@ -396,8 +398,8 @@ class TippControllerTest {
         return performLogout;
     }
 
-    private Session findSessionToken() {
-        List<Session> sessions = sessionDao.findByNickname(NICKNAME);
+    private SessionEntity findSessionToken() {
+        List<SessionEntity> sessions = sessionDao.findByNickname(NICKNAME);
         assertThat(sessions).hasSize(1);
         return sessions.get(0);
     }

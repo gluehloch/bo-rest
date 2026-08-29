@@ -41,37 +41,36 @@ import de.betoffice.service.CommunityService;
 import de.betoffice.service.MasterDataManagerService;
 import de.betoffice.service.SeasonManagerService;
 import de.betoffice.storage.community.entity.CommunityReference;
-import de.betoffice.storage.group.entity.GroupType;
-import de.betoffice.storage.season.entity.Game;
-import de.betoffice.storage.season.entity.GameList;
-import de.betoffice.storage.season.entity.Group;
-import de.betoffice.storage.season.entity.Season;
-import de.betoffice.storage.session.entity.Session;
+import de.betoffice.storage.group.GroupTypeDto;
+import de.betoffice.storage.group.entity.GroupTypeEntity;
+import de.betoffice.storage.group.entity.GroupTeamDto;
+import de.betoffice.storage.group.entity.GroupTypeDtoMapper;
+import de.betoffice.storage.season.AddRoundJson;
+import de.betoffice.storage.season.GameDto;
+import de.betoffice.storage.season.RoundDto;
+import de.betoffice.storage.season.SeasonDto;
+import de.betoffice.storage.season.SeasonGroupTeamDto;
+import de.betoffice.storage.season.UpdateRoundDto;
+import de.betoffice.storage.season.entity.GameEntity;
+import de.betoffice.storage.season.entity.GameListEntity;
+import de.betoffice.storage.season.entity.GroupEntity;
+import de.betoffice.storage.season.entity.DtoBuilder;
+import de.betoffice.storage.season.entity.SeasonEntity;
+import de.betoffice.storage.season.entity.SeasonMemberDto;
+import de.betoffice.storage.season.entity.SeasonMemberDtoMapper;
+import de.betoffice.storage.season.entity.SeasonDtoMapper;
+import de.betoffice.storage.session.entity.SessionEntity;
+import de.betoffice.storage.team.TeamDto;
 import de.betoffice.storage.team.TeamType;
-import de.betoffice.storage.team.entity.Team;
+import de.betoffice.storage.team.entity.TeamEntity;
+import de.betoffice.storage.team.entity.TeamDtoMapper;
 import de.betoffice.storage.time.DateTimeProvider;
+import de.betoffice.storage.user.PartyDto;
 import de.betoffice.storage.user.entity.Nickname;
-import de.betoffice.storage.user.entity.User;
+import de.betoffice.storage.user.entity.PartyDtoMapper;
+import de.betoffice.storage.user.entity.UserEntity;
 import de.betoffice.validation.ValidationMessage;
 import de.betoffice.validation.ValidationMessages;
-import de.betoffice.web.json.GameJson;
-import de.betoffice.web.json.GroupTeamJson;
-import de.betoffice.web.json.GroupTypeJson;
-import de.betoffice.web.json.IGameJson;
-import de.betoffice.web.json.JsonBuilder;
-import de.betoffice.web.json.PartyJson;
-import de.betoffice.web.json.SeasonGroupTeamJson;
-import de.betoffice.web.json.SeasonJson;
-import de.betoffice.web.json.SeasonMemberJson;
-import de.betoffice.web.json.TeamJson;
-import de.betoffice.web.json.builder.GroupTypeJsonMapper;
-import de.betoffice.web.json.builder.PartyJsonMapper;
-import de.betoffice.web.json.builder.SeasonJsonMapper;
-import de.betoffice.web.json.builder.SeasonMemberJsonMapper;
-import de.betoffice.web.json.builder.TeamJsonMapper;
-import de.betoffice.web.json.round.AddRoundJson;
-import de.betoffice.web.json.round.RoundJson;
-import de.betoffice.web.json.round.UpdateRoundJson;
 
 /**
  * Betoffice administration JSON service interface.
@@ -113,7 +112,7 @@ public class DefaultAdminService implements AdminService {
 
     @Override
     public void validateAdminSession(String token) {
-        Optional<Session> session = authService.validateSession(token);
+        Optional<SessionEntity> session = authService.validateSession(token);
 
         if (!session.isPresent()) {
             throw new IllegalStateException("No valid session found for given token.");
@@ -137,9 +136,9 @@ public class DefaultAdminService implements AdminService {
 
     @Override
     @Transactional
-    public RoundJson reconcileRoundWithOpenligadb(String token, Long seasonId, Long roundId) {
-        Season season = seasonManagerService.findSeasonById(seasonId);
-        GameList round = seasonManagerService.findRound(roundId);
+    public RoundDto reconcileRoundWithOpenligadb(String token, Long seasonId, Long roundId) {
+        SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
+        GameListEntity round = seasonManagerService.findRound(roundId);
 
         if (round == null) {
             openligadbUpdateService.createOrUpdateRound(seasonId, 0);
@@ -147,16 +146,16 @@ public class DefaultAdminService implements AdminService {
             openligadbUpdateService.createOrUpdateRound(round.getSeason().getId(), round.getIndex());
         }
 
-        GameList updatedGameList = seasonManagerService.findNextRound(roundId)
+        GameListEntity updatedGameList = seasonManagerService.findNextRound(roundId)
                 .orElseGet(() -> seasonManagerService.findFirstRound(season).orElseThrow());
-        return JsonBuilder.toJsonWithGames(seasonManagerService.findRoundGames(updatedGameList.getId()).get());
+        return DtoBuilder.toJsonWithGames(seasonManagerService.findRoundGames(updatedGameList.getId()).get());
     }
 
     @Override
     @Transactional
-    public RoundJson mountRoundWithOpenligadb(String token, Long seasonId, Long roundId) {
-        Season season = seasonManagerService.findSeasonById(seasonId);
-        GameList round = seasonManagerService.findRound(roundId);
+    public RoundDto mountRoundWithOpenligadb(String token, Long seasonId, Long roundId) {
+        SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
+        GameListEntity round = seasonManagerService.findRound(roundId);
 
         if (round == null) {
             openligadbUpdateService.createOrUpdateRound(seasonId, 0);
@@ -164,69 +163,69 @@ public class DefaultAdminService implements AdminService {
             openligadbUpdateService.createOrUpdateRound(seasonId, round.getIndex() + 1);
         }
 
-        GameList updatedGameList = seasonManagerService.findNextRound(roundId)
+        GameListEntity updatedGameList = seasonManagerService.findNextRound(roundId)
                 .orElseGet(() -> seasonManagerService.findFirstRound(season).orElseThrow());
-        return JsonBuilder.toJsonWithGames(seasonManagerService.findRoundGames(updatedGameList.getId()).get());
+        return DtoBuilder.toJsonWithGames(seasonManagerService.findRoundGames(updatedGameList.getId()).get());
     }
 
     // -- team administration -------------------------------------------------
 
     @Override
-    public List<TeamJson> findTeams(Optional<TeamType> teamType, String filter) {
-        return TeamJsonMapper.map(masterDataManagerService.findTeams(teamType, filter));
+    public List<TeamDto> findTeams(Optional<TeamType> teamType, String filter) {
+        return TeamDtoMapper.map(masterDataManagerService.findTeams(teamType, filter));
     }
 
     @Override
-    public TeamJson findTeam(long teamId) {
-        Team team = masterDataManagerService.findTeamById(teamId);
-        return TeamJsonMapper.map(team, new TeamJson());
+    public TeamDto findTeam(long teamId) {
+        TeamEntity team = masterDataManagerService.findTeamById(teamId);
+        return TeamDtoMapper.map(team, new TeamDto());
     }
 
     @Override
-    public List<TeamJson> findTeams() {
-        return TeamJsonMapper.map(masterDataManagerService.findAllTeams());
+    public List<TeamDto> findTeams() {
+        return TeamDtoMapper.map(masterDataManagerService.findAllTeams());
     }
 
     @Override
     @Transactional
-    public TeamJson addTeam(TeamJson teamJson) {
-        Team team = TeamJsonMapper.reverse(teamJson, new Team());
+    public TeamDto addTeam(TeamDto teamJson) {
+        TeamEntity team = TeamDtoMapper.reverse(teamJson, new TeamEntity());
         masterDataManagerService.createTeam(team);
-        return TeamJsonMapper.map(team, teamJson);
+        return TeamDtoMapper.map(team, teamJson);
     }
 
     @Override
     @Transactional
-    public TeamJson updateTeam(TeamJson teamJson) {
-        Team storedTeam = masterDataManagerService.findTeamById(teamJson.getId());
-        Team team = TeamJsonMapper.reverse(teamJson, storedTeam);
+    public TeamDto updateTeam(TeamDto teamJson) {
+        TeamEntity storedTeam = masterDataManagerService.findTeamById(teamJson.getId());
+        TeamEntity team = TeamDtoMapper.reverse(teamJson, storedTeam);
         masterDataManagerService.updateTeam(team);
         return teamJson;
     }
 
     // -- user administration -------------------------------------------------
 
-    public PartyJson findUser(long userId) {
-        User user = communityService.findUser(userId);
-        return PartyJsonMapper.map(user, new PartyJson());
+    public PartyDto findUser(long userId) {
+        UserEntity user = communityService.findUser(userId);
+        return PartyDtoMapper.map(user, new PartyDto());
     }
 
     @Override
-    public List<PartyJson> findUsers() {
-        return PartyJsonMapper.map(communityService.findAllUsers());
+    public List<PartyDto> findUsers() {
+        return PartyDtoMapper.map(communityService.findAllUsers());
     }
 
     @Override
     @Transactional
-    public PartyJson addUser(PartyJson partyJson) {
-        User user = PartyJsonMapper.reverse(partyJson, new User());
+    public PartyDto addUser(PartyDto partyJson) {
+        UserEntity user = PartyDtoMapper.reverse(partyJson, new UserEntity());
         user = communityService.createUser(user);
-        return PartyJsonMapper.map(user, partyJson);
+        return PartyDtoMapper.map(user, partyJson);
     }
 
     @Override
     @Transactional
-    public PartyJson updateUser(PartyJson partyJson) {
+    public PartyDto updateUser(PartyDto partyJson) {
         communityService.updateUser(
                 true,
                 Nickname.of(partyJson.getNickname()),
@@ -242,25 +241,25 @@ public class DefaultAdminService implements AdminService {
 
     @Override
     @Transactional
-    public SeasonJson addSeason(SeasonJson seasonJson) {
-        Season season = SeasonJsonMapper.reverse(seasonJson, new Season());
+    public SeasonDto addSeason(SeasonDto seasonJson) {
+        SeasonEntity season = SeasonDtoMapper.reverse(seasonJson, new SeasonEntity());
         masterDataManagerService.createSeason(season);
         return seasonJson;
     }
 
     @Override
     @Transactional
-    public SeasonJson updateSeason(SeasonJson seasonJson) {
-        Season season = seasonManagerService.findSeasonById(seasonJson.getId());
-        season = SeasonJsonMapper.reverse(seasonJson, season);
+    public SeasonDto updateSeason(SeasonDto seasonJson) {
+        SeasonEntity season = seasonManagerService.findSeasonById(seasonJson.getId());
+        season = SeasonDtoMapper.reverse(seasonJson, season);
         masterDataManagerService.updateSeason(season);
 
-        return SeasonJsonMapper.map(season, seasonJson);
+        return SeasonDtoMapper.map(season, seasonJson);
     }
 
     @Override
     @Transactional
-    public ValidationMessages updateRoundAndGames(long seasonId, long roundId, RoundJson round) {
+    public ValidationMessages updateRoundAndGames(long seasonId, long roundId, RoundDto round) {
         if (roundId != round.getId()) {
             LOG.error("Round id from path variable {} does not match round id from request body {}.", roundId,
                     round.getId());
@@ -269,7 +268,7 @@ public class DefaultAdminService implements AdminService {
                             round.getId())));
         }
 
-        final Optional<GameList> roundEntity = seasonManagerService.findRoundGames(round.getId());
+        final Optional<GameListEntity> roundEntity = seasonManagerService.findRoundGames(round.getId());
         if (roundEntity.isEmpty()) {
             LOG.error("Can´t find round with id={}.", round.getId());
             return ValidationMessages.of(
@@ -277,9 +276,9 @@ public class DefaultAdminService implements AdminService {
                             round.getId())));
         }
 
-        final List<Game> games = new ArrayList<>();
-        for (GameJson match : round.getGames()) {
-            Game game = roundEntity.get().getById(match.getId());
+        final List<GameEntity> games = new ArrayList<>();
+        for (GameDto match : round.getGames()) {
+            GameEntity game = roundEntity.get().getById(match.getId());
             updateGame(match, game);
             games.add(game);
         }
@@ -288,18 +287,17 @@ public class DefaultAdminService implements AdminService {
         return ValidationMessages.ok();
     }
 
-
     @Override
     @Transactional
-    public void updateGame(GameJson gameJson) {
-        Game game = seasonManagerService.findMatch(gameJson.getId());
+    public void updateGame(GameDto gameJson) {
+        GameEntity game = seasonManagerService.findMatch(gameJson.getId());
         game.setDateTime(gameJson.getDateTime());
         updateGame(gameJson, game);
         seasonManagerService.updateMatch(game);
     }
 
     // TODO Gehoert sowas eher in einen JSON-Mapper? JsonAssembler | JsonBuilder?
-    private void updateGame(IGameJson match, Game game) {
+    private void updateGame(GameDto match, GameEntity game) {
         game.setPlayed(match.isFinished());
         game.setKo(match.isKo());
         game.setResult(match.getResult().getHomeGoals(),
@@ -315,31 +313,31 @@ public class DefaultAdminService implements AdminService {
     // -- user / season member administration ---------------------------------
 
     @Override
-    public List<SeasonMemberJson> findPotentialSeasonMembers(long seasonId) {
-        Season season = seasonManagerService.findSeasonById(seasonId);
+    public List<SeasonMemberDto> findPotentialSeasonMembers(long seasonId) {
+        SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
         CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(season.getReference());
-        Set<User> activatedUsers = communityService.findMembers(defaultPlayerGroup);
-        List<User> users = communityService.findAllUsers();
+        Set<UserEntity> activatedUsers = communityService.findMembers(defaultPlayerGroup);
+        List<UserEntity> users = communityService.findAllUsers();
         users.removeAll(activatedUsers);
-        return SeasonMemberJsonMapper.map(users);
+        return SeasonMemberDtoMapper.map(users);
     }
 
     @Override
-    public List<SeasonMemberJson> findAllSeasonMembers(long seasonId) {
-        Season season = seasonManagerService.findSeasonById(seasonId);
+    public List<SeasonMemberDto> findAllSeasonMembers(long seasonId) {
+        SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
         CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(season.getReference());
-        Set<User> activatedUsers = communityService.findMembers(defaultPlayerGroup);
-        return SeasonMemberJsonMapper.map(activatedUsers);
+        Set<UserEntity> activatedUsers = communityService.findMembers(defaultPlayerGroup);
+        return SeasonMemberDtoMapper.map(activatedUsers);
     }
 
     @Override
     @Transactional
-    public List<SeasonMemberJson> addSeasonMembers(long seasonId, List<SeasonMemberJson> seasonMembers) {
-        List<User> users = findUsers(seasonMembers);
-        Season season = seasonManagerService.findSeasonById(seasonId);
+    public List<SeasonMemberDto> addSeasonMembers(long seasonId, List<SeasonMemberDto> seasonMembers) {
+        List<UserEntity> users = findUsers(seasonMembers);
+        SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
         CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(season.getReference());
 
-        Set<Nickname> nicknames = new HashSet<>(users.stream().map(User::getNickname).toList());
+        Set<Nickname> nicknames = new HashSet<>(users.stream().map(UserEntity::getNickname).toList());
         communityService.addMembers(defaultPlayerGroup, nicknames);
 
         return findAllSeasonMembers(seasonId);
@@ -347,8 +345,8 @@ public class DefaultAdminService implements AdminService {
 
     @Override
     @Transactional
-    public List<SeasonMemberJson> removeSeasonMembers(long seasonId, List<SeasonMemberJson> seasonMembers) {
-        Season season = seasonManagerService.findSeasonById(seasonId);
+    public List<SeasonMemberDto> removeSeasonMembers(long seasonId, List<SeasonMemberDto> seasonMembers) {
+        SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
         CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(season.getReference());
 
         Set<Nickname> nicknames = new HashSet<>(
@@ -358,53 +356,53 @@ public class DefaultAdminService implements AdminService {
         return findAllSeasonMembers(seasonId);
     }
 
-    private List<User> findUsers(List<SeasonMemberJson> seasonMembers) {
-        List<User> users = new ArrayList<>();
-        for (SeasonMemberJson member : seasonMembers) {
-            User user = communityService.findUser(member.getId());
+    private List<UserEntity> findUsers(List<SeasonMemberDto> seasonMembers) {
+        List<UserEntity> users = new ArrayList<>();
+        for (SeasonMemberDto member : seasonMembers) {
+            UserEntity user = communityService.findUser(member.getId());
             users.add(user);
         }
         return users;
     }
 
     @Override
-    public List<GroupTypeJson> findGroupTypes() {
-        return GroupTypeJsonMapper.map(masterDataManagerService.findAllGroupTypes());
+    public List<GroupTypeDto> findGroupTypes() {
+        return GroupTypeDtoMapper.map(masterDataManagerService.findAllGroupTypes());
     }
 
     @Override
-    public GroupTypeJson findGroupType(long groupTypeId) {
-        return GroupTypeJsonMapper.map(masterDataManagerService.findGroupType(groupTypeId), new GroupTypeJson());
-    }
-
-    @Override
-    @Transactional
-    public SeasonJson addGroupToSeason(SeasonJson seasonJson, GroupTypeJson groupTypeJson) {
-        Season season = seasonManagerService.findSeasonById(seasonJson.getId());
-        GroupType groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
-        Season season2 = seasonManagerService.addGroupType(season, groupType);
-        return SeasonJsonMapper.map(season2, new SeasonJson());
+    public GroupTypeDto findGroupType(long groupTypeId) {
+        return GroupTypeDtoMapper.map(masterDataManagerService.findGroupType(groupTypeId), new GroupTypeDto());
     }
 
     @Override
     @Transactional
-    public void removeGroupFromSeason(SeasonJson seasonJson, GroupTypeJson groupTypeJson) {
-        Season season = seasonManagerService.findSeasonById(seasonJson.getId());
-        GroupType groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
+    public SeasonDto addGroupToSeason(SeasonDto seasonJson, GroupTypeDto groupTypeJson) {
+        SeasonEntity season = seasonManagerService.findSeasonById(seasonJson.getId());
+        GroupTypeEntity groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
+        SeasonEntity season2 = seasonManagerService.addGroupType(season, groupType);
+        return SeasonDtoMapper.map(season2, new SeasonDto());
+    }
+
+    @Override
+    @Transactional
+    public void removeGroupFromSeason(SeasonDto seasonJson, GroupTypeDto groupTypeJson) {
+        SeasonEntity season = seasonManagerService.findSeasonById(seasonJson.getId());
+        GroupTypeEntity groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
         seasonManagerService.removeGroupType(season, groupType);
     }
 
     @Override
-    public SeasonGroupTeamJson findSeasonGroupsAndTeams(long seasonId) {
-        Season season = seasonManagerService.findSeasonById(seasonId);
-        List<Group> groups = seasonManagerService.findGroups(season);
-        SeasonGroupTeamJson seasonGroupTeamJson = new SeasonGroupTeamJson();
+    public SeasonGroupTeamDto findSeasonGroupsAndTeams(long seasonId) {
+        SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
+        List<GroupEntity> groups = seasonManagerService.findGroups(season);
+        SeasonGroupTeamDto seasonGroupTeamJson = new SeasonGroupTeamDto();
 
-        for (Group group : groups) {
-            List<Team> teams = seasonManagerService.findTeams(group);
-            GroupTeamJson groupTeamJson = new GroupTeamJson();
-            groupTeamJson.setGroupType(GroupTypeJsonMapper.map(group.getGroupType(), new GroupTypeJson()));
-            groupTeamJson.setTeams(TeamJsonMapper.map(teams));
+        for (GroupEntity group : groups) {
+            List<TeamEntity> teams = seasonManagerService.findTeams(group);
+            GroupTeamDto groupTeamJson = new GroupTeamDto();
+            groupTeamJson.setGroupType(GroupTypeDtoMapper.map(group.getGroupType(), new GroupTypeDto()));
+            groupTeamJson.setTeams(TeamDtoMapper.map(teams));
             seasonGroupTeamJson.getGroupTeams().add(groupTeamJson);
         }
 
@@ -412,31 +410,31 @@ public class DefaultAdminService implements AdminService {
     }
 
     @Override
-    public List<TeamJson> findSeasonGroupAndTeamCandidates(SeasonJson seasonJson, GroupTypeJson groupTypeJson) {
-        Season season = seasonManagerService.findSeasonById(seasonJson.getId());
-        GroupType groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
-        List<Team> teams = seasonManagerService.findTeams(season, groupType);
-        List<Team> teamCandidates = masterDataManagerService.findTeams(season.getTeamType());
+    public List<TeamDto> findSeasonGroupAndTeamCandidates(SeasonDto seasonJson, GroupTypeDto groupTypeJson) {
+        SeasonEntity season = seasonManagerService.findSeasonById(seasonJson.getId());
+        GroupTypeEntity groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
+        List<TeamEntity> teams = seasonManagerService.findTeams(season, groupType);
+        List<TeamEntity> teamCandidates = masterDataManagerService.findTeams(season.getTeamType());
         teamCandidates.removeAll(teams);
 
-        return TeamJsonMapper.map(teamCandidates);
+        return TeamDtoMapper.map(teamCandidates);
     }
 
     @Override
     @Transactional
-    public void addTeamToGroup(SeasonJson seasonJson, GroupTypeJson groupTypeJson, TeamJson teamJson) {
-        Season season = seasonManagerService.findSeasonById(seasonJson.getId());
-        GroupType groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
-        Team team = masterDataManagerService.findTeamById(teamJson.getId());
+    public void addTeamToGroup(SeasonDto seasonJson, GroupTypeDto groupTypeJson, TeamDto teamJson) {
+        SeasonEntity season = seasonManagerService.findSeasonById(seasonJson.getId());
+        GroupTypeEntity groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
+        TeamEntity team = masterDataManagerService.findTeamById(teamJson.getId());
         seasonManagerService.addTeam(season, groupType, team);
     }
 
     @Override
     @Transactional
-    public void removeTeamFromGroup(SeasonJson seasonJson, GroupTypeJson groupTypeJson, TeamJson teamJson) {
-        Season season = seasonManagerService.findSeasonById(seasonJson.getId());
-        GroupType groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
-        Team team = masterDataManagerService.findTeamById(teamJson.getId());
+    public void removeTeamFromGroup(SeasonDto seasonJson, GroupTypeDto groupTypeJson, TeamDto teamJson) {
+        SeasonEntity season = seasonManagerService.findSeasonById(seasonJson.getId());
+        GroupTypeEntity groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
+        TeamEntity team = masterDataManagerService.findTeamById(teamJson.getId());
         seasonManagerService.removeTeam(season, groupType, team);
     }
 
@@ -448,7 +446,7 @@ public class DefaultAdminService implements AdminService {
 
     @Override
     @Transactional
-    public ValidationMessages updateRound(long seasonId, long roundId, UpdateRoundJson round) {
+    public ValidationMessages updateRound(long seasonId, long roundId, UpdateRoundDto round) {
         return roundHandler.updateRound(seasonId, roundId, round);
     }
 
