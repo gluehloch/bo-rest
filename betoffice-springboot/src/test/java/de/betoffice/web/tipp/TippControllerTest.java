@@ -64,6 +64,7 @@ import de.betoffice.database.data.DeleteDatabase;
 import de.betoffice.service.CommunityService;
 import de.betoffice.service.MasterDataManagerService;
 import de.betoffice.service.SeasonManagerService;
+import de.betoffice.service.request.CommunityCreateCommand;
 import de.betoffice.storage.community.entity.CommunityReference;
 import de.betoffice.storage.group.entity.GroupTypeEntity;
 import de.betoffice.storage.season.GameResultDto;
@@ -339,8 +340,9 @@ class TippControllerTest {
         communityService.createUser(data.user);
 
         CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(data.season.getReference());
-        communityService.create(defaultPlayerGroup, data.season.getReference(), defaultPlayerGroup.getShortName(),
-                "2024", Nickname.of(NICKNAME));
+        communityService.create(new CommunityCreateCommand(defaultPlayerGroup, data.season.getReference(),
+                defaultPlayerGroup.getShortName(),
+                "2024", Nickname.of(NICKNAME)));
         communityService.addMember(CommunityService.defaultPlayerGroup(data.season.getReference()),
                 data.user.getNickname());
     }
