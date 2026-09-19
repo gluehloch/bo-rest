@@ -37,6 +37,7 @@ import de.betoffice.storage.season.entity.SeasonMemberDto;
 import de.betoffice.storage.team.TeamDto;
 import de.betoffice.storage.team.TeamType;
 import de.betoffice.storage.user.PartyDto;
+import de.betoffice.storage.user.entity.UserProfileDto;
 import de.betoffice.validation.ValidationMessages;
 
 /**
@@ -141,7 +142,7 @@ public interface AdminService {
      * @param  user the new user/party
      * @return      the created party
      */
-    PartyDto addUser(PartyDto user);
+    UserProfileDto addUser(PartyDto user);
 
     /**
      * Update a party

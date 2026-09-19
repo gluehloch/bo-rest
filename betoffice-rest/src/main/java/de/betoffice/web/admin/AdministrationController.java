@@ -54,6 +54,7 @@ import de.betoffice.storage.season.entity.SeasonMemberDto;
 import de.betoffice.storage.team.TeamDto;
 import de.betoffice.storage.team.TeamType;
 import de.betoffice.storage.user.PartyDto;
+import de.betoffice.storage.user.entity.UserProfileDto;
 import de.betoffice.validation.ValidationMessages;
 import de.betoffice.web.BetofficeHttpConsts;
 import de.betoffice.web.season.BetofficeService;
@@ -301,7 +302,7 @@ public class AdministrationController {
 
     @PreAuthorize("@authService.isAdminSession(#token)")
     @PostMapping(value = "/user/add", headers = { "Content-type=application/json" })
-    public PartyDto addUser(@RequestBody PartyDto partyJson,
+    public UserProfileDto addUser(@RequestBody PartyDto partyJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 

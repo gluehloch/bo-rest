@@ -40,35 +40,37 @@ import de.betoffice.service.AuthService;
 import de.betoffice.service.CommunityService;
 import de.betoffice.service.MasterDataManagerService;
 import de.betoffice.service.SeasonManagerService;
+import de.betoffice.service.request.UserCreateCommand;
 import de.betoffice.storage.community.entity.CommunityReference;
 import de.betoffice.storage.group.GroupTypeDto;
-import de.betoffice.storage.group.entity.GroupTypeEntity;
 import de.betoffice.storage.group.entity.GroupTeamDto;
 import de.betoffice.storage.group.entity.GroupTypeDtoMapper;
+import de.betoffice.storage.group.entity.GroupTypeEntity;
 import de.betoffice.storage.season.AddRoundJson;
 import de.betoffice.storage.season.GameDto;
 import de.betoffice.storage.season.RoundDto;
 import de.betoffice.storage.season.SeasonDto;
 import de.betoffice.storage.season.SeasonGroupTeamDto;
 import de.betoffice.storage.season.UpdateRoundDto;
+import de.betoffice.storage.season.entity.DtoBuilder;
 import de.betoffice.storage.season.entity.GameEntity;
 import de.betoffice.storage.season.entity.GameListEntity;
 import de.betoffice.storage.season.entity.GroupEntity;
-import de.betoffice.storage.season.entity.DtoBuilder;
+import de.betoffice.storage.season.entity.SeasonDtoMapper;
 import de.betoffice.storage.season.entity.SeasonEntity;
 import de.betoffice.storage.season.entity.SeasonMemberDto;
 import de.betoffice.storage.season.entity.SeasonMemberDtoMapper;
-import de.betoffice.storage.season.entity.SeasonDtoMapper;
 import de.betoffice.storage.session.entity.SessionEntity;
 import de.betoffice.storage.team.TeamDto;
 import de.betoffice.storage.team.TeamType;
-import de.betoffice.storage.team.entity.TeamEntity;
 import de.betoffice.storage.team.entity.TeamDtoMapper;
+import de.betoffice.storage.team.entity.TeamEntity;
 import de.betoffice.storage.time.DateTimeProvider;
 import de.betoffice.storage.user.PartyDto;
 import de.betoffice.storage.user.entity.Nickname;
 import de.betoffice.storage.user.entity.PartyDtoMapper;
 import de.betoffice.storage.user.entity.UserEntity;
+import de.betoffice.storage.user.entity.UserProfileDto;
 import de.betoffice.validation.ValidationMessage;
 import de.betoffice.validation.ValidationMessages;
 
@@ -217,10 +219,16 @@ public class DefaultAdminService implements AdminService {
 
     @Override
     @Transactional
-    public PartyDto addUser(PartyDto partyJson) {
-        UserEntity user = PartyDtoMapper.reverse(partyJson, new UserEntity());
-        user = communityService.createUser(user);
-        return PartyDtoMapper.map(user, partyJson);
+    public UserProfileDto addUser(PartyDto partyJson) {
+        UserCreateCommand command = new UserCreateCommand(
+                partyJson.getNickname(),
+                partyJson.getSurname(),
+                partyJson.getName(),
+                partyJson.getMail(),
+                partyJson.getPassword(),
+                partyJson.getPhone());
+
+        return communityService.create(command).orElseThrow();
     }
 
     @Override
