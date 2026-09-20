@@ -88,13 +88,14 @@ public class CommunityController {
         return ResponseEntity.ok(communityService.findCommunities(communityFilter, pageRequest));
     }
 
-    @GetMapping(value = "/community/{communityId}", headers = { "Content-type=application/json" })
+    @GetMapping(value = "/community/{communityShortName}", headers = { "Content-type=application/json" })
     public ResponseEntity<CommunityDto> findCommunity(
-            @PathVariable("communityId") Long communityId,
+            @PathVariable("communityShortName") String communityShortName,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
 
-        return ResponseEntity.ok(communityService.find(communityId));
+        CommunityReference communityReference = CommunityReference.of(communityShortName);
+        return ResponseEntity.of(communityService.find(communityReference));
     }
 
     @PostMapping(value = "/community", headers = { "Content-type=application/json" })
@@ -117,6 +118,19 @@ public class CommunityController {
                 nickname);
 
         final ServiceResult<CommunityDto> serviceResult = communityService.create(createCommand);
+        return serviceResult.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
+    }
+
+    @PostMapping(value = "/community/{communityId}/{nickname}", headers = { "Content-type=application/json" })
+    public ResponseEntity<CommunityDto> addUserToCommunity(
+            @PathVariable("communityShortName") String communityShortName,
+            @PathVariable("nickname") String nickname,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_USER_AGENT) String userAgent) {
+
+        final ServiceResult<CommunityDto> serviceResult = communityService.addMember(
+                CommunityReference.of(communityShortName),
+                Nickname.of(nickname));
         return serviceResult.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 

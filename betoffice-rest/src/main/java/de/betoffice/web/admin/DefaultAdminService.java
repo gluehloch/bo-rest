@@ -81,7 +81,7 @@ import de.betoffice.validation.ValidationMessages;
  */
 @Component
 @Transactional(readOnly = true)
-public class DefaultAdminService implements AdminService {
+public class DefaultAdminService {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultAdminService.class);
 
@@ -112,7 +112,12 @@ public class DefaultAdminService implements AdminService {
 
     // ------------------------------------------------------------------------
 
-    @Override
+    /**
+     * Validate admin session.
+     *
+     * @param  token             the session token
+     * @throws SecurityException if the token is invalid, expired, or does not represent a valid administrator session
+     */
     public void validateAdminSession(String token) {
         Optional<SessionEntity> session = authService.validateSession(token);
 
@@ -136,7 +141,14 @@ public class DefaultAdminService implements AdminService {
 
     // ------------------------------------------------------------------------
 
-    @Override
+    /**
+     * Update round and game informations with the data from openligadb. (reconcile = abgleichen)
+     * 
+     * @param  token    the session id / security token
+     * @param  seasonId the season id
+     * @param  roundId  The round to update
+     * @return          The updated round and games
+     */
     @Transactional
     public RoundDto reconcileRoundWithOpenligadb(String token, Long seasonId, Long roundId) {
         SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
@@ -153,7 +165,14 @@ public class DefaultAdminService implements AdminService {
         return DtoBuilder.toJsonWithGames(seasonManagerService.findRoundGames(updatedGameList.getId()).get());
     }
 
-    @Override
+    /**
+     * Append round and game informations
+     * 
+     * @param  token    the session id / security token
+     * @param  seasonId the season id
+     * @param  roundId  create or update the round after roundId
+     * @return          The mounted round and games.
+     */
     @Transactional
     public RoundDto mountRoundWithOpenligadb(String token, Long seasonId, Long roundId) {
         SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
@@ -172,23 +191,19 @@ public class DefaultAdminService implements AdminService {
 
     // -- team administration -------------------------------------------------
 
-    @Override
     public List<TeamDto> findTeams(Optional<TeamType> teamType, String filter) {
         return TeamDtoMapper.map(masterDataManagerService.findTeams(teamType, filter));
     }
 
-    @Override
     public TeamDto findTeam(long teamId) {
         TeamEntity team = masterDataManagerService.findTeamById(teamId);
         return TeamDtoMapper.map(team, new TeamDto());
     }
 
-    @Override
     public List<TeamDto> findTeams() {
         return TeamDtoMapper.map(masterDataManagerService.findAllTeams());
     }
 
-    @Override
     @Transactional
     public TeamDto addTeam(TeamDto teamJson) {
         TeamEntity team = TeamDtoMapper.reverse(teamJson, new TeamEntity());
@@ -196,7 +211,6 @@ public class DefaultAdminService implements AdminService {
         return TeamDtoMapper.map(team, teamJson);
     }
 
-    @Override
     @Transactional
     public TeamDto updateTeam(TeamDto teamJson) {
         TeamEntity storedTeam = masterDataManagerService.findTeamById(teamJson.getId());
@@ -212,12 +226,10 @@ public class DefaultAdminService implements AdminService {
         return PartyDtoMapper.map(user, new PartyDto());
     }
 
-    @Override
     public List<PartyDto> findUsers() {
         return PartyDtoMapper.map(communityService.findAllUsers());
     }
 
-    @Override
     @Transactional
     public UserProfileDto addUser(PartyDto partyJson) {
         UserCreateCommand command = new UserCreateCommand(
@@ -231,7 +243,6 @@ public class DefaultAdminService implements AdminService {
         return communityService.create(command).orElseThrow();
     }
 
-    @Override
     @Transactional
     public PartyDto updateUser(PartyDto partyJson) {
         communityService.updateUser(
@@ -247,7 +258,6 @@ public class DefaultAdminService implements AdminService {
 
     // -- season administration -----------------------------------------------
 
-    @Override
     @Transactional
     public SeasonDto addSeason(SeasonDto seasonJson) {
         SeasonEntity season = SeasonDtoMapper.reverse(seasonJson, new SeasonEntity());
@@ -255,7 +265,6 @@ public class DefaultAdminService implements AdminService {
         return seasonJson;
     }
 
-    @Override
     @Transactional
     public SeasonDto updateSeason(SeasonDto seasonJson) {
         SeasonEntity season = seasonManagerService.findSeasonById(seasonJson.getId());
@@ -265,7 +274,6 @@ public class DefaultAdminService implements AdminService {
         return SeasonDtoMapper.map(season, seasonJson);
     }
 
-    @Override
     @Transactional
     public ValidationMessages updateRoundAndGames(long seasonId, long roundId, RoundDto round) {
         if (roundId != round.getId()) {
@@ -295,7 +303,6 @@ public class DefaultAdminService implements AdminService {
         return ValidationMessages.ok();
     }
 
-    @Override
     @Transactional
     public void updateGame(GameDto gameJson) {
         GameEntity game = seasonManagerService.findMatch(gameJson.getId());
@@ -320,7 +327,12 @@ public class DefaultAdminService implements AdminService {
 
     // -- user / season member administration ---------------------------------
 
-    @Override
+    /**
+     * Find all potential season members. So all users who are not member of the requested season.
+     * 
+     * @param  seasonId the season id
+     * @return          a list of potential season members
+     */
     public List<SeasonMemberDto> findPotentialSeasonMembers(long seasonId) {
         SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
         CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(season.getReference());
@@ -330,7 +342,12 @@ public class DefaultAdminService implements AdminService {
         return SeasonMemberDtoMapper.map(users);
     }
 
-    @Override
+    /**
+     * Find all potential season members. So all users who are not member of the requested season.
+     * 
+     * @param  seasonId the season id
+     * @return          a list of potential season members
+     */
     public List<SeasonMemberDto> findAllSeasonMembers(long seasonId) {
         SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
         CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(season.getReference());
@@ -338,7 +355,6 @@ public class DefaultAdminService implements AdminService {
         return SeasonMemberDtoMapper.map(activatedUsers);
     }
 
-    @Override
     @Transactional
     public List<SeasonMemberDto> addSeasonMembers(long seasonId, List<SeasonMemberDto> seasonMembers) {
         List<UserEntity> users = findUsers(seasonMembers);
@@ -351,7 +367,6 @@ public class DefaultAdminService implements AdminService {
         return findAllSeasonMembers(seasonId);
     }
 
-    @Override
     @Transactional
     public List<SeasonMemberDto> removeSeasonMembers(long seasonId, List<SeasonMemberDto> seasonMembers) {
         SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
@@ -373,17 +388,14 @@ public class DefaultAdminService implements AdminService {
         return users;
     }
 
-    @Override
     public List<GroupTypeDto> findGroupTypes() {
         return GroupTypeDtoMapper.map(masterDataManagerService.findAllGroupTypes());
     }
 
-    @Override
     public GroupTypeDto findGroupType(long groupTypeId) {
         return GroupTypeDtoMapper.map(masterDataManagerService.findGroupType(groupTypeId), new GroupTypeDto());
     }
 
-    @Override
     @Transactional
     public SeasonDto addGroupToSeason(SeasonDto seasonJson, GroupTypeDto groupTypeJson) {
         SeasonEntity season = seasonManagerService.findSeasonById(seasonJson.getId());
@@ -392,7 +404,6 @@ public class DefaultAdminService implements AdminService {
         return SeasonDtoMapper.map(season2, new SeasonDto());
     }
 
-    @Override
     @Transactional
     public void removeGroupFromSeason(SeasonDto seasonJson, GroupTypeDto groupTypeJson) {
         SeasonEntity season = seasonManagerService.findSeasonById(seasonJson.getId());
@@ -400,7 +411,6 @@ public class DefaultAdminService implements AdminService {
         seasonManagerService.removeGroupType(season, groupType);
     }
 
-    @Override
     public SeasonGroupTeamDto findSeasonGroupsAndTeams(long seasonId) {
         SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
         List<GroupEntity> groups = seasonManagerService.findGroups(season);
@@ -417,7 +427,6 @@ public class DefaultAdminService implements AdminService {
         return seasonGroupTeamJson;
     }
 
-    @Override
     public List<TeamDto> findSeasonGroupAndTeamCandidates(SeasonDto seasonJson, GroupTypeDto groupTypeJson) {
         SeasonEntity season = seasonManagerService.findSeasonById(seasonJson.getId());
         GroupTypeEntity groupType = masterDataManagerService.findGroupType(groupTypeJson.getId());
@@ -428,7 +437,6 @@ public class DefaultAdminService implements AdminService {
         return TeamDtoMapper.map(teamCandidates);
     }
 
-    @Override
     @Transactional
     public void addTeamToGroup(SeasonDto seasonJson, GroupTypeDto groupTypeJson, TeamDto teamJson) {
         SeasonEntity season = seasonManagerService.findSeasonById(seasonJson.getId());
@@ -437,7 +445,6 @@ public class DefaultAdminService implements AdminService {
         seasonManagerService.addTeam(season, groupType, team);
     }
 
-    @Override
     @Transactional
     public void removeTeamFromGroup(SeasonDto seasonJson, GroupTypeDto groupTypeJson, TeamDto teamJson) {
         SeasonEntity season = seasonManagerService.findSeasonById(seasonJson.getId());
@@ -446,13 +453,18 @@ public class DefaultAdminService implements AdminService {
         seasonManagerService.removeTeam(season, groupType, team);
     }
 
-    @Override
     @Transactional
     public ValidationMessages addRound(long seasonId, AddRoundJson round) {
         return roundHandler.addRound(seasonId, round);
     }
 
-    @Override
+    /**
+     * Aktualisiert eine Runde mit den Daten aus dem übergebenen UpdateRoundJson Objekt. Es werden nur die Daten
+     * aktualisiert, die im UpdateRoundJson Objekt gesetzt sind. Alle anderen Daten der Runde bleiben unverändert.
+     * 
+     * @param  round
+     * @return       operation feedback
+     */
     @Transactional
     public ValidationMessages updateRound(long seasonId, long roundId, UpdateRoundDto round) {
         return roundHandler.updateRound(seasonId, roundId, round);

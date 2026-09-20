@@ -73,7 +73,7 @@ public class AdministrationController {
     private BetofficeService betofficeService;
 
     @Autowired
-    private AdminService betofficeAdminService;
+    private DefaultAdminService betofficeAdminService;
 
     // -- openligadb ----------------------------------------------------------
 
