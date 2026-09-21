@@ -65,6 +65,7 @@ import de.betoffice.service.CommunityService;
 import de.betoffice.service.MasterDataManagerService;
 import de.betoffice.service.SeasonManagerService;
 import de.betoffice.service.request.CommunityCreateCommand;
+import de.betoffice.service.request.UserCreateCommand;
 import de.betoffice.storage.community.entity.CommunityReference;
 import de.betoffice.storage.group.entity.GroupTypeEntity;
 import de.betoffice.storage.season.GameResultDto;
@@ -203,7 +204,8 @@ class TippControllerTest {
         // Tippabgabe erfolgt (weit) nach Spielstart (also heute). Es wird ein leerer
         // Tipp mit zurueck gegeben (Der Nickname wird vom Server NICHT gesetzt!).
         //
-        List<GameTippEntity> expectedTipps = seasonManagerService.findTipps(data.round, data.user);
+        UserEntity user = communityService.findUser(Nickname.of(NICKNAME)).orElseThrow();
+        List<GameTippEntity> expectedTipps = seasonManagerService.findTipps(data.round, user);
         assertThat(expectedTipps).hasSize(0);
 
         SubmitTippRoundRequest tipp = new SubmitTippRoundRequest();
@@ -243,7 +245,7 @@ class TippControllerTest {
 
         seasonManagerService.findTippsByMatch(data.luebeckVsRwe);
 
-        List<GameTippEntity> tipps = seasonManagerService.findTipps(data.round, data.user);
+        List<GameTippEntity> tipps = seasonManagerService.findTipps(data.round, user);
         assertThat(tipps).hasSize(0);
 
         logout(findSessionToken().getToken());
@@ -337,7 +339,8 @@ class TippControllerTest {
         data.user = new UserEntity();
         data.user.setNickname(Nickname.of(NICKNAME));
         data.user.setPassword(PASSWORD);
-        communityService.createUser(data.user);
+        UserCreateCommand userCreateCommand = new UserCreateCommand(NICKNAME, "Andre", "Winkler", "winkler@mail.com",  PASSWORD, "1234567890");
+        communityService.create(userCreateCommand);
 
         CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(data.season.getReference());
         communityService.create(new CommunityCreateCommand(defaultPlayerGroup, data.season.getReference(),
