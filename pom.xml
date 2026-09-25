@@ -6,18 +6,18 @@
     <parent>
         <groupId>de.winkler.betoffice</groupId>
         <artifactId>betoffice-maven-parent</artifactId>
-        <version>1.16.0</version>
+        <version>1.16.1.SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.betoffice</groupId>
     <artifactId>betoffice-web</artifactId>
-    <version>1.5.3</version>
+    <version>1.6.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
-        <betoffice.openligadb.version>3.2.2</betoffice.openligadb.version>
-        <betoffice.storage.version>3.2.2</betoffice.storage.version>
+        <betoffice.openligadb.version>3.3.0-SNAPSHOT</betoffice.openligadb.version>
+        <betoffice.storage.version>3.3.0-SNAPSHOT</betoffice.storage.version>
         <betoffice.testutils.version>1.4.2</betoffice.testutils.version>
     </properties>
 

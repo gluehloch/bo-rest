@@ -32,14 +32,14 @@ import java.util.List;
  * 
  * @author Andre Winkler
  */
-public class SubmitTippRoundJson implements Serializable {
+public class SubmitTippRoundRequest implements Serializable {
 
     private static final long serialVersionUID = -1131645240778072140L;
 
     private String nickname;
     private long roundId;
 
-    private List<SubmitTippGameJson> submitTippGames = new ArrayList<>();
+    private List<SubmitTippGameRequest> submitTippGames = new ArrayList<>();
 
     /**
      * @return the nickname
@@ -72,14 +72,14 @@ public class SubmitTippRoundJson implements Serializable {
     /**
      * @return the submitted tippGames
      */
-    public List<SubmitTippGameJson> getSubmitTippGames() {
+    public List<SubmitTippGameRequest> getSubmitTippGames() {
         return submitTippGames;
     }
 
     /**
      * @param submitTippGames the tippGameJsons to set
      */
-    public void setSubmitTippGames(List<SubmitTippGameJson> submitTippGames) {
+    public void setSubmitTippGames(List<SubmitTippGameRequest> submitTippGames) {
         this.submitTippGames = submitTippGames;
     }
 
