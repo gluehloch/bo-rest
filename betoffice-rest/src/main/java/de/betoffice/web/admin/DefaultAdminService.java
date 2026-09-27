@@ -40,6 +40,7 @@ import de.betoffice.service.AuthService;
 import de.betoffice.service.CommunityService;
 import de.betoffice.service.MasterDataManagerService;
 import de.betoffice.service.SeasonManagerService;
+import de.betoffice.service.UserService;
 import de.betoffice.service.request.UserCreateCommand;
 import de.betoffice.storage.community.entity.CommunityReference;
 import de.betoffice.storage.group.GroupTypeDto;
@@ -89,6 +90,7 @@ public class DefaultAdminService {
     private final OpenligadbUpdateService openligadbUpdateService;
     private final MasterDataManagerService masterDataManagerService;
     private final SeasonManagerService seasonManagerService;
+    private final UserService userService;
     private final CommunityService communityService;
     private final AuthService authService;
     private final RoundHandler roundHandler;
@@ -98,6 +100,7 @@ public class DefaultAdminService {
             OpenligadbUpdateService openligadbUpdateService,
             MasterDataManagerService masterDataManagerService,
             SeasonManagerService seasonManagerService,
+            UserService userService,
             CommunityService communityService,
             AuthService authService,
             RoundHandler roundHandler) {
@@ -106,6 +109,7 @@ public class DefaultAdminService {
         this.openligadbUpdateService = openligadbUpdateService;
         this.masterDataManagerService = masterDataManagerService;
         this.seasonManagerService = seasonManagerService;
+        this.userService = userService;
         this.communityService = communityService;
         this.roundHandler = roundHandler;
     }
@@ -222,12 +226,12 @@ public class DefaultAdminService {
     // -- user administration -------------------------------------------------
 
     public PartyDto findUser(long userId) {
-        UserEntity user = communityService.findUser(userId);
+        UserEntity user = userService.findUser(userId);
         return PartyDtoMapper.map(user, new PartyDto());
     }
 
     public List<PartyDto> findUsers() {
-        return PartyDtoMapper.map(communityService.findAllUsers());
+        return PartyDtoMapper.map(userService.findAllUsers());
     }
 
     @Transactional
@@ -240,12 +244,12 @@ public class DefaultAdminService {
                 partyJson.getPassword(),
                 partyJson.getPhone());
 
-        return communityService.create(command).orElseThrow();
+        return userService.create(command).orElseThrow();
     }
 
     @Transactional
     public PartyDto updateUser(PartyDto partyJson) {
-        communityService.updateUser(
+        userService.updateUser(
                 true,
                 Nickname.of(partyJson.getNickname()),
                 partyJson.getName(),
@@ -337,7 +341,7 @@ public class DefaultAdminService {
         SeasonEntity season = seasonManagerService.findSeasonById(seasonId);
         CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(season.getReference());
         Set<UserEntity> activatedUsers = communityService.findMembers(defaultPlayerGroup);
-        List<UserEntity> users = communityService.findAllUsers();
+        List<UserEntity> users = userService.findAllUsers();
         users.removeAll(activatedUsers);
         return SeasonMemberDtoMapper.map(users);
     }
@@ -382,7 +386,7 @@ public class DefaultAdminService {
     private List<UserEntity> findUsers(List<SeasonMemberDto> seasonMembers) {
         List<UserEntity> users = new ArrayList<>();
         for (SeasonMemberDto member : seasonMembers) {
-            UserEntity user = communityService.findUser(member.getId());
+            UserEntity user = userService.findUser(member.getId());
             users.add(user);
         }
         return users;

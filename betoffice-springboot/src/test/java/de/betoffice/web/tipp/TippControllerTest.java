@@ -64,6 +64,7 @@ import de.betoffice.database.data.DeleteDatabase;
 import de.betoffice.service.CommunityService;
 import de.betoffice.service.MasterDataManagerService;
 import de.betoffice.service.SeasonManagerService;
+import de.betoffice.service.UserService;
 import de.betoffice.service.request.CommunityCreateCommand;
 import de.betoffice.service.request.UserCreateCommand;
 import de.betoffice.storage.community.entity.CommunityReference;
@@ -140,6 +141,9 @@ class TippControllerTest {
     private CommunityService communityService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private DataSource dataSource;
 
     private T data;
@@ -204,7 +208,7 @@ class TippControllerTest {
         // Tippabgabe erfolgt (weit) nach Spielstart (also heute). Es wird ein leerer
         // Tipp mit zurueck gegeben (Der Nickname wird vom Server NICHT gesetzt!).
         //
-        UserEntity user = communityService.findUser(Nickname.of(NICKNAME)).orElseThrow();
+        UserEntity user = userService.findUser(Nickname.of(NICKNAME)).orElseThrow();
         List<GameTippEntity> expectedTipps = seasonManagerService.findTipps(data.round, user);
         assertThat(expectedTipps).hasSize(0);
 
@@ -339,8 +343,9 @@ class TippControllerTest {
         data.user = new UserEntity();
         data.user.setNickname(Nickname.of(NICKNAME));
         data.user.setPassword(PASSWORD);
-        UserCreateCommand userCreateCommand = new UserCreateCommand(NICKNAME, "Andre", "Winkler", "winkler@mail.com",  PASSWORD, "1234567890");
-        communityService.create(userCreateCommand);
+        UserCreateCommand userCreateCommand = new UserCreateCommand(NICKNAME, "Andre", "Winkler", "winkler@mail.com",
+                PASSWORD, "1234567890");
+        userService.create(userCreateCommand);
 
         CommunityReference defaultPlayerGroup = CommunityService.defaultPlayerGroup(data.season.getReference());
         communityService.create(new CommunityCreateCommand(defaultPlayerGroup, data.season.getReference(),

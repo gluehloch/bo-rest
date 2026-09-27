@@ -32,14 +32,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.betoffice.service.CommunityService;
 import de.betoffice.service.SeasonManagerService;
 import de.betoffice.service.TippService;
+import de.betoffice.service.UserService;
 import de.betoffice.storage.season.GameDto;
 import de.betoffice.storage.season.RoundDto;
-import de.betoffice.storage.season.entity.GameListEntity;
 import de.betoffice.storage.season.entity.DtoAssembler;
 import de.betoffice.storage.season.entity.DtoBuilder;
+import de.betoffice.storage.season.entity.GameListEntity;
 import de.betoffice.storage.time.DateTimeProvider;
 import de.betoffice.storage.tip.GameTippEntity;
 import de.betoffice.storage.tip.TippDto;
@@ -58,7 +58,7 @@ public class DefaultOfficeTippService implements OfficeTippService {
     private SeasonManagerService seasonManagerService;
 
     @Autowired
-    private CommunityService communityService;
+    private UserService userService;
 
     @Autowired
     private TippService tippService;
@@ -93,7 +93,7 @@ public class DefaultOfficeTippService implements OfficeTippService {
 
     @Override
     public RoundDto findTipp(Long roundId, String nickName) {
-        Optional<UserEntity> user = communityService.findUser(Nickname.of(nickName));
+        Optional<UserEntity> user = userService.findUser(Nickname.of(nickName));
 
         if (!user.isPresent()) {
             return null;

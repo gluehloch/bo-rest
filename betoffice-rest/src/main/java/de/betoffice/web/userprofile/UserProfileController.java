@@ -36,9 +36,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import de.betoffice.service.CommunityService;
+import de.betoffice.service.UserService;
 import de.betoffice.storage.user.entity.Nickname;
 import de.betoffice.storage.user.entity.UserEntity;
 import de.betoffice.storage.user.entity.UserProfileDto;
@@ -48,14 +47,13 @@ import de.betoffice.validation.ValidationMessages;
 import de.betoffice.web.BetofficeHttpConsts;
 
 @CrossOrigin
-@RestController
 @RequestMapping("/office")
 public class UserProfileController {
 
-    private final CommunityService communityService;
+    private final UserService userService;
 
-    public UserProfileController(final CommunityService communityService) {
-        this.communityService = communityService;
+    public UserProfileController(final UserService userService) {
+        this.userService = userService;
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
@@ -67,7 +65,7 @@ public class UserProfileController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
 
         return ResponseEntity
-                .of(communityService.findUser(Nickname.of(headerNickname)).map(UserProfileDtoMapper::map));
+                .of(userService.findUser(Nickname.of(headerNickname)).map(UserProfileDtoMapper::map));
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
@@ -78,7 +76,7 @@ public class UserProfileController {
             @RequestBody UserProfileDto userProfileJson) {
 
         return ResponseEntity.of(UserProfileDtoMapper.map(
-                communityService.updateUser(
+                userService.updateUser(
                         false,
                         Nickname.of(nickname),
                         userProfileJson.getName(),
@@ -96,7 +94,7 @@ public class UserProfileController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
 
         return ResponseEntity.of(UserProfileDtoMapper.map(
-                communityService.resubmitConfirmationMail(Nickname.of(nickname))));
+                userService.resubmitConfirmationMail(Nickname.of(nickname))));
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
@@ -107,12 +105,12 @@ public class UserProfileController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
 
-        final Optional<UserEntity> optionalUser = communityService.findUserByChangeToken(changeToken);
+        final Optional<UserEntity> optionalUser = userService.findUserByChangeToken(changeToken);
         if (optionalUser.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         final UserEntity user = optionalUser.get();
-        final ServiceResult<UserEntity> confirmMailAddressChangeServiceResult = communityService
+        final ServiceResult<UserEntity> confirmMailAddressChangeServiceResult = userService
                 .confirmMailAddressChange(user.getNickname(), changeToken);
 
         return ResponseEntity.ofNullable(RestResult.of(
@@ -126,8 +124,8 @@ public class UserProfileController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
 
-        return ResponseEntity.of(UserProfileDtoMapper.map(communityService.findUser(Nickname.of(nickname))
-                .flatMap(u -> communityService.abortMailAddressChange(u.getNickname()))));
+        return ResponseEntity.of(UserProfileDtoMapper.map(userService.findUser(Nickname.of(nickname))
+                .flatMap(u -> userService.abortMailAddressChange(u.getNickname()))));
     }
 
     public static class RestResult<T> {

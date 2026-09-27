@@ -31,8 +31,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import de.betoffice.service.AuthService;
-import de.betoffice.service.CommunityService;
 import de.betoffice.service.SecurityToken;
+import de.betoffice.service.UserService;
 import de.betoffice.storage.time.DateTimeProvider;
 import de.betoffice.storage.user.entity.Nickname;
 import de.betoffice.storage.user.entity.UserEntity;
@@ -51,7 +51,7 @@ public class DefaultBetofficeAuthenticationService implements BetofficeAuthentic
     private AuthService authService;
 
     @Autowired
-    private CommunityService communityService;
+    private UserService userService;
 
     @Override
     public SecurityTokenJson login(String user, String password, String sessionId, String address, String browserId) {
@@ -81,7 +81,7 @@ public class DefaultBetofficeAuthenticationService implements BetofficeAuthentic
 
     @Override
     public SecurityTokenJson logout(String nickname, String token) {
-        Optional<UserEntity> user = communityService.findUser(Nickname.of(nickname));
+        Optional<UserEntity> user = userService.findUser(Nickname.of(nickname));
         SecurityToken securityToken = new SecurityToken(
                 token, user.get(), user.get().getRoleTypes(),
                 dateTimeProvider.currentDateTime());
