@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -55,6 +57,7 @@ import de.betoffice.storage.team.TeamDto;
 import de.betoffice.storage.team.TeamType;
 import de.betoffice.storage.user.PartyDto;
 import de.betoffice.storage.user.entity.UserProfileDto;
+import de.betoffice.validation.ServiceResult;
 import de.betoffice.validation.ValidationMessages;
 import de.betoffice.web.BetofficeHttpConsts;
 import de.betoffice.web.season.BetofficeService;
@@ -302,16 +305,27 @@ public class AdministrationController {
 
     @PreAuthorize("@authService.isAdminSession(#token)")
     @PostMapping(value = "/user/add", headers = { "Content-type=application/json" })
-    public UserProfileDto addUser(@RequestBody PartyDto partyJson,
+    public ResponseEntity<UserProfileDto> addUser(@RequestBody PartyDto partyJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
         betofficeAdminService.validateAdminSession(token);
-        return betofficeAdminService.addUser(partyJson);
+        final ServiceResult<UserProfileDto> user = betofficeAdminService.addUser(partyJson);
+        
+        ValidationMessages messages = user.messages();
+        if (messages != null && messages.containsAnError()) { // adapt to your API: hasErrors()/isEmpty()/containsError()
+            ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+            pd.setTitle("User creation failed");
+            pd.setDetail("Validation failed");
+            pd.setProperty("messages", messages); // or map to List<String>
+            return ResponseEntity.of(pd).build();
+        }
+        
+        return ResponseEntity.of(user.result());
     }
 
     @PostMapping(value = "/user/update", headers = { "Content-type=application/json" })
-    public PartyDto updateUser(@RequestBody PartyDto partyJson,
+    public ResponseEntity<PartyDto> updateUser(@RequestBody PartyDto partyJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 

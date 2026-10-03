@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb Copyright (c) 2015-2025 by Andre Winkler. All rights
+ * Project betoffice-jweb Copyright (c) 2015-2026 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import de.betoffice.service.UserService;
+import de.betoffice.service.request.UserUpdateCommand;
 import de.betoffice.storage.user.entity.Nickname;
 import de.betoffice.storage.user.entity.UserEntity;
 import de.betoffice.storage.user.entity.UserProfileDto;
@@ -75,15 +76,17 @@ public class UserProfileController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname,
             @RequestBody UserProfileDto userProfileJson) {
 
-        return ResponseEntity.of(UserProfileDtoMapper.map(
-                userService.updateUser(
-                        false,
-                        Nickname.of(nickname),
-                        userProfileJson.getName(),
-                        userProfileJson.getSurname(),
-                        userProfileJson.getMail(),
-                        userProfileJson.isEmailNotificationEnabled(),
-                        userProfileJson.getPhone())));
+        final UserUpdateCommand userUpdateCommand = new UserUpdateCommand(
+                false,
+                Nickname.of(nickname),
+                userProfileJson.getName(),
+                userProfileJson.getSurname(),
+                userProfileJson.getMail(),
+                userProfileJson.isEmailNotificationEnabled(),
+                userProfileJson.getPhone());
+
+        final ServiceResult<UserProfileDto> update = userService.update(userUpdateCommand);
+        return ResponseEntity.of(update.result());
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })

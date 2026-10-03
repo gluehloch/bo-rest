@@ -42,6 +42,7 @@ import de.betoffice.service.MasterDataManagerService;
 import de.betoffice.service.SeasonManagerService;
 import de.betoffice.service.UserService;
 import de.betoffice.service.request.UserCreateCommand;
+import de.betoffice.service.request.UserUpdateCommand;
 import de.betoffice.storage.community.entity.CommunityReference;
 import de.betoffice.storage.group.GroupTypeDto;
 import de.betoffice.storage.group.entity.GroupTeamDto;
@@ -72,6 +73,7 @@ import de.betoffice.storage.user.entity.Nickname;
 import de.betoffice.storage.user.entity.PartyDtoMapper;
 import de.betoffice.storage.user.entity.UserEntity;
 import de.betoffice.storage.user.entity.UserProfileDto;
+import de.betoffice.validation.ServiceResult;
 import de.betoffice.validation.ValidationMessage;
 import de.betoffice.validation.ValidationMessages;
 
@@ -234,8 +236,7 @@ public class DefaultAdminService {
         return PartyDtoMapper.map(userService.findAllUsers());
     }
 
-    @Transactional
-    public UserProfileDto addUser(PartyDto partyJson) {
+    public ServiceResult<UserProfileDto> addUser(PartyDto partyJson) {
         UserCreateCommand command = new UserCreateCommand(
                 partyJson.getNickname(),
                 partyJson.getSurname(),
@@ -244,12 +245,11 @@ public class DefaultAdminService {
                 partyJson.getPassword(),
                 partyJson.getPhone());
 
-        return userService.create(command).orElseThrow();
+        return userService.create(command);
     }
 
-    @Transactional
-    public PartyDto updateUser(PartyDto partyJson) {
-        userService.updateUser(
+    public ServiceResult<UserProfileDto> updateUser(PartyDto partyJson) {
+        UserUpdateCommand command = new UserUpdateCommand(
                 true,
                 Nickname.of(partyJson.getNickname()),
                 partyJson.getName(),
@@ -257,7 +257,8 @@ public class DefaultAdminService {
                 partyJson.getMail(),
                 partyJson.isEmailNotificationEnabled(),
                 partyJson.getPhone());
-        return partyJson;
+
+        return userService.update(command);
     }
 
     // -- season administration -----------------------------------------------
