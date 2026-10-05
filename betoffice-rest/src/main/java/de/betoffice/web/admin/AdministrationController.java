@@ -23,15 +23,10 @@
 
 package de.betoffice.web.admin;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -61,10 +56,9 @@ import de.betoffice.storage.team.TeamType;
 import de.betoffice.storage.user.PartyDto;
 import de.betoffice.storage.user.entity.UserProfileDto;
 import de.betoffice.validation.ServiceResult;
-import de.betoffice.validation.ValidationMessage;
-import de.betoffice.validation.ValidationMessage.MessageType;
 import de.betoffice.validation.ValidationMessages;
 import de.betoffice.web.BetofficeHttpConsts;
+import de.betoffice.web.ResponseEntityBuilder;
 import de.betoffice.web.season.BetofficeService;
 
 /**
@@ -309,7 +303,7 @@ public class AdministrationController {
     }
 
     @PreAuthorize("@authService.isAdminSession(#token)")
-    @PostMapping(value = "/user/add", headers = { "Content-type=application/json" })
+    @PostMapping(value = "/user", headers = { "Content-type=application/json" })
     public ResponseEntity<UserProfileDto> addUser(@RequestBody PartyDto partyJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
@@ -317,46 +311,22 @@ public class AdministrationController {
         betofficeAdminService.validateAdminSession(token);
         final ServiceResult<UserProfileDto> user = betofficeAdminService.create(partyJson);
 
-        ValidationMessages messages = user.messages();
-        if (messages != null && messages.containsAnError()) { // adapt to your API: hasErrors()/isEmpty()/containsError()
-            ProblemDetail problemDetail = toProblemDetail(messages);
-            return ResponseEntity.of(problemDetail).build();
+        final ValidationMessages messages = user.messages();
+        if (messages != null && messages.containsAnError()) {
+            return ResponseEntity.of(ResponseEntityBuilder.toProblemDetail(messages)).build();
         }
 
         return ResponseEntity.of(user.result());
     }
 
-    private Map<MessageType, List<String>> toMap(ValidationMessages messages) {
-        Map<MessageType, List<String>> map = new HashMap<>();
-        for (ValidationMessage message : messages.getMessages()) {
-            map.computeIfAbsent(message.getMessageType(), _ -> new ArrayList<String>()).add(message.getMessage());
-        }
-        return map;
-    }
-    
-    private Map<String, Object> toProblemDetails(Map<MessageType, List<String>> messages) {
-        Map<String, Object> map = new HashMap<>();
-        for (Map.Entry<MessageType, List<String>> entry : messages.entrySet()) {
-            map.put(entry.getKey().name(), String.join(", ", entry.getValue()));
-        }
-        return map;
-    }
-    
-    private ProblemDetail toProblemDetail(ValidationMessages messages) {
-        ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-        pd.setTitle("Validation failed");
-        pd.setDetail("One or more validation errors occurred.");
-        pd.setProperties(toProblemDetails(toMap(messages)));
-        return pd;
-    }
-
-    @PostMapping(value = "/user/update", headers = { "Content-type=application/json" })
-    public ResponseEntity<PartyDto> updateUser(@RequestBody PartyDto partyJson,
+    @PutMapping(value = "/user", headers = { "Content-type=application/json" })
+    public ResponseEntity<UserProfileDto> updateUser(@RequestBody PartyDto partyJson,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String token,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
         betofficeAdminService.validateAdminSession(token);
-        return betofficeAdminService.update(partyJson);
+        final ServiceResult<UserProfileDto> user = betofficeAdminService.update(partyJson);
+        return ResponseEntityBuilder.toResponseEntity(user);
     }
 
     // -- team administration -------------------------------------------------
