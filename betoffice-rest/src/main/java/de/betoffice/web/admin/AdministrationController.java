@@ -23,7 +23,10 @@
 
 package de.betoffice.web.admin;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +61,8 @@ import de.betoffice.storage.team.TeamType;
 import de.betoffice.storage.user.PartyDto;
 import de.betoffice.storage.user.entity.UserProfileDto;
 import de.betoffice.validation.ServiceResult;
+import de.betoffice.validation.ValidationMessage;
+import de.betoffice.validation.ValidationMessage.MessageType;
 import de.betoffice.validation.ValidationMessages;
 import de.betoffice.web.BetofficeHttpConsts;
 import de.betoffice.web.season.BetofficeService;
@@ -76,7 +81,7 @@ public class AdministrationController {
     private BetofficeService betofficeService;
 
     @Autowired
-    private DefaultAdminService betofficeAdminService;
+    private AdminService betofficeAdminService;
 
     // -- openligadb ----------------------------------------------------------
 
@@ -310,18 +315,39 @@ public class AdministrationController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
         betofficeAdminService.validateAdminSession(token);
-        final ServiceResult<UserProfileDto> user = betofficeAdminService.addUser(partyJson);
-        
+        final ServiceResult<UserProfileDto> user = betofficeAdminService.create(partyJson);
+
         ValidationMessages messages = user.messages();
         if (messages != null && messages.containsAnError()) { // adapt to your API: hasErrors()/isEmpty()/containsError()
-            ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-            pd.setTitle("User creation failed");
-            pd.setDetail("Validation failed");
-            pd.setProperty("messages", messages); // or map to List<String>
-            return ResponseEntity.of(pd).build();
+            ProblemDetail problemDetail = toProblemDetail(messages);
+            return ResponseEntity.of(problemDetail).build();
         }
-        
+
         return ResponseEntity.of(user.result());
+    }
+
+    private Map<MessageType, List<String>> toMap(ValidationMessages messages) {
+        Map<MessageType, List<String>> map = new HashMap<>();
+        for (ValidationMessage message : messages.getMessages()) {
+            map.computeIfAbsent(message.getMessageType(), _ -> new ArrayList<String>()).add(message.getMessage());
+        }
+        return map;
+    }
+    
+    private Map<String, Object> toProblemDetails(Map<MessageType, List<String>> messages) {
+        Map<String, Object> map = new HashMap<>();
+        for (Map.Entry<MessageType, List<String>> entry : messages.entrySet()) {
+            map.put(entry.getKey().name(), String.join(", ", entry.getValue()));
+        }
+        return map;
+    }
+    
+    private ProblemDetail toProblemDetail(ValidationMessages messages) {
+        ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        pd.setTitle("Validation failed");
+        pd.setDetail("One or more validation errors occurred.");
+        pd.setProperties(toProblemDetails(toMap(messages)));
+        return pd;
     }
 
     @PostMapping(value = "/user/update", headers = { "Content-type=application/json" })
@@ -330,7 +356,7 @@ public class AdministrationController {
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String nickname) {
 
         betofficeAdminService.validateAdminSession(token);
-        return betofficeAdminService.updateUser(partyJson);
+        return betofficeAdminService.update(partyJson);
     }
 
     // -- team administration -------------------------------------------------
