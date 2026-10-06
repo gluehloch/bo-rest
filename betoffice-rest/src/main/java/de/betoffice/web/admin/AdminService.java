@@ -236,6 +236,7 @@ public class AdminService {
         return PartyDtoMapper.map(userService.findAllUsers());
     }
 
+    @Transactional
     public ServiceResult<UserProfileDto> create(PartyDto partyJson) {
         UserCreateCommand command = new UserCreateCommand(
                 partyJson.getNickname(),
@@ -248,6 +249,7 @@ public class AdminService {
         return userService.create(command);
     }
 
+    @Transactional
     public ServiceResult<UserProfileDto> update(PartyDto partyJson) {
         UserUpdateCommand command = new UserUpdateCommand(
                 true,
