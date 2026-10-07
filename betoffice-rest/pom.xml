@@ -62,27 +62,23 @@
         </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>pl.project13.maven</groupId>
-                <artifactId>git-commit-id-plugin</artifactId>
+                <groupId>io.github.git-commit-id</groupId>
+                <artifactId>git-commit-id-maven-plugin</artifactId>
+                <version>9.2.0</version>
                 <executions>
                     <execution>
+                        <id>get-the-git-infos</id>
                         <goals>
                             <goal>revision</goal>
                         </goals>
+                        <phase>initialize</phase>
                     </execution>
                 </executions>
                 <configuration>
-                    <!-- do not fail builds where .git isn't present (useful in
-					some CI/packaging cases) -->
-                    <failOnNoGitDirectory>false</failOnNoGitDirectory>
-
-                    <!-- write to output directory so it ends up in the jar -->
                     <generateGitPropertiesFile>true</generateGitPropertiesFile>
-                    <gitPropertiesPath>
-                        ${project.build.outputDirectory}/git.properties</gitPropertiesPath>
-                    <!-- optional: keep values you care about -->
-                    <!-- by default the plugin writes many keys; you can control
-					keys if needed -->
+                    <generateGitPropertiesFilename>
+                        ${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+                    <commitIdGenerationMode>full</commitIdGenerationMode>
                 </configuration>
             </plugin>
         </plugins>
