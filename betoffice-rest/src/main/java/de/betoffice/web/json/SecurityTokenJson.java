@@ -27,6 +27,8 @@ import java.time.ZonedDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import de.betoffice.storage.JsonDateTimeFormat;
+
 /**
  * A security token as JSON object.
  * 

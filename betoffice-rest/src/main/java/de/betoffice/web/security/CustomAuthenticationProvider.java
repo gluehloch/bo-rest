@@ -41,7 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import de.betoffice.service.AuthService;
 import de.betoffice.storage.user.entity.Nickname;
-import de.betoffice.storage.user.entity.User;
+import de.betoffice.storage.user.entity.UserEntity;
 
 /**
  * Custom Authentification Provider: Defines my own authentication implementation. A nickname/password comparison.
@@ -81,7 +81,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         authService.login(nickname, password, password, ipaddress, browserid);
 
-        User user = authService.findByNickname(nickname).orElseThrow(
+        UserEntity user = authService.findByNickname(nickname).orElseThrow(
                 () -> new BadCredentialsException(
                         String.format("Authentication failed for nickname=[%1s].", nickname.value())));
 

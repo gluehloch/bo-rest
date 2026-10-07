@@ -21,47 +21,61 @@
  * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package de.betoffice.web.json;
+package de.betoffice.web.tipp;
+
+import java.io.Serializable;
+
+import de.betoffice.storage.season.GameResultDto;
 
 /**
- * Tipp for a game and an extension of {@link GameJson}.
+ * Holds the submit tipp for a game for one user.
  * 
  * @author Andre Winkler
  */
-public class GameTippJson {
+public class SubmitTippGameRequest implements Serializable {
 
-    private String nickname;
-    private GameResultJson tipp;
-    private long points;
+    private static final long serialVersionUID = -1535458861691048504L;
 
-    public GameResultJson getTipp() {
-        return tipp;
+    private long gameId;
+    private GameResultDto tippResult;
+
+    /**
+     * @return the gameId
+     */
+    public long getGameId() {
+        return gameId;
     }
 
-    public void setTipp(GameResultJson tipp) {
-        this.tipp = tipp;
+    /**
+     * @param gameId the gameId to set
+     */
+    public void setGameId(long gameId) {
+        this.gameId = gameId;
     }
 
-    public String getNickname() {
-        return nickname;
+    /**
+     * @return the tippResult
+     */
+    public GameResultDto getTippResult() {
+        return tippResult;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    /**
+     * @param tippResult the tippResult to set
+     */
+    public void setTippResult(GameResultDto tippResult) {
+        this.tippResult = tippResult;
     }
 
-    public long getPoints() {
-        return points;
-    }
-
-    public void setPoints(long points) {
-        this.points = points;
-    }
-
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
-        return "GameTippJson [nickname=" + nickname + ", tipp=" + tipp
-                + ", points=" + points + "]";
+        return "TippGameJson [gameId=" + gameId + ", tippResult=" + tippResult
+                + "]";
     }
 
 }

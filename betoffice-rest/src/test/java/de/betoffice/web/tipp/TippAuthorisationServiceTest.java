@@ -24,9 +24,10 @@
 
 package de.betoffice.web.tipp;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Optional;
 
@@ -34,9 +35,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import de.betoffice.service.AuthService;
-import de.betoffice.storage.session.entity.Session;
+import de.betoffice.storage.session.entity.SessionEntity;
 import de.betoffice.storage.user.entity.Nickname;
-import de.betoffice.storage.user.entity.User;
+import de.betoffice.storage.user.entity.UserEntity;
 
 /**
  * Unit tests for {@link TippAuthorisationService}.
@@ -65,7 +66,7 @@ class TippAuthorisationServiceTest {
     @Test
     void testSuccessfulAuthorization_WhenTokenAndNicknameMatch() {
         // Arrange
-        Session mockSession = createMockSession(NICKNAME);
+        SessionEntity mockSession = createMockSession(NICKNAME);
         when(authService.validateSession(VALID_TOKEN)).thenReturn(Optional.of(mockSession));
 
         // Act
@@ -90,7 +91,7 @@ class TippAuthorisationServiceTest {
     @Test
     void testFailedAuthorization_WhenUserNicknameDoesNotMatch() {
         // Arrange
-        Session mockSession = createMockSession(DIFFERENT_NICKNAME);
+        SessionEntity mockSession = createMockSession(DIFFERENT_NICKNAME);
         when(authService.validateSession(VALID_TOKEN)).thenReturn(Optional.of(mockSession));
 
         // Act
@@ -106,7 +107,7 @@ class TippAuthorisationServiceTest {
         // Create a session where user.nickname matches but session.nickname doesn't
         // This tests the dual nickname check: both session.getUser().getNickname().value()
         // and session.getNickname() must match the submitted nickname
-        Session mockSession = createMockSessionWithDifferentSessionNickname(NICKNAME, DIFFERENT_NICKNAME);
+        SessionEntity mockSession = createMockSessionWithDifferentSessionNickname(NICKNAME, DIFFERENT_NICKNAME);
         when(authService.validateSession(VALID_TOKEN)).thenReturn(Optional.of(mockSession));
 
         // Act
@@ -131,7 +132,7 @@ class TippAuthorisationServiceTest {
     @Test
     void testFailedAuthorization_WhenNullNickname() {
         // Arrange
-        Session mockSession = createMockSession(NICKNAME);
+        SessionEntity mockSession = createMockSession(NICKNAME);
         when(authService.validateSession(VALID_TOKEN)).thenReturn(Optional.of(mockSession));
 
         // Act
@@ -144,7 +145,7 @@ class TippAuthorisationServiceTest {
     @Test
     void testFailedAuthorization_WhenEmptyNickname() {
         // Arrange
-        Session mockSession = createMockSession(NICKNAME);
+        SessionEntity mockSession = createMockSession(NICKNAME);
         when(authService.validateSession(VALID_TOKEN)).thenReturn(Optional.of(mockSession));
 
         // Act
@@ -157,9 +158,9 @@ class TippAuthorisationServiceTest {
     /**
      * Creates a mock session with matching user nickname and session nickname.
      */
-    private Session createMockSession(String nickname) {
-        Session session = mock(Session.class);
-        User user = mock(User.class);
+    private SessionEntity createMockSession(String nickname) {
+        SessionEntity session = mock(SessionEntity.class);
+        UserEntity user = mock(UserEntity.class);
         Nickname nicknameObj = mock(Nickname.class);
 
         when(nicknameObj.value()).thenReturn(nickname);
@@ -175,9 +176,9 @@ class TippAuthorisationServiceTest {
      * This helps test the dual nickname check in the authorization logic,
      * where both the user's nickname and the session's nickname must match.
      */
-    private Session createMockSessionWithDifferentSessionNickname(String userNickname, String sessionNickname) {
-        Session session = mock(Session.class);
-        User user = mock(User.class);
+    private SessionEntity createMockSessionWithDifferentSessionNickname(String userNickname, String sessionNickname) {
+        SessionEntity session = mock(SessionEntity.class);
+        UserEntity user = mock(UserEntity.class);
         Nickname nicknameObj = mock(Nickname.class);
 
         when(nicknameObj.value()).thenReturn(userNickname);

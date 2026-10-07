@@ -28,7 +28,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import de.betoffice.service.AuthService;
-import de.betoffice.storage.session.entity.Session;
+import de.betoffice.storage.session.entity.SessionEntity;
 
 @Service
 public class BetofficeAuthorizationService {
@@ -40,7 +40,7 @@ public class BetofficeAuthorizationService {
     }
 
     public boolean validateSession(String token, String nickname) {
-        Optional<Session> session = authService.validateSession(token);
+        Optional<SessionEntity> session = authService.validateSession(token);
         if (session.isEmpty())
             return false;
         if (!session.get().getNickname().equals(nickname))

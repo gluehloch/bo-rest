@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb Copyright (c) 2015-2025 by Andre Winkler. All rights
+ * Project betoffice-jweb Copyright (c) 2015-2026 by Andre Winkler. All rights
  * reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -36,98 +36,99 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import de.betoffice.service.CommunityService;
+import de.betoffice.service.UserService;
+import de.betoffice.service.request.UserUpdateCommand;
 import de.betoffice.storage.user.entity.Nickname;
-import de.betoffice.storage.user.entity.User;
+import de.betoffice.storage.user.entity.UserEntity;
+import de.betoffice.storage.user.entity.UserProfileDto;
+import de.betoffice.storage.user.entity.UserProfileDtoMapper;
 import de.betoffice.validation.ServiceResult;
 import de.betoffice.validation.ValidationMessages;
 import de.betoffice.web.BetofficeHttpConsts;
-import de.betoffice.web.json.UserProfileJson;
-import de.betoffice.web.json.builder.UserProfileJsonMapper;
 
 @CrossOrigin
-@RestController
 @RequestMapping("/office")
 public class UserProfileController {
 
-    private final CommunityService communityService;
+    private final UserService userService;
 
-    public UserProfileController(final CommunityService communityService) {
-        this.communityService = communityService;
+    public UserProfileController(final UserService userService) {
+        this.userService = userService;
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
     // TODO Diese Prüfung ist überflüssig. War aber auch nur als Proof-of-Concept Lösung gedacht.
     @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
     @GetMapping(value = "/profile/{nickname}", headers = { "Content-type=application/json" })
-    public ResponseEntity<UserProfileJson> findProfile(@PathVariable("nickname") String nickname,
+    public ResponseEntity<UserProfileDto> findProfile(@PathVariable("nickname") String nickname,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
 
         return ResponseEntity
-                .of(communityService.findUser(Nickname.of(headerNickname)).map(UserProfileJsonMapper::map));
+                .of(userService.findUser(Nickname.of(headerNickname)).map(UserProfileDtoMapper::map));
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
     @PostMapping(value = "/profile/{nickname}", headers = { "Content-type=application/json" })
-    public ResponseEntity<UserProfileJson> updateProfile(@PathVariable("nickname") String nickname,
+    public ResponseEntity<UserProfileDto> updateProfile(@PathVariable("nickname") String nickname,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname,
-            @RequestBody UserProfileJson userProfileJson) {
+            @RequestBody UserProfileDto userProfileJson) {
 
-        return ResponseEntity.of(UserProfileJsonMapper.map(
-                communityService.updateUser(
-                        false,
-                        Nickname.of(nickname),
-                        userProfileJson.getName(),
-                        userProfileJson.getSurname(),
-                        userProfileJson.getMail(),
-                        userProfileJson.isEmailNotificationEnabled(),
-                        userProfileJson.getPhone())));
+        final UserUpdateCommand userUpdateCommand = new UserUpdateCommand(
+                false,
+                Nickname.of(nickname),
+                userProfileJson.getName(),
+                userProfileJson.getSurname(),
+                userProfileJson.getMail(),
+                userProfileJson.isEmailNotificationEnabled(),
+                userProfileJson.getPhone());
+
+        final ServiceResult<UserProfileDto> update = userService.update(userUpdateCommand);
+        return ResponseEntity.of(update.result());
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
     @PostMapping(value = "/profile/{nickname}/resubmit-confirmation-mail", headers = {
             "Content-type=application/json" })
-    public ResponseEntity<UserProfileJson> resubmitConfirmationMail(@PathVariable("nickname") String nickname,
+    public ResponseEntity<UserProfileDto> resubmitConfirmationMail(@PathVariable("nickname") String nickname,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
 
-        return ResponseEntity.of(UserProfileJsonMapper.map(
-                communityService.resubmitConfirmationMail(Nickname.of(nickname))));
+        return ResponseEntity.of(UserProfileDtoMapper.map(
+                userService.resubmitConfirmationMail(Nickname.of(nickname))));
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
     @PostMapping(value = "/profile/{nickname}/confirm-update/{changeToken}", headers = {
             "Content-type=text/plain" })
-    public ResponseEntity<RestResult<UserProfileJson>> confirmUpdateProfile(@PathVariable("nickname") String nickname,
+    public ResponseEntity<RestResult<UserProfileDto>> confirmUpdateProfile(@PathVariable("nickname") String nickname,
             @PathVariable("changeToken") String changeToken, @RequestBody String changeTokenAsBody,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
 
-        final Optional<User> optionalUser = communityService.findUserByChangeToken(changeToken);
+        final Optional<UserEntity> optionalUser = userService.findUserByChangeToken(changeToken);
         if (optionalUser.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        final User user = optionalUser.get();
-        final ServiceResult<User> confirmMailAddressChangeServiceResult = communityService
+        final UserEntity user = optionalUser.get();
+        final ServiceResult<UserEntity> confirmMailAddressChangeServiceResult = userService
                 .confirmMailAddressChange(user.getNickname(), changeToken);
 
         return ResponseEntity.ofNullable(RestResult.of(
-                confirmMailAddressChangeServiceResult, UserProfileJsonMapper::map));
+                confirmMailAddressChangeServiceResult, UserProfileDtoMapper::map));
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
     @PostMapping(value = "/profile/{nickname}/abort-update", headers = {
             "Content-type=text/plain" })
-    public ResponseEntity<UserProfileJson> abortUpdateProfile(@PathVariable("nickname") String nickname,
+    public ResponseEntity<UserProfileDto> abortUpdateProfile(@PathVariable("nickname") String nickname,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
 
-        return ResponseEntity.of(UserProfileJsonMapper.map(communityService.findUser(Nickname.of(nickname))
-                .flatMap(u -> communityService.abortMailAddressChange(u.getNickname()))));
+        return ResponseEntity.of(UserProfileDtoMapper.map(userService.findUser(Nickname.of(nickname))
+                .flatMap(u -> userService.abortMailAddressChange(u.getNickname()))));
     }
 
     public static class RestResult<T> {
