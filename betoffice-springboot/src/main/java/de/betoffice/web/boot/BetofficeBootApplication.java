@@ -12,14 +12,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 
 /**
  * For local development, add this parameter to the VM options: {@code -Dspring.profiles.active=dev }
  */
-@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
-@ComponentScan(basePackages = { "de.betoffice" })
+@SpringBootApplication(exclude = DataSourceAutoConfiguration.class, scanBasePackages = { "de.betoffice" })
+// @ComponentScan(basePackages = { "de.betoffice" })
 public class BetofficeBootApplication extends SpringBootServletInitializer {
 
     @Autowired
