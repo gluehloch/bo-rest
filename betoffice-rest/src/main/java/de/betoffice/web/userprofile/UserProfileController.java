@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.service.UserService;
 import de.betoffice.service.request.UserUpdateCommand;
@@ -48,6 +49,7 @@ import de.betoffice.validation.ValidationMessages;
 import de.betoffice.web.BetofficeHttpConsts;
 
 @CrossOrigin
+@RestController
 @RequestMapping("/office")
 public class UserProfileController {
 
@@ -60,13 +62,14 @@ public class UserProfileController {
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
     // TODO Diese Prüfung ist überflüssig. War aber auch nur als Proof-of-Concept Lösung gedacht.
     @PreAuthorize("@betofficeAuthorizationService.validateSession(#headerToken, #nickname)")
-    @GetMapping(value = "/profile/{nickname}", headers = { "Content-type=application/json" })
+    @GetMapping(value = "/profile/{nickname}", produces = { "application/json" })
     public ResponseEntity<UserProfileDto> findProfile(@PathVariable("nickname") String nickname,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname
+            ) {
 
         return ResponseEntity
-                .of(userService.findUser(Nickname.of(headerNickname)).map(UserProfileDtoMapper::map));
+                .of(userService.findUser(Nickname.of(nickname)).map(UserProfileDtoMapper::map));
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })

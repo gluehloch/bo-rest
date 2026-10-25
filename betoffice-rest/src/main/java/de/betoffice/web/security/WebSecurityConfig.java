@@ -118,26 +118,21 @@ public class WebSecurityConfig {
                 .requestMatchers(HttpMethod.POST,
                         BetofficeUrlPath.URL_AUTHENTICATION + BetofficeUrlPath.URL_AUTHENTICATION_LOGOUT)
                 .authenticated()
+
                 // Send tipp form
-                .requestMatchers(HttpMethod.POST, BetofficeUrlPath.URL_OFFICE + "/tipp/submit")
-                .hasRole("TIPPER")
+                .requestMatchers(HttpMethod.POST, BetofficeUrlPath.URL_OFFICE + "/tipp/submit").hasRole("TIPPER")
+
                 // user profile update
-                .requestMatchers(HttpMethod.GET, BetofficeUrlPath.URL_OFFICE + "/profile/**")
-                .hasRole("TIPPER")
-                .requestMatchers(HttpMethod.PUT, BetofficeUrlPath.URL_OFFICE + "/profile/**")
-                .hasRole("TIPPER")
-                .requestMatchers(HttpMethod.POST, BetofficeUrlPath.URL_OFFICE + "/profile/**")
-                .hasRole("TIPPER")
+                .requestMatchers(HttpMethod.GET, BetofficeUrlPath.URL_OFFICE + "/profile/**").hasRole("TIPPER")
+                .requestMatchers(HttpMethod.PUT, BetofficeUrlPath.URL_OFFICE + "/profile/**").hasRole("TIPPER")
+                .requestMatchers(HttpMethod.POST, BetofficeUrlPath.URL_OFFICE + "/profile/**").hasRole("TIPPER")
 
                 // Community Administration
-                .requestMatchers(HttpMethod.GET, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**")
-                .hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**")
-                .hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**")
-                .hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**")
-                .hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, BetofficeUrlPath.URL_COMMUNITY_ADMIN + "/**").hasRole("ADMIN")
+
                 // Administration
                 .requestMatchers(HttpMethod.GET, BetofficeUrlPath.URL_ADMIM + "/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, BetofficeUrlPath.URL_ADMIM + "/**").hasRole("ADMIN")
