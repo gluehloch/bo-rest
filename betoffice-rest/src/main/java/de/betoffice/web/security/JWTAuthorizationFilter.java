@@ -45,7 +45,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import de.betoffice.service.AuthService;
-import de.betoffice.storage.session.entity.Session;
+import de.betoffice.storage.session.entity.SessionEntity;
 import de.betoffice.storage.user.RoleType;
 
 /**
@@ -83,7 +83,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
         String token = SecurityConstants.getToken(request);
         if (token != null) {
-            Optional<Session> validateSession = authService.validateSession(token);
+            Optional<SessionEntity> validateSession = authService.validateSession(token);
 
             if (validateSession.isPresent()) {
                 List<RoleType> roleTypes = validateSession.get().getUser().getRoleTypes();

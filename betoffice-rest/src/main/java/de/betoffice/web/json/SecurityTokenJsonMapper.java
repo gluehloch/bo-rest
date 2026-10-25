@@ -21,11 +21,10 @@
  * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package de.betoffice.web.json.builder;
+package de.betoffice.web.json;
 
 import de.betoffice.service.SecurityToken;
 import de.betoffice.storage.user.RoleType;
-import de.betoffice.web.json.SecurityTokenJson;
 
 /**
  * Map a {@link SecurityToken} to {@link SecurityTokenJson}.
