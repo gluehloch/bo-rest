@@ -47,6 +47,7 @@ import de.betoffice.storage.user.entity.UserProfileDtoMapper;
 import de.betoffice.validation.ServiceResult;
 import de.betoffice.validation.ValidationMessages;
 import de.betoffice.web.BetofficeHttpConsts;
+import de.betoffice.web.ResponseEntityBuilder;
 
 @CrossOrigin
 @RestController
@@ -65,8 +66,9 @@ public class UserProfileController {
     @GetMapping(value = "/profile/{nickname}", produces = { "application/json" })
     public ResponseEntity<UserProfileDto> findProfile(@PathVariable("nickname") String nickname,
             @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_TOKEN) String headerToken,
-            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname
-            ) {
+            @RequestHeader(BetofficeHttpConsts.HTTP_HEADER_BETOFFICE_NICKNAME) String headerNickname) {
+
+        // TODO Session nickname == #nickname
 
         return ResponseEntity
                 .of(userService.findUser(Nickname.of(nickname)).map(UserProfileDtoMapper::map));
@@ -89,7 +91,7 @@ public class UserProfileController {
                 userProfileJson.getPhone());
 
         final ServiceResult<UserProfileDto> update = userService.update(userUpdateCommand);
-        return ResponseEntity.of(update.result());
+        return ResponseEntityBuilder.toResponseEntity(update);
     }
 
     @Secured({ "ROLE_TIPPER", "ROLE_ADMIN" })
