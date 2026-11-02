@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- * Project betoffice-jweb-misc Copyright (c) 2000-2021 by Andre Winkler. All
+ * Project betoffice-jweb-misc Copyright (c) 2000-2026 by Andre Winkler. All
  * rights reserved.
  * ============================================================================
  * GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
@@ -26,16 +26,15 @@ package de.betoffice.web.season;
 import java.util.List;
 import java.util.Optional;
 
+import de.betoffice.storage.group.GroupTypeDto;
+import de.betoffice.storage.season.GameDto;
+import de.betoffice.storage.season.RoundAndTableDto;
+import de.betoffice.storage.season.RoundDto;
+import de.betoffice.storage.season.SeasonDto;
+import de.betoffice.storage.season.UserRankingTableDto;
+import de.betoffice.storage.team.TeamDto;
 import de.betoffice.storage.team.TeamType;
-import de.betoffice.web.json.GameJson;
-import de.betoffice.web.json.GameWithGoalsJson;
-import de.betoffice.web.json.GroupTypeJson;
 import de.betoffice.web.json.PingJson;
-import de.betoffice.web.json.RoundAndTableJson;
-import de.betoffice.web.json.SeasonJson;
-import de.betoffice.web.json.TeamJson;
-import de.betoffice.web.json.UserTableJson;
-import de.betoffice.web.json.round.RoundJson;
 
 /**
  * Betoffice JSON service interface
@@ -50,7 +49,7 @@ public interface BetofficeService {
      * @param  seasonId the season id
      * @return          the season
      */
-    SeasonJson findSeasonById(Long seasonId);
+    SeasonDto findSeasonById(Long seasonId);
 
     /**
      * Find all groups of a season.
@@ -58,7 +57,7 @@ public interface BetofficeService {
      * @param  seasonId the season id
      * @return          the group types of a season
      */
-    List<GroupTypeJson> findAllGroups(Long seasonId);
+    List<GroupTypeDto> findAllGroups(Long seasonId);
 
     /**
      * Find all rounds of a season
@@ -66,7 +65,7 @@ public interface BetofficeService {
      * @param  seasonId the season id
      * @return          the rounds of a season
      */
-    List<RoundJson> findAllRounds(Long seasonId);
+    List<RoundDto> findAllRounds(Long seasonId);
 
     /**
      * Find all rounds of a season
@@ -75,7 +74,7 @@ public interface BetofficeService {
      * @param  groupTypeId the group type id
      * @return             the rounds of a season
      */
-    SeasonJson findAllRounds(Long seasonId, Long groupTypeId);
+    SeasonDto findAllRounds(Long seasonId, Long groupTypeId);
 
     /**
      * Find a round by id
@@ -84,7 +83,7 @@ public interface BetofficeService {
      * @param  roundId  the round id
      * @return          the round
      */
-    RoundJson findRound(Long seasonId, Long roundId);
+    RoundDto findRound(Long seasonId, Long roundId);
 
     /**
      * Find a game by id
@@ -92,7 +91,7 @@ public interface BetofficeService {
      * @param  gameId the game id
      * @return        the game
      */
-    GameJson findGame(Long gameId);
+    GameDto findGame(Long gameId);
 
     /**
      * Find a game by id
@@ -100,7 +99,7 @@ public interface BetofficeService {
      * @param  gameId the game id
      * @return        the game
      */
-    GameWithGoalsJson findDetailGame(Long gameId);
+    GameDto findDetailGame(Long gameId);
 
     /**
      * Find a round by id. Returns only the games of a round with defined groupType.
@@ -110,7 +109,7 @@ public interface BetofficeService {
      * @param  groupTypeId the group type id
      * @return             the round
      */
-    RoundJson findRoundByGroup(Long seasonId, Long roundId, Long groupTypeId);
+    RoundDto findRoundByGroup(Long seasonId, Long roundId, Long groupTypeId);
 
     /**
      * Find the next round
@@ -119,7 +118,7 @@ public interface BetofficeService {
      * @param  roundId the round id
      * @return         the next round from id
      */
-    RoundJson findNextRound(Long seasonId, Long roundId);
+    RoundDto findNextRound(Long seasonId, Long roundId);
 
     /**
      * Find the prev round
@@ -128,7 +127,7 @@ public interface BetofficeService {
      * @param  roundId the round id
      * @return         the prev round from id
      */
-    RoundJson findPrevRound(Long seasonId, Long roundId);
+    RoundDto findPrevRound(Long seasonId, Long roundId);
 
     /**
      * Find a round by id
@@ -138,7 +137,7 @@ public interface BetofficeService {
      * @param  groupTypeId the group type id
      * @return             the round
      */
-    RoundAndTableJson findRoundTable(Long seasonId, Long roundId, Long groupTypeId);
+    RoundAndTableDto findRoundTable(Long seasonId, Long roundId, Long groupTypeId);
 
     /**
      * Find the next round
@@ -147,7 +146,7 @@ public interface BetofficeService {
      * @param  roundId the round id
      * @return         the next round from id
      */
-    RoundAndTableJson findNextRoundTable(Long seasonId, Long roundId);
+    RoundAndTableDto findNextRoundTable(Long seasonId, Long roundId);
 
     /**
      * Find the prev round
@@ -156,7 +155,7 @@ public interface BetofficeService {
      * @param  roundId the round id
      * @return         the prev round from id
      */
-    RoundAndTableJson findPrevRoundTable(Long seasonId, Long roundId);
+    RoundAndTableDto findPrevRoundTable(Long seasonId, Long roundId);
 
     /**
      * Find current match round for a season
@@ -164,7 +163,7 @@ public interface BetofficeService {
      * @param  seasonId the season id
      * @return          the current round
      */
-    Optional<RoundJson> findCurrent(Long seasonId);
+    Optional<RoundDto> findCurrent(Long seasonId);
 
     /**
      * Calculate the user ranking for the season.
@@ -172,7 +171,7 @@ public interface BetofficeService {
      * @param  seasonId the season ud
      * @return          user ranking
      */
-    UserTableJson calcUserRanking(Long seasonId);
+    UserRankingTableDto calcUserRanking(Long seasonId);
 
     /**
      * Calculate the user ranking for a specific round.
@@ -180,7 +179,7 @@ public interface BetofficeService {
      * @param  roundId the round id
      * @return         user ranking for a specific round
      */
-    UserTableJson calcUserRankingByRoundOnly(Long roundId);
+    UserRankingTableDto calcUserRankingByRoundOnly(Long roundId);
 
     /**
      * Calculate the user ranking till specified round.
@@ -188,7 +187,7 @@ public interface BetofficeService {
      * @param  roundId the round id
      * @return         user ranking
      */
-    UserTableJson calcUserRankingByRound(Long roundId);
+    UserRankingTableDto calcUserRankingByRound(Long roundId);
 
     /**
      * Calculate the user ranking till next specified round
@@ -196,7 +195,7 @@ public interface BetofficeService {
      * @param  roundId the round id
      * @return         user ranking
      */
-    UserTableJson calcUserRankingByNextRound(Long roundId);
+    UserRankingTableDto calcUserRankingByNextRound(Long roundId);
 
     /**
      * Calculate the user ranking till prev specified round
@@ -204,14 +203,14 @@ public interface BetofficeService {
      * @param  roundId the round id
      * @return         user ranking
      */
-    UserTableJson calcUserRankingByPrevRound(Long roundId);
+    UserRankingTableDto calcUserRankingByPrevRound(Long roundId);
 
     /**
      * Find all teams
      *
      * @return all teams
      */
-    List<TeamJson> findAllTeams();
+    List<TeamDto> findAllTeams();
 
     /**
      * Find all teams
@@ -220,14 +219,14 @@ public interface BetofficeService {
      * @param  nameFilter a filter for the team name
      * @return            all teams matching the request
      */
-    List<TeamJson> findTeams(Optional<TeamType> teamType, String nameFilter);
+    List<TeamDto> findTeams(Optional<TeamType> teamType, String nameFilter);
 
     /**
      * Find all seasons
      *
      * @return all season
      */
-    List<SeasonJson> findAllSeason();
+    List<SeasonDto> findAllSeason();
 
     /**
      * Ping. Is the server alive?

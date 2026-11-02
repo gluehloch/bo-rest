@@ -25,7 +25,7 @@ package de.betoffice.web.tipp;
 
 import java.util.Optional;
 
-import de.betoffice.web.json.round.RoundJson;
+import de.betoffice.storage.season.RoundDto;
 
 public interface OfficeTippService {
 
@@ -35,7 +35,7 @@ public interface OfficeTippService {
      * @param  seasonId the season id
      * @return          the round
      */
-    Optional<RoundJson> findTippRound(Long seasonId);
+    Optional<RoundDto> findTippRound(Long seasonId);
 
     /**
      * Find round and tipp of a user
@@ -44,7 +44,7 @@ public interface OfficeTippService {
      * @param  nickName the nickname of the user
      * @return          the round
      */
-    RoundJson findTipp(Long roundId, String nickName);
+    RoundDto findTipp(Long roundId, String nickName);
 
     /**
      * Find current tipp round for an user.
@@ -53,7 +53,7 @@ public interface OfficeTippService {
      * @param  nickName the nickname of the user
      * @return          the round
      */
-    Optional<RoundJson> findCurrentTipp(Long seasonId, String nickName);
+    Optional<RoundDto> findCurrentTipp(Long seasonId, String nickName);
 
     /**
      * Find the next tipp round
@@ -62,7 +62,7 @@ public interface OfficeTippService {
      * @param  nickName the nickname of the user
      * @return          a round
      */
-    Optional<RoundJson> findNextTipp(Long roundId, String nickName);
+    Optional<RoundDto> findNextTipp(Long roundId, String nickName);
 
     /**
      * Find the prev tipp round
@@ -71,7 +71,7 @@ public interface OfficeTippService {
      * @param  nickName the nickname of the user
      * @return          a round
      */
-    Optional<RoundJson> findPrevTipp(Long roundId, String nickName);
+    Optional<RoundDto> findPrevTipp(Long roundId, String nickName);
 
     /**
      * Submit a tipp
@@ -80,6 +80,6 @@ public interface OfficeTippService {
      * @param  tippRoundJson tipp data
      * @return               a round
      */
-    RoundJson submitTipp(String token, SubmitTippRoundJson tippRoundJson);
+    RoundDto submitTipp(String token, SubmitTippRoundRequest tippRoundJson);
 
 }
