@@ -36,14 +36,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.betoffice.service.MasterDataManagerService;
 import de.betoffice.service.SeasonManagerService;
-import de.betoffice.storage.season.entity.Game;
+import de.betoffice.storage.season.entity.GameEntity;
+import de.betoffice.storage.season.entity.HistoryTeamVsTeamDtoMapper;
+import de.betoffice.storage.season.HistoryTeamVsTeamDto;
+import de.betoffice.storage.season.entity.DtoBuilder;
+import de.betoffice.storage.team.TeamDto;
 import de.betoffice.storage.team.TeamType;
-import de.betoffice.storage.team.entity.Team;
-import de.betoffice.web.json.HistoryTeamVsTeamJson;
-import de.betoffice.web.json.HistoryTeamVsTeamJsonMapper;
-import de.betoffice.web.json.JsonBuilder;
-import de.betoffice.web.json.TeamJson;
-import de.betoffice.web.json.builder.TeamJsonMapper;
+import de.betoffice.storage.team.entity.TeamEntity;
+import de.betoffice.storage.team.entity.TeamDtoMapper;
 
 /**
  * Researching data...
@@ -68,69 +68,69 @@ public class ResearchController {
     // ------------------------------------------------------------------------
 
     @RequestMapping(value = "/team/dfb", method = RequestMethod.GET)
-    public @ResponseBody List<TeamJson> findDfbTeams() {
-        List<Team> dfbTeams = masterDataManagerService.findTeams(TeamType.DFB);
-        return JsonBuilder.toJsonWithTeams(dfbTeams);
+    public @ResponseBody List<TeamDto> findDfbTeams() {
+        List<TeamEntity> dfbTeams = masterDataManagerService.findTeams(TeamType.DFB);
+        return DtoBuilder.toJsonWithTeams(dfbTeams);
     }
 
     @RequestMapping(value = "/team/fifa", method = RequestMethod.GET)
-    public @ResponseBody List<TeamJson> findFifaTeams() {
-        List<Team> fifaTeams = masterDataManagerService.findTeams(TeamType.FIFA);
-        return JsonBuilder.toJsonWithTeams(fifaTeams);
+    public @ResponseBody List<TeamDto> findFifaTeams() {
+        List<TeamEntity> fifaTeams = masterDataManagerService.findTeams(TeamType.FIFA);
+        return DtoBuilder.toJsonWithTeams(fifaTeams);
     }
 
     @RequestMapping(value = "/team-search", method = RequestMethod.GET, headers = { "Content-type=application/json" })
-    public List<TeamJson> findTeams(
+    public List<TeamDto> findTeams(
             @RequestParam(name = "filter", required = false) String teamFilter,
             @RequestParam(name = "type", required = false) TeamType teamType) {
-        return TeamJsonMapper.map(masterDataManagerService.findTeams(Optional.ofNullable(teamType), teamFilter));
+        return TeamDtoMapper.map(masterDataManagerService.findTeams(Optional.ofNullable(teamType), teamFilter));
     }
 
     @RequestMapping(value = "/game/team-vs-team", method = RequestMethod.GET)
-    public @ResponseBody HistoryTeamVsTeamJson research(
+    public @ResponseBody HistoryTeamVsTeamDto research(
             @RequestParam(value = "homeTeam", required = true) long homeTeamId,
             @RequestParam(value = "guestTeam", required = true) long guestTeamId,
             @RequestParam(value = "spin", required = false) Boolean spin,
             @RequestParam(value = "limit", required = false, defaultValue = "100") int limit) {
 
-        Team homeTeam = masterDataManagerService.findTeamById(homeTeamId);
-        Team guestTeam = masterDataManagerService.findTeamById(guestTeamId);
+        TeamEntity homeTeam = masterDataManagerService.findTeamById(homeTeamId);
+        TeamEntity guestTeam = masterDataManagerService.findTeamById(guestTeamId);
 
-        List<Game> findMatches = null;
+        List<GameEntity> findMatches = null;
         if (spin == null) {
             findMatches = seasonManagerService.findMatches(homeTeam, guestTeam, limit);
         } else {
             findMatches = seasonManagerService.findMatches(homeTeam, guestTeam, spin, limit);
         }
 
-        return HistoryTeamVsTeamJsonMapper.map(findMatches);
+        return HistoryTeamVsTeamDtoMapper.map(findMatches);
     }
 
     @RequestMapping(value = "/game/team", method = RequestMethod.GET)
-    public @ResponseBody HistoryTeamVsTeamJson researchByTeam(
+    public @ResponseBody HistoryTeamVsTeamDto researchByTeam(
             @RequestParam(value = "team", required = true) long teamId,
             @RequestParam(value = "limit", required = false, defaultValue = "100") int limit) {
-        Team team = masterDataManagerService.findTeamById(teamId);
+        TeamEntity team = masterDataManagerService.findTeamById(teamId);
         final var matches = seasonManagerService.findMatches(team, limit);
-        return HistoryTeamVsTeamJsonMapper.map(matches);
+        return HistoryTeamVsTeamDtoMapper.map(matches);
     }
 
     @RequestMapping(value = "/game/home-team", method = RequestMethod.GET)
-    public @ResponseBody HistoryTeamVsTeamJson researchByHomeTeam(
+    public @ResponseBody HistoryTeamVsTeamDto researchByHomeTeam(
             @RequestParam(value = "team", required = true) long teamId,
             @RequestParam(value = "limit", required = false, defaultValue = "100") int limit) {
-        Team team = masterDataManagerService.findTeamById(teamId);
+        TeamEntity team = masterDataManagerService.findTeamById(teamId);
         final var matches = seasonManagerService.findMatchesWithHomeTeam(team, limit);
-        return HistoryTeamVsTeamJsonMapper.map(matches);
+        return HistoryTeamVsTeamDtoMapper.map(matches);
     }
 
     @RequestMapping(value = "/game/guest-team", method = RequestMethod.GET)
-    public @ResponseBody HistoryTeamVsTeamJson researchByGuestTeam(
+    public @ResponseBody HistoryTeamVsTeamDto researchByGuestTeam(
             @RequestParam(value = "team", required = true) long teamId,
             @RequestParam(value = "limit", required = false, defaultValue = "100") int limit) {
-        Team team = masterDataManagerService.findTeamById(teamId);
+        TeamEntity team = masterDataManagerService.findTeamById(teamId);
         final var matches = seasonManagerService.findMatchesWithGuestTeam(team, limit);
-        return HistoryTeamVsTeamJsonMapper.map(matches);
+        return HistoryTeamVsTeamDtoMapper.map(matches);
     }
 
 }
